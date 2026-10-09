@@ -1,0 +1,179 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "UFOK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in the salon, head for the strength room",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "strength room",
+      "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE SW[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 10",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 10 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 11, past the ZRE > 10 gate",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 11 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back to the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "meditation room",
+      "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn fleeing",
+      "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "back at the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in room 20",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "in room 75",
+      "expect": "JESTES NA ULICY CIEMNEJ , WLASCIWIE NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 77",
+      "expect": "ZNALAZLES SIE WSROD BLUSZCZU , WOKOLO [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 80",
+      "expect": "CHOC TO MALO PRAWDOPODOBNE TUTAJ JEST [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 83",
+      "expect": "............................. PIERDUT.[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "in the cave entrance room 84",
+      "expect": "TO CIEKAWE ZE WCZESNIEJ NIE ZAUWAZYLES[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "living door, DRZWI bar the way",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt in the living-door room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZWIEJ"
+    },
+    {
+      "label": "flee threshold prompt",
+      "expect": "PONIZEJ ILU ENERGII CHCESZ UCIEKAC\\?",
+      "send": "500"
+    },
+    {
+      "label": "threshold set above current energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy topped to keep ENERGIA < WIMP",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 450",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back at the living door",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "escape the fight",
+      "expect": "[\\s\\S]*?WSTYD !!! UCIEKLES Z POLA BITWY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "past the DRZWI into the dark room",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "staruch drops POZIOM to zero",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "second grant to 1000 KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "UNMODE to force the pass",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "no banner: the dark room redispatches",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "no level line between money and attributes",
+      "expect": "PRAKTYK[\\r\\n]+TWOJE PARAMETRY",
+      "send": "WYJSCIE"
+    }
+  ]
+}

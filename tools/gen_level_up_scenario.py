@@ -40,33 +40,34 @@ TWELFTH = "HURRRA TO JUZ DWUNASTY POZIOM"
 def thresholds() -> dict[int, int]:
     """KUNSZT needed to advance from each level, read from source.
 
-    These come from the gate at the top of ZdobadzPoziom, not
-    from the KUNSZT subtraction in the body: the two differ (level
-    one gates at 700 but subtracts 725).
+    These come from the level threshold constants in BOMBKI.PAS,
+    not from the KUNSZT subtraction in the body: the two differ
+    (level one gates at 700 but subtracts 725).
     """
     src = (PROJECT / "src" / "BOMBKI.PAS").read_text()
-    gate = re.search(
-        r"if \(KUNSZT < (\d+)\) or \(POZIOM <> 1\) then\s*"
-        r"if \(KUNSZT < (\d+)\) or \(POZIOM <> 2\) then\s*"
-        r"if \(KUNSZT < (\d+)\) or \(POZIOM <> 3\) then\s*"
-        r"if \(\(735 \+ POZIOM\) > KUNSZT\) or \(POZIOM <= 3\) "
-        r"or \(POZIOM >= 9\) then begin\s*"
-        r"if POZIOM <= 8 then Exit;\s*"
-        r"if \(735 \+ POZIOM \+ POZIOM\) > KUNSZT then Exit;", src)
-    if gate is None:
-        raise RuntimeError("level-up gate not found in BOMBKI.PAS")
-    one, two, three = (int(gate.group(i)) for i in (1, 2, 3))
+
+    def const(name: str) -> int:
+        found = re.search(rf"^\s*{name} = (\d+);", src, re.M)
+        if found is None:
+            raise RuntimeError(f"constant {name} not found in BOMBKI.PAS")
+        return int(found.group(1))
+
+    gate_one = const("Lvl1_Threshold")
+    gate_two = const("Lvl2_Threshold")
+    gate_three = const("Lvl3_Threshold")
+    base = const("Lvl4_Base")
+    base_high = const("Lvl9_Base")
 
     def need(level: int) -> int:
         if level == 1:
-            return one
+            return gate_one
         if level == 2:
-            return two
+            return gate_two
         if level == 3:
-            return three
+            return gate_three
         if level < 9:
-            return 735 + level
-        return 735 + level + level
+            return base + level
+        return base_high + level + level
     return {n: need(n) for n in range(1, 30)}
 
 
@@ -256,6 +257,64 @@ def main() -> None:
     print(f"{path.name}: {len(steps)} steps, {visit} visits, "
           f"levels 1..{target}, thresholds "
           f"{[need[n] for n in range(1, target)]}")
+
+    # The level-up body deducts by the NEXT level's threshold, which
+    # differs from the gate (level one gates at 700 but subtracts
+    # 725). The route's own KUNSZT drift (the DRZWI escape costs 20)
+    # makes an absolute residue fragile, so the scenario only drives
+    # to the sheet; tests/behavior_test.py then asserts the relation
+    # prompt KUNSZT + sheet residue == 2 * need(2), which holds
+    # exactly when the deduction is need(2) = 725.
+    deduction = prefix("UFOK", escape=True)
+    deduction.append({"label": "second grant to 1000 KUNSZT",
+                      "expect": PROMPT, "send": "DAWAJ KUNSZT"})
+    deduction.append({"label": "MODE to leave the room",
+                      "expect": PROMPT, "send": "MODE"})
+    deduction.append({"label": "UNMODE to force the pass",
+                      "expect": PROMPT, "send": "UNMODE"})
+    deduction.append({"label": "level-up banner on the pass",
+                      "expect": BANNER, "send": "MODE"})
+    deduction.append({"label": "ground prompt",
+                      "expect": PROMPT, "send": "JA"})
+    deduction.append({
+        "label": "sheet shows the level-2 line",
+        "expect": "JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI "
+                  "-?[0-9]+ KUNSZTU",
+        "send": "WYJSCIE"})
+    path = OUT / "level-up-deduction.json"
+    path.write_text(json.dumps({"steps": deduction}, indent=2) + "\n",
+                    encoding="utf-8")
+    print(f"{path.name}: {len(deduction)} steps; behavior_test.py "
+          f"checks prompt KUNSZT + residue == 2 * {need[2]}")
+
+    # POZIOM <= 0 never levels up (the gate falls through every
+    # threshold check into the POZIOM <= 8 Exit), and the sheet
+    # prints no level line for it. ZABIJ STARUCH drops POZIOM from
+    # 1 to 0; with KUNSZT far above every threshold the pass must
+    # not fire the banner, and the JA sheet must go straight from
+    # the money line to the attribute line.
+    zero = prefix("UFOK", escape=True)
+    zero.append({"label": "staruch drops POZIOM to zero",
+                 "expect": PROMPT, "send": "ZABIJ STARUCH"})
+    zero.append({"label": "second grant to 1000 KUNSZT",
+                 "expect": PROMPT, "send": "DAWAJ KUNSZT"})
+    zero.append({"label": "MODE to leave the room",
+                 "expect": PROMPT, "send": "MODE"})
+    zero.append({"label": "UNMODE to force the pass",
+                 "expect": PROMPT, "send": "UNMODE"})
+    zero.append({"label": "no banner: the dark room redispatches",
+                 "expect": PROMPT, "send": "MODE"})
+    zero.append({"label": "ground prompt",
+                 "expect": PROMPT, "send": "JA"})
+    zero.append({
+        "label": "no level line between money and attributes",
+        "expect": r"PRAKTYK[\r\n]+TWOJE PARAMETRY",
+        "send": "WYJSCIE"})
+    path = OUT / "level-zero.json"
+    path.write_text(json.dumps({"steps": zero}, indent=2) + "\n",
+                    encoding="utf-8")
+    print(f"{path.name}: {len(zero)} steps, POZIOM 0: no level-up, "
+          f"no sheet line")
 
     # The level-12 block distributes MAXSIL/MAXZRE/MAXMAD by
     # comparing them, and each ordering of the three takes a

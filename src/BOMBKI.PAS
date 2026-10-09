@@ -20,6 +20,13 @@ label
 const
   MIECHO_Podswiadomosc = 1000; { subconscious (MODE) context }
   MIECHO_Smierc = 10000; { smierc context at img 0xEA22 }
+
+  { Level-up KUNSZT thresholds }
+  Lvl1_Threshold = 700;
+  Lvl2_Threshold = 725;
+  Lvl3_Threshold = 730;
+  Lvl4_Base = 735; { 4..8: 735 + POZIOM }
+  Lvl9_Base = 735; { 9..13: 735 + 2*POZIOM }
 var
   Unused0052: Integer; { effectively unused: only saved/loaded, no business code }
   JakaBron: Integer; { invented label for DGROUP word 0x054 }
@@ -128,13 +135,14 @@ begin
     >13 uses the generic message. Formula for required KUNSZT:
     1:700, 2:725, 3:730, 4..8:735+POZIOM, 9..13:735+2*POZIOM, >13:735+2*POZIOM }
   case POZIOM of
-    1: WriteLn('JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI ', 700 - KUNSZT, ' KUNSZTU');
-    2: WriteLn('JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', 725 - KUNSZT, ' KUNSZTU');
-    3: WriteLn('JESTES NA TRZECIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', 730 - KUNSZT, 'KUNSZTU');
-    4..8: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (735 - KUNSZT) + POZIOM, ' KUNSZTU');
-    9..13: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (735 - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
-    else WriteLn('JESTES NA BARDZO WYSOKIM LEVELU A DO NASTEPNEGO BRAKUJE CI TYLKO', (735 - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
+    1: WriteLn('JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl1_Threshold - KUNSZT, ' KUNSZTU');
+    2: WriteLn('JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl2_Threshold - KUNSZT, ' KUNSZTU');
+    3: WriteLn('JESTES NA TRZECIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl3_Threshold - KUNSZT, 'KUNSZTU');
+    4..8: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (Lvl4_Base - KUNSZT) + POZIOM, ' KUNSZTU');
+    9..13: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (Lvl9_Base - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
   end;
+  if POZIOM > 13 then
+    WriteLn('JESTES NA BARDZO WYSOKIM LEVELU A DO NASTEPNEGO BRAKUJE CI TYLKO', (Lvl9_Base - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
   { img 0x11C4..0x12BD: current/max attributes, S.Z, and FUKSROLL. }
   WriteLn('TWOJE PARAMETRY : SILA - ', SIL, '/', MAXSIL,
          ' ZRECZNOSC - ', ZRE, '/', MAXZRE,
@@ -1353,28 +1361,39 @@ begin
   WriteLn('suckemall:', PRZEDM.JAKIEUB);
 end;
 
+function LevelThreshold(lvl: Integer): Integer;
+{ Returns the KUNSZT threshold for the given level. }
+begin
+  case lvl of
+    1: LevelThreshold := Lvl1_Threshold;
+    2: LevelThreshold := Lvl2_Threshold;
+    3: LevelThreshold := Lvl3_Threshold;
+    4..8: LevelThreshold := Lvl4_Base + lvl;
+    9..13: LevelThreshold := Lvl9_Base + 2 * lvl;
+    else LevelThreshold := Lvl9_Base + 2 * lvl;
+  end;
+end;
+
 procedure SprawdzCzyZdobylesLevel;
 { img 0x872E..0x8BA2: level thresholds and stat gains }
+var
+  threshold: Integer;
 begin
-  if (KUNSZT < 700) or (POZIOM <> 1) then
-    if (KUNSZT < 725) or (POZIOM <> 2) then
-      if (KUNSZT < 730) or (POZIOM <> 3) then
-        if ((735 + POZIOM) > KUNSZT) or (POZIOM <= 3) or (POZIOM >= 9) then begin
-          if POZIOM <= 8 then Exit;
-          if (735 + POZIOM + POZIOM) > KUNSZT then Exit;
-        end;
+  if POZIOM < 1 then Exit;
+  threshold := LevelThreshold(POZIOM);
+  if KUNSZT < threshold then Exit;
+
   { Level up body at img 0x87A2 }
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
-  if POZIOM = 1 then KUNSZT := KUNSZT - 725;
-  if POZIOM = 2 then KUNSZT := KUNSZT - 730;
-  if POZIOM = 3 then KUNSZT := KUNSZT - 735;
-  if (POZIOM > 3) and (POZIOM < 9) then
-    KUNSZT := (KUNSZT - 735) - POZIOM;
-  if (POZIOM > 8) then
-    KUNSZT := (KUNSZT - (POZIOM * 2)) - 735;
+
+  if POZIOM = 1 then KUNSZT := KUNSZT - 725
+  else if POZIOM = 2 then KUNSZT := KUNSZT - 730
+  else if POZIOM = 3 then KUNSZT := KUNSZT - 735
+  else if POZIOM <= 8 then KUNSZT := (KUNSZT - Lvl4_Base) - POZIOM
+  else KUNSZT := (KUNSZT - (POZIOM * 2)) - Lvl9_Base;
   if MAD < 11 then PRA := PRA + 3;
   if (MAD > 10) and (MAD < 16) then PRA := PRA + 4;
   if (MAD > 15) and (MAD < 23) then PRA := PRA + 5;

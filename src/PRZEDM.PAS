@@ -347,8 +347,6 @@ procedure WalkaZlozone(wroGenBase, wroGenRand, wroZreBase, wroZreRand, wroSilBas
   serceChance: FUKS threshold for SERCE drop (0 = no SERCE drop)
   checkEnergia: whether to require ENERGIA > 0
   specialMrowka: if True, use MROWKA/PACZEK logic instead of SERCE }
-var
-  serceDrop: Boolean;
 begin
   if wroGenRand > 0 then WROGEN := Random(wroGenRand) + wroGenBase else WROGEN := wroGenBase;
   if wroZreRand > 0 then WROGZRE := Random(wroZreRand) + wroZreBase else WROGZRE := wroZreBase;

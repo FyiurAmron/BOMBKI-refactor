@@ -1458,16 +1458,18 @@ begin
   end;
 end;
 procedure KOMENDY;
+{ Expand single-letter command abbreviations. }
+const
+  AbbrevCount = 8;
+  AbbrevFrom: array[1..AbbrevCount] of string = ('PN','PD','W','Z','G','D','E','M');
+  AbbrevTo:   array[1..AbbrevCount] of string = ('POLNOC','POLODNIE','WSCHOD','ZACHOD','GORA','DOL','EXIT','MODE');
+var i: Integer;
 begin
-
-  if wpisz = 'PN' then wpisz := 'POLNOC';
-  if wpisz = 'PD' then wpisz := 'POLODNIE';
-  if wpisz = 'W' then wpisz := 'WSCHOD';
-  if wpisz = 'Z' then wpisz := 'ZACHOD';
-  if wpisz = 'G' then wpisz := 'GORA';
-  if wpisz = 'D' then wpisz := 'DOL';
-  if wpisz = 'E' then wpisz := 'EXIT';
-  if wpisz = 'M' then wpisz := 'MODE';
+  for i := 1 to AbbrevCount do
+    if wpisz = AbbrevFrom[i] then begin
+      wpisz := AbbrevTo[i];
+      Exit;
+    end;
 end;
 
 procedure save;

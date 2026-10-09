@@ -1360,6 +1360,33 @@ begin
     KASETAZYSK;
   end;
 end;
+procedure ZabijRoslineVEASY(cmd: string; var roslin: Integer);
+{ Kill plant with VEASY difficulty (no energy check). }
+begin
+  if (wpisz = cmd) and (roslin = MIECHO) then begin
+    VEASY;
+    roslin := 0;
+  end;
+end;
+
+procedure ZabijRoslineVEASYEnergy(cmd: string; var roslin: Integer);
+{ Kill plant with VEASY difficulty (energy check). }
+begin
+  if (wpisz = cmd) and (roslin = MIECHO) then begin
+    VEASY;
+    if ENERGIA > 0 then roslin := 0;
+  end;
+end;
+
+procedure ZabijRoslineEASYEnergy(cmd: string; var roslin: Integer);
+{ Kill plant with EASY difficulty (energy check). }
+begin
+  if (wpisz = cmd) and (roslin = MIECHO) then begin
+    EASY;
+    if ENERGIA > 0 then roslin := 0;
+  end;
+end;
+
 procedure FIGHTBLUSZCZ;
 begin
   if (wpisz = 'ZABIJ DUNCAN') and (DUNCAN = MIECHO) then begin
@@ -1406,46 +1433,20 @@ begin
 
     end;
   end;
-  if (wpisz = 'ZABIJ SZCZAW') and (SZCZAW = MIECHO) then begin
-    VEASY;
-    SZCZAW := 0;
-  end;
-  if (wpisz = 'ZABIJ STOKROTKA') and (STOKROTKA = MIECHO) then begin
-    VEASY;
-    if ENERGIA > 0 then STOKROTKA := 0;
-  end;
-  if (wpisz = 'ZABIJ KONICZYNKA') and (KONICZYNKA = MIECHO) then begin
-    VEASY;
-    KONICZYNKA := 0;
-  end;
-  if (wpisz = 'ZABIJ MLECZ') and (MLECZ = MIECHO) then begin
-    VEASY;
-    MLECZ := 0;
-  end;
-  if (wpisz = 'ZABIJ DMUCHAWIEC') and (DMUCHAWIEC = MIECHO) then begin
-    VEASY;
-    DMUCHAWIEC := 0;
-  end;
-  if (wpisz = 'ZABIJ ROZA') and (ROZA = MIECHO) then begin
-    EASY;
-    if ENERGIA > 0 then ROZA := 0;
-  end;
-  if (wpisz = 'ZABIJ OSET') and (OSET = MIECHO) then begin
-    EASY;
-    if ENERGIA > 0 then OSET := 0;
-  end;
-  if (wpisz = 'ZABIJ MALINA') and (MALINA = MIECHO) then begin
-    EASY;
-    if ENERGIA > 0 then MALINA := 0;
-  end;
-  if (wpisz = 'ZABIJ AGREST') and (AGREST = MIECHO) then begin
-    EASY;
-    if ENERGIA > 0 then AGREST := 0;
-  end;
-  if (wpisz = 'ZABIJ JEZYNA') and (JEZYNA = MIECHO) then begin
-    EASY;
-    if ENERGIA > 0 then JEZYNA := 0;
-  end;
+  { VEASY plants (no energy check) }
+  ZabijRoslineVEASY('ZABIJ SZCZAW', SZCZAW);
+  ZabijRoslineVEASY('ZABIJ KONICZYNKA', KONICZYNKA);
+  ZabijRoslineVEASY('ZABIJ MLECZ', MLECZ);
+  ZabijRoslineVEASY('ZABIJ DMUCHAWIEC', DMUCHAWIEC);
+  { VEASY plant with energy check }
+  ZabijRoslineVEASYEnergy('ZABIJ STOKROTKA', STOKROTKA);
+  { EASY plants with energy check }
+  ZabijRoslineEASYEnergy('ZABIJ ROZA', ROZA);
+  ZabijRoslineEASYEnergy('ZABIJ OSET', OSET);
+  ZabijRoslineEASYEnergy('ZABIJ MALINA', MALINA);
+  ZabijRoslineEASYEnergy('ZABIJ AGREST', AGREST);
+  ZabijRoslineEASYEnergy('ZABIJ JEZYNA', JEZYNA);
+  { TRAWA - special: 3x TRUDNO }
   if (wpisz = 'ZABIJ TRAWA') and (TRAWA = MIECHO) then begin
     WriteLn('HA HA HA WOLAJA SETKI LISCI TRAWY - TO BEDZIE WALKA');
     TRUDNO;
@@ -1454,7 +1455,6 @@ begin
     if ENERGIA > 0 then TRUDNO;
     if (ENERGIA > 0) and (PASZOL = 0) then
       WriteLn('UFF STRUDZONY POSTANAWIASZ ODPOCZAC TYLU PRZECIWNIKOW DAWNO NIE WIDZIALES');
-
   end;
 end;
 procedure KOMENDY;

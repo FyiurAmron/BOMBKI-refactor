@@ -100,10 +100,13 @@ python3 tests/save_format_test.py
 
 The test runs a save scenario against the native dev build and compares
 the emitted `pliki.tpu` byte-for-byte against the stored reference.
-The reference file is updated only when a deliberate format change is
-approved. The test must pass on the refactored native build; when the
-original binary is available via DOSEMU2, the same test should be run
-against it to ensure format parity.
+A second, equipped scenario saves with JAKIEUB='SYF', loads, and saves
+again; its post-load output is compared against
+`tests/reference_saves/pliki.tpu.postload.ref` (JAKIEUB restored on
+load). The reference file is updated only when a deliberate format
+change is approved. The test must pass on the refactored native build;
+when the original binary is available via DOSEMU2, the same test should
+be run against it to ensure format parity.
 
 ## Scenarios
 

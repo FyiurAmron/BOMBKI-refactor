@@ -522,6 +522,19 @@ begin
   ZapiszPostac; { save routine at img 0x2BA1, called from img 0x3841 }
 end;
 
+procedure KupItem(cmd: string; var itemVar: Integer; price: Integer;
+                  msg: string; available: Boolean);
+{ Generic shop buy helper: checks command, availability, and money;
+  each purchase adds one carried item (itemVar drops by 10). }
+begin
+  if (wpisz = cmd) and available and (PRZEDM.FORSA >= price) then begin
+    PRZEDM.PRZED := PRZEDM.PRZED + 1;
+    itemVar := itemVar - 10;
+    PRZEDM.FORSA := PRZEDM.FORSA - price;
+    WriteLn(msg);
+  end;
+end;
+
 procedure ZakupyPiekarnia;
 { img 0x39BE..0x3CEA: LISTA and KUP food commands }
 begin
@@ -535,42 +548,12 @@ begin
     WriteLn('WEKA       :   29 ');
   end;
   WalkaMiasto; { img 0x3AA0 -> helper at 0x1C2A }
-  if (wpisz = 'KUP PACZEK') and (PRZEDM.FORSA >= 8) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.PACZEK := PRZEDM.PACZEK - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 8;
-    WriteLn('KUPUJESZ PACZEK ZA 8 MONET');
-  end;
-  if (wpisz = 'KUP CIASTKO') and (PRZEDM.FORSA >= 12) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.CIASTKO := PRZEDM.CIASTKO - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 12;
-    WriteLn('KUPUJESZ CIASTKO ZA 12 MONET');
-  end;
-  if (wpisz = 'KUP SUCHA RACJA') and (PRZEDM.FORSA >= 15) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.SUCHA := PRZEDM.SUCHA - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 15;
-    WriteLn('KUPUJESZ SUCHA RACJE ZA 15 MONET');
-  end;
-  if (wpisz = 'KUP BULKA') and (PRZEDM.FORSA >= 19) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.BULKA := PRZEDM.BULKA - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 19;
-    WriteLn('KUPUJESZ BULKE ZA 19 MONET');
-  end;
-  if (wpisz = 'KUP CHLEB') and (PRZEDM.FORSA >= 24) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.CHLEB := PRZEDM.CHLEB - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 24;
-    WriteLn('KUPUJESZ CHLEB ZA 24 MONET');
-  end;
-  if (wpisz = 'KUP WEKA') and (PRZEDM.FORSA >= 29) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.WEKA := PRZEDM.WEKA - 10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 29;
-    WriteLn('KUPUJESZ WEKE ZA 29 MONET');
-  end;
+  KupItem('KUP PACZEK', PRZEDM.PACZEK, 8, 'KUPUJESZ PACZEK ZA 8 MONET', True);
+  KupItem('KUP CIASTKO', PRZEDM.CIASTKO, 12, 'KUPUJESZ CIASTKO ZA 12 MONET', True);
+  KupItem('KUP SUCHA RACJA', PRZEDM.SUCHA, 15, 'KUPUJESZ SUCHA RACJE ZA 15 MONET', True);
+  KupItem('KUP BULKA', PRZEDM.BULKA, 19, 'KUPUJESZ BULKE ZA 19 MONET', True);
+  KupItem('KUP CHLEB', PRZEDM.CHLEB, 24, 'KUPUJESZ CHLEB ZA 24 MONET', True);
+  KupItem('KUP WEKA', PRZEDM.WEKA, 29, 'KUPUJESZ WEKE ZA 29 MONET', True);
 end;
 
 procedure ZakupyZbrojownia;

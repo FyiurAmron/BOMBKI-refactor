@@ -20,6 +20,7 @@ SCENARIOS = [
     "level-up-deduction",
     "level-zero",
     "shop-item-display",
+    "shop-repeat-buy",
 ]
 
 # The original deducts 725 KUNSZT when leveling 1 -> 2 (reference

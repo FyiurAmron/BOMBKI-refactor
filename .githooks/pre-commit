@@ -22,8 +22,8 @@ if git diff --cached --name-only | grep -q '^_reference/'; then
   fail=1
 fi
 
-# 1b. tests/reference_saves/pliki.tpu.ref is a binary format reference
-# that naturally has a trailing blank line; allow it to skip checks
+# 1b. tests/reference_saves/pliki.tpu*.ref are binary format references
+# that naturally have a trailing blank line; allow them to skip checks
 reference_save_ref="tests/reference_saves/pliki.tpu.ref"
 
 # 2-3. text hygiene over staged files
@@ -51,12 +51,13 @@ for f in $(git diff --cached --name-only --diff-filter=ACMR); do
 done
 
 # 4. trailing whitespace and diff markers
-# Exclude reference save file from trailing whitespace check (binary format with trailing blank line)
+# Exclude reference save files from trailing whitespace check (binary format with trailing blank line)
 excluded_files=""
 for f in $(git diff --cached --name-only --diff-filter=ACMR); do
-  if [ "$f" != "$reference_save_ref" ]; then
-    excluded_files="$excluded_files $f"
-  fi
+  case "$f" in
+    tests/reference_saves/pliki.tpu*.ref) continue ;;
+  esac
+  excluded_files="$excluded_files $f"
 done
 if [ -n "$excluded_files" ]; then
   if ! git diff --cached --check -- $excluded_files; then

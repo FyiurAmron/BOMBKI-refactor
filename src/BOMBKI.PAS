@@ -30,14 +30,12 @@ var
   StanOgromnego: Integer;  { invented label for DGROUP word 0x05E }
   JakaTarcza: Integer;  { invented label for DGROUP word 0x060 }
   LimitPrzedmiotow: Integer;     { invented label for DGROUP word 0x062 }
-  Unused0064: Integer; { completely unused: no references }
   WartoscMiecza: Integer; { invented label for DGROUP word 0x066 }
   WartoscTarczy: Integer; { invented label for DGROUP word 0x068 }
   WartoscSerca: Integer; { invented label for DGROUP word 0x06A }
   PunktKontrolny: Integer; { invented label for DGROUP word 0x06C }
   SilaZbroi: Integer; { S.Z. = PRO + 10 * PRZEDM.ILOSC }
   GodzinySnu: Integer;         { invented label for SPIJ counter at DGROUP word 0x070 }
-  Unused0072: Integer; { completely unused: no references }
   PotrawkiNiepotrzebnaZmiennaBug: Integer; { saved word at DGROUP 0x074 }
   Unused0076: Integer; { completely unused: no references }
   _dummy_int: Integer; { dummy for placeholder reads (e.g. PRZEDM.TEST1) }

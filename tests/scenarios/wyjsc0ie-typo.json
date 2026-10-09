@@ -1,0 +1,48 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 salon",
+      "expect": "OKROGLYM SALONIE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 20 city center",
+      "expect": "CENTRUM MIASTA",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "correct spelling is inert here",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSC0IE"
+    },
+    {
+      "label": "typo exits to DOS",
+      "expect_exit": true
+    }
+  ]
+}

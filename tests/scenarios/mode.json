@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 prompt",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "MODE prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "character-sheet response",
+      "expect": "W SUMIE MASZ[\\s\\S]*?TWOJE PARAMETRY : SILA - [0-9]+/[0-9]+ ZRECZNOSC - [0-9]+/[0-9]+ MADROSC - [0-9]+/[0-9]+[\\s\\S]*?S\\.Z-[0-9]+ +FUKSROLL-[0-9]+[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZDOLNOSCI"
+    },
+    {
+      "label": "abilities response",
+      "expect": "POROWNYWANIE|POTRAWKI|POWROT|[0-9]+%\\.-?[0-9]+>",
+      "send": "ZMIEN KOLOR"
+    },
+    {
+      "label": "color prompt",
+      "expect": "PODAJ LICZBE KOLORU",
+      "send": "4"
+    },
+    {
+      "label": "post-color MODE prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "restored room",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "room exit response",
+      "expect": "JESTES W OKROGLYM SALONIE"
+    }
+  ]
+}

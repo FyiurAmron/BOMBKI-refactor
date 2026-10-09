@@ -1,0 +1,184 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "room 0 (TU ZACZYNA SIE GRE)",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 0 exits -> 1",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 (JESTES W OKROGLYM SA)",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 1 exits -> 20",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 20 (JESTES W CENTRUM MIA)",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 20 exits -> 21",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 21 (JESTES NA ULICY NA U)",
+      "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ -[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 21 exits -> 22",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 22 (CIAGNIE SIE TEDY ULI)",
+      "expect": "CIAGNIE SIE TEDY ULICA SKLEPIKOWA JEST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 22 exits -> 25",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 25 (WSZEDLES DO SKLEPU W)",
+      "expect": "WSZEDLES DO SKLEPU WIELOBRANZOWEGO,STW[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "LISTA"
+    },
+    {
+      "label": "room 25: PATRZ POSTER",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ POSTER"
+    },
+    {
+      "label": "room 25 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 25 exits -> 22",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 22 (CIAGNIE SIE TEDY ULI)",
+      "expect": "CIAGNIE SIE TEDY ULICA SKLEPIKOWA JEST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 22 exits -> 26",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 26 (WCHODZISZ DO SKLEPU )",
+      "expect": "WCHODZISZ DO SKLEPU ALE NICZEGO TU NIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "LISTA"
+    },
+    {
+      "label": "room 26 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 26 exits -> 22",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 22 (CIAGNIE SIE TEDY ULI)",
+      "expect": "CIAGNIE SIE TEDY ULICA SKLEPIKOWA JEST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 22 exits -> 21",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 21 (JESTES NA ULICY NA U)",
+      "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ -[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 21 exits -> 23",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 23 (JESTES W PIEKARNI , )",
+      "expect": "JESTES W PIEKARNI , SKLEP PRZESIAKNIET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "LISTA"
+    },
+    {
+      "label": "room 23: KUP PACZEK",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP PACZEK"
+    },
+    {
+      "label": "room 23 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 23 exits -> 21",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 21 (JESTES NA ULICY NA U)",
+      "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ -[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 21 exits -> 24",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 24 (JESTES W ZBROJOWNI -)",
+      "expect": "JESTES W ZBROJOWNI - SKLEP NIEDAWNO ZO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "LISTA"
+    },
+    {
+      "label": "room 24: PATRZ PLAKAT",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "room 24 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

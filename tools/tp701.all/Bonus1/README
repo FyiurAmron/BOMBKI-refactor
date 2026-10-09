@@ -1,0 +1,226 @@
+                 Borland Pascal with Objects 7.0
+                   Run-time Library Source Code
+                 -------------------------------
+
+Please read this document carefully. It is the only documentation
+for the Borland Pascal with Objects run-time library source code.
+
+
+TABLE OF CONTENTS
+-----------------
+
+1. System requirements
+2. Run-time library source code support policy
+3. Installing the run-time library source code
+4. Run-time library source code overview
+5. Building the run-time library
+6. Modifying the run-time library source code
+
+
+1. SYSTEM REQUIREMENTS
+----------------------
+
+  The Borland Pascal with Objects run-time library source code
+  requires:
+
+    o MS-DOS 3.0 or later
+    o 2Mb of available extended memory
+    o 80286 or later processor
+    o approximately 1.6Mb of disk space (source only)
+    o Borland Pascal with Objects 7.0
+
+
+2. RUN-TIME LIBRARY SOURCE CODE SUPPORT POLICY
+----------------------------------------------
+
+IMPORTANT: Borland Technical Support will not answer questions or
+provide any assistance relating to this product. This product is
+provided "as is."
+
+If you find a genuine problem with the source code, please send a
+written description to our Technical Support Department by one of
+two methods:
+
+    1. Type GO BPROGA on the CompuServe bulletin board system for
+       instant access to the Borland forums.
+
+    2. Or you can write to:
+
+          Borland International
+          Borland Pascal RTL Source Code Technical Support
+          P.O. Box 660001
+          1800 Green Hills Road
+          Scotts Valley, CA 95067-0001
+
+    Please include the following information in your
+    correspondence:
+
+      A.  Product name and serial number from your original
+          distribution disk.
+
+      B.  Computer brand, model, and the brands and model numbers
+          of any additional hardware.
+
+      C.  Operating system and version number. The version number
+          can be determined by typing VER at the DOS prompt.
+
+      D.  Contents of your AUTOEXEC.BAT file.
+
+      E.  Contents of your CONFIG.SYS file.
+
+      F.  A complete description of the problem.
+
+
+3. INSTALLING THE RUN-TIME LIBRARY SOURCE CODE
+----------------------------------------------
+The Borland Pascal with Objects run-time library source code
+installation program, INSTALL.EXE, sets up the run-time library
+source code on your system. To use INSTALL on Drive A, for
+example, place the distribution disk in Drive A and type
+
+  A:INSTALL
+
+You can select the base directory for the run-time library by
+selecting the "Run-time library directory" option, and entering
+the desired path.  The install program will create several other
+directories below the directory you specify.
+
+The MAKEFILE included with the run-time library assumes that you
+have installed Borland Pascal with Objects to the \BP directory,
+and that you will accept the default RTL directory of \BP\RTL.
+If you change either of these paths, you need to modify the
+RTL's MAKEFILE accordingly. The remainder of this document
+assumes that you are using the default directories.
+
+
+4. RUN-TIME LIBRARY SOURCE CODE OVERVIEW
+----------------------------------------
+The source and object modules contained in this package
+correspond to Borland Pascal with Objects 7.0.  We assume that
+you own a copy of Borland Pascal with Objects 7.0 (including
+Turbo Assembler 3.2), which you need to compile the run-time
+library sources.
+
+Borland Pascal with Objects' run-time library consists of source
+code for the standard units, the Turbo Vision and ObjectWindows
+application frameworks, and the Windows 3.1 interface files.
+Sources are not supplied for following items: the 8087 emulator
+part of the System unit, the assembly language parts of the
+Overlay unit, the Graph unit, the .BGI or .CHR files, the GRAPH3
+unit, or the TURBO3 unit.
+
+Also included in the run-time library source code package is the
+file MAKEFILE, which contains a script for building the entire
+run-time library and application frameworks. In order to process
+this script, you need the MAKE.EXE utility which comes with
+Borland Pascal with Objects 7.0.
+
+
+5. BUILDING THE RUN-TIME LIBRARY
+--------------------------------
+For each run-time library component, MAKEFILE defines which object
+files depend on which source files, and what commands to execute
+to update those object files. To do a "make" of the run-time
+library source code, first make sure that MAKE.EXE, BPC.EXE, and
+TASM.EXE are on your DOS PATH; then change to the \BP\RTL
+directory and type:
+
+   MAKE
+
+MAKE will execute all necessary commands to completely update the
+run-time libraries (TURBO.TPL, TPP.TPL, and TPW.TPL), Turbo
+Vision, ObjectWindows, and the Windows 3.1 interface.
+
+Don't be alarmed if MAKE doesn't assemble or compile anything;
+that's just an indication that everything is up-to-date (i.e.,
+all object files are more recent than their corresponding source
+files).
+
+The compiled versions of the run-time libraries and application
+frameworks are written to directories under the \RTL\BIN
+directory.  Below is a map of the directory structure, and what
+files you should expect to find there:
+
+  \RTL\BIN        - contains TURBO.TPL, TPP.TPL and TPW.TPL
+  \RTL\BIN\TPU    - contains the .TPU files from TURBO.TPL
+  \RTL\BIN\TPP    - contains the .TPP files from TPP.TPL
+  \RTL\BIN\TPW    - contains the .TPW files from TPW.TPL
+  \RTL\BIN\TV     - contains the Turbo Vision .TPU/.TPP files
+  \RTL\BIN\OWL    - contains the ObjectWindows .TPW files
+  \RTL\BIN\WIN31  - contains the Windows 3.1 .TPW files
+
+In order to use the newly built versions of the run-time library,
+you must copy the file(s) to the appropriate working directory.
+By default, the .TPL files should be copied to the \BP\BIN
+directory, and the Turbo Vision, ObjectWindows and Windows 3.1
+interface files to the \BP\UNITS directory.
+
+
+Creating a debug version of the run-time library
+------------------------------------------------
+You can build a version of the run-time library which contains
+debug information, by using the following command line:
+
+  MAKE -DDEBUG
+
+Note: If you have already built the RTL, you will need to
+instruct MAKE to do a build instead of a make.  Use the -B switch
+to force MAKE to rebuild all files even if they are up to date:
+
+  MAKE -B -DDEBUG
+
+Once you have compiled the debug version, you can use the IDE's
+integrated debugger (or other debugger) to trace into the RTL
+itself. To allow the IDE to find RTL assembler source, use the
+Options|Directories menu to set the INCLUDE directory path to
+\BP\RTL and then re-compile your program.
+
+
+Building parts of the run-time library
+--------------------------------------
+You can build specific parts of the run-time library by supplying
+additional command line parameters to the MAKE utility.  For
+example, you might want to rebuild only TURBO.TPL, the DOS
+real-mode library, or only the ObjectWindows application
+framework.  Below is a table of run-time library components you
+can build separately, and the command lines to use for each:
+
+  Component           Command line
+  --------------      ---------------
+  TURBO.TPL           MAKE rtldos
+  TPP.TPL             MAKE rtldpmi
+  TPW.TPL             MAKE rtlwin
+  Turbo Vision        MAKE tv
+  ObjectWindows       MAKE owl
+  Win 3.1 interface   MAKE win31
+
+
+6. MODIFYING THE RUN-TIME LIBRARY SOURCE CODE
+---------------------------------------------
+With the exception of the System unit, all RTL units are "normal"
+Borland Pascal with Objects units. The System unit, however, has
+a number of special properties.
+
+The interface part of SYSTEM.PAS defines only variables and typed
+constants--the remaining symbols are contained in a bootstrap
+symbol table contained in the file SYSTEM.TPS. Furthermore, you
+will notice a number of external procedures in the implementation
+part; these "semi-hidden" procedures cannot be called directly
+(since they are not exported), but the compiler knows about them.
+When you call a built-in procedure or function, such as Writeln,
+the compiler translates the reference into one or more calls to
+hidden procedures in the System unit. Since the compiler depends
+upon the hidden routines' order of declaration, it is very
+important that you don't change their ordering.
+
+We strongly recommend that you refrain from changing the System
+unit's interface section, and only modify the implementation
+section and the assembly language files. Very few changes are
+possible in the interface section, and any change, however minor,
+will cause a unit version mismatch between the System unit and
+ALL OTHER UNITS compiled with the shipping RTL.
+
+
+
+*  *  *  *  *  *
+

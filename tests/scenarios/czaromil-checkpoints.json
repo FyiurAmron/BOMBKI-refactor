@@ -1,0 +1,543 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "CZAROMIL"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the school corridor",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the school hall",
+      "expect": "JESTES\\ W\\ HALLU\\ MUD\\ SZKOLY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the shock room",
+      "expect": "SZOK!!\\ AAA\\ UPSI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "the training room",
+      "expect": "JESTES\\ W\\ MALUTKIM\\ POKOJU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "before cage 12: enter the ground context",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "before cage 12: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 12: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 12: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 12: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 12: back in JESTES W POKOJU PROWADZACYM DO KLA",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 12",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "kill the monster in cage 12",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 12 drops loot",
+      "expect": "ZABILES\\ GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "before cage 13: enter the ground context",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "before cage 13: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 13: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 13: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 13: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 13: back in JESTES W POKOJU PROWADZACYM DO KLA",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 13",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "kill the monster in cage 13",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 13 drops loot",
+      "expect": "ZABILES\\ GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "before cage 14: enter the ground context",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "before cage 14: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 14: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 14: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 14: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 14: back in JESTES W POKOJU PROWADZACYM DO KLA",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 14",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "kill the monster in cage 14",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 14 drops loot",
+      "expect": "ZABILES\\ GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "before cage 15: enter the ground context",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "before cage 15: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 15: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 15: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 15: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 15: back in JESTES W POKOJU PROWADZACYM DO KLA",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 15",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "kill the monster in cage 15",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 15 drops loot",
+      "expect": "ZABILES\\ GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "before cage 16: enter the ground context",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "before cage 16: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 16: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 16: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 16: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "before cage 16: back in JESTES W POKOJU PROWADZACYM DO KLA",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 16",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "cage 16 is over before the door shuts",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWI[\\s\\S]*?ZABILES\\ GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "the poster room",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "the teleport room",
+      "expect": "JESTES\\ W\\ POKOJU\\ W\\ KTORYM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "teleport to the salon",
+      "expect": "BBBBBBBBZBZBZBZBZZZZZZZzzzzzzzzzbbzbBb",
+      "send": "TELEPORT"
+    },
+    {
+      "label": "the city centre again",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the shopping street",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the dog on the street: enter the ground context",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULICY\\ SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "the dog on the street: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the dog on the street: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the dog on the street: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the dog on the street: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the dog on the street: back in JESTES NA ULICY NA ULICY SKLEPIKOWEJ",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "the dog is here",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULICY\\ SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ OWCZAREK"
+    },
+    {
+      "label": "the dog is down",
+      "expect": "ZABILES\\ GO[\\s\\S]*?MONET\\ Z\\ CIALA\\ PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the first checkpoint fires",
+      "expect": "###################!!!CHECKPOINT!!![\\s\\S]*?JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the dark street",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the thicket",
+      "expect": "ZNALAZLES\\ SIE\\ WSROD\\ BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the well",
+      "expect": "CHOC\\ TO\\ MALO\\ PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the lost corner",
+      "expect": "PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the notice board",
+      "expect": "TO\\ CIEKAWE\\ ZE\\ WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the tree: enter the ground context",
+      "expect": "DO\\ DOBRA\\ WYGLADA\\ TO\\ NA\\ JAKIS\\ DOM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "the tree: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +1000",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +1200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +1400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +1600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +1800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +2000",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +2200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +2400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +2600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +2800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +3000",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +3200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +3400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +3600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +3800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: energy +4000",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "the tree: back in DO DOBRA WYGLADA TO NA JAKIS DOM",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "the tree is in the way",
+      "expect": "DO\\ DOBRA\\ WYGLADA\\ TO\\ NA\\ JAKIS\\ DOM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "the tree is down",
+      "expect": "ZABILES\\ GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the den",
+      "expect": "DOBRA\\ JESTES\\ W\\ SRODKU\\ BRAK\\ OSWIETLENIA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ROZMAWIAJ STARUCH"
+    },
+    {
+      "label": "the staruch asks for something",
+      "expect": "[\\s\\S]*?STARUCH\\ MOWI\\ CI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ GARNKI"
+    },
+    {
+      "label": "the pots are empty",
+      "expect": "[\\s\\S]*?Z\\ JEZOREM\\ NA\\ WIERZCHU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "ground context in the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "the ground prompt in the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "the sheet counts the grant",
+      "expect": "JESTES NA PIERWSZYM LEVELU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back in the den",
+      "expect": "[\\s\\S]*?ZDOBYLES LEVEL[\\s\\S]*?DOBRA\\ JESTES\\ W\\ SRODKU\\ BRAK\\ OSWIETLENIA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the door, two more checkpoints and level two",
+      "expect": "DO\\ DOBRA\\ WYGLADA\\ TO\\ NA\\ JAKIS\\ DOM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "the door exits",
+      "expect": "DOSTEPNE\\ WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "UFOK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in room 1",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in room 20",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "in room 75",
+      "expect": "JESTES NA ULICY CIEMNEJ , WLASCIWIE NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 77",
+      "expect": "ZNALAZLES SIE WSROD BLUSZCZU , WOKOLO [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 80",
+      "expect": "CHOC TO MALO PRAWDOPODOBNE TUTAJ JEST [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 83",
+      "expect": "............................. PIERDUT.[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "in the cave entrance room 84",
+      "expect": "TO CIEKAWE ZE WCZESNIEJ NIE ZAUWAZYLES[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "living door, DRZWI bar the way",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "energy top-up 1",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy top-up 2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy top-up 3",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "back in the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back at the living door",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "defeat the DRZWI",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "past the DRZWI into the dark room",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 2: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 2: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 2: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 2: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 3: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 3: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 3: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 3: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 4: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 4: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 4: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 4: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 5: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 5: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 5: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 5: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 6: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 6: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 6: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 6: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 7: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 7: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 7: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 7: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 8: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 8: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 8: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 8: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 9: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 9: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 9: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 9: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 10: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 10: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 10: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 10: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 11: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 11: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 11: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 11: banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 12: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "level 12: MODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "level 12: UNMODE",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "level 12: banner, then grant 1/2",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "leave the room at the end",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    }
+  ]
+}

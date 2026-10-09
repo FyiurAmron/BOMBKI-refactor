@@ -1,0 +1,63 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "intro complete",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "context 1",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "context 20",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "context 30",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONOSC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "context 31",
+      "expect": "IDAC ULICA DLUGA NA POLNOC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "context 60",
+      "expect": "JESTES W DOLINIE ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "context 61",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "same-pass transition to context 64",
+      "expect": "JESTES W SRODKU TLUMU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>"
+    }
+  ]
+}

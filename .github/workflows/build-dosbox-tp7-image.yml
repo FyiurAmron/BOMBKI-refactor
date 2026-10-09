@@ -1,0 +1,53 @@
+name: build-dosbox-tp7-image
+
+on:
+  push:
+    paths:
+      - 'docker/dosbox-tp7/**'
+      - '.github/workflows/build-dosbox-tp7-image.yml'
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: rzuf79/bombki-dosbox-tp7
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine image tag
+        id: meta
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            TAG="latest"
+          else
+            TAG="${{ github.sha }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "image=${REGISTRY}/${IMAGE_NAME}:${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: docker/dosbox-tp7
+          file: docker/dosbox-tp7/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          labels: |
+            org.opencontainers.image.title=BOMBKI DOSBox-X + TP7
+            org.opencontainers.image.description=Compile reconstructed BOMBKI TP7 sources with genuine TPC.EXE
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

@@ -1,0 +1,489 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "UFOK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in the salon, head for the strength room",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "strength room",
+      "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE SW[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 10",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 10 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 11, past the ZRE > 10 gate",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 11 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back to the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "meditation room",
+      "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn fleeing",
+      "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "back at the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "in room 20",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "in room 75",
+      "expect": "JESTES NA ULICY CIEMNEJ , WLASCIWIE NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 77",
+      "expect": "ZNALAZLES SIE WSROD BLUSZCZU , WOKOLO [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 80",
+      "expect": "CHOC TO MALO PRAWDOPODOBNE TUTAJ JEST [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "in room 83",
+      "expect": "............................. PIERDUT.[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "in the cave entrance room 84",
+      "expect": "TO CIEKAWE ZE WCZESNIEJ NIE ZAUWAZYLES[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "living door, DRZWI bar the way",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt in the living-door room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZWIEJ"
+    },
+    {
+      "label": "flee threshold prompt",
+      "expect": "PONIZEJ ILU ENERGII CHCESZ UCIEKAC\\?",
+      "send": "500"
+    },
+    {
+      "label": "threshold set above current energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy topped to keep ENERGIA < WIMP",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 450",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back at the living door",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "escape the fight",
+      "expect": "[\\s\\S]*?WSTYD !!! UCIEKLES Z POLA BITWY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "past the DRZWI into the dark room",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 1: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 1: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 1: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 1: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ PIERWSZYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 1: level-up banner, then grant 1/2 for level 2",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 2: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 2: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 2: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 2: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ DRUGIM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 2: level-up banner, then grant 1/2 for level 3",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 3: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 3: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 3: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 3: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ TRZECIM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 3: level-up banner, then grant 1/2 for level 4",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 4: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 4: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 4: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 4: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ CZWARTYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 4: level-up banner, then grant 1/2 for level 5",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 5: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 5: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 5: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 5: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ PIATYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 5: level-up banner, then grant 1/2 for level 6",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 6: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 6: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 6: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 6: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ SZ.STYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 6: level-up banner, then grant 1/2 for level 7",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 7: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 7: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 7: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 7: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ SIODMYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 7: level-up banner, then grant 1/2 for level 8",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 8: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 8: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 8: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 8: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ OSMYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 8: level-up banner, then grant 1/2 for level 9",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 9: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 9: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 9: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 9: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ DZIEWIATYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 9: level-up banner, then grant 1/2 for level 10",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 10: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 10: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 10: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 10: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ DZIESIATYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 10: level-up banner, then grant 1/2 for level 11",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 11: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 11: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 11: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 11: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ JEDENASTYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 12: level-up banner with the twelfth-level block",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 12: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 12: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 12: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 12: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ DWUNASTYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 12: level-up banner, then grant 1/2 for level 13",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 13: grant 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 13: MODE to leave the room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 13: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 13: UNMODE to force the pass",
+      "expect": "JESTES\\ NA\\ TRZYNASTYM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 13: level-up banner, then grant 1/2 for level 14",
+      "expect": "ZDOBYLES LEVEL",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "final visit: MODE to read the sheet once more",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "final visit: the very high level message",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "final visit: the very high level message is shown",
+      "expect": "JESTES\\ NA\\ BARDZO\\ WYSOKIM\\ LEVELU",
+      "send": "UNMODE"
+    },
+    {
+      "label": "leave the room at the end",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    }
+  ]
+}

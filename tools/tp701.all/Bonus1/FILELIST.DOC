@@ -1,0 +1,185 @@
+FILES ON DISKS
+--------------
+
+DISK 1
+------
+INSTALL   EXE - Run-time library installation program
+UNZIP     EXE - De-archiving program
+README    COM - Program to view README file
+RTL       ZIP - 
+   MAKEFILE      - RTL makefile
+
+RTLCOM    ZIP - 
+   OBJECTS   PAS - Objects source
+   VALIDATE  PAS - Validate objects source
+
+RTLCRT    ZIP - 
+   CRT       ASM - RTL source for CRT unit
+   CRT       PAS - RTL object files for numeric emulation
+
+RTLDOS    ZIP - 
+   CBRK      ASM - RTL source for DOS unit
+   DISK      ASM - RTL source for DOS unit
+   DOS       PAS - RTL source for DOS unit
+   ENVS      ASM - RTL source for DOS unit
+   ENVV      ASM - RTL source for DOS unit
+   EXEC      ASM - RTL source for DOS unit
+   EXPN      ASM - RTL source for DOS unit
+   FATR      ASM - RTL source for DOS unit
+   FIND      ASM - RTL source for DOS unit
+   FTIM      ASM - RTL source for DOS unit
+   INTR      ASM - RTL source for DOS unit
+   KEEP      ASM - RTL source for DOS unit
+   PTIM      ASM - RTL source for DOS unit
+   SPLT      ASM - RTL source for DOS unit
+   SRCH      ASM - RTL source for DOS unit
+   SWAP      ASM - RTL source for DOS unit
+   TIME      ASM - RTL source for DOS unit
+   VECT      ASM - RTL source for DOS unit
+   VERF      ASM - RTL source for DOS unit
+   VERS      ASM - RTL source for DOS unit
+
+RTLINC    ZIP - 
+   SE        ASM - RTL source include file
+
+RTLLIB    ZIP - 
+   EM86      OBJ - RTL object files for numeric emulation
+   EM86      OBP - RTL object files for numeric emulation
+   EM87      OBJ - RTL object files for numeric emulation
+   EM87      OBP - RTL object files for numeric emulation
+   WF87      OBJ - RTL object files for numeric emulation
+
+RTLOVR    ZIP - 
+   OVEREMS   OBJ - RTL object file for OVERLAY unit
+   OVERLAY   OBJ - RTL object file for OVERLAY unit
+   OVERLAY   PAS - RTL source code for OVERLAY unit
+
+RTLOWL    ZIP - 
+   BUILDOWL  PAS - Used to build OWL files
+   BWCC      PAS - RTL source for BWCC unit
+   CUSTCNTL  PAS - RTL source for CUSTCNTL unit
+   ODIALOGS  PAS - RTL source for ODIALOGS unit
+   OMEMORY   PAS - RTL source for OMEMORY unit
+   OPRINTER  PAS - RTL source for OPRINTER unit
+   OPRINTER  RES - Resource file for OPRINTER unit
+   OSTDDLGS  INC - RTL source for OSTDDLGS unit
+   OSTDDLGS  PAS - RTL source for OSTDDLGS unit
+   OSTDDLGS  RES - Resource file for OSTDDLGS unit
+   OSTDWNDS  PAS - RTL source for OSTDWNDS unit
+   OSTDWNDS  RES - Resource file for OSTDWNDS unit
+   OWINDOWS  INC - RTL source for OWINDOWS unit
+   OWINDOWS  PAS - RTL source for OWINDOWS unit
+
+RTLPRT    ZIP - 
+   PRINTER   PAS - RTL source code for PRINTER unit
+
+RTLSTR    ZIP - 
+   STRINGS   PAS - RTL source code for STRINGS unit
+
+RTLSYS    ZIP - 
+   CF48      ASM - RTL source for SYSTEM unit
+   CF87      ASM - RTL source for SYSTEM unit
+   CHAR      ASM - RTL source for SYSTEM unit
+   CINT      ASM - RTL source for SYSTEM unit
+   DAPP      ASM - RTL source for SYSTEM unit
+   DEND      ASM - RTL source for SYSTEM unit
+   DF48      ASM - RTL source for SYSTEM unit
+   DF87      ASM - RTL source for SYSTEM unit
+   DINT      ASM - RTL source for SYSTEM unit
+   DIRH      ASM - RTL source for SYSTEM unit
+   DLIB      ASM - RTL source for SYSTEM unit
+   DMTH      ASM - RTL source for SYSTEM unit
+   EI86      ASM - RTL source for SYSTEM unit
+   EI87      ASM - RTL source for SYSTEM unit
+   ERRC      ASM - RTL source for SYSTEM unit
+   F48F      ASM - RTL source for SYSTEM unit
+   F48H      ASM - RTL source for SYSTEM unit
+   F87H      ASM - RTL source for SYSTEM unit
+   FCTL      ASM - RTL source for SYSTEM unit
+   FDIR      ASM - RTL source for SYSTEM unit
+   FFUN      ASM - RTL source for SYSTEM unit
+   FP48      ASM - RTL source for SYSTEM unit
+   HEAP      ASM - RTL source for SYSTEM unit
+   LAST      ASM - RTL source for SYSTEM unit
+   LONG      ASM - RTL source for SYSTEM unit
+   LOVF      ASM - RTL source for SYSTEM unit
+   MAIN      ASM - RTL source for SYSTEM unit
+   MEMH      ASM - RTL source for SYSTEM unit
+   OBJH      ASM - RTL source for SYSTEM unit
+   PARS      ASM - RTL source for SYSTEM unit
+   RAND      ASM - RTL source for SYSTEM unit
+   SETH      ASM - RTL source for SYSTEM unit
+   SF48      ASM - RTL source for SYSTEM unit
+   SF87      ASM - RTL source for SYSTEM unit
+   SINT      ASM - RTL source for SYSTEM unit
+   STRH      ASM - RTL source for SYSTEM unit
+   SYSTEM    PAS - RTL source for SYSTEM unit
+   SYSTEM    TPS - RTL source for SYSTEM unit
+   TBOL      ASM - RTL source for SYSTEM unit
+   TCHR      ASM - RTL source for SYSTEM unit
+   TCTL      ASM - RTL source for SYSTEM unit
+   TF48      ASM - RTL source for SYSTEM unit
+   TF87      ASM - RTL source for SYSTEM unit
+   TFIO      ASM - RTL source for SYSTEM unit
+   TFUN      ASM - RTL source for SYSTEM unit
+   TGPC      ASM - RTL source for SYSTEM unit
+   TINT      ASM - RTL source for SYSTEM unit
+   TPCH      ASM - RTL source for SYSTEM unit
+   TSTR      ASM - RTL source for SYSTEM unit
+   VARH      ASM - RTL source for SYSTEM unit
+   WAPP      ASM - RTL source for SYSTEM unit
+   WE87      ASM - RTL source for SYSTEM unit
+   WEND      ASM - RTL source for SYSTEM unit
+   WI87      ASM - RTL source for SYSTEM unit
+   WINI      ASM - RTL source for SYSTEM unit
+   WLIB      ASM - RTL source for SYSTEM unit
+   WMEM      ASM - RTL source for SYSTEM unit
+   WPAR      ASM - RTL source for SYSTEM unit
+   WX87      ASM - RTL source for SYSTEM unit
+
+RTLTV     ZIP - 
+   APP       PAS - Application unit source
+   BUILDTV   PAS - Used to build all TV files
+   COLORSEL  PAS - Color installation unit source
+   DIALOGS   PAS - Dialogs source
+   DRIVERS   PAS - Drivers source
+   EDITORS   PAS - Editors unit source
+   FORMAT    ASM - FormatStr source
+   HISTLIST  PAS - History list source
+   MEMORY    PAS - Memory management source
+   MENUS     PAS - Menus source
+   MSGBOX    PAS - Message box unit source
+   OUTLINE   PAS - Outline unit source
+   STDDLG    PAS - Standard dialogs unit source
+   SYSINT    ASM - Sysint source
+   TEXTVIEW  PAS - Simple text window source
+   VIEWS     PAS - Views source
+
+RTLW31    ZIP - 
+   BUILD31   PAS - Windows 3.1 API Interface build program
+   COLORDLG  PAS - Windows 3.1 API Interface File
+   COMMDLG   PAS - Windows 3.1 API Interface File
+   CPL       PAS - Windows 3.1 API Interface File
+   DDEML     PAS - Windows 3.1 API Interface File
+   DLGS      PAS - Windows 3.1 API Interface File
+   LZEXPAND  PAS - Windows 3.1 API Interface File
+   MMSYSTEM  PAS - Windows 3.1 API Interface File
+   OLE       PAS - Windows 3.1 API Interface File
+   PRINT     PAS - Windows 3.1 API Interface File
+   SHELLAPI  PAS - Windows 3.1 API Interface File
+   STRESS    PAS - Windows 3.1 API Interface File
+   TOOLHELP  PAS - Windows 3.1 API Interface File
+   VER       PAS - Windows 3.1 API Interface File
+   WFEXT     PAS - Windows 3.1 API Interface File
+   WINMEM32  PAS - Windows 3.1 API Interface File
+
+RTLWIN    ZIP - 
+   WIN31     PAS - RTL source for WIN31 unit
+   WINAPI    PAS - RTL source for WINAPI unit
+   WINCRT    PAS - RTL source for WINCRT unit
+   WINDOS    PAS - RTL source for WINDOS unit
+   WINPRN    PAS - RTL source for WINPRN unit
+   WINPROCS  PAS - RTL source for WINPROCS unit
+   WINTYPES  PAS - RTL source for WINTYPES unit
+
+README        - Product information file - use README.COM to view

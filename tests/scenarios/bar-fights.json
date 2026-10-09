@@ -1,0 +1,128 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the dark street",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the bar",
+      "expect": "JESTES\\ W\\ BARZE\\ POD\\ DWOMA\\ PEDALAMI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "kill pedal (EASY)",
+      "expect": "JESTES\\ W\\ BARZE\\ POD\\ DWOMA\\ PEDALAMI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PEDAL"
+    },
+    {
+      "label": "kill para 1 (BTRUDNO)",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PARA"
+    },
+    {
+      "label": "kill para 2 (BTRUDNO)",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PARA"
+    },
+    {
+      "label": "kill maciek (EASY)",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ MACIEK"
+    },
+    {
+      "label": "leave bar to dark street",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "back to city centre",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back to salon",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "enter ground context",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "exit game",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "room 0 (TU ZACZYNA SIE GRE)",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 0 exits -> 1",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 (JESTES W OKROGLYM SA)",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 1 exits -> 4",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 4 (JESTES W HALLU MUD S)",
+      "expect": "JESTES W HALLU MUD SZKOLY- OGARNIA CIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 4 exits -> 5",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 5 (SZOK!! AAA UPSI  O N)",
+      "expect": "SZOK!! AAA UPSI  O NIE FUJ ACH AJ OCH [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 5 exits -> 9",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "room 9 (JESTES W MALUTKIM PO)",
+      "expect": "JESTES W MALUTKIM POKOJU ALE WIDZISZ W[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 9 exits -> 11",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "room 11 (JESTES W POKOJU PROW)",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 11 exits -> 12",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 12 (TEN POKOJ JEST CALY )",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWIA NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 12 exits -> 11",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 11 (JESTES W POKOJU PROW)",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 11 exits -> 14",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 14 (TEN POKOJ JEST CALY )",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWIA NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 14 exits -> 11",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 11 (JESTES W POKOJU PROW)",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 11 exits -> 15",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 15 (TEN POKOJ JEST CALY )",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWIA NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 15 exits -> 11",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 11 (JESTES W POKOJU PROW)",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 11 exits -> 13",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 13 (TEN POKOJ JEST CALY )",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWIA NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 13 exits -> 11",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 11 (JESTES W POKOJU PROW)",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 11 exits -> 17",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "room 17 (JESTES W POKOJU W KT)",
+      "expect": "JESTES W POKOJU W KTORYM !JEST! !PLAKA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 17 exits -> 18",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "room 1 (JESTES W OKROGLYM SA)",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

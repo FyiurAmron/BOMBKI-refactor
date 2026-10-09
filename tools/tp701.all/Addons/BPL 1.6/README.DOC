@@ -1,0 +1,419 @@
+     Borland-Pascal 7.0 Runtime Libary Update - Release 1.6   29-AUG-1994
+
+
+     ********************************************************************
+
+     IMPORTANT NOTE: THIS IS THE FINAL VERSION OF MY FAST LIBRARY
+     REPLACEMENT FOR BP/TP 7.0, EXCEPT IF SOMEONE FINDS A SERIOUS
+     BUG IN THIS VERSION THAT I WOULD FIX, OF COURSE. IT SEEMS THAT
+     BP 8.0 IS JUST AROUND THE CORNER, SO FURTHER WORK ON BPL70Nxx
+     WOULDN'T MAKE MUCH SENSE. THERE WILL PROBABLY BE NO ENHANCED
+     LIBRARY FOR BP 8.0, AS I DO NOT HAVE THE TIME ANYMORE FOR THIS
+     KIND OF PROJECT.
+
+     ********************************************************************
+
+
+     Welcome to BPL70N16.ZIP, a collection of fast replacement libraries
+     for your Turbo Pascal 7.0 / Borland Pascal 7.0 compiler. There are
+     three libraries in this package, a real mode library (TURBO.TPL), a
+     DOS protected mode library (TPP.TPL), and a Windows library (TPW.TPL).
+     Every file is a complete replacement for the original library bearing
+     the same name that came with your Pascal compiler. Due to the many
+     optimizations in the replacement libraries, many programs compiled
+     with these libraries will run faster. For more detailed information
+     on possible performance improvements, see the file PERFORM.DOC. Only
+     performance information for real mode and DOS protected mode programs
+     can be provided at the moment.
+
+     Those users already familiar with my previous project, the fast
+     replacement library for Turbo Pascal 6.0 (distributed as TPL60N19.ZIP),
+     may be disappointed that not all the features of that program have
+     been included in BPL70N16.ZIP yet. I don't have much time at the moment,
+     but still wanted to provide a BP 7.0 version of my library as soon as
+     possible. So I decided to port the performance relevant stuff first
+     and work on the other aspects later.
+
+     The libaries in BPL70N16 maintain 99.9% compatibility with the original
+     libraries. Differences are mostly caused by bug fixes and enhancements.
+     Some bugs from the original libraries supplied by Borland have been
+     eliminated, but there can be no guarantee that new ones have not crept
+     in. Most of the code in the BPL70N16.ZIP libraries was ported from the
+     latest version of my fast replacement library for Turbo Pascal 6.0,
+     TPL60N19.ZIP, which has been proven to be a stable and reliable product.
+
+     If you discover any bugs, or have other comments, please let me know.
+     My email and snail mail addresses are given below. Although I am under
+     severe time constraints, I will try as hard as possible to fix any bugs
+     reported in as short a time as possible.
+
+     The legal conditions under which Borland is distributing the source code
+     of the Borland Pascal 7.0 run-time libraries are not entirely clear to me.
+     To stay on the safe side, I assume that they are the same as for the RTL
+     source for the TP 6.0 compiler. Under these conditions, I am not allowed
+     to distribute modified source modules from the library. I may only
+     provide the binaries to third parties. However, some of the modules in
+     the BPL70N16.ZIP libaries do not contain a single line of code written
+     by Borland and are written entirely by me. I am including the source for
+     these modules for your reference. The source of the arithmetic routines
+     can be found in the file ARISOURC.ZIP. The source code of most of the
+     string routines is contained in the file STRSOURC.ZIP. The code of the
+     arithmetic and string routines is hereby released into the public domain.
+     You may use it in your own programs under the condition that you do not
+     include it into a commercial product. Parties interested in commercial
+     use of my code should contact me at my address below.
+
+
+     Original library code is Copyright (C) 1983,92 Borland International
+
+
+     New / additional library code is Copyright (C) 1988-1994 Norbert Juffa
+
+
+     Until October 1994:
+
+     Norbert Juffa, Wielandtstr. 14, 76137 Karlsruhe, Germany
+     Internet: s_juffa@iravcl.ira.uka.de
+
+     Thereafter:
+
+     Norbert Juffa, 460 Navaro Way #201, San Jose, CA 95134, USA
+     Internet: norbert@iit.com
+
+
+
+     Contents of this document:
+
+     I.   Capabilities of RTL replacement
+     II.  Revision History
+     III. References
+
+
+
+     I. Capabilities of RTL replacement
+     ==================================
+
+
+     General note:
+
+     BPL70N16 provides you with optimized libraries, it does not enhance
+     the code produced by the Borland Pascal compiler. Thus, only code
+     that uses many library calls can be expected to experience significant
+     performance advantages. Library calls are made by BP 7.0 to operate
+     on LONGINTs, STRINGs, REALs, SETs, perform heap operations such as
+     allocating and deallocating memory (New, Dispose, GetMem, FreeMem),
+     as well as to perform other tasks. One exception where BPL70N16 speeds
+     up your code although no calls to optimized library routines are
+     made is floating-point applications using a 287 or 387 coprocessor.
+
+     If want to speed up your applications even further than can be
+     accomplished by using BPL70N16, you might want to look at the
+     "Sally TPU peephole optimizer" (SPO for short) written by Morten
+     Welinder (terra@diku.dk). Unlike BPL70N16, this program is not in
+     the public domain, but Morten grants free use of the program for
+     personal, non-commercial use. SPO is a peephole optimizer that aims
+     at optimizing the code produced by the Pascal compiler. Peephole
+     optimizations means that the optimizer looks at a rather small
+     collection of machine instructions at a time and replaces certain
+     sequences it finds with optimized code. A TPU-optimizer speeds up
+     those parts of a program that can't be enhanced by a replacement
+     library and vice versa. So it might be a good idea to combine both
+     tools to get the best performance out of your BP 7.0 programs. The
+     SPO optimizer is currently distributed as a file SPO120.ZIP. It
+     should be available from all ftp-sites that carry BPL70N16 and in
+     particular can be downloaded from garbo.uwasa.fi, which is the upload
+     site for the program. Please note that this is not intended to be
+     an endorsement of the program. Rather, the info provided should be
+     thought of as being a service to those users of BPL70N16 who want
+     to speed up their programs even further than possible by using
+     BPL70N16.
+
+
+     Improvements in SYSTEM module
+     -----------------------------
+
+o    REAL type software arithmetic operations now comply with ANSI/IEEE
+     Standard 754-1985 for Binary Floating Point Arithmetic [1,2] as much
+     as possible. Note that REAL arithmetic by design differs from the
+     standard in many ways, especially available numeric formats, value
+     set, and available operations. The rounding mode implemented here
+     is "round to nearest or even" as specified by the standard. Add,
+     Subtract, Multiply, Squaring, Division, and Square Root deliver
+     exact results with regard to this rounding mode, as demanded by the
+     standard. Conversions from REAL to LONGINT and from EXTENDED to REAL
+     use rounding to nearest or even, as specified in the standard. Correct
+     implementation of above features was tested with the PARANOIA test
+     program [3]. The correctness of basic REAL arithmetic functions has
+     also been tested against the coprocessor/emulator EXTENDED format
+     with the program FUN1_TST. The EXTENDED format carries approximately
+     19 decimal digits of precision. This description applies to all three
+     libraries in the package.
+
+o    REAL arithmetic operations have been sped up. Speed-up for SQRT varies
+     between a factor of 11 for a 8086 and 30 for a 486DLC. FRAC now executes
+     at twice the original speed and speed-up is between 50% and 100% for
+     SIN, COS, ARCTAN, LN, EXP and division (2.8x speed up for division on
+     80386). Overall numeric processing power using REAL arithmetic increases
+     by about 52% for an 8086 and by 85% for an Cyrix 486DLC as measured
+     by the WHETSTONE benchmark [4,5]. This description applies to all three
+     libraries, but the actual values cited are for the real mode library
+     TURBO.TPL and may be different for the other libraries. In general,
+     DOS protected mode and Windows programs tend to be slower than real mode
+     programs by 5-50%.
+
+o    Overall accuracy of REAL arithmetic transcendental functions has been
+     improved as indicated by Cody&Waite's ELEFUNT tests [6]: DLOG, DEXP,
+     DATAN, DSIN. Correct argument reduction ensures that relative error
+     over the whole argument range does not exceed 1.9e-12 for Exp, 2.8e-12
+     for Arctan, and 2.7e-12 for Ln. These values have been determined
+     by comparing the function returns of the REAL transcendental functions
+     to the values computed on a Cyrix 83D87 coprocessor for the EXTENDED
+     format. For Sin and Cos, relative error is also in the above range
+     when the argument is reasonably small (e.g. in range -100..100) and
+     not very close to an integer multiple of 0.25*Pi. The error of the
+     transcendental functions expressed in ULPs (units in the last place)
+     over the whole argument range does not exceed 1.6 ULPs for Exp, 1.8
+     ULPs for Arctan, and 2.2 ULPs for Ln. This description applies to all
+     three libraries in the package.
+
+o    Execution of coprocessor floating point computations using an 80287 or
+     80387 has been accelerated. For these coprocessors, NOPs will be inserted
+     before every floating point instruction converted from an emulator
+     interrupt instead of WAITs. As a result of this optimization, an
+     improvement in execution speed of about 10% has been observed running the
+     Lawrence Livermore Loops (LLL) [7] on a Cyrix 83D87, the improvement
+     for the WHETSTONE benchmark on the 83D87 is similar. Maximum performance
+     gain for tight loops (e.g. fractal computation) by this measure is about
+     22%.
+
+o    On 80287XL, 80387, 80486DX, or compatible chips the Sin and Cos functions
+     take advantage of the FSIN and FCOS instructions of these coprocessors,
+     speeding up these functions by almost a factor of two. As a side effect,
+     there is also some improvement in accuracy as measured by the DSIN test
+     program from the ELEFUNT test suite. Also, the Arctan function takes
+     advantage of the increased argument range of the FPATAN function. These
+     optimizations result in another 19% increase in WHETSTONE power, so
+     that the total combined speedup over the original library is about 30%
+     for this benchmark using a 387 coprocessor.
+
+o    STRING operations are faster, especially for longer strings. Most
+     dramatic increase is in the INSERT function, with execution times
+     reduced to up to one fourth compared with the original version of
+     the RTL. Faster string operations cause 7% performance increase for
+     the DHRYSTONE [8,9] benchmark on a 8086.
+
+o    Improved speed of random number generation. Random for REAL numbers
+     is 10-20% faster, Random for EXTENDED numbers is 5% faster. Due to
+     the improvements in the uniform distribution of integer random numbers,
+     there is a decrease in the speed of integer random number generation
+     of about 5%.
+
+o    Binary to decimal conversions used in Str and Write procedures have
+     been sped up by up to 70% for integers (BYTE, SHORTINT, INTEGER,
+     WORD, LONGINT), up to 5% for REAL numbers and about 3% for EXTENDED
+     numbers.
+
+o    Improved speed of LONGINT arithmetic for 8086..80286. Division enjoys
+     a 30% reduction of execution time on 8086. On 386 and 486 type CPUs,
+     the code used in BPL70N16 may be slower than that used by the original
+     library, which uses 32 bit register operations, while BPL70N16 uses
+     only 16 bit operations, however very cleverly. For most applications
+     you will not note any drop in LONGINT performance on 386/486 machines
+     by using BPL70N16.
+
+o    Several of the functions of the heap manager have been tuned, resulting
+     in 7%-11% faster operation for these routines, depending on the CPU used.
+     This note applies only to the real mode heap manager in TURBO.TPL!
+
+o    Set functions have been sped up by a few percent, but the add variable
+     range operation may be up to eight times as fast.
+
+o    Several bugs of the original RTL supplied by Borland have been fixed:
+
+     The original routines to perform LONGINT shifts provide the wrong results
+     when the program runs on a 386 or 486 type processor and the shift count
+     exceeds 16. This has been fixed by replacing all LONGINT routines with
+     my own code. My code doesn't use 386 specific instructions and foregoes
+     the speed advantage offered by using 32-bit register operations. For all
+     programs but a very few you will not notice any drop in performance on a
+     386-486 machine, though. Borland has fixed this bug in the mean time and
+     versions 7.01 and later of the compiler no longer have it.
+
+     GetDir now correctly returns a run-time error 15 (invalid drive)
+     when called with a non existent drive. Differing from the original,
+     it also signals all errors reported by DOS as run-time errors. E.g.
+     when applied to a floppy drive that does not contain a floppy, it
+     will now return run-time error 152 (drive not ready), where previously
+     it would incorrectly signal successful completion of the operation
+     (InOutRes = 0).
+
+     For programs compiled with $N+, only true INFs are printed out as
+     INF where with the original library some NaNs are also printed as
+     INF. Correct operation can be tested with the INFBUG program.
+
+     REAL arithmetic EXP functions no longer signals overflow when
+     called with small arguments, but underflows to zero instead as it
+     should.
+
+     Denormals in EXTENDED computations no longer cause an invalid state
+     on a 8087 coprocessor when being converted to true zeros. Consistency
+     between register contents and tag bits is now asserted. Removal of
+     this bug can be tested with the BUG87 program.
+
+     Denormals in EXTENDED format are now correctly converted to decimal
+     strings by the Str and Write routines. The original routines print
+     EXTENDED precision denormals as zero. Note that BP 7.0 supports
+     EXTENDED denormals only if your machine has an 80287XL, 80387, 80486
+     or equivalent. On the 8087 and Intel's original 80287 coprocessor
+     denormals are only supported for the SINGLE and DOUBLE formats. Correct
+     printing of extended precision denormals can be checked with the
+     program DENORMTS.
+
+     Program initialization routine now tries to prevent that programs
+     compiled with the $G+ (286 code generation) switch are run on 8086
+     and 8088. The checks done are not 100% safe, but catch most of these
+     cases, displaying the message "CPU > 8086 required" and aborting the
+     program with a return code of 254 ($FE) instead of letting it crash.
+     Note that this check lets programs compiled with $G+ run on 80186 and
+     V20/V30 processors, since they have the ability to execute all 80286
+     real mode instructions produced by Turbo Pascal. This note applies
+     only to real mode programs, as DOS protected mode and Windows programs
+     will not run on anything less than a 286 anyhow.
+
+
+
+     Improvements in CRT module
+     --------------------------
+
+o    Bug fix in routine DirectWrite. The method used to prevent "snow"
+     when writing directly to a CGA graphics card was not entirely safe.
+     When used in a heavily interrupted program (e.g. serial communication
+     as a background task), it would not always write during the time
+     when scanning was in the invisible parts of the screen. The method
+     used now is 100% save and is even faster, since it takes advantage
+     of the horizontal and vertical retrace periods, as opposed to the
+     old method which only used the horizontal retrace time. The new
+     routine has been tested successfully on an original IBM-CGA card.
+
+
+
+     II. Revision History
+     ====================
+
+o    Changes since version 1.5, dated 03-18-1994
+
+     It was brought to my attention by Sotiris Tsibonis
+     (Sotiris.Tsibonis@p2.f204.n410.z2.fidonet.org) that the enhanced
+     Upcase function in previous versions of this library caused
+     problems when used in countries where the national code page
+     differs sustantially from the standard code page 437, e.g.
+     Greece. I have therefore changed the Upcase function back to
+     the original functionality and am providing the extended upcase
+     function as a separate .OBJ file that can be linked as needed.
+     The extended function is named UpCase437. It converts the following
+     characters to upper case that are not converted by the normal
+     Upcase function: Ñ,Å,î,Ü,ë,Ç,§,á. To use the function UpCase437,
+     copy the file UCASE437.OBJ to your work directory and include
+     the following two lines in your program:
+
+       {$L UCASE437.OBJ}
+
+       FUNCTION UpCase437 (C: CHAR): CHAR; FAR; EXTERNAL;
+
+
+
+o    Changes since version 1.4, dated 01-07-1994
+
+     When fixing the bug in the Str function in the Windows library
+     TPW.TPL for machines without a math coprocessor in version 1.4,
+     I accidentally broke the code for machines that do have a math
+     coprocessor. Thanks to Siegfried Voessner (VOESSNERQFTUG.AC.AT)
+     for reporting this bug.
+
+
+
+o    Changes since version 1.3, dated 10-24-1993
+
+     Fixed bug in the Str function in the Windows library TPW.TPL that
+     caused the Str function to abort with run time error 207 when passed
+     a non-zero argument on a PC without a math coprocessor. The bug
+     was caused by the inability of Windows' coprocessor emulator to
+     correctly emulate the FBSTP instruction. Many thanks to Eduardo
+     Mauro (eduardo.mauro@bbs816.mandic.onsp.br) for reporting this bug
+     and helping me to track it down.
+
+
+
+o    Changes since version 1.2, dated 05-20-1993
+
+     Fixed bug in the code of the Instr function. The previously provided
+     code did not work correctly when compiled with the $G+ option. Thanks
+     to Flurin Honegger (honegger@urz.unibas.ch) for reporting this bug.
+
+
+
+     Changes since version 1.1, dated 03-15-1993
+
+o    Fixed bug in the Write and WriteLn routines of the CRT unit. Due to
+     this bug, these routines could not function properly on a Hercules
+     Graphics Card or other monochrome display. Thanks to Miha Vitorovic
+     (Miha.Vitorovic@f108.n380.z2.fidonet.org) for reporting this bug.
+
+
+
+     Changes since version 1.0, dated 03-10-1993
+
+o    Fixed bug in LONGINT and REAL Val routine. Val erroneously returned
+     the wrong value or an error code for syntactically correct strings.
+     Thanks to Dennis J. Basiaga (dennisb@dancer.cc.bellcore.com), who was
+     the first to report this bug.
+
+
+
+     Version 1.0, original release.
+
+
+
+     III. References
+     ===============
+
+[1]  IEEE: IEEE Standard for Binary Floating-Point Arithmetic.
+     SIGPLAN Notices, Vol. 22, No. 2, 1985, pp. 9-25
+
+[2]  IEEE Standard for Binary Floating-Point Arithmetic.
+     ANSI/IEEE Std 754-1985.
+     New York, NY: Institute of Electrical and Electronics Engineers 1985
+
+[3]  Karpinski, R.: Paranoia: A Floating-Point Benchmark.
+     Byte, February 1985, pp. 223-235
+
+[4]  Curnow, H.J.; Wichmann, B.A.: A synthetic benchmark.
+     Computer Journal, Vol. 19, No. 1, 1976, pp. 43-49
+
+[5]  Wichmannn, B.A.: Validation code for the Whetstone benchmark.
+     NPL Report DITC 107/88, National Physics Laboratory, UK, March 1988
+
+[6]  Cody, W.J.; Waite, W.: Software Manual for the Elementary Functions.
+     Englewood Cliffs, NJ: Prentice Hall 1980
+
+[7]  McMahon, H.H.: The Livermore Fortran Kernels: A Test of the Numerical
+     Performance Range.
+     Technical Report UCRL-53745, Lawrence Livermore National Laboratory,
+     December 1986, p. 179
+
+[8]  Weicker, R.P.: Dhrystone: A Synthetic Systems Programming Benchmark.
+     Communications of the ACM, Vol. 27, No. 10, October 1984, pp. 1013-1030
+
+[9]  Weicker, R.P.: Dhrystone Benchmark: Rationale for Version 2 and
+     Measurement Rules.
+     SIGPLAN Notices, Vol. 23, No. 8, August 1988, pp. 49-62
+
+[10] 387DX User's Manual, Programmer's Reference. Intel 1989
+
+
+     Note:
+
+     PARANOIA, DHRYSTONE, WHETSTONE, LLL, and ELEFUNT source code is
+     available from NETLIB@ORNL.GOV
+
+

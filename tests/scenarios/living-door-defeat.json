@@ -1,0 +1,42 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "OLBRZYM" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "city centre", "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "dark street", "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz", "expect": "ZNALAZLES SIE WSROD BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "flower thicket", "expect": "CHOC TO MALO PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz clearing", "expect": "\\.\\.\\.\\.\\.\\.\\. PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "cave entrance", "expect": "TO CIEKAWE ZE WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "living door, DRZWI bar the way", "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+
+    { "label": "ground prompt in the living-door room", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 250", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 450", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 650", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+
+    { "label": "back at the living door, try the blocked way",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD" },
+    { "label": "the doors refuse to let you through",
+      "expect": "SPROBOJ OMINAC TE MEGA-PRZYPAKOWANE DRZWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI" },
+    { "label": "the blocked way west is refused",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "EXIT" },
+    { "label": "with the doors down the way west is open",
+      "expect": "ZACHOD-WEJSCIE DO DOMKU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "past the DRZWI into the dark room",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?W ROGU ZAUWAZASZ MALEGO WYGLODZONEGO ELFIEGO STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT" },
+    { "label": "DAWAJ KUNSZT grants xp when in staruch's room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ GARNKI" },
+    { "label": "PATRZ GARNKI on the empty pots", "expect": "Z JEZOREM NA WIERZCHU PATRZYSZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "EXIT" },
+    { "label": "dark room exit list", "expect": "WSCHOD-BUDYNEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

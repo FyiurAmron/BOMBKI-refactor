@@ -1,0 +1,356 @@
++++++++++++++++++ TPP.TPL Performance Comparison ++++++++++++++++++++
+
+                   BP 7.0 Turbo Pascal Library
+                              versus
+                BP 7.0 Runtime Library Update 1.2
+
+
+      Performance data for Cyrix 486DLC, Intel RapidCAD, Intel 386DX,
+      and Intel 8086
+
+Note: The time resolution in the ARITEST test program is about 0.3
+      usec, so the relative timing error can get quite large for
+      small times like those measured on a 386DX, 486DLC, or Intel
+      RapidCAD. For these processors, the times given in the table
+      represent the average of three measurements.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Machine configuration: Cyrix 486DLC 40 MHz Computer w/ 128 kB CPU-cache
+                       8.0 MB of RAM
+                       Cyrix 387+ coprocessor
+                       DOS 5.0 Operating System
+
+
+Test Program: ARITEST.PAS
+
+                                                         PERFORMANCE
+OPERATION (in usec)        BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+LONG-Mul                          2.9           2.3           26.09%
+LONG-Div                          4.0           4.2           -4.76%
+LONG-Abs                          0.4           0.4            0.00%
+REAL-Float                        3.8           3.7            2.70%
+REAL-Add                          7.1           7.2           -1.39%
+REAL-Sub                          7.6           7.9           -3.80%
+REAL-Mul                          7.1           7.1            0.00%
+REAL-Mul (Short)                  5.5           5.6           -1.79%
+REAL-Div                         42.4          11.0          285.45%
+REAL-Sqr                          6.9           5.6           23.21%
+REAL-Sqr (Short)                  2.9           2.9            0.00%
+REAL-Int                          3.7           3.8           -2.63%
+REAL-Frac                         9.3           3.1          200.00%
+REAL-Trunc                        4.3           4.2            2.38%
+REAL-Round                        4.3           4.2            2.38%
+REAL-Sqrt                       249.9           9.4         2558.51%
+REAL-Ln                         143.4          87.1           64.64%
+REAL-Exp                        161.4          74.8          115.78%
+REAL-Sin                        114.6          79.5           44.15%
+REAL-Cos                        118.5          77.9           52.12%
+REAL-ArcTan                     107.2          60.1           78.37%
+--------------------------------------------------------------------
+
+
+Test Program: DHRYSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Dhrystones / Sec:             10543.3       10864.7            3.05%
+--------------------------------------------------------------------
+
+
+Test Program: WHETSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+REAL KWhetstones:             537.924       949.668           76.54%
+--------------------------------------------------------------------
+
+
+Test Program: STRTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+String-Benchmark (msec)           704           401           75.56%
+--------------------------------------------------------------------
+
+
+Test Program: WHETST87.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION KWhetstones:1956.947      2793.296           42.74%
+--------------------------------------------------------------------
+
+
+Test Program: LLL.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION MFLOPS:       0.3860        0.4239            9.82%
+--------------------------------------------------------------------
+
+
+Test Program: SETTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Set benchmark (sec):           35.734        30.008           19.08%
+--------------------------------------------------------------------
+
+
+Test Program: LONGBN2.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Longint benchmark (msec):         181           179            1.11%
+--------------------------------------------------------------------
+
+
+Test Program: HEAPTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Heap benchmark (msec):            123           120            2.50%
+--------------------------------------------------------------------
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Machine configuration: Intel RapidCAD 40 MHz Computer w/ 128 kB CPU-cache
+                       8.0 MB of RAM
+                       on-chip coprocessor in RapidCAD
+                       DOS 5.0 Operating System
+                       QEMM 6.01
+
+
+Test Program: ARITEST.PAS
+
+                                                         PERFORMANCE
+OPERATION (in usec)        BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+LONG-Mul                          3.2           3.5           -8.57%
+LONG-Div                          4.0           4.9          -18.37%
+LONG-Abs                          0.3           0.3            0.00%
+REAL-Float                        4.3           4.3            0.00%
+REAL-Add                          6.7           7.2           -6.94%
+REAL-Sub                          7.3           7.9           -7.59%
+REAL-Mul                         12.3          12.5           -1.60%
+REAL-Mul (Short)                  6.0           6.6           -9.09%
+REAL-Div                         36.1          15.3          135.95%
+REAL-Sqr                         12.1           8.9           35.96%
+REAL-Sqr (Short)                  3.5           2.9           20.69%
+REAL-Int                          3.2           3.1            3.23%
+REAL-Frac                         8.7           3.0          190.00%
+REAL-Trunc                        4.0           4.1           -2.50%
+REAL-Round                        4.0           4.1           -2.50%
+REAL-Sqrt                       220.7          12.4         1679.84%
+REAL-Ln                         188.3         113.4           66.05%
+REAL-Exp                        193.4          97.8           97.75%
+REAL-Sin                        164.8         105.8           55.77%
+REAL-Cos                        166.9         103.0           62.04%
+REAL-ArcTan                     144.0          78.7           82.97%
+--------------------------------------------------------------------
+
+
+Test Program: DHRYSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Dhrystones / Sec:              9284.9        9555.5            2.91%
+--------------------------------------------------------------------
+
+
+Test Program: WHETSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+REAL KWhetstones:             461.467       719.942           56.01%
+--------------------------------------------------------------------
+
+
+Test Program: STRTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+String-Benchmark (msec)           778           452           72.12%
+--------------------------------------------------------------------
+
+
+Test Program: WHETST87.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION KWhetstones:2525.253      3484.321           37.98%
+--------------------------------------------------------------------
+
+
+Test Program: LLL.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION MFLOPS:       0.6641        0.6367           -4.13%
+--------------------------------------------------------------------
+
+
+Test Program: SETTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Set benchmark (sec):           44.730        36.607           22.19%
+--------------------------------------------------------------------
+
+
+Test Program: LONGBN2.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Longint benchmark (msec):         250 (*)       276          -10.40%
+--------------------------------------------------------------------
+
+(*) original library gets wrong results due to bug in SHL, SHR routines
+
+
+Test Program: HEAPTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Heap benchmark (msec):            143           140            2.14%
+--------------------------------------------------------------------
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Machine configuration: Intel 80386 40 MHz Computer w/ 128 kB CPU-cache
+                       8.0 MB of RAM
+                       Cyrix 387+ coprocessor
+                       DOS 5.0 Operating System
+
+
+Test Program: ARITEST.PAS
+
+                                                         PERFORMANCE
+OPERATION (in usec)        BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+LONG-Mul                          3.8           3.8            0.00%
+LONG-Div                          4.8           5.9          -18.64%
+LONG-Abs                          0.5           0.5            0.00%
+REAL-Float                        6.0           5.4           11.11%
+REAL-Add                          9.7           9.7            0.00%
+REAL-Sub                         10.3          10.6           -2.83%
+REAL-Mul                         15.2          14.7            3.40%
+REAL-Mul (Short)                  8.0           8.2           -2.44%
+REAL-Div                         52.7          19.2          174.48%
+REAL-Sqr                         14.5          10.6           36.79%
+REAL-Sqr (Short)                  4.5           3.5           28.57%
+REAL-Int                          4.0           3.8            5.26%
+REAL-Frac                        11.4           4.1          178.05%
+REAL-Trunc                        5.3           5.4           -1.85%
+REAL-Round                        5.3           5.4           -1.85%
+REAL-Sqrt                       313.1          14.9         2001.34%
+REAL-Ln                         244.8         145.2           68.60%
+REAL-Exp                        255.5         126.0          102.78%
+REAL-Sin                        211.5         134.1           57.77%
+REAL-Cos                        214.1         130.9           63.56%
+REAL-ArcTan                     187.6         100.6           86.48%
+--------------------------------------------------------------------
+
+
+Test Program: DHRYSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Dhrystones / Sec:              8675.1        8702.7            0.32%
+--------------------------------------------------------------------
+
+
+Test Program: WHETSTON.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+REAL KWhetstones:             353.232       571.102           61.68%
+--------------------------------------------------------------------
+
+
+Test Program: STRTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+String-Benchmark (msec)           842           513           64.13%
+--------------------------------------------------------------------
+
+
+Test Program: WHETST87.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION KWhetstones:1550.388      2242.152           44.62%
+--------------------------------------------------------------------
+
+
+Test Program: LLL.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+DOUBLE PRECISION MFLOPS:       0.2870        0.3155            9.93%
+--------------------------------------------------------------------
+
+
+Test Program: SETTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Set benchmark (sec):           51.718        41.920           23.37%
+--------------------------------------------------------------------
+
+
+Test Program: LONGBN2.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Longint benchmark (msec):         294 (*)       318           -7.55%
+--------------------------------------------------------------------
+
+(*) original library returns wrong result due to bug in SHL, SHR routines
+
+
+Test Program: HEAPTEST.PAS
+
+                                                         PERFORMANCE
+OPERATION                  BP 7.0 TPL    BP 7.0 RLU         INCREASE
+--------------------------------------------------------------------
+Heap benchmark (msec):            169           165            2.42%
+--------------------------------------------------------------------
+

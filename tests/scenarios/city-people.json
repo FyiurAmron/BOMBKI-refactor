@@ -1,0 +1,224 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre, read the poster",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "city centre, then the shopping street",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 21: enter ground context",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 21: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 21: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 21: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 21: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 21: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "shopping street again, fight the zamiatacz",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ ZAMIATACZ"
+    },
+    {
+      "label": "zamiatacz down, head for the street continues",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 22: enter ground context",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 22: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 22: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 22: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 22: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 22: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "street continues again, fight the sprzedawca",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ SPRZEDAWCA"
+    },
+    {
+      "label": "sprzedawca down, back to the shopping street",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "shopping street, turn into the armoury",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 24: enter ground context",
+      "expect": "JESTES\\ W\\ ZBROJOWNI\\ \\-\\ S[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 24: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 24: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 24: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 24: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 24: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "armoury again, fight the pijak",
+      "expect": "JESTES\\ W\\ ZBROJOWNI\\ \\-\\ S[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PIJAK"
+    },
+    {
+      "label": "pijak down, back to the shopping street",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "shopping street, on to the street continues",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "street continues, turn into the multi-branch shop",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 26: enter ground context",
+      "expect": "WCHODZISZ\\ DO\\ SKLEPU\\ AL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 26: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 26: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 26: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 26: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 26: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "multi-branch shop again, fight the taksowkarz",
+      "expect": "WCHODZISZ\\ DO\\ SKLEPU\\ AL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ TAKSOWKARZ"
+    },
+    {
+      "label": "taksowkarz down, fight the zebrak",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ ZEBRAK"
+    },
+    {
+      "label": "zebrak down",
+      "expect": "Z GRUBEGO PORTFELA ZEBRAKA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

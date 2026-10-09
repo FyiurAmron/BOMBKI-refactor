@@ -1,0 +1,74 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "room 0 (TU ZACZYNA SIE GRE)",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 0 exits -> 1",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 (JESTES W OKROGLYM SA)",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 1 exits -> 20",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 20 (JESTES W CENTRUM MIA)",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 20 exits -> 30",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 30 (ULICA DLUGA CIAGNIE )",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 30 exits -> 32",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 32 (CZESC TO ARENA PRZYC)",
+      "expect": "CZESC TO ARENA PRZYCHODZA TU TACY JAK [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "room 32 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

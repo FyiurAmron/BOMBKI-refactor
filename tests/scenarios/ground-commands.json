@@ -1,0 +1,45 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "POL-ELF" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+
+    { "label": "ground prompt", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ KASE" },
+    { "label": "grant one", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ KASE" },
+    { "label": "grant two", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ KASE" },
+    { "label": "grant three", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+
+    { "label": "restored salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "city centre", "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "shopping street", "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "armoury", "expect": "JESTES W ZBROJOWNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "KUP STARY" },
+    { "label": "buy sword", "expect": "KUPUJESZ ZWYKLY MALY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "KUP MALA" },
+    { "label": "buy shield", "expect": "KUPUJESZ !MALA! TARCZA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "back on the street", "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+
+    { "label": "ground prompt again", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "ODRZUC STARY" },
+    { "label": "sword dropped", "expect": "ODRZUCASZ STARY ZARDZEWIALY MIECZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ODRZUC MALA" },
+    { "label": "shield dropped", "expect": "ODRZUCASZ MALA ZWYKLA TARCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+    { "label": "back on the street", "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+    { "label": "re-enter ground, both items announced", "expect": "W TWYM POKOJU LEZY !STARY![\\s\\S]*?W TYM POKOJU ZNAJDUJE SIE !MALA! TARCZA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "BIERZ STARY" },
+    { "label": "pick the sword back up", "expect": "PODNOSISZ STARY ZARDZEWIALY MIECZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "BIERZ MALA" },
+    { "label": "pick the shield back up", "expect": "PODNOSISZ MALA TARCZA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UZYJ STARY" },
+    { "label": "equip the sword", "expect": "UZYWASZ STAREGO ZARDZEWIALEGO MIECZA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ODLOZ STARY" },
+    { "label": "stow sword", "expect": "CHOWASZ STARY ZARDZEWIALY MIECZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UZYJ MALA" },
+    { "label": "equip shield", "expect": "UZYWASZ MALEJ TARCZY JAKO TARCZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ODLOZ MALA" },
+    { "label": "stow shield", "expect": "JUZ NIE UZYWASZ MALEJ TARCZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "USTAW SZ" },
+    { "label": "reset gear stats", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "ZDEJMUJ" },
+    { "label": "take off gear", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "restore energy", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "ZABIERAJ KASE" },
+    { "label": "lose coins", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "SCAN" },
+    { "label": "scan future function", "expect": "FUNKCJA BEDZIE DOSTEPNA ZA DWA LATA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ODRZUC PACZEK" },
+    { "label": "refuse to drop food", "expect": "JAK SMIESZ WYRZUCAC JEDZENIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "JA" },
+    { "label": "character sheet", "expect": "W SUMIE MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "EXIT" },
+    { "label": "ground exit hint", "expect": "NAPISZ UNMODE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+    { "label": "restored street", "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

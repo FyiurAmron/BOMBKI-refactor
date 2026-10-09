@@ -1,0 +1,149 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "shopping street",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "street continues",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "road crossroads",
+      "expect": "ZNALAZLES\\ SIE\\ NA\\ ROZJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt at crossroads",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JESTEM SPEEDE"
+    },
+    {
+      "label": "ground prompt with the pass",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "the sheet shows the pass",
+      "expect": "PRZEPUSTKA WLASNORECZNIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "crossroads again, now with a pass",
+      "expect": "ZNALAZLES\\ SIE\\ NA\\ ROZJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the road, exit list",
+      "expect": "IDZIESZ\\ DROGA\\ ,\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "the road",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ DROGOWSKAZ"
+    },
+    {
+      "label": "signpost text, head west",
+      "expect": "WSCHOD\\ -\\ MIASTO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "stony road, exit list",
+      "expect": "IDZIESZ\\ DALEJ\\ KAMIENIS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "stony road",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "road ends at the river, exit list",
+      "expect": "CO\\ TO\\ ZA\\ GLUPOTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "road ends at the river",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back on the stony road",
+      "expect": "IDZIESZ\\ DALEJ\\ KAMIENIS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back on the road",
+      "expect": "IDZIESZ\\ DROGA\\ ,\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back at the crossroads",
+      "expect": "ZNALAZLES\\ SIE\\ NA\\ ROZJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "street continues again",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "shopping street again",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "bakery",
+      "expect": "JESTES\\ W\\ PIEKARNI\\ ,\\ SK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "bakery notice board",
+      "expect": "LISTA-LISTA DOSTEPNYCH RZECZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back on the shopping street",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

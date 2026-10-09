@@ -1,0 +1,158 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica d\u0142uga (30)",
+      "expect": "ULICA\\ DLUGA\\ CIAGNIE\\ SIE\\ W\\ NIESKONCZONOSC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica d\u0142uga (31)",
+      "expect": "IDAC\\ ULICA\\ DLUGA\\ NA\\ POLNOC\\ SPOSTRZEGASZ\\ DOLINE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "dolina rozrywek (60)",
+      "expect": "JESTES\\ W\\ DOLINIE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "budowla (61)",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZEJ\\ ZBARANIALES\\ -\\ TO\\ SALA\\ KONCERTOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "t\u0142um (63)",
+      "expect": "NA\\ BRZEGACH\\ TLUM\\ JEST\\ RZADSZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "piwiarnia (67)",
+      "expect": "JESTES\\ W\\ PIWIARNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "kill mini-barman (BTRUDNO)",
+      "expect": "JESTES\\ W\\ PIWIARNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ MINI-BARMAN"
+    },
+    {
+      "label": "kill grubas (BTRUDNO)",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ GRUBAS"
+    },
+    {
+      "label": "back to t\u0142um",
+      "expect": "[\\s\\S]*?WYCIAGASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "back to budowla (61)",
+      "expect": "NA\\ BRZEGACH\\ TLUM\\ JEST\\ RZADSZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "back to dolina (60)",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZEJ\\ ZBARANIALES\\ -\\ TO\\ SALA\\ KONCERTOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back to ulica d\u0142uga (31)",
+      "expect": "JESTES\\ W\\ DOLINIE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "back to ulica d\u0142uga (30)",
+      "expect": "IDAC\\ ULICA\\ DLUGA\\ NA\\ POLNOC\\ SPOSTRZEGASZ\\ DOLINE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back to city centre",
+      "expect": "ULICA\\ DLUGA\\ CIAGNIE\\ SIE\\ W\\ NIESKONCZONOSC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back to salon",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "enter ground context",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "exit game",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

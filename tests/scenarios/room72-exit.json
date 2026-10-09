@@ -1,0 +1,183 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica d\u0142uga (30)",
+      "expect": "ULICA\\ DLUGA\\ CIAGNIE\\ SIE\\ W\\ NIESKONCZONOSC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica d\u0142uga (31)",
+      "expect": "IDAC\\ ULICA\\ DLUGA\\ NA\\ POLNOC\\ SPOSTRZEGASZ\\ DOLINE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "dolina rozrywek (60)",
+      "expect": "JESTES\\ W\\ DOLINIE\\ ROZRYWEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "budowla (61)",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZEJ\\ ZBARANIALES\\ -\\ TO\\ SALA\\ KONCERTOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "t\u0142um (63)",
+      "expect": "NA\\ BRZEGACH\\ TLUM\\ JEST\\ RZADSZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "piwiarnia (67)",
+      "expect": "JESTES\\ W\\ PIWIARNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "piwiarnia after UNMODE",
+      "expect": "JESTES\\ W\\ PIWIARNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "wej\u015bcie na scen\u0119 (68)",
+      "expect": "TO\\ JEST\\ WEJSCIE\\ NA\\ SCENE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "scena (69)",
+      "expect": "JESTES\\ NA\\ SCENIE\\ ,\\ WLASCIWIE\\ TO\\ DOPIERO\\ POCZATEK\\ SCENY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "scena (70)",
+      "expect": "ALL\\ RIGHT\\ JESTES\\ NA\\ SCENIE\\ !!!\\ NA\\ TWOJ\\ WIDOK\\ OCHRONIAZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "\u015brodek sceny (71)",
+      "expect": "LUDZIE\\ SIE\\ NA\\ CIEBIE\\ GAPIA\\ ,\\ JESTES\\ NA\\ SRODKU\\ SCENY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "past middle (72)",
+      "expect": "UFFF\\ PRZEBIEGLES\\ PRZEZ\\ SRODEK\\ SCENY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground in room 72",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "exit in room 72",
+      "expect": "UFFF\\ PRZEBIEGLES\\ PRZEZ\\ SRODEK\\ SCENY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "wyjscie to room 71",
+      "expect": "[\\s\\S]*?DOSTEPNE\\ WYJSCIA[\\s\\S]*?POLNOC-SRODEK\\ SCENY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "room 71 prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground context in 71",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

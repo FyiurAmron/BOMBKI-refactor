@@ -1,0 +1,153 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "CZLOWIEK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "rambo's room",
+      "expect": "JESTES\\ W\\ POKOJU\\ GDZIE\\ RAMBO\\ TRENUJE[\\s\\S]*?",
+      "send": "TRENUJ"
+    },
+    {
+      "label": "train list",
+      "expect": "CO\\ CHCESZ\\ TRENOWAC",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train zrecznosc",
+      "expect": "TRENUJESZ\\ ZRECZNOSC",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train madrosc",
+      "expect": "TRENUJESZ\\ MADROSC",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the salon again",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?",
+      "send": "DOL"
+    },
+    {
+      "label": "the training room",
+      "expect": "ZSZEDLES\\ NA\\ DOL\\ GDZIE\\ TRENUJE\\ SIE\\ MEDYTUJAC[\\s\\S]*?",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "train flee 1",
+      "expect": "CWICZYSZ\\ UCIEKANIE",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "train flee 2",
+      "expect": "CWICZYSZ\\ UCIEKANIE",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "train flee 3",
+      "expect": "CWICZYSZ\\ UCIEKANIE",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "train flee 4",
+      "expect": "CWICZYSZ\\ UCIEKANIE",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "train flee 5",
+      "expect": "CWICZYSZ\\ UCIEKANIE",
+      "send": "MODE"
+    },
+    {
+      "label": "ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZWIEJ"
+    },
+    {
+      "label": "flee threshold prompt",
+      "expect": "PONIZEJ\\ ILU\\ ENERGII\\ CHCESZ\\ UCIEKAC",
+      "send": "900"
+    },
+    {
+      "label": "threshold set",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back in the training room",
+      "expect": "ZSZEDLES\\ NA\\ DOL\\ GDZIE\\ TRENUJE\\ SIE\\ MEDYTUJAC[\\s\\S]*?",
+      "send": "GORA"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the school hall",
+      "expect": "JESTES\\ W\\ HALLU\\ MUD\\ SZKOLY[\\s\\S]*?",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the shock room",
+      "expect": "SZOK!!\\ AAA\\ UPSI[\\s\\S]*?",
+      "send": "GORA"
+    },
+    {
+      "label": "the small room",
+      "expect": "JESTES\\ W\\ MALUTKIM\\ POKOJU[\\s\\S]*?",
+      "send": "GORA"
+    },
+    {
+      "label": "the cage corridor",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?",
+      "send": "POLNOC"
+    },
+    {
+      "label": "cage 14",
+      "expect": "TEN\\ POKOJ\\ JEST\\ CALY\\ OBRYZGANY\\ KRWIA\\ NA\\ SCIANACH\\ FLAKI\\ I\\ MOZGI\\ LODZKIE[\\s\\S]*?",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 14: flee",
+      "expect": "WSTYD\\ !!!\\ UCIEKLES\\ Z\\ POLA\\ BITWY[\\s\\S]*?",
+      "send": "MODE"
+    },
+    {
+      "label": "ground context after the flee",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

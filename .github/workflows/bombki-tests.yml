@@ -1,0 +1,110 @@
+name: bombki-tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  fpc-conformance:
+    name: FPC TP-mode conformance sweep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run conformance sweep in FPC image
+        run: |
+          docker run --rm \
+            -e CONF_ARTIFACTS=/src/tests/artifacts \
+            -v "${{ github.workspace }}":/src -w /src \
+            freepascal/fpc:3.2.2-full \
+            sh tests/pas-conformance.sh
+
+      - name: Upload sweep artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: pas-sweep
+          path: tests/artifacts/
+          if-no-files-found: warn
+
+  unit-tests:
+    name: Pascal unit tests (FPC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install FPC toolchain
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fpc > /dev/null
+
+      - name: Build and run unit tests
+        run: python3 tests/run_unit_tests.py
+
+  dev-scenarios:
+    name: Scenario suite on the dev build (FPC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install FPC toolchain
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fpc > /dev/null
+
+      - name: Build the deterministic dev game
+        run: python3 tools/build_dev_game.py
+
+      - name: Run every scenario against the dev build
+        env:
+          BOMBKI_SEED: "0x9E3779B97F4A7C15"
+        run: |
+          mkdir -p build/devruns
+          fail=0
+          failed=""
+          total=0
+          for s in tests/scenarios/*.json; do
+            n=$(basename "$s" .json)
+            total=$((total + 1))
+            if python3 tests/expect_pty.py build/tmp/dev-game/BOMBKI "$s" \
+                --log "build/devruns/$n.jsonl" --timeout 60 \
+                > "build/devruns/$n.out" 2>&1; then
+              echo "PASS $n"
+            else
+              echo "FAIL $n (see build/devruns/$n.out)"
+              fail=$((fail + 1))
+              failed="$failed $n"
+            fi
+          done
+          echo "scenarios: $((total - fail))/$total passed"
+          if [ "$fail" -ne 0 ]; then echo "failed:$failed"; exit 1; fi
+
+      - name: Upload scenario logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: dev-scenario-logs
+          path: build/devruns/
+
+  coverage-gate:
+    name: Callgrind line coverage gate (100%)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install FPC toolchain and valgrind
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fpc valgrind > /dev/null
+
+      - name: Pin the FPC version the 100% baseline was measured with
+        run: test "$(fpc -iV)" = 3.2.2
+
+      - name: Run coverage gate
+        run: python3 tools/coverage_callgrind.py --fail-under 100 --dump-uncovered build/coverage-uncovered.txt
+
+      - name: Upload uncovered list on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-uncovered
+          path: build/coverage-uncovered.txt

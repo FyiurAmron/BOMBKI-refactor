@@ -1,0 +1,289 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "room 0 (TU ZACZYNA SIE GRE)",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 0 exits -> 1",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 (JESTES W OKROGLYM SA)",
+      "expect": "JESTES W OKROGLYM SALONIE WYPELNIONYM [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 1 exits -> 20",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 20 (JESTES W CENTRUM MIA)",
+      "expect": "JESTES W CENTRUM MIASTA : NA SCIANIE J[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 20 exits -> 30",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 30 (ULICA DLUGA CIAGNIE )",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 30 exits -> 31",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 31 (IDAC ULICA DLUGA NA )",
+      "expect": "IDAC ULICA DLUGA NA POLNOC SPOSTRZEGAS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 31 exits -> 30",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 30 (ULICA DLUGA CIAGNIE )",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 30 exits -> 32",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 32 (CZESC TO ARENA PRZYC)",
+      "expect": "CZESC TO ARENA PRZYCHODZA TU TACY JAK [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 32 exits -> 30",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 30 (ULICA DLUGA CIAGNIE )",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 30 exits -> 31",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 31 (IDAC ULICA DLUGA NA )",
+      "expect": "IDAC ULICA DLUGA NA POLNOC SPOSTRZEGAS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 31 exits -> 60",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 60 (JESTES W DOLINIE ROZ)",
+      "expect": "JESTES W DOLINIE ROZRYWEK DOLINA CIAGN[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 60 exits -> 61",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 61 (KIEDY PODSZEDLES BLI)",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES - [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "room 61 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 61 exits -> 62",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 62 (NA BRZEGACH TLUM JES)",
+      "expect": "NA BRZEGACH TLUM JEST MNIEJSZY , MIMO [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 62 exits -> 61",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 61 (KIEDY PODSZEDLES BLI)",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES - [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 61 exits -> 63",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 63 (NA BRZEGACH TLUM JES)",
+      "expect": "NA BRZEGACH TLUM JEST RZADSZY , BOISZ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 63 exits -> 61",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 61 (KIEDY PODSZEDLES BLI)",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES - [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 61 exits -> 64",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 64 (JESTES W SRODKU TLUM)",
+      "expect": "JESTES W SRODKU TLUMU A DO TEGO PRZY B[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 64 exits -> 65",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 65 (JESTES Z BOKU ALE PR)",
+      "expect": "JESTES Z BOKU ALE PRZY BALUSTRADKACH L[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 65 exits -> 64",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 64 (JESTES W SRODKU TLUM)",
+      "expect": "JESTES W SRODKU TLUMU A DO TEGO PRZY B[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 64 exits -> 66",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 66 (JESTES PRZY BALUSTRA)",
+      "expect": "JESTES PRZY BALUSTRADKACH-NIE BEDE SIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 66 exits -> 63",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 63 (NA BRZEGACH TLUM JES)",
+      "expect": "NA BRZEGACH TLUM JEST RZADSZY , BOISZ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 63 exits -> 67",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 67 (JESTES W PIWIARNI - )",
+      "expect": "JESTES W PIWIARNI - WOKOLO CIEBIE UNOS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 67 exits -> 68",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 68 (TO JEST WEJSCIE NA S)",
+      "expect": "TO JEST WEJSCIE NA SCENE NA KTOREJ TAN[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ TABLICZKA"
+    },
+    {
+      "label": "room 68 exits",
+      "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 68 exits -> 69",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 69 (JESTES NA SCENIE , W)",
+      "expect": "JESTES NA SCENIE , WLASCIWIE TO DOPIER[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 69 exits -> 70",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 70 (ALL RIGHT JESTES NA )",
+      "expect": "ALL RIGHT JESTES NA SCENIE !!! NA TWOJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 70 exits -> 71",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 71 (LUDZIE SIE NA CIEBIE)",
+      "expect": "LUDZIE SIE NA CIEBIE GAPIA , JESTES NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "room 71 exits -> 72",
+      "expect": "DOSTEPNE WYJSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 72 (UFFF PRZEBIEGLES PRZ)",
+      "expect": "UFFF PRZEBIEGLES PRZEZ SRODEK SCENY WI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "start room, head for the salon",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon, enter ground context for funds",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground, take the cash",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KASE"
+    },
+    {
+      "label": "ground, energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "ground, energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "ground, energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "ground, back to the salon",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "salon, head for the city centre",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre, head for ulica sklepikowa",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "ulica sklepikowa, keep going north",
+      "expect": "JEST\\ TU\\ PARE\\ SKLEPIKOW[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "ulica sklepikowa, head for the general store",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA\\ SKLEPIKOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "general store, buy the fajka",
+      "expect": "WSZEDLES\\ DO\\ SKLEPU\\ WIELOBRANZOWEGO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP FAJKA"
+    },
+    {
+      "label": "fajka bought, enter ground context",
+      "expect": "KUPUJESZ\\ FAJKE\\ ZA\\ 480\\ MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground, drop the fajka",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ODRZUC FAJKA"
+    },
+    {
+      "label": "fajka dropped, back to the store",
+      "expect": "WYRZUCASZ\\ FAJKE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "store, re-enter ground to see the dropped fajka",
+      "expect": "WSZEDLES\\ DO\\ SKLEPU\\ WIELOBRANZOWEGO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fajka lies on the ground",
+      "expect": "TU\\ LEZY\\ !FAJKA![\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back in the store, leave the game",
+      "expect": "WSZEDLES\\ DO\\ SKLEPU\\ WIELOBRANZOWEGO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

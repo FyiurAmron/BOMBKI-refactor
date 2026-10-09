@@ -1,0 +1,40 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "UFOK" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "strength room", "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "TRENUJ ZRECZNOSC" },
+    { "label": "train agility to 10", "expect": "TRENUJESZ ZRECZNOSC I MASZ 10 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "TRENUJ ZRECZNOSC" },
+    { "label": "train agility to 11, past the ZRE > 10 gate", "expect": "TRENUJESZ ZRECZNOSC I MASZ 11 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "back to the salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "DOL" },
+    { "label": "meditation room", "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "CWICZ UCIEKAC" },
+    { "label": "learn fleeing", "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "GORA" },
+    { "label": "back at the salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "city centre", "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "dark street", "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz", "expect": "ZNALAZLES SIE WSROD BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "flower thicket", "expect": "CHOC TO MALO PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz clearing", "expect": "\\.\\.\\.\\.\\.\\.\\. PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "cave entrance", "expect": "TO CIEKAWE ZE WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "living door, DRZWI bar the way", "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+
+    { "label": "ground prompt in the living-door room", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "ZWIEJ" },
+    { "label": "flee threshold prompt", "expect": "PONIZEJ ILU ENERGII CHCESZ UCIEKAC\\?", "send": "500" },
+    { "label": "threshold set above current energy", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy topped to keep ENERGIA < WIMP", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 450", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+
+    { "label": "back at the living door", "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZABIJ DRZWI" },
+    { "label": "escape the fight",
+      "expect": "[\\s\\S]*?WSTYD !!! UCIEKLES Z POLA BITWY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD" },
+    { "label": "DRZWI cleared, ZACHOD opens",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT" },
+    { "label": "dark room exit list", "expect": "WSCHOD-BUDYNEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

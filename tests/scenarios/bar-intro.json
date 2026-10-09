@@ -1,0 +1,48 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 to city center",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city center to dark street",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "dark street to bar",
+      "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "bar opening dialogue",
+      "expect": "JESTES W BARZE POD DWOMA PEDALAMI CHCAC ROZWIKLAC TA DZIWNA NAZWE[\\s\\S]*?PYTASZ SIE BARMANA : PRZEPRASZAM DLACZEGO TEN BAR NAZYWA SIE[\\s\\S]*?\\\"POD DWOMA PEDALAMI\\\"\\? A ON NA TO -WLASCIWIE TO NIE WIEM[\\s\\S]*?ALE SPYTAM SIE ZONY:MAREEEK!!.......\\(teraz ju[\\s\\S]*?wiesz\\)[\\s\\S]*?[0-9]+%\\.-?[0-9]+>"
+    }
+  ]
+}

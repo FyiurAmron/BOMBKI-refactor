@@ -1,0 +1,453 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "CZLOWIEK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the salon again",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the school hall",
+      "expect": "JESTES\\ W\\ HALLU\\ MUD\\ SZKOLY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the shock room",
+      "expect": "SZOK!!\\ AAA\\ UPSI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "the small room",
+      "expect": "JESTES\\ W\\ MALUTKIM\\ POKOJU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "before cage 12: enter ground",
+      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 12",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "cage 12: kill",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 12: look",
+      "expect": "WALCZYSZ[\\s\\S]*?ZABILES GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "cage 12: sheet",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "cage 12: back",
+      "expect": "W SUMIE MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 12: leave",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "before cage 13: ground",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 13",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "cage 13: kill",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 13: look",
+      "expect": "WALCZYSZ[\\s\\S]*?ZABILES GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "cage 13: sheet",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "cage 13: back",
+      "expect": "W SUMIE MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 13: leave",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "before cage 14: ground",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 14",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "POLNOC"
+    },
+    {
+      "label": "cage 14: kill",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 14: look",
+      "expect": "WALCZYSZ[\\s\\S]*?ZABILES GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "cage 14: sheet",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "cage 14: back",
+      "expect": "W SUMIE MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 14: leave",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "before cage 15: ground",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 15",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "cage 15: kill",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POTWOR"
+    },
+    {
+      "label": "cage 15: look",
+      "expect": "WALCZYSZ[\\s\\S]*?ZABILES GO[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "cage 15: sheet",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "cage 15: back",
+      "expect": "W SUMIE MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "cage 15: leave",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the poster room",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLA",
+      "send": "DOL"
+    },
+    {
+      "label": "the teleport room",
+      "expect": "JESTES W POKOJU W KTORYM",
+      "send": "DOL"
+    },
+    {
+      "label": "teleport animation",
+      "expect": "BBBBBBBBZBZBZBZBZZZZZZZzzzzzzzzzbbzbBb",
+      "send": "TELEPORT"
+    },
+    {
+      "label": "salon after teleport",
+      "expect": "JESTES W OKROGLYM SALONIE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES W CENTRUM MIASTA",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica dluga (30)",
+      "expect": "ULICA DLUGA CIAGNIE SIE W NIESKONCZONOSC",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica dluga (31)",
+      "expect": "IDAC ULICA DLUGA NA POLNOC SPOSTRZEGASZ DOLINE ROZRYWEK",
+      "send": "POLNOC"
+    },
+    {
+      "label": "dolina rozrywek (60)",
+      "expect": "JESTES W DOLINIE ROZRYWEK",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "budowla (61)",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES - TO SALA KONCERTOWA",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "budowla (61): kill GORYL",
+      "expect": "KIEDY PODSZEDLES BLIZEJ ZBARANIALES - TO SALA KONCERTOWA",
+      "send": "ZABIJ GORYL"
+    },
+    {
+      "label": "GORYL fight end",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ FAN"
+    },
+    {
+      "label": "FAN fight end",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "tlum (63)",
+      "expect": "NA BRZEGACH TLUM JEST RZADSZY",
+      "send": "POLNOC"
+    },
+    {
+      "label": "piwiarnia (67)",
+      "expect": "JESTES W PIWIARNI",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "kill MINI-BARMAN",
+      "expect": "JESTES W PIWIARNI",
+      "send": "ZABIJ MINI-BARMAN"
+    },
+    {
+      "label": "MINI-BARMAN fight end",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ GRUBAS"
+    },
+    {
+      "label": "GRUBAS fight end",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "checkpoint 826 fires in tlum (63)",
+      "expect": "!!!CHECKPOINT!!![\\s\\S]*?NA BRZEGACH TLUM JEST RZADSZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

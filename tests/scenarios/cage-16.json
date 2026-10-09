@@ -1,0 +1,30 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "OLBRZYM" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "mud school hall", "expect": "JESTES W HALLU MUD SZKOLY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "shock room", "expect": "SZOK!! AAA UPSI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "GORA" },
+    { "label": "small room", "expect": "JESTES W MALUTKIM POKOJU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "GORA" },
+    { "label": "cage corridor", "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+
+    { "label": "ground prompt", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 250", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 450", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ EN" },
+    { "label": "energy 650", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+
+    { "label": "back in the corridor", "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "GORA" },
+
+    { "label": "room 16 attacks on entry; fight it out",
+      "expect": "TEN POKOJ JEST CALY OBRYZGANY KRWIA[\\s\\S]*?WYCIAGASZ [0-9]+ MONET Z CIALA POTWORA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT" },
+    { "label": "room 16 exits", "expect": "DOL-KLATKI PELNE GAJDY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "DOL" },
+    { "label": "back in the corridor", "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "DOL" },
+    { "label": "poster room", "expect": "JESTES W POKOJU W KTORYM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "DOL" },
+    { "label": "teleport returns to the salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

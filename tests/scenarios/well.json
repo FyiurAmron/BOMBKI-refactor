@@ -1,0 +1,373 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the dark street",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the bluszcz",
+      "expect": "ZNALAZLES\\ SIE\\ WSROD\\ BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the well",
+      "expect": "CHOC\\ TO\\ MALO\\ PRAWDOPODOBNE\\ TUTAJ\\ JEST\\ JESZCZE\\ CIEMNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "fill energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "out of ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "look at well",
+      "expect": "CHOC\\ TO\\ MALO\\ PRAWDOPODOBNE\\ TUTAJ\\ JEST\\ JESZCZE\\ CIEMNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 1",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 2",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 3",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 4",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 5",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 6",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 7",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 8",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 9",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 10",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 11",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 12",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 13",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 14",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 15",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 16",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 17",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 18",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 19",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 20",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 21",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 22",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 23",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 24",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 25",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 26",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 27",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 28",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 29",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 30",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 31",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 32",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 33",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 34",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 35",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 36",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 37",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 38",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 39",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 40",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 41",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 42",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 43",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 44",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 45",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 46",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 47",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 48",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 49",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "look at well retry 50",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ STUDNIA"
+    },
+    {
+      "label": "back to bluszcz",
+      "expect": "[\\s\\S]*?WYCI\\S+GASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "back to dark street",
+      "expect": "ZNALAZLES\\ SIE\\ WSROD\\ BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "back to city centre",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back to salon",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "enter ground context",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "exit game",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

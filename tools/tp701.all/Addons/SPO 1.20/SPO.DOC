@@ -1,0 +1,661 @@
+
+
+
+---------------------------------------------------------------------------
+                Sally Tpu Peephole Optimizer version 1,20
+                             Morten Welinder
+                          Copenhagen 1993-1994
+---------------------------------------------------------------------------
+
+1. Welcome
+
+Welcome to Sally Tpu Peephole Optimizer, Spo.  This program lets you produce
+faster programs with Borland Pascal version 7.0 by optimizing the
+intermediate code produced by that compiler.
+
+The program and documentation of it (including this file) is copyright 1993,
+1994 by Morten Welinder.  "Sally" as the program outputs, that's me.
+
+As a special bonus of using this program, the longint shift bug in the
+runtime library will be eliminated.
+
+
+2. Terms of use
+
+I do not currently know what I want to do with this program.  Therefore the
+following terms apply to all use of Sally Tpu Peephole Optimizer version
+1,20:
+
+        1. The program may be used by private individuals only.  As a
+           special exception I allow universities to use the program
+           for educational purposes.
+        2. You don't have to pay for using the program.
+        3. You may distribute copies of the program, if and if only
+           you distribute the whole package unmodified.
+        4. You use the program at your own risk.
+
+If you do not like these terms you have two options: (1) don't use the
+program, and (2) contact me and explain your needs -- I may grant you more
+rights.
+
+
+3. Bug reports and suggestions
+
+Bug reports, comments et cetera can be snail-mailed to
+
+        Morten Welinder
+        Borups Alle 249B, 3tv
+        DK-2400  Koebenhavn NV
+        Denmark
+
+or emailed to "terra@diku.dk".  (TeX fans would have written the third line
+as {DK\raise0.12ex\hbox{-}2400~~K{\o}benhavn~NV} but don't worry, because The
+Royal Danish Mail is quite efficient.)  The email address is my Ph.D. student
+account at Department of Computer Science, University of Copenhagen, Denmark.
+Please be specific: use the debugging options to localize the bugs and
+include the failing source code.  By the way: don't misspell my name.
+
+
+4. Usage
+
+The optimizer is a command-line utility and recognizes lots of options.
+Entering "Spo" without parameters gives you a list:
+
+   Sally Tpu Peephole Optimizer version 1,20
+   Copyright 1994 by Sally
+
+   Usage: Spo Infile(s) [Options]
+          /?     Help
+          /Ax    Assembler           Example: Tasmx.Exe
+          /Tx    Target              86, 186, ... , 486
+          /Rx    Range Check         (B)ounds, (E)liminate
+          /Sx    Stack Check         (U)nfold, (E)liminate
+          /Ix    InOutRes Check      (U)nfold, (E)liminate
+          /Ox    Overflow Check      (I)ntO, (E)liminate
+          /Nx    80n87 instructions  (S)oft, (H)ard
+          /Cx    Target platform     (D)os, (P)rotected, (W)indows, (O)S/2
+          /Dx    Debug               Keep (L)ist file.
+                                     (N)o optimization.
+                                     (S)ystem names.
+                                     Allow no (D)ebug information.
+
+Infile(s) is a list of the units to optimize.  Wildcards are now allowed.
+Debug information must be present in the unit.  The optimized versions of the
+units will be written in the current directory with an extension of "Ttt".
+This may very well change in later versions.
+
+Note that options with parameters (e.g., "/Sx") does not accept any white
+space between the "S" and the parameter.
+
+The options are described in greater detail in the following sections.  In
+order to run Spo you will need 300-600 KB free memory.  The presence of Xms
+memory (up to 64 KB) may improve capacity very slightly.  See the assembler
+option for information about how to use an assembler with larger capacity.
+
+An alternate version for users with 386 processors is available: Spo386.
+This version runs under Dpmi and you will need some of the files that came
+with Borland Pascal 7.0 (the same files you need to start Bp.Exe).  The
+alternate version of Spo doesn't have the 64K limit for the assembly buffer
+and will thus optimize larger units.  Spo386 has been tested under Borland's
+dos extender only and since it uses some dirty tricks to operate in 32 bit
+mode it may or may not function under other dos extenders.  Please let me
+know it you have problems.
+
+
+4.1 The assembler option, "/Ax"
+
+By default Spo uses "Tasm.Exe" to assemble the generated code.  Since the
+syntax of the generated list file is very important you don't really have
+much choice here, but "Tasmx.Exe" might increase the maximum unit size that
+Spo can handle.  "Tasmx.Exe" is somewhat slower than "Tasm.Exe" so don't use
+it if you haven't got to.
+
+The assembler is looked for in the current directory, as specified by the
+PATH environment, and in "C:\Bp\Bin" using that order.
+
+
+4.2 The target option, "/Tx"
+
+By specifying the target processor you direct Spo to generate the best code
+it knows for that processor.  As a consequence the generated code may not run
+on all the 8086-family.  As an example consider "/T3" (or "/T386" or
+something like that).  The resulting code may use 32-bit operations (but
+still in a 16-bit segment) and 386-specific instructions like "Bts".  Your
+program would then run on 386s and 486s only.
+
+Specifying "/T486" produces code that will run on both 386s and 486s but it
+will be optimized for 486s.  There is no "/T5" or "/TPentium" because I have
+no idea of what makes Pentium code run faster.  Using "/T486" is probably the
+best idea in that case.
+
+The default for this option depends on the target platform; for real mode
+units it is 8086, for Windows and protected mode units it is 286, and for
+OS/2 units it is 386.  If you specify a target that is weaker than the
+default your specification is silently ignored.
+
+Specifying "/T8086" (for real mode units) produces code that will run on
+every 8086-family machine, including the 8088 used in the original IBM PC.
+Double prefixes will not be used for this target since the 8088 does not
+handle these correctly.  It does not matter whether the original unit was
+compiled with "/G+" (use 186 instructions) or not.  These instructions will
+be eliminated, I hope.  If not, then the assembler will report an error and
+no new code is generated.
+
+Specifying "/T" on its own selects the processor on which Spo is running as
+the target.
+
+You must ensure that the correct processor is present at run time.  You may
+do this by placing "Need_186", "Need_286", or "Need_386" very early in the
+uses list of your main program.  By "very early" I mean before any optimized
+unit (or unit that calls an optimized unit in the initialization procedure).
+Only programs for real mode need to check for 186/286 explicitly, and OS/2
+programs need not check for 386.  In these cases, the "Need_x86" units are
+therefore empty units.
+
+
+4.3 The range check option, "/Rx"
+
+The /R option together with the /T specifies what to do with range checks in
+the code.  A very large number of code sequences have been prepared to
+provide very fast range checking -- some checks which can be guaranteed never
+to fail will even be eliminated.
+
+"/RI" (the default) directs Spo to improve the range checking actions.  You
+get this whether you want it or not.  In the 386+ case the instruction queue
+is unbroken.
+
+"/RB" will cause "Bound" instructions to be generated to check a value
+against a given range.  These instructions are fast but an exception/
+interrupt 5 is generated when the check fails.  By default this will crash
+the system by generating an infinite number of screen dumps.  You must
+install a smart Int-5 handler to use this feature.  The easiest way to do
+this is to place "Int_0405" early in the uses list of your main program.
+"/RB" is not available for the 8086 case.
+
+"/RE" will remove range checks as best as it can.  This process is not
+perfect -- it does not yield the same code as compiling with range checks
+disabled.  No range errors will be reported by the resulting code though.
+
+
+4.4 The stack checking option, "/Sx"
+
+The /S options specifies what to do with stack overflow checking as generated
+by Borland Pascal.
+
+"/SI" and "/SU" direct Spo to unfold and improve the check.
+
+"/SE" directs Spo to remove the checks.  Removal is perfect.
+
+
+4.5 The input/output error checking option, "/Ix"
+
+"/II" and "/IU" direct Spo to unfold and improve the check.  This speeds up
+the check significantly.  In the 386+ case the instruction queue is unbroken.
+
+"/IE" directs Spo to remove the checks.  Removal is perfect.
+
+
+4.6 The arithmetic overflow check option, "/Qx"
+
+The /Q option together with the /T specifies what to do with overflow checks
+in the code.
+
+"/Q0" (the default) directs Spo to improve the overflow checking actions.
+This is possible for the 386+ case only where the instruction queue will be
+left unbroken.
+
+"/QI" will cause "Into" instructions to be generated to check the signed
+cases.  This instruction is fast but an exception/interrupt 4 is generated
+when the check fails.  By default this may crash the system if no handler is
+installed.  You must install an Int-4 handler to use this feature.  The
+easiest way to do this is to place "Int_0405" early in the uses list of your
+main program.
+
+"/QE" will remove overflow checks as best as it can.  This process is not
+perfect -- it does not yield the same code as compiling with the checks
+disabled.  No overflow errors will be reported by the resulting code though.
+
+
+4.7 The numeric processing option, "/Nx"
+
+All 8087 instructions generated by Borland Pascal are emulated.  With the /N
+options you can direct Spo to hard-code "Esc" instructions.
+
+"/NS" (the default) causes Spo to generate emulated instructions.  If the
+real emulator is present at run time (if the program is compiled with /E+)
+the resulting code will run without a co-processor.  Please note that
+emulation does not show on the assembler generated list file.
+
+"/NH" causes hard-coded "Esc" instructions to be generated. This also makes it
+possible to use a larger part of the instruction set for the 287+ case.  The
+resulting code will not run without a co-processor unless you have an
+exception based emulator.
+
+Currently the Fpu is assumed to match the Cpu.  This is wrong and will be
+fixed later.  386+287 systems must not specify "/NH /T386", or else!  "Fsin"
+et cetera will not be used for 186+187 systems.
+
+
+4.8 The target platform option, "/Cx"
+
+"/CD" (the default) directs Spo to treat units targeted for real mode.  In
+addition to this, "/CP" may be used to specify dos protected mode units,
+"/CW" to specify Windows mode units, and "/CO" to specify OS/2 mode units.
+
+
+4.9 The debugging options, "/Dx"
+
+Some options are available for debugging and for sticking your nose into the
+finer details of the program.  More than one debugging option can be
+specified.
+
+"/DL" directs Spo to leave the list file from the assembler.  By examining
+the file "$po.Lst" in the current directory you can see the generated code.
+Only the list file from the last unit assembled can be seen.  Please note
+that 8087 instructions show un-emulated except for some "Fwait" instructions.
+
+"/DN" makes Spo skip the optimization phase.  Together with "/DL" this
+gives disassembly of the original unit.
+
+"/DS" causes Spo to put the names of system procedures in the list file.  The
+names used are the same as in "System.Pas" from the Run Time Library Source
+Code.
+
+"/DD" is for my experiments use only.  It specifies that it is OK for a
+module not to contain debug information.
+
+
+
+5. How?
+
+Spo works by a three phase scheme
+
+        1. Disassembly.
+        2. Optimization of the generated assembly code.
+        3. Assembly.
+
+This scheme has the side effect that you cannot rely on a particular coding
+of some instruction.  As an example "Mov Sp,Bp" has two different encodings.
+This should not concern you.
+
+In general the speed-up comes from unfolding system procedures and functions.
+A far call and return takes 30 clock cycles plus penalties for broken
+instruction queues on a 486.
+
+Other speed-up sources are use of larger instruction sets and less local view
+on instructions.
+
+
+5.1 The disassembly phase
+
+The disassembly phase consists of two sub-phases: identification of all
+instructions and text generation.  Starting with the entry point instructions
+are followed one by one including targets of jump and calls.  All
+instructions must be identified uniquely (jumps into the middle of other
+instructions are not accepted).  If not, no optimization will be performed.
+
+Text generation uses my pride: a unit that disassembles one instruction and
+takes great care to handle prefixes correctly.  This unit has found two bugs
+in Borland's Turbo Assembler so you may assume that it has been tested better
+than Tasm.
+
+
+5.2 The optimization phase
+
+The optimization phase is driven by a regular expression engine.  All points
+of optimization are found using regular expressions.  Consider
+
+        Regrep('//\(\(Add\|Adc\|Imul\|Mul\|Or\|And\|Xor\|Sub'+
+                   '\|Sbb\|Not\|Neg\) Ax.*\)/Or Ax,Ax','//\1');
+
+where "/" means newline (ignore the double slashes).  This searches for zero
+flag setting instruction with register Ax as target followed by a check for
+Ax being zero.  When found it will be replaced by the first instruction.
+This is safe for all code generated by Borland Pascal.
+
+        Regrep(Callsystem(System_Procedure_No('FLn')),
+               '/Fldl2e/Fxch/Fyl2x');
+
+Replaces all calls to System.FLn (8087 version of Ln) with three equivalent
+instructions.
+
+When regular expressions are not powerful enough to handle replacements the
+search and replacement are split and mixed with suitable Pascal code.
+
+Following is an almost complete list of optimizations performed.  Please note
+that not optimizations make sense under all circumstances, i.e., the set
+improvements using "Bt?" will be performed for 386+ only.  If you find
+something that ought to be improved, please tell me.  Also some subtle lies
+are present here.
+
+        - Enter and Leave instructions are eliminated for 386 or better.
+        - "J<cc> @@over//Jmp @@target//@@over:" is replaced by
+          "J<ncc> @@target".  The jump sizing of Tasm may reverse this
+          action when the target is not 386 or better.
+        - Stack checks are unfolded.
+        - InOutRes checks are unfolded.
+        - Some overflow checks are improved.
+        - Range checks are improved or eliminated.
+        - FSin/FCos/FArcTan/FLn/FSqrt/FExp (80x87) are hardcoded or 
+          unfolded.
+        - 80x87 flag checks for 286+ improved.
+        - LongInt Shl/Shr are unfolded.  If the second operand is known,
+          special instruction sequences are used.
+        - Longint Mul/Div/Mod are unfolded and improved.
+        - Value parameters of type String are copied word by word.  One
+          byte too many of the actual parameter many may be copied but
+          this is safe.
+        - Value parameters of type String[odd_max_length] are copied word
+          by word.  One byte too many of the actual parameter may be copied
+          but this is safe.
+        - Value parameters of type String[even_max_length] are copied word
+          by word plus a single byte.  One byte too many of the actual 
+          parameter may be copied but this is safe.
+        - Value parameters of size 3, 5--10, or 12 are copied with
+          stand-alone "Mov" instructions.
+        - Value parameters of other sizes are copied word by word plus
+          perhaps a single byte.
+        - Adding a set component (Include or [...,expr,...]) is done by
+          a "Bts" instruction.
+        - Removing a set component (by Exclude) is done by a "Btr"
+          instruction.
+        - Loading of word sized set is unfolded.
+        - Some set membership tests are done by "Bt" instructions.
+        - Loading and storing of sets are unfolded and done word by word.
+        - Set operations "+", "-", "*", "=", and "<>" are unfolded.
+        - Calls to UpCase are unfolded.
+        - Conversions of chars to strings are unfolded.
+        - Loading of strings is done word by word.
+        - Storing of strings is unfolded and done word by word.
+        - Comparing strings for (in)equality is unfolded and improved.
+        - Some Imul instruction sequences are improved.
+        - Redundant Ax tests are eliminated.
+        - Push followed by Pop is eliminated.
+        - Code segments are padded to 2 (286), 4 (386), or 16 (486) bytes
+          in order to make procedures aligned optimal for the processor.
+          The same goes for procedure entries.
+
+
+5.3 The assembly phase
+
+The assembler code from the previous phase is put through Borland's Turbo
+Assembler.  No errors should be found and all optimizations will be ignored
+if one is.  The assembly is done in Ideal+Smart mode with jump optimization.
+
+The assembly is the memory critical phase.  The heap of Spo is shrunk to its
+minimum while running Tasm so I don't think you will notice any problems.  I
+might consider swapping to disk or Xms later.
+
+
+6. Error messages and warnings
+
+There are found kinds of messages from Spo: information, warnings, errors,
+and internal errors.  This (incomplete) list describes them.
+
+
+6.1 Errors
+
+Error are situations in which Spo does not know how to proceed.  If you
+cannot figure out why you get some message, simply refer from optimizing the
+unit.
+
+Error:   Target processor "..." unknown.
+         You must specify one of 8086, 186, 286, 386, or 486 as the
+         target.  A lot of variant spellings are accepted but you
+         needn't know them all.
+
+Error:   More than one target specified.
+         Only one /Tx option may be specified.  To optimize for more than
+         one target processor you must run Spo repeatedly.
+
+Error:   More than one target platform specified.
+         Only one /Cx option may be specified.  To optimize for more than
+         one target platform you must run Spo repeatedly.
+
+Error:   More than one assembler specified.
+Error:   More than one overflow checking action specified.
+Error:   More than one range checking action specified.
+Error:   More than one stack checking action specified.
+Error:   More than one InOutRes checking action specified.
+Error:   More than one floating point action specified.
+         Duplicate use of /Ax, /Ox, /Rx, /Sx, /Ix, and /Nx options is not
+         allowed.  Use the one that comes closest to your needs.
+
+Error:   Illegal overflow check action specified: ...
+Error:   Illegal range check action specified: ...
+Error:   Illegal stack check action specified: ...
+Error:   Illegal InOutRes check action specified: ...
+Error:   Illegal floating point action specified: ...
+Error:   Illegal debug option specified: ...
+Error    Illegal target platform specified: ...
+         You specified an illegal option modifier.  Study the usage
+         description above for the right ones.
+
+Error:   Unknown option specified: "."
+         You specified an option that Spo does not recognize.  See the
+         section about options above.
+
+Error:   The target processor does not have the Bound instruction.
+         Range checking with "Bound" instructions is not available
+         when the target is 8086.  Use option "/T186" to control
+         the target.
+
+Error:   The unit "..."  was compiled for another platform.
+         The indicated unit was compiled for a target platform different
+         from what its name specifies.  This should only happen if you
+         rename units or libraries.
+
+Error:   Could not create temporary file.
+         The file "$po.Asm" could not be created in the current directory.
+         Probably the disk is write protected or full.
+
+Error:   Overflow in table to hold generated code.
+         Either more than 64K code was generated for a single segment or
+         you are running out of memory.  Neither is likely to happen.
+
+Error:   Overflow in table to hold generated fixups.
+         Either more than 64K relocation fixup information was generated
+         for a single segment or you are running out of memory.  Neither
+         is likely to happen.
+
+Error:   Overflow in table to hold generated trace information.
+         Either more than 64K code-per-line information was generated
+         for a single segment or you are running out of memory.  Neither
+         is likely to happen.
+
+Error:   Assembly buffer overflow.
+         The buffer to hold the assembly code overflowed.  Your unit
+         probably has a very large procedure or function.  At the present
+         I estimate the maximum to be 9K code.  You should try to use the
+         386 version instead -- if that fails refer from optimizing that
+         unit.
+
+Error:   The unit "..." could not be loaded.
+         The unit was not found.  By default the unit is searched for in
+         the current directory, in directories specified by the PATH
+         environment variable, in "C:\Unit", in "C:\Bp\Bin", and finally
+         in "C:\Bp\Units".
+
+         The search order is as given here.  If the unit was not found the
+         search is repeated for "Turbo.Tpl" ("Tpp.Tpl" for protected mode
+         units, "Tpw.Tpl" for Windows units, "OS2.Tpl" for OS/2 units) and
+         the unit is searched for therein.  (The PATH is searched in order
+         to find Turbo.Tpl).
+
+         Units specified with wildcards are searched for in the specified
+         or current directory only.
+
+Error:   The unit "..." is too big for Spo to handle.
+         Currently Spo requires the entire unit to be less than 64KB on
+         disk.  Symbol information for browsing is probably not updated
+         correctly anyway so it is a good idea to compile without that.
+
+Error:   The file "..." does not contain a valid unit.
+         The header of the given unit is invalid.  Recompile.
+
+Error:   The unit "..." was made by a pre 7.0 version of Turbo Pascal.
+         The header of the unit indicates that it was compiled by an
+         earlier version of Turbo Pascal, i.e., version 4.0, 5.0, 5.5, or
+         6.0.  Recompile.
+
+Error:   The output file could not be opened.
+Error:   Error writing the output file.
+         Probably the disk is write protected or full.
+
+
+6.2 Warning
+
+Warnings are messages to you about abnormal situations.  Spo knows how to
+continue but evaluate the situation yourself.
+
+Warning: This unit was compiled to use 186 instructions.
+         As the unit was compiled with option {$G+} and the target was
+         specified as 8086 you are relying on Spo to remove all
+         186-specific instructions.  There should be no problems with
+         this if and if only all code segments are optimized, i.e., if
+         the analysis succeeds.
+
+Warning: The resulting code may be inefficient on this machine.
+         The specified target processor is 486 while the processor on
+         which Spo is running is a 386.  The code will be optimized
+         for the 486 but will run on any 386.
+
+Warning: The resulting code may or may not run on this machine.
+         The processor on which Spo is running will probably not be able
+         to run code produced with the optimized unit.  This is OK if
+         you are generating code for another machine, "cross compiling".
+
+Warning: Program must install an Int-4-handler.
+         "Into" instructions will be generated to test for signed
+         arithmetic overflow.  Insert "INT_0405" or equivalent early in
+         the uses clause of your main program to install a proper handler
+         for this instruction.
+
+Warning: Program must install an Int-5-handler.
+         "Bound" instructions will be generated to test some values
+         against a range.  Insert "INT_0405" or equivalent early in the
+         uses clause of your main program to install a proper handler
+         for these instructions.
+
+Warning: The unit does not use itself!
+         There is something strange about this unit, since is not
+         reported to have donated anything to itself.
+
+
+6.3 Internal errors
+
+Internal error are not supposed to occur.  If you get one of these messages
+I'd like to know.  See above for a description about how to report bugs.  The
+messages take the form
+
+        Internal error: Decode_Support confused
+
+or perhaps [let's not hope so]
+
+        Runtime error #201 at 1234:5678
+
+Please include the message and (if possible) the source code for the unit in
+the bug report.  If you know what went wrong, please tell me!
+
+
+6.4 Information
+
+Informational messages are supposed to be self-explanatory.  If they aren't
+you can do one of two things: (1) Flame me.  (2) Ignore them.
+
+
+7. On improved versions of TURBO.TPL, TPP.TPL, TPW.TPL and OS2.TPL
+
+Some optimized versions of Turbo.Tpl can be obtained.  These can be used
+together with Spo without problems.
+
+In an earlier version of this documentation I claimed that "...they are not
+worth the while."  It has been pointed out to me that not only is this
+unfair, it is also incorrect!  What I should have written was
+
+        1. Spo and the improved library can cooperate only where Spo
+           does not optimize.  In that case the improved library
+           function will simply not be called.
+        2. When Spo finds something to optimize it's good!
+
+One could view Spo as low-level optimization and library-improvement as
+mid-level optimization.  As I would never dream of unfolding (say) the heap
+manager in order to improve calls to GetMem chances are that you can have the
+best of both worlds!  You cannot loose so go ahead and try!
+
+I am aware of only one optimized library for Borland Pascal 7.0: BPL70N14 by
+Norbert Juffa.  It is now available at garbo.uwasa.fi in directory (I think)
+/pc/turbopas; the current version as of January 1994 is 1.4.
+
+Note that improved libraries will improve the speed of your program during
+its development without slowing you down.  Spo can (reasonably) only be used
+for the final compilation since it takes its time.
+
+A final word on compatibility: the support unit "Int_0405" depends on the
+first few bytes of the divide error handler.  There is no reason why this
+should be a problem for you; producing optimized versions of handlers for
+fatal exceptions is overkill!
+
+
+8. New features to come or not
+
+As one might expect this program could be enhanced to input the unit (or to
+output the new unit) in older versions of the tpu file format.  It would not
+be very much work but is it worth the while?  An easy thing to do would be to
+generate assembler code so that the code could be linked into C programs or
+whatever.
+
+The code generated for the Case statement could be improved significantly by
+using jump tables when several branches are present.
+
+The Fpu and Cpu types should be separated.
+
+Swapping to disk or Xms should be possible in order to prevent the assembler
+from running out of memory.
+
+Other procedures than system procedures should be unfolded, perhaps
+specialized (producing new procedures when knowing the values of some of the
+parameters).  This is a technique in its childhood so you should not expect
+much.  Look up articles on "Partial Evaluation".
+
+Redundant load and save instructions should be eliminated.  Much more should
+be done with 32-bit instructions, i.e., pushing pointers and longints.  The
+reason that it has not already been done is that a concept of "dead"
+registers and flags has to be formulated.
+
+
+9. Keeping the lawyers happy
+
+Borland International holds "Tasm", "Turbo Assembler", and "Borland Pascal"
+as trademarks; Microsoft Corp. holds "Windows" as trademark; International
+Business Machines Corp. holds "Ibm Pc" as trademark; Intel Corp. holds the
+cpu names as trademarks.  I don't know who holds "OS/2" as a trademark, but
+it must be either International Business Machines Corp. or Microsoft Corp.
+
+
+10. Thanks
+
+Special thanks to William L. Peavy <70042.2310@compuserve.com>, author of
+TPU6.  Without his work this program would not have been possible.
+
+Thanks to Ralf Brown <ralf@telerama.pgh.pa.us> for the interrupt list.
+There's nothing like good documentation on technical issues.
+
+Thanks to Duncan Murdoch <dmurdoch@mast.QueensU.CA> for keeping the list
+of known bugs in Borland Pascal.  New versions of programs always seem to
+follow the line "old bugs replaced by new and unknown ones."
+
+Thanks to Norbert Juffa <S_JUFFA@irav1.ira.uka.de> for useful comments and
+for pointing out serious bugs in the handling of 8087 instructions.
+
+Several others has helped me -- thanks to all of you!
+
+
+11. Scary codes
+
+This chapter is intended to confuse you.
+
+Local Variables: ***
+mode: text ***
+fill-column: 77 ***
+End: ***

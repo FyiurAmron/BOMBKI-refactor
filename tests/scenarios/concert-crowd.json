@@ -1,0 +1,199 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica dluga",
+      "expect": "ULICA\\ DLUGA\\ CIAGNIE\\ SI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "road junction",
+      "expect": "IDAC\\ ULICA\\ DLUGA\\ NA\\ PO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "dolina rozrywki",
+      "expect": "JESTES\\ W\\ DOLINIE\\ ROZRY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "crowd edge, fan and goril and grandpa",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "deep in the crowd, head back",
+      "expect": "JESTES\\ W\\ SRODKU\\ TLUMU\\ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "room 61: enter ground context",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 61: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 61: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 61: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 61: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 61: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "crowd edge again, fight the fan",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ FAN"
+    },
+    {
+      "label": "fan down, fight the goril",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ GORYL"
+    },
+    {
+      "label": "goril down, fight the grandpa",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DZIADEK"
+    },
+    {
+      "label": "grandpa down, head for the crowd",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "room 62: enter ground context",
+      "expect": "NA\\ BRZEGACH\\ TLUM\\ JEST\\ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 62: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 62: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 62: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 62: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 62: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "crowd edge, fight the man",
+      "expect": "NA\\ BRZEGACH\\ TLUM\\ JEST\\ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ CZLOWIEK"
+    },
+    {
+      "label": "man down, fight the reporter",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ REPORTER"
+    },
+    {
+      "label": "reporter down, head for the wariat",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 65: enter ground context",
+      "expect": "JESTES\\ Z\\ BOKU\\ ALE\\ PRZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 65: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 65: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 65: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 65: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 65: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "beside the barriers, fight the madman",
+      "expect": "JESTES\\ Z\\ BOKU\\ ALE\\ PRZY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ WARIAT"
+    },
+    {
+      "label": "madman down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

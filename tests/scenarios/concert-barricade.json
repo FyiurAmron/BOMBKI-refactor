@@ -1,0 +1,149 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "ulica dluga",
+      "expect": "ULICA\\ DLUGA\\ CIAGNIE\\ SI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "road junction",
+      "expect": "IDAC\\ ULICA\\ DLUGA\\ NA\\ PO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "dolina rozrywki",
+      "expect": "JESTES\\ W\\ DOLINIE\\ ROZRY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "crowd edge, then deep into the crowd",
+      "expect": "KIEDY\\ PODSZEDLES\\ BLIZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "room 64: enter ground context",
+      "expect": "JESTES\\ W\\ SRODKU\\ TLUMU\\ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 64: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 64: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 64: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 64: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 64: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "thick of the crowd, fight the listener",
+      "expect": "JESTES\\ W\\ SRODKU\\ TLUMU\\ [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ SLUCHACZ"
+    },
+    {
+      "label": "listener down, fight the bodyguard",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ OCHRONIARZ"
+    },
+    {
+      "label": "bodyguard down, fight the child",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DZIECKO"
+    },
+    {
+      "label": "child down, head for the Policeman",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 66: enter ground context",
+      "expect": "JESTES\\ PRZY\\ BALUSTRADK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "room 66: energy +200",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 66: energy +400",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 66: energy +600",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 66: energy +800",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "room 66: leave ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "barricade, fight the policeman",
+      "expect": "JESTES\\ PRZY\\ BALUSTRADK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ POLICJANT"
+    },
+    {
+      "label": "policeman down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

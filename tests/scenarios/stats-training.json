@@ -1,0 +1,884 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "UFOK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon, into the strength room",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "strength room",
+      "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 10",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 10[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility to 11, past the ZRE > 10 gate",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ 11[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "back at the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "meditation room",
+      "expect": "ZSZEDLES NA DOL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn fleeing",
+      "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "salon again",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "dark street",
+      "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "bluszcz",
+      "expect": "ZNALAZLES SIE WSROD BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "well room",
+      "expect": "CHOC TO MALO PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "bluszcz clearing",
+      "expect": "PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "cave entrance",
+      "expect": "TO CIEKAWE ZE WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "living door, DRZWI bar the way",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt in the living-door room",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZWIEJ"
+    },
+    {
+      "label": "flee threshold prompt",
+      "expect": "PONIZEJ ILU ENERGII CHCESZ UCIEKAC",
+      "send": "500"
+    },
+    {
+      "label": "threshold above current energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy topped",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 450, leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back at the living door",
+      "expect": "TE DRZWI ZYJA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "escape the fight",
+      "expect": "WSTYD !!! UCIEKLES Z POLA BITWY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "past the DRZWI into the dark room",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 1: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 1: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 1: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 1: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 1: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 1: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 2: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 2: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 2: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 2: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 2: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 2: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 3: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 3: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 3: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 3: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 3: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 3: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 4: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 4: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 4: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 4: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 4: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 4: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 5: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 5: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 5: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 5: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 5: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 5: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 6: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 6: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 6: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 6: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 6: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 6: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 7: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 7: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 7: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 7: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 7: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 7: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 8: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 8: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 8: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 8: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 8: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 8: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 9: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 9: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 9: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 9: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 9: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 9: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 10: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 10: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 10: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 10: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 10: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 10: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 11: grant xp 1/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 11: grant xp 2/2",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "visit 11: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "visit 11: ask who you are",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "visit 11: UNMODE back to the den",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "visit 11: level-up banner, then grant 1/2",
+      "expect": "ZDOBYLES LEVEL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 1: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 1: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 1: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 1: UNMODE, second pass through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "extra trip 2: level-12 banner, then grant KUNSZT",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 2: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 2: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 2: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 2: UNMODE, pass 3 through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "extra trip 3: level-12 banner, then grant KUNSZT",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 3: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 3: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 3: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 3: UNMODE, pass 4 through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "extra trip 4: level-12 banner, then grant KUNSZT",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 4: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 4: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 4: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 4: UNMODE, pass 5 through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "extra trip 5: level-12 banner, then grant KUNSZT",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 5: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 5: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 5: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 5: UNMODE, pass 6 through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "extra trip 6: level-12 banner, then grant KUNSZT",
+      "expect": "HURRRA TO JUZ DWUNASTY POZIOM[\\s\\S]*?MASZ TERAZ",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 6: staruch drops POZIOM by one",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ STARUCH"
+    },
+    {
+      "label": "extra trip 6: grant KUNSZT",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KUNSZT"
+    },
+    {
+      "label": "extra trip 6: MODE into the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "extra trip 6: UNMODE, pass 7 through 12",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back at the den prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "out to the living door",
+      "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "out to the cave entrance",
+      "expect": "TO CIEKAWE ZE WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "out to the bluszcz clearing",
+      "expect": "PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "out to the well room",
+      "expect": "CHOC TO MALO PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "out to the bluszcz",
+      "expect": "ZNALAZLES SIE WSROD BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "out to the dark street",
+      "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "out to the city centre",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "out to the salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "into the strength room",
+      "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ"
+    },
+    {
+      "label": "train strength 1/6",
+      "expect": "CO CHCESZ TRENOWAC?[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train strength 2/6",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train strength 3/6",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train strength 4/6",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train strength 5/6",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train strength 6/6",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ SILA"
+    },
+    {
+      "label": "train agility 1/14",
+      "expect": "TRENUJESZ SILE I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 2/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 3/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 4/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 5/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 6/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 7/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 8/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 9/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 10/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 11/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 12/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 13/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train agility 14/14",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ ZRECZNOSC"
+    },
+    {
+      "label": "train cunning 1/7",
+      "expect": "TRENUJESZ ZRECZNOSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 2/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 3/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 4/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 5/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 6/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train cunning 7/7",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "out of the strength room",
+      "expect": "TRENUJESZ MADROSC I MASZ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "down to the meditation room",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "meditation room",
+      "expect": "ZSZEDLES NA DOL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn fleeing 2/4",
+      "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn fleeing 3/4",
+      "expect": "CWICZYSZ UCIEKANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ UCIEKAC"
+    },
+    {
+      "label": "learn returning",
+      "expect": "ALBO MASZ ZA DOBRZE WYTRENOWANE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POWROT"
+    },
+    {
+      "label": "learn stealth",
+      "expect": "CWICZYSZ POWRACANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ PAROWANIE"
+    },
+    {
+      "label": "learn herbs",
+      "expect": "CWICZYSZ PAROWANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POTRAWKI"
+    },
+    {
+      "label": "learn comparison",
+      "expect": "CWICZYSZ POTRAWKI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POROWNANIE"
+    },
+    {
+      "label": "read the training poster",
+      "expect": "CWICZYSZ POROWNYWANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "read the training poster again",
+      "expect": "SZAL - KOMEDNA SZAL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "ground prompt for the sheet",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "the trained sheet",
+      "expect": "MASZ \\d+ MONET I \\d+ PRAKTYK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "exit response",
+      "expect": "ZSZEDLES NA DOL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": ""
+    }
+  ]
+}

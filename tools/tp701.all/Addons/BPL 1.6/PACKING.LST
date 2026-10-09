@@ -1,0 +1,21 @@
+Files in archive file BPL70N16.ZIP:
+
+TURBO    TPL   replacement for the TURBO.TPL supplied by Borland with BP 7.0
+TPP      TPL   replacement for the TPP.TPL supplied by Borland with BP 7.0
+TPW      TPL   replacement for the TPW.TPL supplied by Borland with BP 7.0
+README   DOC   documentation for the run time library replacement
+INSTR    PAS   string routine similar to Pos, enables to specify start position
+UCASE437 ASM   source of enhanced UpCase routine for code page 437
+UCASE437 OBJ   object file, ready to be linked in, of enhanced UpCase routine
+MATH     PAS   makes tan, log10, log2, exp2, exp10 available for copro/emulator
+MATH     TPU   MATH unit compiled for use with real mode programs
+MATH     TPP   MATH unit compiled for use with DOS protected mode programs
+MATH     TPW   MATH unit compiled for use with Windows programs
+TURBPERF DOC   perf. compar. TURBO.TPL for RapidCAD-40, 386-40, 486DLC-40, 8086
+TPPPERF  DOC   perf. compar. TPP.TPL for RapidCAD-40, 386-40, 486DLC-40
+ACCURACY DOC   accuracy comparison for REAL arithmetic including transcendentals
+TESTPRGS ZIP   source to test programs used when creating the RTL update
+ARISOURC ZIP   source files for LONGINT and REAL arithmetic routines
+STRSOURC ZIP   source files for most STRING handling routines
+PACKING  LST   this file
+

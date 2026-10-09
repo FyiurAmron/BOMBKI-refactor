@@ -1,0 +1,51 @@
+#!/bin/sh
+# pre-commit hook -- enforce text hygiene on staged files.
+#
+# Checks (applies repo-wide):
+#   1. no staged change touches _reference/ (read-only ground truth)
+#   2. staged text files end with a newline (EOF)
+#   3. staged text files are LF-only (no CR bytes)
+#   4. no trailing whitespace / \ No newline markers (git diff --cached --check)
+#
+# Enable per clone:
+#   git config core.hooksPath .githooks
+#
+# Checks read the staged blob (git show :path), so they validate exactly
+# what would be committed, not the working tree.
+
+set -u
+fail=0
+
+# 1. _reference/ must never be staged
+if git diff --cached --name-only | grep -q '^_reference/'; then
+  echo "error: staged change touches _reference/ (read-only ground truth)" >&2
+  fail=1
+fi
+
+# 2-3. text hygiene over staged files
+for f in $(git diff --cached --name-only --diff-filter=ACMR); do
+  [ -f "$f" ] || continue  # skip deletions
+  case "$f" in
+    *.pas|*.sh|*.py|*.json|*.yml|*.yaml|*.md|*.conf|*.txt|*.cfg|*.toml|*.ini|Dockerfile*|.gitignore|.githooks/*)
+      # newline at EOF: a final LF byte yields no match for `.`
+      if git show ":$f" 2>/dev/null | tail -c 1 | grep -q .; then
+        echo "error: $f missing newline at EOF" >&2
+        fail=1
+      fi
+      # LF-only: stripping CR must not change the byte count
+      have="$(git show ":$f" 2>/dev/null | tr -d '\r' | wc -c)"
+      want="$(git show ":$f" 2>/dev/null | wc -c)"
+      if [ "$have" -ne "$want" ]; then
+        echo "error: $f contains CR bytes (not LF-only)" >&2
+        fail=1
+      fi
+      ;;
+  esac
+done
+
+# 4. trailing whitespace and diff markers
+if ! git diff --cached --check; then
+  fail=1
+fi
+
+exit "$fail"

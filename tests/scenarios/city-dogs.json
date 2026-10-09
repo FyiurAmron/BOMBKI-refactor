@@ -1,0 +1,119 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon, top up energy for the fights",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt in the salon",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 250",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 450",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 650",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 850",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 1050, leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "salon again, head for the street",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "shopping street, the owczarek is here",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ OWCZAREK"
+    },
+    {
+      "label": "owczarek down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "street continues, piesek and spaniel here",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PIESEK"
+    },
+    {
+      "label": "piesek down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ SPANIEL"
+    },
+    {
+      "label": "spaniel down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "multi-branch shop, jamnik and pudel here",
+      "expect": "WCHODZISZ\\ DO\\ SKLEPU\\ AL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ JAMNIK"
+    },
+    {
+      "label": "jamnik down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ PUDEL"
+    },
+    {
+      "label": "pudel down",
+      "expect": "WYCIAGASZ [0-9]+ MONET Z CIALA PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back on the street continues",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

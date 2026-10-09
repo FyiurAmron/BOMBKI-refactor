@@ -1,0 +1,78 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "room 1 prompt",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "MODE prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "PAMIETAJ"
+    },
+    {
+      "label": "post-save character-sheet response",
+      "expect": "W SUMIE MASZ[\\s\\S]*?TWOJE PARAMETRY : SILA - [0-9]+/[0-9]+[\\s\\S]*?FUKSROLL-[0-9]+[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KASE"
+    },
+    {
+      "label": "prompt after money change",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "changed-money report",
+      "expect": "MASZ 5030 MONET",
+      "send": "WLACZ POSTAC"
+    },
+    {
+      "label": "load command echo",
+      "expect": "WLACZ POSTAC",
+      "send": "JA"
+    },
+    {
+      "label": "load confirmation prompt",
+      "expect": "suckemall:",
+      "send": "JA"
+    },
+    {
+      "label": "loaded-money report",
+      "expect": "MASZ 30 MONET",
+      "send": "UNMODE"
+    },
+    {
+      "label": "restored room",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "room exit",
+      "expect": "JESTES W OKROGLYM SALONIE"
+    }
+  ]
+}

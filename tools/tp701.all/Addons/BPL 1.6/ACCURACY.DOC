@@ -1,0 +1,98 @@
+                Accuracy Comparison for REAL arithmetic
+
+
+                   BP 7.0 Turbo Pascal Library
+                              versus
+                BP 7.0 Runtime Library Update 1.2
+
+
+
+Test of basic arithmetic with FUN1_TST. 10,000,000 random trials per function
+Limit of relative error for full 40 bit accuracy is 9.094947022e-13.
+
+                  BP 7.0 RTL                    BP 7.0 RLU 1.0
+
+             % wrong   max. rel. error       % wrong   max. rel. error
+
+ADD          0.0000%   9.094837432e-13       0.0000%   9.094820930e-13
+SUB          0.1571%   9.155430759e-13       0.0000%   9.094905407e-13
+MUL          0.0000%   8.459999740e-13       0.0000%   9.089090757e-13
+DIV          0.0000%   9.093448608e-13       0.0000%   9.093327167e-13
+Short-MUL *  0.0000%   9.094682364e-13       0.0000%   9.094466215e-13
+
+* Short-MUL is a multiplication where one of the operands carries only 16
+  bits of precision (the last 24 mantissa bits are zero).
+
+
+
+Test of higher math functions with ELEFUNT test programs. 1,000,000 random
+trials per function test.
+
+MRE = maximum relative error
+RMS = root mean square relative error (average error)
+
+Errors reported by ELEFUNT test programs tend to be larger than the actual
+error of the routines as compared to higher precision routines (coprocessor).
+This is due to the nature of the tests, which are based on functional
+identities. The additional computations in testing the identities cause
+additional round-off errors.
+
+
+                      BP 7.0 RTL                     BP 7.0 RLU 1.0
+
+              % wrong    MRE         RMS        % wrong    MRE        RMS
+
+DSQRT Test1   9.5168% 1.28622e-12 3.55691e-13   0.0000% 0.00000e+00 0.00000e+00
+      Test2   0.0004% 1.81880e-12 3.63514e-15   0.0000% 0.00000e+00 0.00000e+00
+
+DSIN  Test1  48.5711% 7.27690e-12 1.23904e-12  38.4640% 2.64505e-12 7.22852e-13
+      Test2  84.1128% 4.11862e-04 4.11889e-07  44.0276% 8.00614e-09 8.04878e-12
+*     Test3  91.4008% 9.81763e-07 2.28067e-09  42.9703% 4.31878e-11 8.08930e-13
+
+DATAN Test1  18.7838% 1.81897e-12 5.36074e-13  11.1927% 1.81897e-12 4.11701e-13
+      Test2  63.1259% 6.66016e-12 1.91192e-12  20.3286% 1.82093e-12 5.74504e-13
+      Test3  70.2866% 4.27213e-12 1.38748e-12  31.3874% 3.33085e-12 7.80409e-13
+      Test4  64.5424% 7.27474e-12 2.87544e-12  42.5229% 3.63782e-12 9.16674e-13
+
+DEXP  Test1  51.1003% 4.86911e-12 1.12152e-12  29.3751% 2.93224e-12 7.09432e-13
+      Test2  99.4743% 6.14647e-11 2.34142e-11  30.0348% 2.95769e-12 7.24600e-13
+      Test3  99.7909% 6.09032e-11 2.82847e-11  30.5228% 2.94201e-12 7.30898e-13
+
+DLOG  Test1  99.9991% 1.00000e+00 1.10905e-02  39.8793% 3.46234e-12 8.16947e-13
+      Test2  92.8802% 3.87388e-11 5.31959e-12  38.5649% 3.63262e-12 8.65898e-13
+**    Test3  73.2293% 2.84949e-11 2.72609e-12  62.3653% 5.44522e-12 1.36790e-12
+      Test4  22.3294% 1.81898e-12 6.51330e-13  11.5519% 2.32351e-12 4.31119e-13
+
+
+*  test of cosine function
+** test of LOG10 function, here simulated by Ln(10) * Ln(X)
+
+
+
+Comparison of the results returned by the higher math functions of the REAL
+arithmetic software routines with the results returned by a math coprocessor
+(Intel RapidCAD). 10,000,000 uniformly distributed arguments from the stated
+interval were used to test each function. Note that measuring the error in
+ULPs is a more accurate metric than simply measuring the relative error. An
+ideal function realization would have an error of exactly 0.5 ULPs.
+
+
+                           BP 7.0 RTL                     BP 7.0 RLU 1.0
+
+         interval    % wrong        ULP error       % wrong        ULP error
+
+EXP   -80.0 .. 80.0  94.6121% -68.4469 .. 67.5848   11.7631%  -1.4265 .. 1.4454
+LN    0.001 .. 20.0  90.6081% -161855. .. 96518.0   37.1437%  -1.8061 .. 2.1469
+SIN   -pi/2 .. pi/2  56.9757% -592880. .. 159489.    8.1556%  -1.2619 .. 0.9408
+COS   -pi/2 .. pi/2  76.4614% -738834. .. 1.61904 * 18.7306% -6914048 .. 1.3582
+ATAN  -20.0 .. 20.0  33.9098%  -4.4094 .. 2.06105   40.5580%  -1.7263 .. 1.2855
+
+%wrong are those cases where the result returned by the REAL arithmetic
+       software routines differ from the result returned by the coprocessor
+       and rounded to the precision of the REAL type.
+
+*      the high error in the COS routine is caused by the loss of accuracy
+       in the argument reduction. Loss of accuracy in the reduction process
+       for the SIN and COS functions can only prohibited at a relatively
+       high cost.
+

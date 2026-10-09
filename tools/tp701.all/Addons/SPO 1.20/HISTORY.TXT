@@ -1,0 +1,101 @@
+----------------------------------------------------------------------------
+                            The history of Spo
+----------------------------------------------------------------------------
+
+Jan-Feb 1993   : Version 1,00
+                 All the basic stuff, but crude interface.
+Feb 5, 1993    : Wrote some documentation.
+                 Version 1,00 released to Internet via Garbo.
+
+Feb 18, 1993   : Version 1,01 introduced.
+                 Added detection for units compiled by older versions
+                   of TP.  These caused a garbled error message.  Also
+                   added detection for files that are not units.
+                 Added check for unit larger than 64K which is not handled
+                   by Spo.  These caused run time errors.  I wasn't even
+                   aware of the possibility.  [I guess I have been pointing
+                   out too many bugs in other products...]
+                 Added setting of {$G+} flag when target>=186.
+                 Reduced memory requirements slightly.
+                 Updated the documentation with a list of errors and
+                   warnings with their causes.
+                 Added "/A" option to specify the assembler to use; useful
+                   for Tasmx.Exe only.
+Feb 23, 1993   : Added list of optimizations to the documentation.
+Feb 25, 1993   : Fixed some bugs in the regular expression search engine.
+                   These bugs should not have been noticed by users of Spo.
+                 Added some string optimizations.
+                 Command line parsing improved.  Among other things, the
+                   switch char (normally '/') returned by Dos is now
+                   respected.
+Feb 26, 1993   : Procedures and segments are now aligned according to
+                   processor.
+Mar 1, 1993    : Fixed bug in analysis; it didn't follow Loop instructions.
+                 Changed processor directive from "P386N" to "P386" to
+                   allow inlined protected instructions.
+                 Fixed overflow bug that sometimes caused strange assembly
+                   errors and even memory overwrites.
+Mar 2, 1993    : Fixed bug that caused spilling of file handles as more and
+                   more units were optimized.
+                 Error message "The unit does not use itself!" changed to
+                   warning.  It seems as if a unit is reported as using
+                   another if and if only some fixup depends on that unit.
+                 Improved the capacity significantly by compacting the data
+                   section by a factor of approximately 7.
+
+Mar 6, 1993    : Version 1,10 introduced.
+Mar 7, 1993    : Made changes to allow Spo itself to run in protected mode.
+Mar 8, 1993    : Changed "Int_0405" to work in protected mode also.
+                 Fixed a bug that caused incorrect code when emulated
+                   8087-instructions used segment override.
+                 Fixed a bug in the above mentioned compaction of the data
+                   segment.
+Mar 9, 1993    : Efficient Shr/Shl for longints on 86/186/286.
+                 Improved ZUnion, ZDifference, ZIntersect, and ZEqual.
+                 Improved 186->86 conversion.
+                 Allowed "/T" on its own to specify the processor on which
+                   Spo is running.
+Mar 11, 1993   : Broke the 32 bit barrier for the assembly buffer (DPMI
+                   version, 386+ only).
+                 Put macros for Op32/Addr32/Pushd/Fnsetpm in the start of
+                   all assembler files.
+                 Wrote units Need_186, Need_286, and Need_386 to check for
+                   processor at run time.
+Mar 12, 1993   : Improved some for-loops guaranteed to execute either at
+                   least once or never.
+Mar 13, 1993   : Added clearing of {$G+} flag when target is 8086 and no
+                   errors were detected.
+                 Added "/Cx" option to specify target platform.
+                 Implemented searching for units for dos protected mode or
+                   Windows.
+                 Added the system tables for dos protected mode.
+                 Had my first game of optimized TvChess.  Lost.
+                 Increased the starting size of the assembly buffer to 32K
+                   for Spo386.
+Mar 14, 1993   : Found very ugly bug in procedure alignment.  Affected all
+                   Cpu targets except 486.  (I'm glad that didn't make it
+                   to the internet!)
+                 Corrected the FLn replacement under "/NH".
+Mar 15, 1993   : Bug in "LongShl 8" found and corrected; misspelling.
+Jan 5, 1994    : Target is set to 286 for non-dos targets if no higher target
+                   is specified.
+                 Added some hooks for OS/2 units.
+                 Minor optimization: don't set Al after addtion etc.
+                 Updated docs.
+                 Significantly improved the annotation of call statements
+                   with procedure names.  Some cache may be benefical when
+                   this code is used.  Annotation no longer inhibits any
+                   optimization since they are now added at a later stage.
+                 Improved Need_186 and Need_286 by making them a no-op user
+                   non-dos platforms.
+                 Tables for Windows & OS/2 entered.  These targets enabled.
+Jan 6, 1994    : Fixed a bug that caused bad results for longint
+                   multiplication and division is some rare cases.  (It
+                   was found because some already faulty code didn't do
+                   what it was supposed to!)
+Jan 11, 1994   : Target defaults to 8086 (Real), 286 (Prot.+Windows), and
+                   386 (OS/2).
+                 Target cannot be set lower then default.  Attempts are
+                   silently ignored.
+                 The entry point of procedures are annotated with the name
+                   of the function, if that is in the interface.

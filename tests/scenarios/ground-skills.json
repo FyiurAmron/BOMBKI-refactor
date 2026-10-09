@@ -1,0 +1,213 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "CZAROMIL"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon, into the ground context",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "a handful of coins",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KASE"
+    },
+    {
+      "label": "out of the ground context",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the shopping street",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the alleys",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULICY\\ SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the magic shop",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA\\ SKLEPIKOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "buy the enchantment scroll",
+      "expect": "WCHODZISZ\\ DO\\ SKLEPU\\ ALE\\ NICZEGO\\ TU\\ NIE\\ MA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP SCROLL POROWNYWANIE"
+    },
+    {
+      "label": "the scroll is bought",
+      "expect": "[\\s\\S]*?SPRZEDAWCA\\ SPRZEDAJE\\ CI\\ SCROLL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the shopping street again",
+      "expect": "CIAGNIE\\ SIE\\ TEDY\\ ULICA\\ SKLEPIKOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the city centre again",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULICY\\ SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the salon again",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "rambo's room",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the training list",
+      "expect": "JESTES\\ W\\ POKOJU\\ GDZIE\\ RAMBO\\ TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ"
+    },
+    {
+      "label": "train madrosc #1",
+      "expect": "[\\s\\S]*?CO\\ CHCESZ\\ TRENOWAC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "train madrosc #2",
+      "expect": "[\\s\\S]*?MADROSCI\\ I\\ ZOSTALO\\ CI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "TRENUJ MADROSC"
+    },
+    {
+      "label": "madrosc is 18",
+      "expect": "[\\s\\S]*?MASZ\\ 18\\ MADROSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the training room",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "train the return skill",
+      "expect": "ZSZEDLES\\ NA\\ DOL\\ GDZIE\\ TRENUJE\\ SIE\\ MEDYTUJAC[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POWROT"
+    },
+    {
+      "label": "train the enchantment",
+      "expect": "[\\s\\S]*?CWICZYSZ\\ POWRACANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POROWNANIE"
+    },
+    {
+      "label": "the ground context in the training room",
+      "expect": "[\\s\\S]*?CWICZYSZ\\ POROWNYWANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "enchantment attempt 1",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 2",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 3",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 4",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 5",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 6",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "enchantment attempt 7",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "use the enchantment scroll",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "UZYJ SCROLL POROWNYWANIE"
+    },
+    {
+      "label": "return attempt 1",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "return attempt 2",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "return attempt 3",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "return attempt 4",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "return attempt 5",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "return attempt 6",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "POWROT"
+    },
+    {
+      "label": "out of the game",
+      "expect": "(?:KOGO\\ CHCESZ\\ ZE\\ SOBA\\ POROWNAC?|[\\s\\S]*?[0-9]+%\\.-?[0-9]+>)",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

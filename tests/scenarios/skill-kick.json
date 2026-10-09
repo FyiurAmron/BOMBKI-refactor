@@ -1,0 +1,23 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "UFOK" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "strength room", "expect": "JESTES W POKOJU GDZIE RAMBO TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "TRENUJ SILA" },
+    { "label": "train strength once", "expect": "TRENUJESZ SILE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "TRENUJ SILA" },
+    { "label": "train strength twice", "expect": "TRENUJESZ SILE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "TRENUJ SILA" },
+    { "label": "train strength three times", "expect": "TRENUJESZ SILE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "back to the salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "DOL" },
+    { "label": "meditation room", "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "CWICZ KOPAC" },
+    { "label": "learn KOP", "expect": "CWICZYSZ KOPANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+    { "label": "ground prompt", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "KOP" },
+    { "label": "kick energy prompt", "expect": "1\\)PONIZEJ JAKIEJ ENERGI CHCESZ ZACZAC KOPAC", "send": "20" },
+    { "label": "kick mana prompt", "expect": "2\\)DO JAKIECH ILOSCI MANA CHCESZ KOPAC", "send": "0" },
+    { "label": "kick finished", "expect": "[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+    { "label": "restored meditation room", "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground, fund the expedition",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ KASE"
+    },
+    {
+      "label": "5000 coins, leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "salon, head for the street",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "shopping street",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "bakery, buy the first weka",
+      "expect": "JESTES\\ W\\ PIEKARNI\\ ,\\ SK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP WEKA"
+    },
+    {
+      "label": "second weka",
+      "expect": "KUPUJESZ WEKE ZA 29 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP WEKA"
+    },
+    {
+      "label": "third weka",
+      "expect": "KUPUJESZ WEKE ZA 29 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP WEKA"
+    },
+    {
+      "label": "fourth weka",
+      "expect": "KUPUJESZ WEKE ZA 29 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP WEKA"
+    },
+    {
+      "label": "bakery, back to the street",
+      "expect": "KUPUJESZ WEKE ZA 29 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "shopping street, back to the centre",
+      "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "city centre, take the dark street",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "dark street",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "bluszcz",
+      "expect": "ZNALAZLES\\ SIE\\ WSROD\\ BL[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "flower thicket",
+      "expect": "CHOC\\ TO\\ MALO\\ PRAWDOPOD[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "bluszcz clearing",
+      "expect": "\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "cave entrance",
+      "expect": "TO\\ CIEKAWE\\ ZE\\ WCZESNIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "living door, DRZWI bar the way",
+      "expect": "DO\\ DOBRA\\ WYGLADA\\ TO\\ NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground, top up energy",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 250",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 450",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "DAWAJ EN"
+    },
+    {
+      "label": "energy 650, leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "living door, fight the DRZWI",
+      "expect": "DO\\ DOBRA\\ WYGLADA\\ TO\\ NA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZABIJ DRZWI"
+    },
+    {
+      "label": "DRZWI down, slip through",
+      "expect": "[\\s\\S]*?ZABILES GO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "staruch's den",
+      "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ROZMAWIAJ STARUCH"
+    },
+    {
+      "label": "tree room after the fight",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt with the gift beer",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "the sheet counts the gift beer",
+      "expect": "OZEWIAJACE PIWSKO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UZYJ PIWO"
+    },
+    {
+      "label": "ground, drink the beer",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UZYJ PIWO"
+    },
+    {
+      "label": "beer drunk, open the return portal",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UZYJ SCROLL POWROT"
+    },
+    {
+      "label": "portal open, leave ground",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "back in the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIAST[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    }
+  ]
+}

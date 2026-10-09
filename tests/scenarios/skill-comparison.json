@@ -1,0 +1,64 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "UFOK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "round salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "meditation room",
+      "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "training poster lists POROWNANIE",
+      "expect": "POROWNANIE-KOMEDA POROWNAJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "CWICZ POROWNANIE"
+    },
+    {
+      "label": "learn POROWNANIE",
+      "expect": "CWICZYSZ POROWNYWANIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "POROWNAJ"
+    },
+    {
+      "label": "the comparison is decided by a roll",
+      "expect": "(KOGO CHCESZ ZE SOBA POROWNAC|POPELNILES PEWNE BLEDY)[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "UNMODE"
+    },
+    {
+      "label": "restored meditation room",
+      "expect": "ZSZEDLES NA DOL GDZIE TRENUJE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WYJSCIE"
+    }
+  ]
+}

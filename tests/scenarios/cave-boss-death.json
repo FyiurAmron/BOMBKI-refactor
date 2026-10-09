@@ -1,0 +1,27 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "POL-ELF" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "city centre", "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WSCHOD" },
+    { "label": "dark street", "expect": "JESTES NA ULICY CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz", "expect": "ZNALAZLES SIE WSROD BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "flower thicket", "expect": "CHOC TO MALO PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "bluszcz clearing", "expect": "\\.\\.\\.\\.\\.\\.\\. PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+    { "label": "cave entrance", "expect": "TO CIEKAWE ZE WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "cave hall", "expect": "MLASK , MLASK KTOS RZECZYWISCIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLODNIE" },
+    { "label": "cave exit", "expect": "MOJ BOZE , COZ TO JEST , NA TRONIE SIEDZI[\\s\\S]*?TAK lub NIE >", "send": "TAK" },
+
+    { "label": "the twenty-times-bigger POKRZYWA cannot be beaten",
+      "expect": "NO TO GIN!!![\\s\\S]*?ZOSTALES ZABITY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "" },
+    { "label": "death handler runs on the next pass",
+      "expect": "POJAWISZ SIE W CENTRUM MIASTA", "send": "" },
+    { "label": "resurrected in the city centre",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE" }
+  ]
+}

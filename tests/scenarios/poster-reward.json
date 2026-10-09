@@ -1,0 +1,73 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "POL-ELF"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU ZACZYNA SIE GRE",
+      "send": "POLNOC"
+    },
+    {
+      "label": "round salon to mud school hall",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "mud school hall to shock room",
+      "expect": "JESTES W HALLU MUD SZKOLY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "shock room to small room",
+      "expect": "SZOK!! AAA UPSI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "small room to cage hall",
+      "expect": "JESTES W MALUTKIM POKOJU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "GORA"
+    },
+    {
+      "label": "cage hall to poster room",
+      "expect": "JESTES W POKOJU PROWADZACYM DO KLATEK[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "poster room and poster text",
+      "expect": "JESTES W POKOJU W KTORYM !JEST! !PLAKAT \\(SMIERDZI TU\\)[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "PATRZ PLAKAT"
+    },
+    {
+      "label": "poster text and reward hint",
+      "expect": "SORRY ZE NIE UMYLEM POKOJU[\\s\\S]*?JEZELI BYLES AKTYWNY[\\s\\S]*?SPRAWDZ CZY LEZY TU COS[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "poster room exits",
+      "expect": "GORA-KLATKI PELNE GAJDY[\\s\\S]*?DOL-TELEPORT!!![\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "DOL"
+    },
+    {
+      "label": "teleport room returns to room 1",
+      "expect": "T\\*\\*\\*E\\*\\*\\*L\\*\\*\\*E\\*\\*\\*P\\*\\*\\*O\\*\\*\\*R\\*\\*\\*T\\*\\*\\*O\\*\\*\\*W\\*\\*\\*A\\*\\*\\*L\\*\\*\\*E\\*\\*\\*S[\\s\\S]*?JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>"
+    }
+  ]
+}

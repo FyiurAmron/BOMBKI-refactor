@@ -1,0 +1,108 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "OLBRZYM"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "starting room",
+      "expect": "TU\\ ZACZYNA\\ SIE\\ GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the salon",
+      "expect": "JESTES\\ W\\ OKROGLYM\\ SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the city centre",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "the dark street",
+      "expect": "JESTES\\ NA\\ ULICY\\ CIEMNEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the bluszcz",
+      "expect": "ZNALAZLES\\ SIE\\ WSROD\\ BLUSZCZU[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the well",
+      "expect": "CHOC\\ TO\\ MALO\\ PRAWDOPODOBNE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the pier dut clearing",
+      "expect": "PIERDUT[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "the cave entrance",
+      "expect": "TO\\ CIEKAWE\\ ZE\\ WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the tree room",
+      "expect": "MLASK\\ ,\\ MLASK\\ KTOS\\ RZECZYWISCIE\\ SIE\\ OBZERA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "the tree room exit list",
+      "expect": "DOSTEPNE\\ WYJSCIA[\\s\\S]*?POLODNIE-GROTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the cave entrance again",
+      "expect": "TO\\ CIEKAWE\\ ZE\\ WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the tree room again",
+      "expect": "MLASK\\ ,\\ MLASK\\ KTOS\\ RZECZYWISCIE\\ SIE\\ OBZERA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "the cave entrance once more",
+      "expect": "TO\\ CIEKAWE\\ ZE\\ WCZESNIEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the tree room once more",
+      "expect": "MLASK\\ ,\\ MLASK\\ KTOS\\ RZECZYWISCIE\\ SIE\\ OBZERA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLODNIE"
+    },
+    {
+      "label": "the giant plant",
+      "expect": "MOJ\\ BOZE\\ ,\\ COZ\\ TO\\ JEST[\\s\\S]*?TAK\\ lub\\ NIE\\ >",
+      "send": "TAK"
+    },
+    {
+      "label": "the plant wins",
+      "expect": "ZOSTALES ZABITY",
+      "send": "WYJSCIE"
+    },
+    {
+      "label": "the game ends",
+      "expect_exit": true
+    }
+  ]
+}

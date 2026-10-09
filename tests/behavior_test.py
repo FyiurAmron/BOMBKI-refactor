@@ -19,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCENARIOS = [
     "level-up-deduction",
     "level-zero",
+    "shop-item-display",
 ]
 
 # The original deducts 725 KUNSZT when leveling 1 -> 2 (reference

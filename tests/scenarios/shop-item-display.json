@@ -1,0 +1,22 @@
+{
+  "steps": [
+    { "label": "intro tick", "expect": "TICK !!!", "send": "" },
+    { "label": "race prompt", "expect": "NAPISZ SWA RASE", "send": "POL-ELF" },
+    { "label": "player-name prompt", "expect": "PODAJE SWE IMIE", "send": "TESTER" },
+    { "label": "startup key read", "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": "" },
+
+    { "label": "first room", "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "round salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+    { "label": "ground prompt", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "DAWAJ KASE" },
+    { "label": "prompt after the grant", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "UNMODE" },
+    { "label": "restored salon", "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "city centre", "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "POLNOC" },
+    { "label": "shopping street south", "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "ZACHOD" },
+
+    { "label": "armoury", "expect": "JESTES W ZBROJOWNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "KUP STARY" },
+    { "label": "buy sword", "expect": "KUPUJESZ ZWYKLY MALY[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE" },
+    { "label": "ground prompt in the armoury", "expect": "[0-9]+%\\.-?[0-9]+>", "send": "JA" },
+    { "label": "sheet prints the sword line without the value",
+      "expect": "STARY ZARDZEWIALY MIECZ[\\r\\n]", "send": "WYJSCIE" }
+  ]
+}

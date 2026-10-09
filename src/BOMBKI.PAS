@@ -82,6 +82,30 @@ begin
   else LevelName := '';
 end;
 
+procedure ShowItem(val: Integer; const desc: string; width: Integer);
+{ Display inventory item if owned (val <= -10). width=0 prints the
+  description only; width>0 appends val right-aligned to width. }
+begin
+  if val <= -10 then
+    if width = 0 then WriteLn(desc)
+    else WriteLn(desc, val:width);
+end;
+
+procedure ShowItemPlain(val: Integer; const desc: string);
+{ Display inventory item if owned (val <= -10): desc followed by the
+  raw value, like the original's plain WriteLn(desc, val) lines. }
+begin
+  if val <= -10 then
+    WriteLn(desc, val);
+end;
+
+procedure ShowItemDiv10(val: Integer; const desc: string);
+{ Display inventory item with value divided by 10. }
+begin
+  if val <= -10 then
+    WriteLn(desc, val div 10);
+end;
+
 procedure PokazPostac;
 { Invented source name for the inventory/status portion of the JA helper at
   img 0x073C..0x1405 (called through the near-call at img 0xEC98). }
@@ -96,30 +120,28 @@ begin
   if ZRE > 24 then LimitPrzedmiotow := 16;
   if PRZEDM.PLECAK < 0 then LimitPrzedmiotow := LimitPrzedmiotow + 4;
   WriteLn('NOSISZ ZE SOBA:'); { inventory header at img 0x07D4..0x07EB }
-  if MMIECZ <= -10 then WriteLn('STARY ZARDZEWIALY MIECZ');
-  if MTARCZA <= -10 then WriteLn('OKRAGLA MALA TARCZA');
-  if SERCE <= -10 then WriteLn('ZAKRWAWIONE SERCE');
-  if DYPLOM <= -10 then WriteLn('DYPLOM MUD SZKOLY');
-  if PACZEK <= -10 then WriteLn('SMACZNY POLANY LIKIEREM PACZEK', PACZEK:10);
-  if CIASTKO <= -10 then WriteLn('SMACZNE CIASTKO ', CIASTKO:10);
-  if SUCHA <= -10 then WriteLn('TWARDA SUCHA RACJE', SUCHA:10);
-  if BULKA <= -10 then WriteLn('OKRAGLA PACHNACA BULKA', BULKA:10);
-  if CHLEB <= -10 then WriteLn('DUZY CIEPLY CHLEB', CHLEB:10);
-  if WEKA <= -10 then WriteLn('DLUGA I SMACZNA WEKE', WEKA:10);
-  if BIGOS <= -10 then WriteLn('PYSZNY BIGOS Z KAPUSTA Z WROGA', BIGOS:10);
-  if PrzedmPiwo <= -10 then
-    WriteLn('OZEWIAJACE PIWSKO Z KONKRETNYM KLIMATEM', PrzedmPiwo div 10);
-  if FAJKA <= -10 then WriteLn('CIEZKA FAJKA OD DZIADA MROZA', FAJKA);
-  if KOMPLET <= -10 then WriteLn('KOMPLET UBRAN FIRMY "SYF"', KOMPLET);
-  if GARNITUR <= -10 then WriteLn('GARNITUR Z KOLCAMI', GARNITUR);
-  if MBUTELKA <= -10 then WriteLn('MALA BUTELKE MANY', MBUTELKA);
-  if LISTEK <= -10 then WriteLn('DELIKATNY CHOC SZORSTKI LISTEK', LISTEK);
-  if kaseta <= -10 then WriteLn('KASETA LIROYA : L - JAK LIROY ', kaseta);
-  if PIGULKA <= -10 then WriteLn('PIGULKA TRANSPORTUJACA (M:G) ', PIGULKA);
-  if PRZEPUSTKA <= -10 then
-    WriteLn('PRZEPUSTKA WLASNORECZNIE PODPISANA PRZEZ QUEST-MASTERA ', PRZEPUSTKA);
-  if SCROLLPOR <= -10 then WriteLn('SCROLL Z CZAREM : POROWNYWANIE ', SCROLLPOR);
-  if PrzedmScrollPowrot <= -10 then WriteLn('SCROLL Z CZAREM : POWROT ', PrzedmScrollPowrot);
+  ShowItem(MMIECZ, 'STARY ZARDZEWIALY MIECZ', 0);
+  ShowItem(MTARCZA, 'OKRAGLA MALA TARCZA', 0);
+  ShowItem(SERCE, 'ZAKRWAWIONE SERCE', 0);
+  ShowItem(DYPLOM, 'DYPLOM MUD SZKOLY', 0);
+  ShowItem(PACZEK, 'SMACZNY POLANY LIKIEREM PACZEK', 10);
+  ShowItem(CIASTKO, 'SMACZNE CIASTKO ', 10);
+  ShowItem(SUCHA, 'TWARDA SUCHA RACJE', 10);
+  ShowItem(BULKA, 'OKRAGLA PACHNACA BULKA', 10);
+  ShowItem(CHLEB, 'DUZY CIEPLY CHLEB', 10);
+  ShowItem(WEKA, 'DLUGA I SMACZNA WEKE', 10);
+  ShowItem(BIGOS, 'PYSZNY BIGOS Z KAPUSTA Z WROGA', 10);
+  ShowItemDiv10(PrzedmPiwo, 'OZEWIAJACE PIWSKO Z KONKRETNYM KLIMATEM');
+  ShowItemPlain(FAJKA, 'CIEZKA FAJKA OD DZIADA MROZA');
+  ShowItemPlain(KOMPLET, 'KOMPLET UBRAN FIRMY "SYF"');
+  ShowItemPlain(GARNITUR, 'GARNITUR Z KOLCAMI');
+  ShowItemPlain(MBUTELKA, 'MALA BUTELKE MANY');
+  ShowItemPlain(LISTEK, 'DELIKATNY CHOC SZORSTKI LISTEK');
+  ShowItemPlain(kaseta, 'KASETA LIROYA : L - JAK LIROY ');
+  ShowItemPlain(PIGULKA, 'PIGULKA TRANSPORTUJACA (M:G) ');
+  ShowItemPlain(PRZEPUSTKA, 'PRZEPUSTKA WLASNORECZNIE PODPISANA PRZEZ QUEST-MASTERA ');
+  ShowItemPlain(SCROLLPOR, 'SCROLL Z CZAREM : POROWNYWANIE ');
+  ShowItemPlain(PrzedmScrollPowrot, 'SCROLL Z CZAREM : POWROT ');
   WriteLn('W SUMIE MASZ ', PRZED, '/', LimitPrzedmiotow, ' PRZEDMIOTOW');
   if JakaBron = 0 then WriteLn('BIJESZ SIE NA PIESCI');
   if JakaTarcza = 0 then WriteLn('NIE MASZ ZADNEJ OCHRONY');

@@ -36,6 +36,7 @@ SCENARIOS = [
     "ground-commands",
     "ground-skills",
     "shops-rich",
+    "czaromil-checkpoints",
     "arena-poster-tour",
     "cage-fights-tour",
     "cages-tour",

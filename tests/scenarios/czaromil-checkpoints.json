@@ -276,8 +276,8 @@
       "send": "DOL"
     },
     {
-      "label": "the poster room",
-      "expect": "JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "label": "the poster room: the first checkpoint fires",
+      "expect": "###################!!!CHECKPOINT!!![\\s\\S]*?JESTES\\ W\\ POKOJU\\ PROWADZACYM\\ DO\\ KLA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "DOL"
     },
     {
@@ -331,18 +331,13 @@
       "send": "UNMODE"
     },
     {
-      "label": "the dog is here",
+      "label": "the shopping street",
       "expect": "JESTES\\ NA\\ ULICY\\ NA\\ ULICY\\ SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
-      "send": "ZABIJ OWCZAREK"
-    },
-    {
-      "label": "the dog is down",
-      "expect": "ZABILES\\ GO[\\s\\S]*?MONET\\ Z\\ CIALA\\ PSA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "POLODNIE"
     },
     {
-      "label": "the first checkpoint fires",
-      "expect": "###################!!!CHECKPOINT!!![\\s\\S]*?JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "label": "the city centre past the cages",
+      "expect": "JESTES\\ W\\ CENTRUM\\ MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "WSCHOD"
     },
     {

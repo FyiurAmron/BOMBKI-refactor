@@ -77,6 +77,14 @@ type
     run: TCommandHandler;
   end;
 
+  TPredicate = function: Boolean;
+  TShopAction = procedure;
+  TShopRule = record
+    cmd: string;      { shop command word }
+    allowed: TPredicate;  { availability gate, quirks included }
+    act: TShopAction;
+  end;
+
 const
   Races: array[1..6] of TRace = (
     (name:'CZLOWIEK'; sil:10; zre:10; mad:10;
@@ -620,6 +628,324 @@ begin
   KupItem('KUP WEKA', PRZEDM.WEKA, 29, 'KUPUJESZ WEKE ZA 29 MONET', True);
 end;
 
+{ --- Shop transaction tables. Each rule pairs a command word with an
+  availability predicate (Zawsze: unconditional, quirks included) and
+  the verbatim action body. Shop commands are distinct within a shop
+  and no action rewrites wpisz, so the original sequential ifs
+  collapse to a single match without changing behavior. }
+
+procedure ZrealizujZakupy(const rules: array of TShopRule);
+var
+  i: Integer;
+begin
+  for i := Low(rules) to High(rules) do
+    if wpisz = rules[i].cmd then begin
+      if rules[i].allowed then
+        rules[i].act;
+      Break;
+    end;
+end;
+
+function Zawsze: Boolean;
+begin
+  Zawsze := True;
+end;
+
+{ --- Zbrojownia (img 0x3E8E..0x40BB): weapon/armor rules --- }
+
+function MoznaKupicStary: Boolean;
+begin
+  MoznaKupicStary := (PRZEDM.MMIECZ = 0) and (PRZEDM.FORSA >= 70);
+end;
+
+procedure KupStary;
+begin
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+  PRZEDM.MMIECZ := -10;
+  PRZEDM.FORSA := PRZEDM.FORSA - 70;
+  WriteLn('KUPUJESZ ZWYKLY MALY !STARY! MIECZYK ZA 70 MONET');
+  WartoscMiecza := 500;
+end;
+
+function MoznaSprzedacStary: Boolean;
+begin
+  MoznaSprzedacStary := PRZEDM.MMIECZ = -10;
+end;
+
+procedure SprzedajStary;
+begin
+  WriteLn('SPRZEDAWCA MOWI CI : WYPCHAJ SIE Z TYM MIECZEM');
+  WriteLn('ALBO DOBRA KUPIE GO OD CIEBIE ZA 30 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 30;
+  PRZEDM.MMIECZ := 0;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+function MoznaKupicMala: Boolean;
+begin
+  MoznaKupicMala := (PRZEDM.MTARCZA = 0) and (PRZEDM.FORSA >= 15);
+end;
+
+procedure KupMala;
+begin
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+  PRZEDM.MTARCZA := -10;
+  PRZEDM.FORSA := PRZEDM.FORSA - 15;
+  WriteLn('KUPUJESZ !MALA! TARCZA ZA 15 MONET');
+end;
+
+procedure SprzedajMala;
+{ Unconditional in the original: it pays 8 for a shield you may not own. }
+begin
+  WriteLn('TA TARCZA JEST BAJER,FRAJER KUPIE JA OD CIEBIE ZA 8 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 8;
+  PRZEDM.MTARCZA := 0;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+const
+  ZbrojowniaRules: array[1..4] of TShopRule = (
+    (cmd:'KUP STARY'; allowed:MoznaKupicStary; act:KupStary),
+    (cmd:'SPRZEDAJ STARY'; allowed:MoznaSprzedacStary; act:SprzedajStary),
+    (cmd:'KUP MALA'; allowed:MoznaKupicMala; act:KupMala),
+    (cmd:'SPRZEDAJ MALA'; allowed:Zawsze; act:SprzedajMala)
+  );
+
+{ --- Sklep Wielobranzowy (img 0x43A5..0x47DB): general-store rules --- }
+
+function MoznaKupicFajka: Boolean;
+begin
+  MoznaKupicFajka := (PRZEDM.FAJKA = 0) and (PRZEDM.FORSA >= 480);
+end;
+
+procedure KupFajka;
+begin
+  WriteLn('KUPUJESZ FAJKE ZA 480 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA - 480;
+  PRZEDM.FAJKA := PRZEDM.FAJKA - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+  PRZEDM.MAD := PRZEDM.MAD + 1;
+end;
+
+function MoznaKupicKomplet: Boolean;
+begin
+  MoznaKupicKomplet := (PRZEDM.KOMPLET = 0) and (PRZEDM.FORSA >= 35);
+end;
+
+procedure KupKomplet;
+begin
+  WriteLn('KUPUJESZ !KOMPLET! UBRAN FIRMY "SYF" ZA 35 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA - 35;
+  PRZEDM.KOMPLET := PRZEDM.KOMPLET - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaSprzedacKomplet: Boolean;
+begin
+  MoznaSprzedacKomplet := (PRZEDM.KOMPLET <= -10) and (PRZEDM.JAKIEUB <> 'SYF');
+end;
+
+procedure SprzedajKomplet;
+begin
+  WriteLn('SPRZEDAJESZ !KOMPLET! UBRAN FIRMY "SYF" ZA 15 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 15;
+  PRZEDM.KOMPLET := PRZEDM.KOMPLET + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+function MoznaSprzedacFajka: Boolean;
+begin
+  MoznaSprzedacFajka := PRZEDM.FAJKA = -10;
+end;
+
+procedure SprzedajFajka;
+begin
+  WriteLn('SPRZEDAJESZ FAJKE ZA 120 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 120;
+  PRZEDM.FAJKA := PRZEDM.FAJKA + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+  PRZEDM.MAD := PRZEDM.MAD - 1;
+end;
+
+function MoznaKupicKaseta: Boolean;
+begin
+  MoznaKupicKaseta := PRZEDM.FORSA >= 1999;
+end;
+
+procedure KupKaseta;
+begin
+  WriteLn('KUPUJESZ KASETE LIROYA - L JAK LIROY ZA 1999 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA - 1999;
+  PRZEDM.kaseta := PRZEDM.kaseta - 10;
+  PRZEDM.PRO := PRZEDM.PRO - 8;
+  MONSTRA.MAXE := MONSTRA.MAXE + 5;
+  PRZEDM.ZRE := PRZEDM.ZRE + 1;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaKupicGarnitur: Boolean;
+begin
+  MoznaKupicGarnitur := PRZEDM.FORSA >= 1000;
+end;
+
+procedure KupGarnitur;
+begin
+  WriteLn('KUPUJESZ GARNITUR Z KOLCAMI ZA JEDYNE 1000 $');
+  PRZEDM.FORSA := PRZEDM.FORSA - 1000;
+  PRZEDM.GARNITUR := PRZEDM.GARNITUR - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaSprzedacGarnitur: Boolean;
+begin
+  MoznaSprzedacGarnitur := PRZEDM.JAKIEUB <> 'GARNITUR';
+end;
+
+procedure SprzedajGarnitur;
+begin
+  WriteLn('SPRZEDAJESZ GARNITUR Z KOLCAMI ZA JEDYNE 500 $');
+  PRZEDM.FORSA := PRZEDM.FORSA + 500;
+  PRZEDM.GARNITUR := PRZEDM.GARNITUR + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+function MoznaSprzedacKaseta: Boolean;
+begin
+  MoznaSprzedacKaseta := PRZEDM.kaseta < 0;
+end;
+
+procedure SprzedajKaseta;
+begin
+  WriteLn('SPRZEDAJESZ KASETE LIROYA - L JAK LIROY ZA 1000 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 1000;
+  PRZEDM.kaseta := PRZEDM.kaseta + 10;
+  PRZEDM.PRO := PRZEDM.PRO + 8;
+  MONSTRA.MAXE := MONSTRA.MAXE - 5;
+  PRZEDM.ZRE := PRZEDM.ZRE - 1;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+const
+  SklepWielobranzowyRules: array[1..8] of TShopRule = (
+    (cmd:'KUP FAJKA'; allowed:MoznaKupicFajka; act:KupFajka),
+    (cmd:'KUP KOMPLET'; allowed:MoznaKupicKomplet; act:KupKomplet),
+    (cmd:'SPRZEDAJ KOMPLET'; allowed:MoznaSprzedacKomplet; act:SprzedajKomplet),
+    (cmd:'SPRZEDAJ FAJKA'; allowed:MoznaSprzedacFajka; act:SprzedajFajka),
+    (cmd:'KUP KASETA'; allowed:MoznaKupicKaseta; act:KupKaseta),
+    (cmd:'KUP GARNITUR'; allowed:MoznaKupicGarnitur; act:KupGarnitur),
+    (cmd:'SPRZEDAJ GARNITUR'; allowed:MoznaSprzedacGarnitur; act:SprzedajGarnitur),
+    (cmd:'SPRZEDAJ KASETA'; allowed:MoznaSprzedacKaseta; act:SprzedajKaseta)
+  );
+
+{ --- Sklep Magiczny (img 0x4ADD..0x4E8A): potion/leaf/pill/scroll rules;
+  the original gates and prices disagree on purpose (the bottle gate is
+  15 but charges 20, the leaf sells for 820 and charges 830) and are
+  kept as-is. --- }
+
+function MoznaKupicMalaButelka: Boolean;
+begin
+  MoznaKupicMalaButelka := PRZEDM.FORSA >= 15;
+end;
+
+procedure KupMalaButelka;
+begin
+  WriteLn('KUPUJESZ MALA BUTELKA MANY ZA 20 MONET ( AHHHH TA INFLACJA ) ');
+  PRZEDM.FORSA := PRZEDM.FORSA - 20;
+  PRZEDM.MBUTELKA := PRZEDM.MBUTELKA - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaKupicListek: Boolean;
+begin
+  MoznaKupicListek := PRZEDM.FORSA >= 820;
+end;
+
+procedure KupListek;
+begin
+  WriteLn('KUPUJESZ LISTEK KTORY PRZYNOSCI SZCZESCIE ZA 820 KESZU');
+  PRZEDM.FORSA := PRZEDM.FORSA - 830;
+  PRZEDM.LISTEK := PRZEDM.LISTEK - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+  PRZEDM.MAXMANA := PRZEDM.MAXMANA + 40;
+end;
+
+function MoznaSprzedacListek: Boolean;
+begin
+  MoznaSprzedacListek := PRZEDM.FORSA >= 820;
+end;
+
+procedure SprzedajListek;
+begin
+  WriteLn('SPRZEDAJESZ LISTEK ZA 400 !!! CIESZ SIE');
+  PRZEDM.FORSA := PRZEDM.FORSA + 400;
+  PRZEDM.LISTEK := PRZEDM.LISTEK + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+  PRZEDM.MAXMANA := PRZEDM.MAXMANA - 40;
+end;
+
+function MoznaKupicPigulka: Boolean;
+begin
+  MoznaKupicPigulka := PRZEDM.FORSA >= 235;
+end;
+
+procedure KupPigulka;
+begin
+  WriteLn('KUPUJESZ PIGULKE TRANSPORTUJACA ZA 235 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA - 235;
+  PRZEDM.PIGULKA := PRZEDM.PIGULKA - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaSprzedacPigulka: Boolean;
+begin
+  MoznaSprzedacPigulka := PRZEDM.PIGULKA <= 10;
+end;
+
+procedure SprzedajPigulka;
+begin
+  WriteLn('SPRZEDAWCA KUPUJE OD CIEBIE PIGULKE ZA 170 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 170;
+  PRZEDM.PIGULKA := PRZEDM.PIGULKA + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+function MoznaKupicScrollPorownanie: Boolean;
+begin
+  MoznaKupicScrollPorownanie := PRZEDM.FORSA > 39;
+end;
+
+procedure KupScrollPorownanie;
+begin
+  WriteLn('SPRZEDAWCA SPRZEDAJE CI SCROLL ZA 40 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA - 40;
+  PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR - 10;
+  PRZEDM.PRZED := PRZEDM.PRZED + 1;
+end;
+
+function MoznaSprzedacScrollPorownanie: Boolean;
+begin
+  MoznaSprzedacScrollPorownanie := PRZEDM.SCROLLPOR < 0;
+end;
+
+procedure SprzedajScrollPorownanie;
+begin
+  WriteLn('SPRZEDAWCA KUPUJE OD CIEBIE SCROLL ZA NEDZNE 18 MONET');
+  PRZEDM.FORSA := PRZEDM.FORSA + 18;
+  PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR + 10;
+  PRZEDM.PRZED := PRZEDM.PRZED - 1;
+end;
+
+const
+  SklepMagicznyRules: array[1..7] of TShopRule = (
+    (cmd:'KUP MALA BUTELKA MANY'; allowed:MoznaKupicMalaButelka; act:KupMalaButelka),
+    (cmd:'KUP LISTEK'; allowed:MoznaKupicListek; act:KupListek),
+    (cmd:'SPRZEDAJ LISTEK'; allowed:MoznaSprzedacListek; act:SprzedajListek),
+    (cmd:'KUP PIGULKA TRANSPORTUJACA'; allowed:MoznaKupicPigulka; act:KupPigulka),
+    (cmd:'SPRZEDAJ PIGULKA TRANSPORTUJACA'; allowed:MoznaSprzedacPigulka; act:SprzedajPigulka),
+    (cmd:'KUP SCROLL POROWNYWANIE'; allowed:MoznaKupicScrollPorownanie; act:KupScrollPorownanie),
+    (cmd:'SPRZEDAJ SCROLL POROWNYWANIE'; allowed:MoznaSprzedacScrollPorownanie; act:SprzedajScrollPorownanie)
+  );
+
 procedure ZakupyZbrojownia;
 { img 0x3E8E..0x40BB: weapon/armor store transaction body }
 begin
@@ -632,36 +958,7 @@ begin
     WriteLn('DLUGI MIECZ GLADIATORA  : 3200  2%');
   end;
   WalkaMiasto; { img 0x3F2A -> helper at 0x1C2A }
-  if (wpisz = 'KUP STARY') and (PRZEDM.MMIECZ = 0) and
-     (PRZEDM.FORSA >= 70) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.MMIECZ := -10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 70;
-    WriteLn('KUPUJESZ ZWYKLY MALY !STARY! MIECZYK ZA 70 MONET');
-    WartoscMiecza := 500;
-  end;
-  if wpisz = 'SPRZEDAJ STARY' then begin
-    if PRZEDM.MMIECZ = -10 then begin
-      WriteLn('SPRZEDAWCA MOWI CI : WYPCHAJ SIE Z TYM MIECZEM');
-      WriteLn('ALBO DOBRA KUPIE GO OD CIEBIE ZA 30 MONET');
-      PRZEDM.FORSA := PRZEDM.FORSA + 30;
-      PRZEDM.MMIECZ := 0;
-      PRZEDM.PRZED := PRZEDM.PRZED - 1;
-    end;
-  end;
-  if (wpisz = 'KUP MALA') and (PRZEDM.MTARCZA = 0) and
-     (PRZEDM.FORSA >= 15) then begin
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.MTARCZA := -10;
-    PRZEDM.FORSA := PRZEDM.FORSA - 15;
-    WriteLn('KUPUJESZ !MALA! TARCZA ZA 15 MONET');
-  end;
-  if wpisz = 'SPRZEDAJ MALA' then begin
-    WriteLn('TA TARCZA JEST BAJER,FRAJER KUPIE JA OD CIEBIE ZA 8 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 8;
-    PRZEDM.MTARCZA := 0;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
+  ZrealizujZakupy(ZbrojowniaRules);
 end;
 
 procedure ZakupySklepWielobranzowy;
@@ -677,66 +974,7 @@ begin
   end;
   if wpisz = 'PATRZ POSTER' then
     WriteLn('OKAZJA !!! PRZY ZAKUPIE GARNITURU KOMPLET UBRAN GRATIS !!!(ZART)');
-  if (wpisz = 'KUP FAJKA') and (PRZEDM.FAJKA = 0) and
-     (PRZEDM.FORSA >= 480) then begin
-    WriteLn('KUPUJESZ FAJKE ZA 480 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA - 480;
-    PRZEDM.FAJKA := PRZEDM.FAJKA - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.MAD := PRZEDM.MAD + 1;
-  end;
-  if (wpisz = 'KUP KOMPLET') and (PRZEDM.KOMPLET = 0) and
-     (PRZEDM.FORSA >= 35) then begin
-    WriteLn('KUPUJESZ !KOMPLET! UBRAN FIRMY "SYF" ZA 35 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA - 35;
-    PRZEDM.KOMPLET := PRZEDM.KOMPLET - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'SPRZEDAJ KOMPLET') and (PRZEDM.KOMPLET <= -10) and
-     (PRZEDM.JAKIEUB <> 'SYF') then begin
-    WriteLn('SPRZEDAJESZ !KOMPLET! UBRAN FIRMY "SYF" ZA 15 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 15;
-    PRZEDM.KOMPLET := PRZEDM.KOMPLET + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
-  if (wpisz = 'SPRZEDAJ FAJKA') and (PRZEDM.FAJKA = -10) then begin
-    WriteLn('SPRZEDAJESZ FAJKE ZA 120 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 120;
-    PRZEDM.FAJKA := PRZEDM.FAJKA + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-    PRZEDM.MAD := PRZEDM.MAD - 1;
-  end;
-  if (wpisz = 'KUP KASETA') and (PRZEDM.FORSA >= 1999) then begin
-    WriteLn('KUPUJESZ KASETE LIROYA - L JAK LIROY ZA 1999 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA - 1999;
-    PRZEDM.kaseta := PRZEDM.kaseta - 10;
-    PRZEDM.PRO := PRZEDM.PRO - 8;
-    MONSTRA.MAXE := MONSTRA.MAXE + 5;
-    PRZEDM.ZRE := PRZEDM.ZRE + 1;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'KUP GARNITUR') and (PRZEDM.FORSA >= 1000) then begin
-    WriteLn('KUPUJESZ GARNITUR Z KOLCAMI ZA JEDYNE 1000 $');
-    PRZEDM.FORSA := PRZEDM.FORSA - 1000;
-    PRZEDM.GARNITUR := PRZEDM.GARNITUR - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'SPRZEDAJ GARNITUR') and
-     (PRZEDM.JAKIEUB <> 'GARNITUR') then begin
-    WriteLn('SPRZEDAJESZ GARNITUR Z KOLCAMI ZA JEDYNE 500 $');
-    PRZEDM.FORSA := PRZEDM.FORSA + 500;
-    PRZEDM.GARNITUR := PRZEDM.GARNITUR + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
-  if (wpisz = 'SPRZEDAJ KASETA') and (PRZEDM.kaseta < 0) then begin
-    WriteLn('SPRZEDAJESZ KASETE LIROYA - L JAK LIROY ZA 1000 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 1000;
-    PRZEDM.kaseta := PRZEDM.kaseta + 10;
-    PRZEDM.PRO := PRZEDM.PRO + 8;
-    MONSTRA.MAXE := MONSTRA.MAXE - 5;
-    PRZEDM.ZRE := PRZEDM.ZRE - 1;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
+  ZrealizujZakupy(SklepWielobranzowyRules);
 end;
 
 procedure ZakupySklepMagiczny;
@@ -752,54 +990,7 @@ begin
     WriteLn('PIGULKA TRANSPORTUJACA  :  235 ');
     WriteLn('SCROLL POROWNYWANIE     :   40 ');
   end;
-  if (wpisz = 'KUP MALA BUTELKA MANY') and (PRZEDM.FORSA >= 15) then begin
-    WriteLn('KUPUJESZ MALA BUTELKA MANY ZA 20 MONET ( AHHHH TA INFLACJA ) ');
-    PRZEDM.FORSA := PRZEDM.FORSA - 20;
-    PRZEDM.MBUTELKA := PRZEDM.MBUTELKA - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'KUP LISTEK') and (PRZEDM.FORSA >= 820) then begin
-    WriteLn('KUPUJESZ LISTEK KTORY PRZYNOSCI SZCZESCIE ZA 820 KESZU');
-    PRZEDM.FORSA := PRZEDM.FORSA - 830;
-    PRZEDM.LISTEK := PRZEDM.LISTEK - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-    PRZEDM.MAXMANA := PRZEDM.MAXMANA + 40;
-  end;
-  if (wpisz = 'SPRZEDAJ LISTEK') and (PRZEDM.FORSA >= 820) then begin
-    WriteLn('SPRZEDAJESZ LISTEK ZA 400 !!! CIESZ SIE');
-    PRZEDM.FORSA := PRZEDM.FORSA + 400;
-    PRZEDM.LISTEK := PRZEDM.LISTEK + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-    PRZEDM.MAXMANA := PRZEDM.MAXMANA - 40;
-  end;
-  if (wpisz = 'KUP PIGULKA TRANSPORTUJACA') and
-     (PRZEDM.FORSA >= 235) then begin
-    WriteLn('KUPUJESZ PIGULKE TRANSPORTUJACA ZA 235 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA - 235;
-    PRZEDM.PIGULKA := PRZEDM.PIGULKA - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'SPRZEDAJ PIGULKA TRANSPORTUJACA') and
-     (PRZEDM.PIGULKA <= 10) then begin
-    WriteLn('SPRZEDAWCA KUPUJE OD CIEBIE PIGULKE ZA 170 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 170;
-    PRZEDM.PIGULKA := PRZEDM.PIGULKA + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
-  if (wpisz = 'KUP SCROLL POROWNYWANIE') and
-     (PRZEDM.FORSA > 39) then begin
-    WriteLn('SPRZEDAWCA SPRZEDAJE CI SCROLL ZA 40 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA - 40;
-    PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR - 10;
-    PRZEDM.PRZED := PRZEDM.PRZED + 1;
-  end;
-  if (wpisz = 'SPRZEDAJ SCROLL POROWNYWANIE') and
-     (PRZEDM.SCROLLPOR < 0) then begin
-    WriteLn('SPRZEDAWCA KUPUJE OD CIEBIE SCROLL ZA NEDZNE 18 MONET');
-    PRZEDM.FORSA := PRZEDM.FORSA + 18;
-    PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR + 10;
-    PRZEDM.PRZED := PRZEDM.PRZED - 1;
-  end;
+  ZrealizujZakupy(SklepMagicznyRules);
 end;
 
 procedure WalkaKoncert;

@@ -51,6 +51,36 @@ var
   PrzedmPiwo: Integer; { invented label for DGROUP word 0x07C }
   plik: Text;              { main-program file record at DGROUP 0x007E }
 
+type
+  TRace = record
+    name: string;                                     { prompt word }
+    sil, zre, mad: Integer;                           { starting attributes }
+    maxsil, maxzre, maxmad: Integer;                  { starting caps }
+    dmaxmana, dforsa, dmaxe, denergia: Integer;       { deltas at selection }
+  end;
+
+const
+  Races: array[1..6] of TRace = (
+    (name:'CZLOWIEK'; sil:10; zre:10; mad:10;
+     maxsil:15; maxzre:15; maxmad:15;
+     dmaxmana:0; dforsa:0; dmaxe:0; denergia:0),
+    (name:'OLBRZYM'; sil:13; zre:13; mad:5;
+     maxsil:20; maxzre:20; maxmad:7;
+     dmaxmana:-30; dforsa:0; dmaxe:0; denergia:0),
+    (name:'NIMFA'; sil:10; zre:13; mad:7;
+     maxsil:15; maxzre:20; maxmad:11;
+     dmaxmana:0; dforsa:0; dmaxe:0; denergia:0),
+    (name:'POL-ELF'; sil:6; zre:16; mad:8;
+     maxsil:10; maxzre:24; maxmad:12;
+     dmaxmana:-20; dforsa:30; dmaxe:-5; denergia:-5),
+    (name:'UFOK'; sil:9; zre:9; mad:13;
+     maxsil:13; maxzre:14; maxmad:20;
+     dmaxmana:50; dforsa:0; dmaxe:0; denergia:0),
+    (name:'CZAROMIL'; sil:6; zre:7; mad:16;
+     maxsil:9; maxzre:11; maxmad:25;
+     dmaxmana:150; dforsa:0; dmaxe:0; denergia:0)
+  );
+
 procedure WalkaKoncert; forward;
 procedure WybierzRase; forward;
 procedure PunktyKontrolne; forward;
@@ -179,46 +209,42 @@ begin
   if PRZEDM.DUNQ <> 0 then WriteLn('NIE ZAPOMNIALES O POKRZYWIE W SADACH DUNCANA???');
 end;
 
+function FindRace(const name: string): Integer;
+{ Index into Races for the given race word, 0 when unknown. }
+var
+  i: Integer;
+begin
+  FindRace := 0;
+  for i := Low(Races) to High(Races) do
+    if name = Races[i].name then begin
+      FindRace := i;
+      Exit;
+    end;
+end;
+
 procedure WybierzRase;
 { img 0x16EF..0x1ABD: intro call, then race selection at game start }
+var
+  chosen: Integer;
 begin
   MONSTRA.WSTEP; { img 0x16F9 -> far entry 1BC4:022B }
   repeat
     WriteLn('NAPISZ SWA RASE : OLBRZYM , NIMFA , UFOK , CZAROMIL , CZLOWIEK , POL-ELF');
     ReadLn(wpisz);
-    if wpisz = 'CZLOWIEK' then begin
-      SIL := 10; ZRE := 10; MAD := 10;
-      MAXSIL := 15; MAXZRE := 15; MAXMAD := 15;
+    chosen := FindRace(wpisz);
+    if chosen > 0 then begin
+      SIL := Races[chosen].sil;
+      ZRE := Races[chosen].zre;
+      MAD := Races[chosen].mad;
+      MAXSIL := Races[chosen].maxsil;
+      MAXZRE := Races[chosen].maxzre;
+      MAXMAD := Races[chosen].maxmad;
+      MAXMANA := MAXMANA + Races[chosen].dmaxmana;
+      FORSA := FORSA + Races[chosen].dforsa;
+      MAXE := MAXE + Races[chosen].dmaxe;
+      ENERGIA := ENERGIA + Races[chosen].denergia;
     end;
-    if wpisz = 'OLBRZYM' then begin
-      SIL := 13; ZRE := 13; MAD := 5;
-      MAXSIL := 20; MAXZRE := 20; MAXMAD := 7;
-      MAXMANA := MAXMANA - 30;
-    end;
-    if wpisz = 'NIMFA' then begin
-      SIL := 10; ZRE := 13; MAD := 7;
-      MAXSIL := 15; MAXZRE := 20; MAXMAD := 11;
-    end;
-    if wpisz = 'POL-ELF' then begin
-      SIL := 6; ZRE := 16; MAD := 8;
-      MAXSIL := 10; MAXZRE := 24; MAXMAD := 12;
-      MAXMANA := MAXMANA - 20;
-      FORSA := FORSA + 30;
-      MAXE := MAXE - 5;
-      ENERGIA := ENERGIA - 5;
-    end;
-    if wpisz = 'UFOK' then begin
-      SIL := 9; ZRE := 9; MAD := 13;
-      MAXSIL := 13; MAXZRE := 14; MAXMAD := 20;
-      MAXMANA := MAXMANA + 50;
-    end;
-    if wpisz = 'CZAROMIL' then begin
-      SIL := 6; ZRE := 7; MAD := 16;
-      MAXMANA := MAXMANA + 150;
-      MAXSIL := 9; MAXZRE := 11; MAXMAD := 25;
-    end;
-  until (wpisz = 'CZLOWIEK') or (wpisz = 'OLBRZYM') or (wpisz = 'NIMFA') or
-        (wpisz = 'UFOK') or (wpisz = 'CZAROMIL') or (wpisz = 'POL-ELF');
+  until chosen > 0;
   WriteLn('PODAJE SWE IMIE (I TAK MNIE TO NIE OBCHODZI)');
   ReadLn(wpisz);
   ENERGIA := 50;

@@ -59,6 +59,11 @@ type
     dmaxmana, dforsa, dmaxe, denergia: Integer;       { deltas at selection }
   end;
 
+  TZreLimit = record
+    zre: Integer;    { first ZRE value that grants this limit }
+    limit: Integer;  { carried-item capacity from that ZRE on }
+  end;
+
 const
   Races: array[1..6] of TRace = (
     (name:'CZLOWIEK'; sil:10; zre:10; mad:10;
@@ -80,6 +85,11 @@ const
      maxsil:9; maxzre:11; maxmad:25;
      dmaxmana:150; dforsa:0; dmaxe:0; denergia:0)
   );
+
+  ZreItemLimits: array[1..7] of TZreLimit = (
+    (zre: 0; limit: 10), (zre: 11; limit: 11), (zre: 13; limit: 12),
+    (zre: 16; limit: 13), (zre: 19; limit: 14), (zre: 21; limit: 15),
+    (zre: 25; limit: 16));
 
 procedure WalkaKoncert; forward;
 procedure WybierzRase; forward;
@@ -112,6 +122,20 @@ begin
   else LevelName := '';
 end;
 
+function LevelThreshold(lvl: Integer): Integer;
+{ KUNSZT needed to advance from the given level:
+  700/725/730 for 1..3, 735+level for 4..8, 735+2*level above. }
+begin
+  case lvl of
+    1: LevelThreshold := Lvl1_Threshold;
+    2: LevelThreshold := Lvl2_Threshold;
+    3: LevelThreshold := Lvl3_Threshold;
+    4..8: LevelThreshold := Lvl4_Base + lvl;
+    9..13: LevelThreshold := Lvl9_Base + 2 * lvl;
+    else LevelThreshold := Lvl9_Base + 2 * lvl;
+  end;
+end;
+
 procedure ShowItem(val: Integer; const desc: string; width: Integer);
 { Display inventory item if owned (val <= -10). width=0 prints the
   description only; width>0 appends val right-aligned to width. }
@@ -139,15 +163,15 @@ end;
 procedure PokazPostac;
 { Invented source name for the inventory/status portion of the JA helper at
   img 0x073C..0x1405 (called through the near-call at img 0xEC98). }
+var
+  i, gap: Integer;
 begin
   { img 0x073C..0x07D4: carrying-capacity calculation in the JA handler. }
-  if ZRE < 11 then LimitPrzedmiotow := 10;
-  if (ZRE > 10) and (ZRE < 13) then LimitPrzedmiotow := 11;
-  if (ZRE > 12) and (ZRE < 16) then LimitPrzedmiotow := 12;
-  if (ZRE > 15) and (ZRE < 19) then LimitPrzedmiotow := 13;
-  if (ZRE > 18) and (ZRE < 21) then LimitPrzedmiotow := 14;
-  if (ZRE > 20) and (ZRE < 25) then LimitPrzedmiotow := 15;
-  if ZRE > 24 then LimitPrzedmiotow := 16;
+  for i := High(ZreItemLimits) downto Low(ZreItemLimits) do
+    if ZRE >= ZreItemLimits[i].zre then begin
+      LimitPrzedmiotow := ZreItemLimits[i].limit;
+      Break;
+    end;
   if PRZEDM.PLECAK < 0 then LimitPrzedmiotow := LimitPrzedmiotow + 4;
   WriteLn('NOSISZ ZE SOBA:'); { inventory header at img 0x07D4..0x07EB }
   ShowItem(MMIECZ, 'STARY ZARDZEWIALY MIECZ', 0);
@@ -183,18 +207,19 @@ begin
   if (JakaBron = 1) and (MMIECZ = -100) then
     WriteLn('JAKO BRONI UZYWASZ STAREGO MIECZA');
   WriteLn('MASZ ', FORSA, ' MONET I ', PRA, ' PRAKTYK');
-  { Level names and base thresholds; POZIOM=1..13 have special names,
-    >13 uses the generic message. Formula for required KUNSZT:
-    1:700, 2:725, 3:730, 4..8:735+POZIOM, 9..13:735+2*POZIOM, >13:735+2*POZIOM }
+  { Level names; POZIOM=1..13 have special names, >13 uses the generic
+    message. Every branch reports LevelThreshold(POZIOM) - KUNSZT:
+    700/725/730 for 1..3, 735+POZIOM for 4..8, 735+2*POZIOM above. }
+  gap := LevelThreshold(POZIOM) - KUNSZT;
   case POZIOM of
-    1: WriteLn('JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl1_Threshold - KUNSZT, ' KUNSZTU');
-    2: WriteLn('JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl2_Threshold - KUNSZT, ' KUNSZTU');
-    3: WriteLn('JESTES NA TRZECIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', Lvl3_Threshold - KUNSZT, 'KUNSZTU');
-    4..8: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (Lvl4_Base - KUNSZT) + POZIOM, ' KUNSZTU');
-    9..13: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', (Lvl9_Base - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
+    1: WriteLn('JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
+    2: WriteLn('JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
+    3: WriteLn('JESTES NA TRZECIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, 'KUNSZTU');
+    4..8: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
+    9..13: WriteLn('JESTES NA ', LevelName(POZIOM), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
   end;
   if POZIOM > 13 then
-    WriteLn('JESTES NA BARDZO WYSOKIM LEVELU A DO NASTEPNEGO BRAKUJE CI TYLKO', (Lvl9_Base - KUNSZT) + 2 * POZIOM, ' KUNSZTU');
+    WriteLn('JESTES NA BARDZO WYSOKIM LEVELU A DO NASTEPNEGO BRAKUJE CI TYLKO', gap, ' KUNSZTU');
   { img 0x11C4..0x12BD: current/max attributes, S.Z, and FUKSROLL. }
   WriteLn('TWOJE PARAMETRY : SILA - ', SIL, '/', MAXSIL,
          ' ZRECZNOSC - ', ZRE, '/', MAXZRE,
@@ -1390,19 +1415,6 @@ begin
   Read(plik, PRZEDM.JAKIEUB);
   Close(plik);
   WriteLn('suckemall:', PRZEDM.JAKIEUB);
-end;
-
-function LevelThreshold(lvl: Integer): Integer;
-{ Returns the KUNSZT threshold for the given level. }
-begin
-  case lvl of
-    1: LevelThreshold := Lvl1_Threshold;
-    2: LevelThreshold := Lvl2_Threshold;
-    3: LevelThreshold := Lvl3_Threshold;
-    4..8: LevelThreshold := Lvl4_Base + lvl;
-    9..13: LevelThreshold := Lvl9_Base + 2 * lvl;
-    else LevelThreshold := Lvl9_Base + 2 * lvl;
-  end;
 end;
 
 procedure SprawdzCzyZdobylesLevel;

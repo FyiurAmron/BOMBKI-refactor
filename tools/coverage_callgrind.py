@@ -37,6 +37,11 @@ TESTS = PROJECT / "tests"
 SCENARIO_DIR = TESTS / "scenarios"
 UNIT_TEST_DIR = TESTS / "units"
 UNIT_NAMES = ("GRA",)
+# A fixed seed makes the Callgrind runs reproducible: seed-dependent
+# scenarios (cage fights, loot drops, race stats) would otherwise flake
+# on the clock-seeded PRNG. Same seed as tests/behavior_test.py, whose
+# corpus is verified under it.
+COVERAGE_SEED = "0x9E3779B97F4A7C15"
 PROGRAM_NAME = "BOMBKI"
 DEBUG_FLAGS = ("-g",)
 UNCOVERED_PREVIEW = 40
@@ -120,6 +125,7 @@ def run_scenarios(wrapper: Path, out_dir: Path, timeout: float,
         log = run_dir / "transcript.jsonl"
         environment = os.environ.copy()
         environment["CG_OUT_FILE"] = str(profile)
+        environment["BOMBKI_SEED"] = COVERAGE_SEED
         command = [
             sys.executable, str(TESTS / "expect_pty.py"),
             str(wrapper), str(scenario),

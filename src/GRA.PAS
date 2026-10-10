@@ -54,7 +54,6 @@ var wpisz: string;
   procedure ULSKLEPIKOWA;
   procedure POROWNANIE;
   procedure TRAIN;
-  procedure save;
 
   procedure POKOJ0;
   procedure POKOJ1;
@@ -1915,10 +1914,6 @@ begin
     end;
 end;
 
-procedure save;
-begin
-end;
-
 const
   MIECHO_Podswiadomosc = 1000;
   MIECHO_Smierc = 10000;
@@ -2377,7 +2372,6 @@ begin
   wpisz := 'JA';
   ZapisanoGre := 1;
   WriteLn('ALL RIGHT !!! GRA ZAPISANA! ;)');
-  save;
   ClrScr;
   Assign(plik, 'pliki.tpu');
   Rewrite(plik);
@@ -3842,8 +3836,6 @@ const
     (cmd:'UM'; run:CmdWyjdzZPodswiadomosci)
   );
 
-var
-  gi, ri: Integer;
 procedure Pokoj14;
 
 begin

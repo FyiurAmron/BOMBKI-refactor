@@ -40,6 +40,7 @@ var
   Unused0072: Integer; { completely unused: no references }
   PotrawkiNiepotrzebnaZmiennaBug: Integer; { saved word at DGROUP 0x074 }
   Unused0076: Integer; { completely unused: no references }
+  _dummy_int: Integer; { dummy for placeholder reads (e.g. PRZEDM.TEST1) }
   Powracanie: Integer;     { invented label for DGROUP word 0x078 }
   PrzedmScrollPowrot: Integer; { invented label for DGROUP word 0x07A }
   PrzedmPiwo: Integer; { invented label for DGROUP word 0x07C }
@@ -403,7 +404,7 @@ begin
   WriteLn(plik, PRA);
   WriteLn(plik, PunktKontrolny);
   WriteLn(plik, Unused0052);
-  WriteLn(plik, PRZEDM.TEST1);
+  WriteLn(plik, 0); { PRZEDM.TEST1 placeholder - effectively unused }
   WriteLn(plik, FORSA * MAD);
   WriteLn(plik, PRZEDM.CZY);
   WriteLn(plik, MAXE);
@@ -1284,7 +1285,7 @@ begin
   Read(plik, PRA);
   Read(plik, PunktKontrolny);
   Read(plik, Unused0052);
-  Read(plik, PRZEDM.TEST1);
+  Read(plik, _dummy_int); { PRZEDM.TEST1 placeholder - effectively unused }
   Read(plik, FORSA);
   FORSA := FORSA div MAD;
   Read(plik, PRZEDM.CZY);

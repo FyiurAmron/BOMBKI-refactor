@@ -6,7 +6,7 @@ program test_swiat;
  string ends with a command that leaves the room (a movement,
  MODE, or WYJSCIE) so the loop terminates instead of spinning
  at EOF.}
-uses pastest, MONSTRA, PRZEDM, SWIAT;
+uses pastest, GRA;
 
 {Write the given lines (separated by '|') to a temp file and
  redirect standard input to it, so the room procedures that
@@ -42,7 +42,7 @@ begin
   PASZOL := 0; ZWIEJ := 0; WIMP := 0; MANA := 0; PAR := 0;
   FIREBALL := 0; POISON := 0; ILEPOI := 0; POTRAWKI := 0;
   KOP := 0; KOPM := 0; KOPHP := 0; PRO := 0; ILOSC := 0;
-  FUKSROLL := 0; MONSTRA.MAXE := 50; MONSTRA.SILNY := 0;
+  FUKSROLL := 0; MAXE := 50; SILNY := 0;
   PRZED := 0; QUEST := 0; QUESTWYK := 0; FORSA := 0;
   PRZEPUSTKA := 0; DYPLOM := 0; FAJKA := 0; PRA := 1;
 end;
@@ -111,7 +111,7 @@ begin
     PASZOL := 0; ZWIEJ := 0; WIMP := 0; MANA := 0; PAR := 0;
     FIREBALL := 0; POISON := 0; ILEPOI := 0; POTRAWKI := 0;
     KOP := 0; KOPM := 0; KOPHP := 0; FUKSROLL := 0;
-    MONSTRA.SILNY := 13;
+    SILNY := 13;
     PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
     if MMIECZ <> 0 then sword := true;
     if MTARCZA <> 0 then shield := true;
@@ -129,10 +129,10 @@ begin
   {With a flee skill the player runs instead of winning, so
    the monster stays and the procedure clears the flee flag.}
   RoomSetup;
-  MONSTRA.SILNY := 13;
+  SILNY := 13;
   ENERGIA := 50; WIMP := 100; MANA := 20; ZWIEJ := 100;
   PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
-  CheckEqual(13, MONSTRA.SILNY,
+  CheckEqual(13, SILNY,
     'fleeing the room-13 monster leaves it alive');
   CheckEqual(0, PASZOL, 'the flee flag is cleared after the fight');
 end;
@@ -142,7 +142,7 @@ begin
   {With the monster gone the room notes the circling remains;
    MODE sets MIECHO to 1000, which ends the loop.}
   RoomSetup;
-  MONSTRA.SILNY := 0;
+  SILNY := 0;
   PokojAt('EXIT|MODE', 13);
   CheckEqual(1000, MIECHO, 'MODE ends the room-13 loop');
 end;
@@ -266,12 +266,12 @@ end;
 procedure TestPokoj100SellMedium;
 begin
   RoomSetup;
-  QUEST := 2; QUESTWYK := 0; DYPLOM := -10; MONSTRA.MAXE := 50;
+  QUEST := 2; QUESTWYK := 0; DYPLOM := -10; MAXE := 50;
   PRZEPUSTKA := 0; KUNSZT := 100;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
   CheckEqual(0, QUEST, 'the sold quest is cleared');
   CheckEqual(0, DYPLOM, 'the diploma is handed over');
-  CheckEqual(45, MONSTRA.MAXE, 'handing in the diploma costs max energy');
+  CheckEqual(45, MAXE, 'handing in the diploma costs max energy');
   CheckEqual(-10, PRZEPUSTKA, 'selling lowers the pass');
   CheckEqual(350, KUNSZT, 'the medium quest pays 250 skill');
 end;

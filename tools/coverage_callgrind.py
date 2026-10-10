@@ -36,7 +36,7 @@ SOURCES = PROJECT / "src"
 TESTS = PROJECT / "tests"
 SCENARIO_DIR = TESTS / "scenarios"
 UNIT_TEST_DIR = TESTS / "units"
-UNIT_NAMES = ("MONSTRA", "PRZEDM", "SWIAT")
+UNIT_NAMES = ("GRA",)
 PROGRAM_NAME = "BOMBKI"
 DEBUG_FLAGS = ("-g",)
 UNCOVERED_PREVIEW = 40
@@ -52,37 +52,6 @@ RAND_SYMBOLS = (
     "SYSTEM_$$_RANDOM$$EXTENDED",
 )
 SUMMARY = re.compile(r"tests: (\d+), failures: (\d+)")
-# Procedures the original binary never calls. They are absent
-# from their unit interface, so no test can reach them and they
-# would otherwise pin the unit below full coverage. The
-# reconstructed sources stay untouched (CONTRIBUTING.md requires
-# them to match the original .TPU files), so the exclusion lives
-# here instead; their lines are reported separately.
-DEAD_PROCEDURES = {"PRZEDM": ("SMIERC",)}
-
-
-def dead_code_lines(unit: str, names: tuple[str, ...]) -> set[int]:
-    """Return the source lines of the named procedures of a unit.
-
-    The body range is found by scanning the reconstructed source
-    so the exclusion survives unrelated line shifts."""
-    path = SOURCES / f"{unit}.PAS"
-    lines = path.read_text(encoding="utf-8").splitlines()
-    dead: set[int] = set()
-    for name in names:
-        start = None
-        for number, line in enumerate(lines, start=1):
-            if start is None:
-                if re.match(rf"^procedure {name}\s*;", line):
-                    start = number
-            elif line.rstrip() == "end;":
-                dead.update(range(start, number + 1))
-                start = None
-        if start is not None:
-            raise RuntimeError(f"unterminated procedure {name} in {path}")
-    return dead
-
-
 def find_executable(name: str) -> str:
     resolved = shutil.which(name)
     if not resolved:
@@ -491,12 +460,6 @@ def main() -> int:
         for (path, line) in covered:
             covered_by_file[path].add(line)
 
-        dead_by_file: dict[Path, set[int]] = {}
-        for unit, names in DEAD_PROCEDURES.items():
-            path = (SOURCES / f"{unit}.PAS").resolve()
-            if path in target_sources:
-                dead_by_file[path] = dead_code_lines(unit, names)
-
         runs = f"{len(results)} scenario runs"
         if unit_results:
             runs += f" and {len(unit_results)} unit-test programs"
@@ -509,10 +472,7 @@ def main() -> int:
         overall_covered = 0
         overall_total = 0
         for path in sorted(target_sources):
-            dead_lines = dead_by_file.get(path, set())
-            # Dead code is left out of the denominator: it cannot
-            # run, so it is not part of the reachable surface.
-            all_lines = totals.get(path, set()) - dead_lines
+            all_lines = totals.get(path, set())
             covered_lines = covered_by_file.get(path, set()) & all_lines
             percent = (100.0 * len(covered_lines) / len(all_lines)
                        if all_lines else 100.0)
@@ -520,11 +480,6 @@ def main() -> int:
             overall_total += len(all_lines)
             print(f"  {path.name:12} {len(covered_lines):5}"
                   f"/{len(all_lines):<5} {percent:6.2f}%")
-            if dead_lines:
-                names = DEAD_PROCEDURES[path.stem]
-                listed = ", ".join(names)
-                print(f"    excluding {len(dead_lines)} unreachable lines "
-                      f"of the never-called {listed}")
             uncovered = sorted(all_lines - covered_lines)
             if uncovered:
                 preview = ", ".join(str(line) for line
@@ -540,8 +495,7 @@ def main() -> int:
             with open(args.dump_uncovered, "w",
                       encoding="utf-8") as dump:
                 for path in sorted(target_sources):
-                    dead_lines = dead_by_file.get(path, set())
-                    all_lines = totals.get(path, set()) - dead_lines
+                    all_lines = totals.get(path, set())
                     covered_lines = covered_by_file.get(path,
                                                       set()) & all_lines
                     dump.write(f"{path.name}\n")

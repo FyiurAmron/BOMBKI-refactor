@@ -20,7 +20,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "src"
 TEMP_ROOT = PROJECT / "build" / "tmp"
-UNIT_NAMES = ("MONSTRA", "PRZEDM", "SWIAT")
+UNIT_NAMES = ("GRA",)
 PROGRAM_NAME = "BOMBKI"
 
 

@@ -4,7 +4,7 @@ program test_przedm;
 combat stat arithmetic). Each test sets up the
 PRZEDM globals it reads, so the tests are
 order-independent and safe to run one per process.}
-uses pastest, MONSTRA, PRZEDM;
+uses pastest, GRA;
 
 {Write the given lines (separated by '|') to a temp
  file and redirect standard input to it, so the
@@ -151,25 +151,25 @@ begin
   CheckRange('ORGANISTA', ORGANISTA, 70, 72);
   CheckRange('LIROY', LIROY, 70, 72);
   { Fixed constants from POTWORY. }
-  CheckEqual(67, MONSTRA.MINIBARMAN, 'MINIBARMAN is 67');
-  CheckEqual(67, MONSTRA.GRUBAS, 'GRUBAS is 67');
-  CheckEqual(69, MONSTRA.DJ, 'DJ is 69');
-  CheckEqual(76, MONSTRA.PEDAL, 'PEDAL is 76');
-  CheckEqual(76, MONSTRA.PARA, 'PARA is 76');
-  CheckEqual(76, MONSTRA.MACIEK, 'MACIEK is 76');
-  CheckEqual(1, MONSTRA.DRZWI, 'DRZWI is 1');
-  CheckEqual(1, MONSTRA.STARUCH, 'STARUCH is 1');
+  CheckEqual(67, MINIBARMAN, 'MINIBARMAN is 67');
+  CheckEqual(67, GRUBAS, 'GRUBAS is 67');
+  CheckEqual(69, DJ, 'DJ is 69');
+  CheckEqual(76, PEDAL, 'PEDAL is 76');
+  CheckEqual(76, PARA, 'PARA is 76');
+  CheckEqual(76, MACIEK, 'MACIEK is 76');
+  CheckEqual(1, DRZWI, 'DRZWI is 1');
+  CheckEqual(1, STARUCH, 'STARUCH is 1');
   { Random(7) + 20, condition always true: [20, 26]. }
-  CheckRange('JAMNIK', MONSTRA.JAMNIK, 20, 26);
-  CheckRange('OWCZAREK', MONSTRA.OWCZAREK, 20, 26);
-  CheckRange('PIESEK', MONSTRA.PIESEK, 20, 26);
-  CheckRange('SPANIEL', MONSTRA.SPANIEL, 20, 26);
-  CheckRange('PUDEL', MONSTRA.PUDEL, 20, 26);
-  CheckRange('TAKSOWKARZ', MONSTRA.TAKSOWKARZ, 20, 26);
-  CheckRange('SPRZEDAWCA', MONSTRA.SPRZEDAWCA, 20, 26);
-  CheckRange('ZAMIATACZ', MONSTRA.ZAMIATACZ, 20, 26);
-  CheckRange('PIJAK', MONSTRA.PIJAK, 20, 26);
-  CheckRange('ZEBRAK', MONSTRA.ZEBRAK, 20, 26);
+  CheckRange('JAMNIK', JAMNIK, 20, 26);
+  CheckRange('OWCZAREK', OWCZAREK, 20, 26);
+  CheckRange('PIESEK', PIESEK, 20, 26);
+  CheckRange('SPANIEL', SPANIEL, 20, 26);
+  CheckRange('PUDEL', PUDEL, 20, 26);
+  CheckRange('TAKSOWKARZ', TAKSOWKARZ, 20, 26);
+  CheckRange('SPRZEDAWCA', SPRZEDAWCA, 20, 26);
+  CheckRange('ZAMIATACZ', ZAMIATACZ, 20, 26);
+  CheckRange('PIJAK', PIJAK, 20, 26);
+  CheckRange('ZEBRAK', ZEBRAK, 20, 26);
   { Random(8) + 77 redrawn until below 84: [77, 83]. }
   CheckRange('SZCZAW', SZCZAW, 77, 83);
   CheckRange('STOKROTKA', STOKROTKA, 77, 83);
@@ -201,13 +201,13 @@ begin
   CheckEqual(0, WPYSK, 'TARCZA clamps WPYSK at zero');
 end;
 
-{ WALKA: the pre-loop MINIKUNSZT arithmetic (PRZEDM.PAS
+{ WALKA: the pre-loop MINIKUNSZT arithmetic (PAS
   612-693) and the victory adjustments (869-877) are
   deterministic. A dead enemy (WROGEN = 0) makes the
   combat loop run exactly one iteration and end in the
   victory path, so KUNSZT after WALKA is the stat
   arithmetic plus the one iteration bonus; the MAXE
-  pair is then driven by MONSTRA.MAXE alone. A live
+  pair is then driven by MAXE alone. A live
   enemy (MAXE behind) also ends in the victory path,
   but the number of combat rounds depends on the
   Random damage sequence, so those cases assert a
@@ -238,7 +238,7 @@ begin
   FUKSROLL := 0;
   PRO := 0;
   ILOSC := 0;
-  MONSTRA.MAXE := aMaxE;
+  MAXE := aMaxE;
   WROGEN := aWrogE;
   SIL := aSil;
   WROGSIL := aWrogSil;
@@ -617,7 +617,7 @@ procedure TestBraniePicksUpBluszczItems;
 begin
   MIECHO2 := 7;
   MTARCZA := 7; SERCE := 7; DYPLOM := 7; FAJKA := 7;
-  PRZED := 0; MAD := 0; MAXMAD := 5; MONSTRA.MAXE := 50;
+  PRZED := 0; MAD := 0; MAXMAD := 5; MAXE := 50;
   wpisz := 'BIERZ MALA'; BRANIE;
   wpisz := 'BIERZ SERCE'; BRANIE;
   wpisz := 'BIERZ DYPLOM'; BRANIE;
@@ -627,7 +627,7 @@ begin
   CheckEqual(-10, DYPLOM, 'BIERZ DYPLOM stores the diploma as -10');
   CheckEqual(-10, FAJKA, 'BIERZ FAJKA stores the pipe as -10');
   CheckEqual(4, PRZED, 'four BRANIE picks count four items');
-  CheckEqual(55, MONSTRA.MAXE, 'BIERZ DYPLOM adds five max energy');
+  CheckEqual(55, MAXE, 'BIERZ DYPLOM adds five max energy');
   CheckEqual(1, MAD, 'BIERZ FAJKA adds one wisdom under the cap');
 end;
 
@@ -635,7 +635,7 @@ procedure TestBranieDropsBluszczItems;
 begin
   MIECHO2 := 7;
   MTARCZA := -10; SERCE := -10; DYPLOM := -10; FAJKA := -10;
-  PRZED := 4; MAD := 1; MONSTRA.MAXE := 55;
+  PRZED := 4; MAD := 1; MAXE := 55;
   wpisz := 'ODRZUC FAJKA'; BRANIE;
   wpisz := 'ODRZUC MALA'; BRANIE;
   wpisz := 'ODRZUC SERCE'; BRANIE;
@@ -645,13 +645,13 @@ begin
   CheckEqual(7, DYPLOM, 'ODRZUC DYPLOM restores the diploma marker');
   CheckEqual(7, FAJKA, 'ODRZUC FAJKA restores the pipe marker');
   CheckEqual(0, PRZED, 'four ODRZUC drops uncount four items');
-  CheckEqual(50, MONSTRA.MAXE, 'ODRZUC DYPLOM removes five max energy');
+  CheckEqual(50, MAXE, 'ODRZUC DYPLOM removes five max energy');
   CheckEqual(0, MAD, 'ODRZUC FAJKA removes one wisdom');
 end;
 
 procedure TestUzywaSerce;
 begin
-  SERCE := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  SERCE := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ SERCE';
   UZYWANIE;
   CheckEqual(0, SERCE, 'UZYJ SERCE consumes the heart');
@@ -661,10 +661,10 @@ end;
 
 procedure TestUzywaSerceClampsAtMaxE;
 begin
-  SERCE := -10; ENERGIA := 48; MONSTRA.MAXE := 50; PRZED := 1;
+  SERCE := -10; ENERGIA := 48; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ SERCE';
   UZYWANIE;
-  CheckEqual(50, ENERGIA, 'UZYJ SERCE clamps energy at MONSTRA.MAXE');
+  CheckEqual(50, ENERGIA, 'UZYJ SERCE clamps energy at MAXE');
 end;
 
 procedure TestUzywaKomplet;
@@ -751,7 +751,7 @@ end;
 
 procedure TestUzywaPaczek;
 begin
-  PACZEK := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  PACZEK := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ PACZEK';
   UZYWANIE;
   CheckEqual(0, PACZEK, 'UZYJ PACZEK consumes the paczek');
@@ -761,7 +761,7 @@ end;
 
 procedure TestUzywaCiastko;
 begin
-  CIASTKO := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  CIASTKO := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ CIASTKO';
   UZYWANIE;
   CheckEqual(0, CIASTKO, 'UZYJ CIASTKO consumes the ciastko');
@@ -770,7 +770,7 @@ end;
 
 procedure TestUzywaSuchaRacja;
 begin
-  SUCHA := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  SUCHA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ SUCHA RACJA';
   UZYWANIE;
   CheckEqual(0, SUCHA, 'UZYJ SUCHA RACJA consumes the racja');
@@ -779,7 +779,7 @@ end;
 
 procedure TestUzywaBulka;
 begin
-  BULKA := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  BULKA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ BULKA';
   UZYWANIE;
   CheckEqual(0, BULKA, 'UZYJ BULKA consumes the bulka');
@@ -788,7 +788,7 @@ end;
 
 procedure TestUzywaChleb;
 begin
-  CHLEB := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  CHLEB := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ CHLEB';
   UZYWANIE;
   CheckEqual(0, CHLEB, 'UZYJ CHLEB consumes the chleb');
@@ -797,7 +797,7 @@ end;
 
 procedure TestUzyjaWeka;
 begin
-  WEKA := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  WEKA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ WEKA';
   UZYWANIE;
   CheckEqual(0, WEKA, 'UZYJ WEKA consumes the weka');
@@ -806,7 +806,7 @@ end;
 
 procedure TestUzywaBigos;
 begin
-  BIGOS := -10; ENERGIA := 10; MONSTRA.MAXE := 50; PRZED := 1;
+  BIGOS := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
   wpisz := 'UZYJ BIGOS';
   UZYWANIE;
   CheckEqual(0, BIGOS, 'UZYJ BIGOS consumes the bigos');
@@ -815,12 +815,12 @@ end;
 
 procedure TestUzywaPigulkaLow;
 begin
-  PIGULKA := -10; MAD := 5; MONSTRA.MAXE := 50; ENERGIA := 40; KUNSZT := 100;
+  PIGULKA := -10; MAD := 5; MAXE := 50; ENERGIA := 40; KUNSZT := 100;
   wpisz := 'UZYJ PIGULKA';
   UZYWANIE;
   CheckEqual(0, PIGULKA, 'UZYJ PIGULKA consumes the pigulka');
   CheckEqual(1, ENERGIA, 'UZYJ PIGULKA with low MAD drains energy to one');
-  CheckEqual(49, MONSTRA.MAXE, 'UZYJ PIGULKA with low MAD lowers max energy');
+  CheckEqual(49, MAXE, 'UZYJ PIGULKA with low MAD lowers max energy');
   CheckEqual(50, KUNSZT, 'UZYJ PIGULKA with low MAD lowers kunszt');
 end;
 
@@ -1017,10 +1017,10 @@ end;
 procedure TestUlSklepMessages;
 begin
   MIECHO := 1;
-  MONSTRA.JAMNIK := 1; MONSTRA.OWCZAREK := 1; MONSTRA.PIESEK := 1;
-  MONSTRA.SPANIEL := 1; MONSTRA.PUDEL := 1;
-  MONSTRA.TAKSOWKARZ := 1; MONSTRA.SPRZEDAWCA := 1;
-  MONSTRA.ZAMIATACZ := 1; MONSTRA.PIJAK := 1; MONSTRA.ZEBRAK := 1;
+  JAMNIK := 1; OWCZAREK := 1; PIESEK := 1;
+  SPANIEL := 1; PUDEL := 1;
+  TAKSOWKARZ := 1; SPRZEDAWCA := 1;
+  ZAMIATACZ := 1; PIJAK := 1; ZEBRAK := 1;
   ULSKLEPIKOWA;
   CheckEqual(1, MIECHO, 'ULSKLEPIKOWA leaves MIECHO unchanged');
 end;
@@ -1196,7 +1196,7 @@ procedure PorownanieAsk(const monster: string;
 begin
   {Drive one POROWNANIE conversation. The prompt reads the
    monster name from stdin, and the reply branches key off
-   MONSTRA.OGOL (POZIOM + SIL plus the ZRE/PAR/KOP bonuses)
+   OGOL (POZIOM + SIL plus the ZRE/PAR/KOP bonuses)
    and SIL, so both are set to reach each band.}
   FeedStdin(monster);
   MANA := 10; POZIOM := aPoziom; SIL := aSil; ZRE := aZre;

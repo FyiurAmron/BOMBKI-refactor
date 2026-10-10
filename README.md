@@ -80,14 +80,14 @@ python3 tests/run_unit_tests.py
 ```
 
 The unit tests under `tests/units` are plain Pascal programs
-that use the game units from `src/` directly, so they can assert
-on unit internals (global state, deterministic procedures)
-that the PTY scenarios only observe through the game's
-terminal output. The framework `tests/units/pastest.pas` is
-plain TP-compatible Pascal, so the same test sources can later
-compile with genuine TP7. The runner builds them with FPC
-`-Mtp` and executes every test in a fresh process, because
-the units keep global state.
+that use the game unit `src/GRA.PAS` directly, so they can
+assert on unit internals (global state, deterministic
+procedures) that the PTY scenarios only observe through the
+game's terminal output. The framework `tests/units/pastest.pas`
+is plain TP-compatible Pascal, so the same test sources can
+later compile with genuine TP7. The runner builds them with FPC
+`-Mtp` and executes every test in a fresh process, because the
+game unit keeps global state.
 
 Run the TP7 executable in DOSEMU2's terminal frontend without opening a window:
 

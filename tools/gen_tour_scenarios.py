@@ -29,7 +29,23 @@ def extract():
     def add(r, d, t):
         graph.setdefault(r, {})[d] = t
 
-    b = (SOURCES / "BOMBKI.PAS").read_text().split("\n")
+    g = (SOURCES / "GRA.PAS").read_text().split("\n")
+
+    def slice_between(start_marker, end_marker=None):
+        a = next(i for i, l in enumerate(g) if l.strip() == start_marker)
+        if end_marker is None:
+            return g[a:]
+        b = next(i for i, l in enumerate(g) if l.strip() == end_marker)
+        return g[a:b]
+
+    # The fold carries region markers; bounding each scan to its own
+    # region restores the original two-file scan semantics (the
+    # lowercase PokojN rooms' "until MIECHO <> N;" lines would
+    # otherwise poison the SWIAT-side room tracking).
+    bomb = slice_between(
+        "{ --- the former BOMBKI program-level declarations and routines --- }")
+    swi = slice_between("{ --- folded from unit SWIAT --- }",
+                        "{ --- folded from unit PRZEDM --- }")
 
     def scan(lines, lo, hi, proc_rooms=None, want_text=False):
         cur = None
@@ -57,16 +73,16 @@ def extract():
                 if mm:
                     texts[cur] = mm.group(1)[:38]
 
-    bprocs = {"Pokoj2": 2, "Pokoj3": 3, "Pokoj9": 9, "Pokoj12": 12}
+    proc_rooms = {}
+    for l in bomb:
+        m = re.match(r"procedure Pokoj(\d+);", l)
+        if m:
+            proc_rooms["Pokoj%s" % m.group(1)] = int(m.group(1))
     for r in range(61, 73):
         add(r, None, None)
-    # Each range is scanned with its own room context so a
-    # procedure that is not a room cannot inherit the previous one.
-    scan(b, 1, 1445, bprocs, want_text=True)
-    scan(b, 961, 1275, {}, want_text=True)
-    scan(b, 1446, len(b), None, want_text=True)
+    scan(bomb, 1, len(bomb), proc_rooms, want_text=True)
 
-    s = (SOURCES / "SWIAT.PAS").read_text().split("\n")
+    s = swi
     room = None
     for l in s:
         m = re.match(r"^procedure (POKOJ\w+)", l)

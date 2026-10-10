@@ -3,10 +3,10 @@
 # pas-conformance.sh -- TP-mode conformance sweep for the BOMBKI
 # game sources (src/).
 #
-# Compiles every unit with Free Pascal in Turbo-Pascal mode (-Mtp) and
-# links the BOMBKI program against the compiled units, then checks the
-# produced binary exists. Order follows the dependency chain:
-# MONSTRA -> PRZEDM -> SWIAT, then BOMBKI (program).
+# Compiles the game unit with Free Pascal in Turbo-Pascal mode (-Mtp)
+# and links the BOMBKI wrapper program against it, then checks the
+# produced binary exists. The game core lives in GRA.PAS; BOMBKI.PAS
+# is the top-level wrapper that performs the single Start call.
 #
 # Fails the run if any target fails to compile or the binary is missing.
 # Requires: fpc (Free Pascal), e.g. `apt-get install -y fpc`.
@@ -69,9 +69,7 @@ compile_and_check_binary() {
 }
 
 echo "required targets (must compile):"
-compile_unit "$RECON/MONSTRA.PAS"
-compile_unit "$RECON/PRZEDM.PAS"
-compile_unit "$RECON/SWIAT.PAS"
+compile_unit "$RECON/GRA.PAS"
 compile_and_check_binary "$RECON/BOMBKI.PAS"
 
 # Export built binaries for CI artifact upload when CONF_ARTIFACTS is set.

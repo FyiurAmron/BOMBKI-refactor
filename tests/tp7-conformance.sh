@@ -7,8 +7,9 @@
 # Runs inside the bombki-dosbox-tp7 image (docker/dosbox-tp7/Dockerfile):
 # /workspace is the checked-out repository mount. The reconstruction
 # sources are copied to a scratch dir, converted to DOS line endings,
-# compiled in dependency order with TPC.EXE driven through a generated
-# DOSBox-X config, then the build log and the artifacts are checked.
+# compiled with TPC.EXE driven through a generated DOSBox-X config
+# (the GRA unit first, then the BOMBKI wrapper), then the build log
+# and the artifacts are checked.
 # The compile happens in the scratch dir so nothing is written back
 # into the repository.
 #
@@ -44,7 +45,7 @@ TPCDIR="$(basename "$(dirname "$TPC")")"
 echo "TPC: $TPC"
 echo "TP7 root: $TP7ROOT"
 
-if ! cp "$REC/MONSTRA.PAS" "$REC/PRZEDM.PAS" "$REC/SWIAT.PAS" "$REC/BOMBKI.PAS" "$BUILD"/; then
+if ! cp "$REC/GRA.PAS" "$REC/BOMBKI.PAS" "$BUILD"/; then
   echo "::error::game sources not found under $REC" >&2
   exit 2
 fi
@@ -80,9 +81,7 @@ ver=7.0
 mount c $TP7ROOT
 mount d $BUILD
 d:
-c:\\$TPCDIR\\tpc.exe /GD monstra.pas > d:\\tp7-build.log
-c:\\$TPCDIR\\tpc.exe /GD przedm.pas >> d:\\tp7-build.log
-c:\\$TPCDIR\\tpc.exe /GD swiat.pas >> d:\\tp7-build.log
+c:\\$TPCDIR\\tpc.exe /GD gra.pas > d:\\tp7-build.log
 c:\\$TPCDIR\\tpc.exe /GD bombki.pas >> d:\\tp7-build.log
 exit
 EOF
@@ -116,7 +115,7 @@ else
   passed=$((passed + 1))
 fi
 
-for name in MONSTRA.TPU PRZEDM.TPU SWIAT.TPU BOMBKI.EXE BOMBKI.MAP; do
+for name in GRA.TPU BOMBKI.EXE BOMBKI.MAP; do
   if find "$BUILD" -maxdepth 1 -iname "$name" -size +0c | grep -q .; then
     echo "PASS  $name produced"
     passed=$((passed + 1))
@@ -130,7 +129,7 @@ done
 # sweep verdict is about the TPC compile, not artifact plumbing.
 if [ -n "${CONF_ARTIFACTS:-}" ]; then
   mkdir -p "$CONF_ARTIFACTS"
-  for name in MONSTRA.TPU PRZEDM.TPU SWIAT.TPU BOMBKI.EXE BOMBKI.MAP; do
+  for name in GRA.TPU BOMBKI.EXE BOMBKI.MAP; do
     found="$(find "$BUILD" -maxdepth 1 -iname "$name" -size +0c | head -n1)"
     if [ -n "$found" ]; then
       cp "$found" "$CONF_ARTIFACTS"/ && echo "artifact: $(basename "$found") -> $CONF_ARTIFACTS"

@@ -49,6 +49,8 @@ var
   Powracanie: Integer;     { invented label for DGROUP word 0x078 }
   PrzedmScrollPowrot: Integer; { invented label for DGROUP word 0x07A }
   PrzedmPiwo: Integer; { invented label for DGROUP word 0x07C }
+  WyjscieZadane: Boolean; { set by the WYJSCIE handler; the dispatch loop
+    performs the goto, since a handler cannot reach the main loop labels }
   plik: Text;              { main-program file record at DGROUP 0x007E }
 
 type
@@ -62,6 +64,12 @@ type
   TZreLimit = record
     zre: Integer;    { first ZRE value that grants this limit }
     limit: Integer;  { carried-item capacity from that ZRE on }
+  end;
+
+  TCommandHandler = procedure;
+  TCommandEntry = record
+    cmd: string;     { command word; '' runs on every pass, in table order }
+    run: TCommandHandler;
   end;
 
 const
@@ -1484,6 +1492,295 @@ begin
   end;
 end;
 
+{ --- MODE (podswiadomosc) ground-loop command handlers.
+  The table below preserves the original ordered if-chain: entries run
+  in table order, an entry with an empty cmd runs on every pass, and a
+  handler may rewrite wpisz so later entries see the new value
+  (PAMIETAJ falls through to JA, ZapisanoGre falls through to
+  ZDOLNOSCI). }
+
+procedure CmdScan;
+begin
+  WriteLn('FUNKCJA BEDZIE DOSTEPNA ZA DWA LATA , I TAK ZGINIESZ , I TAK :) ');
+end;
+
+procedure CmdCzyscEkran;
+begin
+  ClrScr; { img 0xEB99..0xEBAF }
+end;
+
+procedure CmdDawajEnergie;
+begin
+  ENERGIA := ENERGIA + 200;
+end;
+
+procedure CmdZabierajKase;
+begin
+  FORSA := FORSA - 100;
+end;
+
+procedure CmdUstawSilaZbroi;
+begin
+  PRZEDM.ILOSC := 0;
+  PRO := 0;
+  FUKSROLL := 0;
+end;
+
+procedure CmdZdejmij;
+begin
+  PRZEDM.CIALO := 0;
+  JakaBron := 0;
+  JakaTarcza := 0; { DGROUP word 0x60, shield-equipped flag in this branch }
+  PRZEDM.JAKIEUB := '';
+  MMIECZ := -10;
+  MTARCZA := -10;
+  SIL := SIL - 1;
+end;
+
+procedure CmdNieWychodz;
+begin
+  WriteLn('NAPISZ UNMODE ');
+end;
+
+procedure CmdWyjdzZGry;
+begin
+  WyjscieZadane := True;
+end;
+
+procedure CmdZapisanoGre;
+begin
+  if ZapisanoGre = 1 then begin
+    wpisz := 'ZDOLNOSCI'; { img 0xECA7: short-string assign via System:0x900 }
+    ZapisanoGre := 0;
+    WriteLn(PRZEDM.MIECHO2, ' MIECHO!');
+  end;
+end;
+
+procedure CmdWypijPiwo;
+begin
+  if PrzedmPiwo <= -10 then begin
+    PrzedmPiwo := PrzedmPiwo + 10;
+    WriteLn('GDY POCZULES AMBROZJE W USTACH ODZYSKALES 10 MANY ZAS GDY GO WYPILES 10% E.');
+    PRZEDM.PRZED := PRZEDM.PRZED - 1;
+    ENERGIA := ENERGIA + 10;
+    MANA := MANA + 10;
+  end;
+end;
+
+procedure CmdUzyjStaryMiecz;
+begin
+  if (MMIECZ = -10) and (JakaBron = 0) then begin
+    MMIECZ := -100;
+    JakaBron := 1;
+    WriteLn('UZYWASZ STAREGO ZARDZEWIALEGO MIECZA JAKO BRONI');
+    SIL := SIL + 1;
+    FUKSROLL := FUKSROLL + 3;
+  end;
+end;
+
+procedure CmdZlozStaryMiecz;
+begin
+  if (MMIECZ = -100) and (JakaBron = 1) then begin
+    MMIECZ := -10;
+    JakaBron := 0;
+    WriteLn('CHOWASZ STARY ZARDZEWIALY MIECZ I NIE UZYWASZ GO JAKO BRONI');
+    SIL := SIL - 1;
+    FUKSROLL := FUKSROLL - 3;
+  end;
+end;
+
+procedure CmdUzyjMalaTarcza;
+begin
+  if (JakaTarcza = 0) and (MTARCZA = -10) then begin
+    JakaTarcza := 1;
+    PRO := PRO + 15;
+    PRZEDM.ILOSC := PRZEDM.ILOSC + 1;
+    MTARCZA := -100;
+    WriteLn('UZYWASZ MALEJ TARCZY JAKO TARCZY');
+  end;
+end;
+
+procedure CmdZlozMalaTarcze;
+begin
+  if (JakaTarcza = 1) and (MTARCZA = -100) then begin
+    JakaTarcza := 0;
+    PRO := PRO - 15;
+    PRZEDM.ILOSC := PRZEDM.ILOSC - 1;
+    MTARCZA := -10;
+    WriteLn('JUZ NIE UZYWASZ MALEJ TARCZY JAKO TARCZY');
+  end;
+end;
+
+procedure CmdUstawUcieczke;
+begin
+  if ZWIEJ > 0 then begin
+    WriteLn('PONIZEJ ILU ENERGII CHCESZ UCIEKAC?');
+    ReadLn(PRZEDM.WIMP);
+  end;
+end;
+
+procedure CmdSpij;
+begin
+  GodzinySnu := 0;
+  repeat
+    GodzinySnu := GodzinySnu + 1;
+    Delay(5000);
+    WriteLn('SPISZ JUZ ', GodzinySnu, ' GODZIN');
+    KUNSZT := KUNSZT - 20;
+    ENERGIA := ENERGIA + 10;
+  until KeyPressed;
+  WriteLn('PO OBUDZENIU STWIERDZILES ZE ZYSKALES ', GodzinySnu * 10,
+      ' ENERGI I STRACILES ', (20 * GodzinySnu) - Random(2 * GodzinySnu), ' KUNSZTU');
+  KUNSZT := KUNSZT + Random(2 * GodzinySnu);
+  if GodzinySnu > 4 then begin
+    WriteLn('DLUGI SEN DODATKOWO POZWOLIL CI ODPOCZAC : ZYSKALES ', MAD, 'ENERGI');
+    ENERGIA := ENERGIA + MAD;
+  end;
+  if GodzinySnu > 8 then begin
+    WriteLn('PELNOWARTOSCIOWY SEN SPOWODOWAL SUPER ZYSK : ', MAD * 2, 'ENERGI');
+    ENERGIA := ENERGIA + (MAD * 2);
+  end;
+  if ENERGIA > MAXE then ENERGIA := MAXE;
+end;
+
+procedure CmdPorownaj;
+begin
+  if PRZEDM.POR > 0 then begin
+    PRZEDM.FUKS := Random(100);
+    if PRZEDM.POR > PRZEDM.FUKS then begin
+      PRZEDM.POROWNANIE;
+      MANA := MANA - 10;
+    end
+  else begin
+      WriteLn('POPELNILES PEWNE BLEDY I NIE UDALO SIE WYKONAC CZARU');
+      MANA := MANA - 5;
+    end;
+  end;
+end;
+
+procedure CmdDawajKase;
+begin
+  FORSA := FORSA + 5000;
+end;
+
+procedure CmdOdrzucJedzenie;
+begin
+  if (wpisz = 'ODRZUC PACZEK') or (wpisz = 'ODRZUC CIASTKO') or
+   (wpisz = 'ODRZUC SUCHA RACJA') or (wpisz = 'ODRZUC BULKA') or
+   (wpisz = 'ODRZUC CHLEB') or (wpisz = 'ODRZUC WEKA') or
+   (wpisz = 'ODRZUC SERCE') or (wpisz = 'ODRZUC BIGOS') then
+    WriteLn('JAK SMIESZ WYRZUCAC JEDZENIE!!! WSTYD MI ZA CIEBIE !!! NIE POZWOLE !!!');
+end;
+
+procedure CmdOtworzPortal;
+begin
+  if ((wpisz = 'POWROT') and (Powracanie > 0)) or
+   ((wpisz = 'UZYJ SCROLL POWROT') and (PrzedmScrollPowrot < 0)) then begin
+    PRZEDM.FUKS := Random(100);
+    if wpisz = 'UZYJ SCROLL POWROT' then begin
+      PRZEDM.FUKS := Random(1);
+      PrzedmScrollPowrot := PrzedmScrollPowrot + 10;
+      PRZEDM.PRZED := PRZEDM.PRZED - 1;
+    end;
+    if PRZEDM.FUKS <= Powracanie then begin
+      WriteLn('OTWIERASZ MAGICZNY PORTAL KTORY PRZENOSI CIE DO MIASTA');
+      MANA := MANA - 15;
+      PRZEDM.MIECHO2 := 20;
+    end;
+    if (PRZEDM.FUKS > Powracanie) and (Powracanie + 30 > PRZEDM.FUKS) then begin
+      WriteLn('NIE UDAJE CI SIE OTWORZYC MAGICZNEGO PORTALU');
+      MANA := MANA - 5;
+    end;
+    if Powracanie + 29 < PRZEDM.FUKS then begin
+      WriteLn('OTWIERASZ MAGICZNY PORTAL KTORY JEDNAK PRZENOSI CIE DO INNEGO MIEJSCA');
+      MANA := MANA - 10;
+      PRZEDM.MIECHO2 := Random(100) + 1;
+    end;
+  end;
+end;
+
+procedure CmdScrollPorownanie;
+begin
+  if PRZEDM.SCROLLPOR < 0 then begin
+    PRZEDM.POROWNANIE;
+    MANA := MANA - 10;
+    PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR + 10;
+    PRZEDM.PRZED := PRZEDM.PRZED - 1;
+  end;
+end;
+
+procedure CmdUstawKopanie;
+begin
+  if KOP > 0 then begin
+    WriteLn('ZADAM CI PARE PYTAN:');
+    WriteLn('1)PONIZEJ JAKIEJ ENERGI CHCESZ ZACZAC KOPAC');
+    ReadLn(PRZEDM.KOPHP);
+    WriteLn('2)DO JAKIECH ILOSCI MANA CHCESZ KOPAC');
+    ReadLn(PRZEDM.KOPM);
+  end;
+end;
+
+procedure CmdPrzepustkaSpeede;
+begin
+  PRZEPUSTKA := PRZEPUSTKA - 10;
+end;
+
+procedure CmdPokazZdolnosci;
+begin
+  if (MAD > 10) and (SIL > 11) then WriteLn('KOPANIE       - ', KOP, '%');
+  if (MAD > 10) and (ZRE > 10) then WriteLn('UCIEKANIE     - ', ZWIEJ, '%');
+  if (MAD > 15) and (ZRE > 11) then WriteLn('PAROWANIE     - ', PAR, '%');
+  if MAD > 11 then WriteLn('POROWNYWANIE  - ', PRZEDM.POR, '%');
+  if MAD > 18 then WriteLn('POTRAWKI      - ', PotrawkiNiepotrzebnaZmiennaBug, '%');
+  if MAD > 19 then WriteLn('POWROT        - ', Powracanie, '%');
+end;
+
+procedure CmdWyjdzZPodswiadomosci;
+begin
+  MIECHO := PRZEDM.MIECHO2;
+end;
+
+const
+  GroundCommands: array[1..32] of TCommandEntry = (
+    (cmd:'PAMIETAJ'; run:ZapiszPostac),
+    (cmd:'SCAN'; run:CmdScan),
+    (cmd:'CZYSC EKRAN'; run:CmdCzyscEkran),
+    (cmd:'DAWAJ EN'; run:CmdDawajEnergie),
+    (cmd:'ZABIERAJ KASE'; run:CmdZabierajKase),
+    (cmd:'USTAW SZ'; run:CmdUstawSilaZbroi),
+    (cmd:'ZDEJMUJ'; run:CmdZdejmij),
+    (cmd:'EXIT'; run:CmdNieWychodz),
+    (cmd:'WYJSCIE'; run:CmdWyjdzZGry),
+    (cmd:'JA'; run:PokazPostac),
+    { unconditional passes: item pickup/drop, then the save-then-sheet hook }
+    (cmd:''; run:PRZEDM.BRANIE),
+    (cmd:''; run:CmdZapisanoGre),
+    (cmd:'UZYJ PIWO'; run:CmdWypijPiwo),
+    (cmd:'UZYJ STARY'; run:CmdUzyjStaryMiecz),
+    (cmd:'ODLOZ STARY'; run:CmdZlozStaryMiecz),
+    (cmd:'UZYJ MALA'; run:CmdUzyjMalaTarcza),
+    (cmd:'ODLOZ MALA'; run:CmdZlozMalaTarcze),
+    { unconditional pass: unit-level item effects }
+    (cmd:''; run:PRZEDM.UZYWANIE),
+    (cmd:'ZWIEJ'; run:CmdUstawUcieczke),
+    (cmd:'SPIJ'; run:CmdSpij),
+    (cmd:'POROWNAJ'; run:CmdPorownaj),
+    (cmd:'DAWAJ KASE'; run:CmdDawajKase),
+    (cmd:''; run:CmdOdrzucJedzenie),
+    (cmd:''; run:CmdOtworzPortal),
+    (cmd:'UZYJ SCROLL POROWNYWANIE'; run:CmdScrollPorownanie),
+    (cmd:'KOP'; run:CmdUstawKopanie),
+    (cmd:'JESTEM SPEEDE'; run:CmdPrzepustkaSpeede),
+    (cmd:'ZDOLNOSCI'; run:CmdPokazZdolnosci),
+    { unconditional pass: color/background command dispatch }
+    (cmd:''; run:PRZEDM.PIERDOLY),
+    (cmd:'WLACZ POSTAC'; run:WczytajPostac),
+    (cmd:'UNMODE'; run:CmdWyjdzZPodswiadomosci),
+    (cmd:'UM'; run:CmdWyjdzZPodswiadomosci)
+  );
+
+var
+  gi: Integer; { ground-command table cursor }
 
 begin
   { --- TP7 runtime, implicit (file 0x52E0..): img 0xB0CF..0xB0D8 ---
@@ -2436,189 +2733,13 @@ begin
       L1012_ZachetaPodswiadomosc: Write(ENERGIA, '%.', KUNSZT, '>'); { img 0xEAF8..0xEB31 }
       ReadLn(wpisz);
 
-      if wpisz = 'PAMIETAJ' then ZapiszPostac; { save routine starts img 0x2BA1 }
-      if wpisz = 'SCAN' then
-        WriteLn('FUNKCJA BEDZIE DOSTEPNA ZA DWA LATA , I TAK ZGINIESZ , I TAK :) ');
-      if wpisz = 'CZYSC EKRAN' then ClrScr; { img 0xEB99..0xEBAF }
-      if wpisz = 'DAWAJ EN' then ENERGIA := ENERGIA + 200;
-      if wpisz = 'ZABIERAJ KASE' then FORSA := FORSA - 100;
-
-      if wpisz = 'USTAW SZ' then begin
-        PRZEDM.ILOSC := 0;
-        PRO := 0;
-        FUKSROLL := 0;
-      end;
-      if wpisz = 'ZDEJMUJ' then begin
-        PRZEDM.CIALO := 0;
-        JakaBron := 0;
-        JakaTarcza := 0; { DGROUP word 0x60, shield-equipped flag in this branch }
-        PRZEDM.JAKIEUB := '';
-        MMIECZ := -10;
-        MTARCZA := -10;
-        SIL := SIL - 1;
-      end;
-
-      if wpisz = 'EXIT' then WriteLn('NAPISZ UNMODE ');
-      if wpisz = 'WYJSCIE' then goto L1025_Wyjscie;
-
-      if wpisz = 'JA' then PokazPostac;
-      PRZEDM.BRANIE; { img 0xEC9B -> PRZEDM:0x5A36 item pickup/drop dispatch }
-      if ZapisanoGre = 1 then begin
-        wpisz := 'ZDOLNOSCI'; { img 0xECA7: short-string assign via System:0x900 }
-        ZapisanoGre := 0;
-        WriteLn(PRZEDM.MIECHO2, ' MIECHO!');
-      end;
-      if wpisz = 'UZYJ PIWO' then begin
-        if PrzedmPiwo <= -10 then begin
-          PrzedmPiwo := PrzedmPiwo + 10;
-          WriteLn('GDY POCZULES AMBROZJE W USTACH ODZYSKALES 10 MANY ZAS GDY GO WYPILES 10% E.');
-          PRZEDM.PRZED := PRZEDM.PRZED - 1;
-          ENERGIA := ENERGIA + 10;
-          MANA := MANA + 10;
+      { The table walk replaces the original ordered if-chain one-for-one. }
+      WyjscieZadane := False;
+      for gi := Low(GroundCommands) to High(GroundCommands) do
+        if (GroundCommands[gi].cmd = '') or (wpisz = GroundCommands[gi].cmd) then begin
+          GroundCommands[gi].run;
+          if WyjscieZadane then goto L1025_Wyjscie;
         end;
-      end;
-      if wpisz = 'UZYJ STARY' then begin
-        if (MMIECZ = -10) and (JakaBron = 0) then begin
-          MMIECZ := -100;
-          JakaBron := 1;
-          WriteLn('UZYWASZ STAREGO ZARDZEWIALEGO MIECZA JAKO BRONI');
-          SIL := SIL + 1;
-          FUKSROLL := FUKSROLL + 3;
-        end;
-      end;
-      if wpisz = 'ODLOZ STARY' then begin
-        if (MMIECZ = -100) and (JakaBron = 1) then begin
-          MMIECZ := -10;
-          JakaBron := 0;
-          WriteLn('CHOWASZ STARY ZARDZEWIALY MIECZ I NIE UZYWASZ GO JAKO BRONI');
-          SIL := SIL - 1;
-          FUKSROLL := FUKSROLL - 3;
-        end;
-      end;
-      if wpisz = 'UZYJ MALA' then begin
-        if (JakaTarcza = 0) and (MTARCZA = -10) then begin
-          JakaTarcza := 1;
-          PRO := PRO + 15;
-          PRZEDM.ILOSC := PRZEDM.ILOSC + 1;
-          MTARCZA := -100;
-          WriteLn('UZYWASZ MALEJ TARCZY JAKO TARCZY');
-        end;
-      end;
-      if wpisz = 'ODLOZ MALA' then begin
-        if (JakaTarcza = 1) and (MTARCZA = -100) then begin
-          JakaTarcza := 0;
-          PRO := PRO - 15;
-          PRZEDM.ILOSC := PRZEDM.ILOSC - 1;
-          MTARCZA := -10;
-          WriteLn('JUZ NIE UZYWASZ MALEJ TARCZY JAKO TARCZY');
-        end;
-      end;
-
-    { Unit procedures supply the remaining recovered item effects. }
-      PRZEDM.UZYWANIE;
-
-      if wpisz = 'ZWIEJ' then begin
-        if ZWIEJ > 0 then begin
-          WriteLn('PONIZEJ ILU ENERGII CHCESZ UCIEKAC?');
-          ReadLn(PRZEDM.WIMP);
-        end;
-      end;
-      if wpisz = 'SPIJ' then begin
-        GodzinySnu := 0;
-        repeat
-          GodzinySnu := GodzinySnu + 1;
-          Delay(5000);
-          WriteLn('SPISZ JUZ ', GodzinySnu, ' GODZIN');
-          KUNSZT := KUNSZT - 20;
-          ENERGIA := ENERGIA + 10;
-        until KeyPressed;
-        WriteLn('PO OBUDZENIU STWIERDZILES ZE ZYSKALES ', GodzinySnu * 10,
-            ' ENERGI I STRACILES ', (20 * GodzinySnu) - Random(2 * GodzinySnu), ' KUNSZTU');
-        KUNSZT := KUNSZT + Random(2 * GodzinySnu);
-        if GodzinySnu > 4 then begin
-          WriteLn('DLUGI SEN DODATKOWO POZWOLIL CI ODPOCZAC : ZYSKALES ', MAD, 'ENERGI');
-          ENERGIA := ENERGIA + MAD;
-        end;
-        if GodzinySnu > 8 then begin
-          WriteLn('PELNOWARTOSCIOWY SEN SPOWODOWAL SUPER ZYSK : ', MAD * 2, 'ENERGI');
-          ENERGIA := ENERGIA + (MAD * 2);
-        end;
-        if ENERGIA > MAXE then ENERGIA := MAXE;
-      end;
-      if wpisz = 'POROWNAJ' then begin
-        if PRZEDM.POR > 0 then begin
-          PRZEDM.FUKS := Random(100);
-          if PRZEDM.POR > PRZEDM.FUKS then begin
-            PRZEDM.POROWNANIE;
-            MANA := MANA - 10;
-          end
-        else begin
-            WriteLn('POPELNILES PEWNE BLEDY I NIE UDALO SIE WYKONAC CZARU');
-            MANA := MANA - 5;
-          end;
-        end;
-      end;
-      if wpisz = 'DAWAJ KASE' then FORSA := FORSA + 5000;
-      if (wpisz = 'ODRZUC PACZEK') or (wpisz = 'ODRZUC CIASTKO') or
-       (wpisz = 'ODRZUC SUCHA RACJA') or (wpisz = 'ODRZUC BULKA') or
-       (wpisz = 'ODRZUC CHLEB') or (wpisz = 'ODRZUC WEKA') or
-       (wpisz = 'ODRZUC SERCE') or (wpisz = 'ODRZUC BIGOS') then
-        WriteLn('JAK SMIESZ WYRZUCAC JEDZENIE!!! WSTYD MI ZA CIEBIE !!! NIE POZWOLE !!!');
-      if ((wpisz = 'POWROT') and (Powracanie > 0)) or
-       ((wpisz = 'UZYJ SCROLL POWROT') and (PrzedmScrollPowrot < 0)) then begin
-        PRZEDM.FUKS := Random(100);
-        if wpisz = 'UZYJ SCROLL POWROT' then begin
-          PRZEDM.FUKS := Random(1);
-          PrzedmScrollPowrot := PrzedmScrollPowrot + 10;
-          PRZEDM.PRZED := PRZEDM.PRZED - 1;
-        end;
-        if PRZEDM.FUKS <= Powracanie then begin
-          WriteLn('OTWIERASZ MAGICZNY PORTAL KTORY PRZENOSI CIE DO MIASTA');
-          MANA := MANA - 15;
-          PRZEDM.MIECHO2 := 20;
-        end;
-        if (PRZEDM.FUKS > Powracanie) and (Powracanie + 30 > PRZEDM.FUKS) then begin
-          WriteLn('NIE UDAJE CI SIE OTWORZYC MAGICZNEGO PORTALU');
-          MANA := MANA - 5;
-        end;
-        if Powracanie + 29 < PRZEDM.FUKS then begin
-          WriteLn('OTWIERASZ MAGICZNY PORTAL KTORY JEDNAK PRZENOSI CIE DO INNEGO MIEJSCA');
-          MANA := MANA - 10;
-          PRZEDM.MIECHO2 := Random(100) + 1;
-        end;
-      end;
-      if wpisz = 'UZYJ SCROLL POROWNYWANIE' then begin
-        if PRZEDM.SCROLLPOR < 0 then begin
-          PRZEDM.POROWNANIE;
-          MANA := MANA - 10;
-          PRZEDM.SCROLLPOR := PRZEDM.SCROLLPOR + 10;
-          PRZEDM.PRZED := PRZEDM.PRZED - 1;
-        end;
-      end;
-      if wpisz = 'KOP' then begin
-        if KOP > 0 then begin
-          WriteLn('ZADAM CI PARE PYTAN:');
-          WriteLn('1)PONIZEJ JAKIEJ ENERGI CHCESZ ZACZAC KOPAC');
-          ReadLn(PRZEDM.KOPHP);
-          WriteLn('2)DO JAKIECH ILOSCI MANA CHCESZ KOPAC');
-          ReadLn(PRZEDM.KOPM);
-        end;
-      end;
-      if wpisz = 'JESTEM SPEEDE' then PRZEPUSTKA := PRZEPUSTKA - 10;
-
-      if wpisz = 'ZDOLNOSCI' then begin
-        if (MAD > 10) and (SIL > 11) then WriteLn('KOPANIE       - ', KOP, '%');
-        if (MAD > 10) and (ZRE > 10) then WriteLn('UCIEKANIE     - ', ZWIEJ, '%');
-        if (MAD > 15) and (ZRE > 11) then WriteLn('PAROWANIE     - ', PAR, '%');
-        if MAD > 11 then WriteLn('POROWNYWANIE  - ', PRZEDM.POR, '%');
-        if MAD > 18 then WriteLn('POTRAWKI      - ', PotrawkiNiepotrzebnaZmiennaBug, '%');
-        if MAD > 19 then WriteLn('POWROT        - ', Powracanie, '%');
-      end;
-      PRZEDM.PIERDOLY; { img 0xF566: color/background command dispatch }
-      if wpisz = 'WLACZ POSTAC' then WczytajPostac;
-    { At img 0xF5A1, UNMODE and UM both restore the saved room context. }
-      if ((wpisz = 'UNMODE') or (wpisz = 'UM')) then
-        MIECHO := PRZEDM.MIECHO2;
       if MIECHO = MIECHO_Podswiadomosc then goto L1012_ZachetaPodswiadomosc;
     end;
     { Reached after leaving MODE: img 0xF5B2 clears the combat flee flag. }

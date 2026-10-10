@@ -54,6 +54,14 @@ behavior for every possible input sequence:
 - RNG-dependent outcomes (seeded via `BOMBKI_SEED` for reproducibility)
 - Save/load round-trips (identical `pliki.tpu` content)
 
+**Save file format preservation.** The binary save file (`pliki.tpu`) format
+must remain byte-identical to the reference format stored in
+`tests/reference_saves/pliki.tpu.ref`. A dedicated test
+`tests/save_format_test.py` validates this by running a save scenario
+and comparing the emitted `pliki.tpu` byte-for-byte against the stored
+reference. This test must pass on both the refactored native build and,
+when available, the original binary via DOSEMU2.
+
 Refactoring is restricted to *internal* structure: control flow,
 helper extraction, variable renaming, dead-code removal, constant
 folding, and algorithmic simplification that does not alter any

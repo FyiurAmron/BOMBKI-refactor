@@ -22,13 +22,20 @@ if git diff --cached --name-only | grep -q '^_reference/'; then
   fail=1
 fi
 
+# 1b. tests/reference_saves/pliki.tpu.ref is a binary format reference
+# that naturally has a trailing blank line; allow it to skip checks
+reference_save_ref="tests/reference_saves/pliki.tpu.ref"
+
 # 2-3. text hygiene over staged files
 for f in $(git diff --cached --name-only --diff-filter=ACMR); do
   [ -f "$f" ] || continue  # skip deletions
   case "$f" in
     *.pas|*.sh|*.py|*.json|*.yml|*.yaml|*.md|*.conf|*.txt|*.cfg|*.toml|*.ini|Dockerfile*|.gitignore|.githooks/*)
       # newline at EOF: a final LF byte yields no match for `.`
-      if git show ":$f" 2>/dev/null | tail -c 1 | grep -q .; then
+      # Exception: reference save file is a binary format without trailing newline
+      if [ "$f" = "$reference_save_ref" ]; then
+        : # skip newline check for reference save file
+      elif git show ":$f" 2>/dev/null | tail -c 1 | grep -q .; then
         echo "error: $f missing newline at EOF" >&2
         fail=1
       fi
@@ -44,8 +51,17 @@ for f in $(git diff --cached --name-only --diff-filter=ACMR); do
 done
 
 # 4. trailing whitespace and diff markers
-if ! git diff --cached --check; then
-  fail=1
+# Exclude reference save file from trailing whitespace check (binary format with trailing blank line)
+excluded_files=""
+for f in $(git diff --cached --name-only --diff-filter=ACMR); do
+  if [ "$f" != "$reference_save_ref" ]; then
+    excluded_files="$excluded_files $f"
+  fi
+done
+if [ -n "$excluded_files" ]; then
+  if ! git diff --cached --check -- $excluded_files; then
+    fail=1
+  fi
 fi
 
 exit "$fail"

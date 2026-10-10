@@ -1,0 +1,18 @@
+{
+  "steps": [
+    {"expect": "TICK !!!", "send": ""},
+    {"expect": "NAPISZ SWA RASE", "send": "POL-ELF"},
+    {"expect": "PODAJE SWE IMIE", "send": "TESTER"},
+    {"expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ", "send": ""},
+    {"expect": "TU ZACZYNA SIE GRE", "send": "POLNOC"},
+    {"expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE"},
+    {"expect": "[0-9]+%\\.-?[0-9]+>", "send": "PAMIETAJ"},
+    {"expect": "W SUMIE MASZ", "send": "UNMODE"},
+    {"expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "MODE"},
+    {"expect": "[0-9]+%\\.-?[0-9]+>", "send": "WLACZ POSTAC"},
+    {"expect": "suckemall:", "send": "JA"},
+    {"expect": "MASZ 30 MONET", "send": "JA"},
+    {"expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "UNMODE"},
+    {"expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>", "send": "WYJSCIE"}
+  ]
+}

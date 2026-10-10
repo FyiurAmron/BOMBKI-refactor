@@ -88,6 +88,23 @@ instead, except when reproducing a direct quotation verbatim.
   unpredictable. If several scenarios need checking,
   run them one after another, one command at a time.
 
+## Save format test
+
+`tests/save_format_test.py` validates that the emitted `pliki.tpu` save
+file matches the reference format stored in `tests/reference_saves/pliki.tpu.ref`
+byte-for-byte. Run it after any change that might affect the save file format:
+
+```sh
+python3 tests/save_format_test.py
+```
+
+The test runs a save scenario against the native dev build and compares
+the emitted `pliki.tpu` byte-for-byte against the stored reference.
+The reference file is updated only when a deliberate format change is
+approved. The test must pass on the refactored native build; when the
+original binary is available via DOSEMU2, the same test should be run
+against it to ensure format parity.
+
 ## Scenarios
 
 `tests/scenarios/*.json` drives the game through a PTY: each

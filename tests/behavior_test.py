@@ -21,6 +21,20 @@ SCENARIOS = [
     "level-zero",
     "shop-item-display",
     "shop-repeat-buy",
+    "race-stats-czlowiek",
+    "race-stats-olbrzym",
+    "race-stats-nimfa",
+    "race-stats-pol-elf",
+    "race-stats-ufok",
+    "race-stats-czaromil",
+    "zre-limits",
+    "mode",
+    "mode-save-load",
+    "test_save_load_roundtrip",
+    "mode-sleep",
+    "ground-commands",
+    "ground-skills",
+    "shops-rich",
 ]
 
 # The original deducts 725 KUNSZT when leveling 1 -> 2 (reference

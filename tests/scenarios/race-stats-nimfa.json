@@ -1,0 +1,69 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "GADZIETO"
+    },
+    {
+      "label": "unknown race re-prompts",
+      "expect": "NAPISZ SWA RASE",
+      "send": "NIMFA"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "round salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "item limit for the starting ZRE",
+      "expect": "W SUMIE MASZ 0/12 PRZEDMIOTOW"
+    },
+    {
+      "label": "starting money and practices",
+      "expect": "MASZ 0 MONET I 10 PRAKTYK"
+    },
+    {
+      "label": "first level gap at zero KUNSZT",
+      "expect": "JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI 700 KUNSZTU"
+    },
+    {
+      "label": "starting attributes",
+      "expect": "TWOJE PARAMETRY : SILA - 10/15 ZRECZNOSC - 13/20 MADROSC - 7/11"
+    },
+    {
+      "label": "starting mana",
+      "expect": "MASZ 100/100 MANY"
+    },
+    {
+      "label": "starting energy (ENERGIA := 50 lands after the race block)",
+      "expect": "MASZ 50/50 ENERGII",
+      "send": "WYJSCIE"
+    }
+  ]
+}

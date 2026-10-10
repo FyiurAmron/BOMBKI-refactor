@@ -21,6 +21,7 @@ SCENARIOS = [
     "level-zero",
     "shop-item-display",
     "shop-repeat-buy",
+    "shop-quirks",
     "race-stats-czlowiek",
     "race-stats-olbrzym",
     "race-stats-nimfa",

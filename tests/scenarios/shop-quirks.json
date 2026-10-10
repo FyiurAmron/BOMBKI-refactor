@@ -1,0 +1,107 @@
+{
+  "steps": [
+    {
+      "label": "intro tick",
+      "expect": "TICK !!!",
+      "send": ""
+    },
+    {
+      "label": "race prompt",
+      "expect": "NAPISZ SWA RASE",
+      "send": "CZLOWIEK"
+    },
+    {
+      "label": "player-name prompt",
+      "expect": "PODAJE SWE IMIE",
+      "send": "TESTER"
+    },
+    {
+      "label": "startup key read",
+      "expect": "ABY SIE PATRZEC UZYJ KOMENDY PATRZ",
+      "send": ""
+    },
+    {
+      "label": "first room",
+      "expect": "TU ZACZYNA SIE GRE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "round salon",
+      "expect": "JESTES W OKROGLYM SALONIE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "city centre",
+      "expect": "JESTES W CENTRUM MIASTA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "shopping street south",
+      "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "armoury",
+      "expect": "JESTES W ZBROJOWNI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "SPRZEDAJ MALA"
+    },
+    {
+      "label": "unconditional shield sale pays 8 with nothing sold",
+      "expect": "TA TARCZA JEST BAJER,FRAJER KUPIE JA OD CIEBIE ZA 8 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "SPRZEDAJ MALA"
+    },
+    {
+      "label": "the unconditional sale repeats",
+      "expect": "TA TARCZA JEST BAJER[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "EXIT"
+    },
+    {
+      "label": "armoury exits",
+      "expect": "DOSTEPNE WYJSCIA:[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "WSCHOD"
+    },
+    {
+      "label": "back on the south street",
+      "expect": "JESTES NA ULICY NA ULICY SKLEPIKOWEJ[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "POLNOC"
+    },
+    {
+      "label": "shopping street north",
+      "expect": "CIAGNIE SIE TEDY ULICA SKLEPIKOWA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "ZACHOD"
+    },
+    {
+      "label": "magic shop",
+      "expect": "WCHODZISZ DO SKLEPU ALE NICZEGO[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "KUP MALA BUTELKA MANY"
+    },
+    {
+      "label": "gate 15 charges 20: sale succeeds at 16 coins",
+      "expect": "KUPUJESZ MALA BUTELKA MANY ZA 20 MONET \\( AHHHH TA INFLACJA \\) [\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "SPRZEDAJ PIGULKA TRANSPORTUJACA"
+    },
+    {
+      "label": "pill gate <=10 buys nothing first: sale pays 170",
+      "expect": "SPRZEDAWCA KUPUJE OD CIEBIE PIGULKE ZA 170 MONET[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
+      "send": "MODE"
+    },
+    {
+      "label": "ground prompt",
+      "expect": "[0-9]+%\\.-?[0-9]+>",
+      "send": "JA"
+    },
+    {
+      "label": "sheet: the bottle is carried",
+      "expect": "MALA BUTELKE MANY-10"
+    },
+    {
+      "label": "sheet: PRZED went negative from the empty sales",
+      "expect": "W SUMIE MASZ -2/10 PRZEDMIOTOW"
+    },
+    {
+      "label": "sheet: 16 - 20 + 170 = 166 coins",
+      "expect": "MASZ 166 MONET I 10 PRAKTYK",
+      "send": "WYJSCIE"
+    }
+  ]
+}

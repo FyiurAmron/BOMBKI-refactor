@@ -20,6 +20,7 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "src"
+UNIT_NAME = "Game"
 STUB = PROJECT / "tests" / "units" / "randstub.c"
 DELAY_STUB = PROJECT / "tests" / "units" / "delaystub.c"
 DELAY_SYMBOL = "CRT_$$_DELAY$WORD"
@@ -50,9 +51,13 @@ def build(out_dir: Path, fpc: str) -> Path:
     command += [f"-k--wrap={symbol}" for symbol in RAND_SYMBOLS]
     command.append(f"-k--wrap={DELAY_SYMBOL}")
     command += [f"-k{out_dir / 'randstub.o'}", f"-k{out_dir / 'delaystub.o'}"]
-    command.append(str(SOURCES / "BOMBKI.PAS"))
-    print("+", subprocess.list2cmdline(command), file=sys.stderr)
-    subprocess.run(command, cwd=out_dir, check=True)
+    # The unit is compiled explicitly: FPC locates unit sources only by
+    # lowercase filenames on case-sensitive filesystems, so a search-path
+    # lookup of the mixed-case Game.PAS would fail.
+    for source in (SOURCES / f"{UNIT_NAME}.PAS", SOURCES / "BOMBKI.PAS"):
+        print("+", subprocess.list2cmdline(command + [str(source)]),
+              file=sys.stderr)
+        subprocess.run(command + [str(source)], cwd=out_dir, check=True)
     return out_dir / "BOMBKI"
 
 

@@ -61,7 +61,7 @@
       "send": "ZACHOD"
     },
     {
-      "label": "living door, DRZWI bar the way",
+      "label": "living door bars the way",
       "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "MODE"
     },
@@ -96,7 +96,7 @@
       "send": "ZACHOD"
     },
     {
-      "label": "past the DRZWI into the dark room",
+      "label": "past the living door into the dark room",
       "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "DAWAJ KUNSZT"
     },

@@ -22,9 +22,10 @@ Behavior-preserving refactor of the reconstructed 1999 BOMBKI game sources.
 - Byte-identity with the original binaries is history: `_reference/` is the
   last byte-matched snapshot, kept as provenance. What is preserved in
   `src/` is behavior only; machine-code equivalence is explicitly not a goal.
-- Invented identifiers use ordinary Pascal capitalization with Polish names
-  (e.g. `WybierzRase`, `PunktKontrolny`, `ZdobadzPoziom`), ALLCAPS is used only
-  for names fully available in reference data.
+- Identifiers are English, ordinary Pascal capitalization
+  (e.g. `ChooseRace`, `CheckpointStage`, `CheckLevelUp`); acronyms keep
+  their conventional form (`DJ`). The user-facing string literals stay
+  Polish - they are the game's observable output and are immutable.
 
 ## Commits
 

@@ -1,8 +1,8 @@
 program BOMBKI;
 
 uses
-  gra;
+  Game;
 
 begin
-  GRA.Start;
+  Game.Start;
 end.

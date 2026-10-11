@@ -41,7 +41,7 @@
       "send": "TRENUJ ZRECZNOSC"
     },
     {
-      "label": "train agility to 11, past the ZRE > 10 gate",
+      "label": "train agility to 11, past the Dexterity > 10 gate",
       "expect": "TRENUJESZ ZRECZNOSC I MASZ 11 ZRECZNOSCI[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "ZACHOD"
     },
@@ -96,7 +96,7 @@
       "send": "ZACHOD"
     },
     {
-      "label": "living door, DRZWI bar the way",
+      "label": "living door bars the way",
       "expect": "DO DOBRA WYGLADA TO NA JAKIS DOM[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?NIE WPUSZCZE[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "MODE"
     },
@@ -116,7 +116,7 @@
       "send": "DAWAJ EN"
     },
     {
-      "label": "energy topped to keep ENERGIA < WIMP",
+      "label": "energy topped to keep Energy < FleeEnergy",
       "expect": "[0-9]+%\\.-?[0-9]+>",
       "send": "DAWAJ EN"
     },
@@ -136,7 +136,7 @@
       "send": "ZACHOD"
     },
     {
-      "label": "past the DRZWI into the dark room",
+      "label": "past the living door into the dark room",
       "expect": "DOBRA JESTES W SRODKU BRAK OSWIETLENIA[\\s\\S]*?STARUCHA[\\s\\S]*?[0-9]+%\\.-?[0-9]+>",
       "send": "DAWAJ KUNSZT"
     },

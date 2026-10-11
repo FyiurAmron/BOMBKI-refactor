@@ -4,7 +4,7 @@ program test_przedm;
 combat stat arithmetic). Each test sets up the
 PRZEDM globals it reads, so the tests are
 order-independent and safe to run one per process.}
-uses pastest, GRA;
+uses pastest, Game;
 
 {Write the given lines (separated by '|') to a temp
  file and redirect standard input to it, so the
@@ -32,173 +32,173 @@ end;
 
 procedure TestMode;
 begin
-  MIECHO := 42;
-  MODE;
-  CheckEqual(42, MIECHO2, 'MODE saves MIECHO into MIECHO2');
-  CheckEqual(1000, MIECHO, 'MODE switches MIECHO to 1000');
+  Room := 42;
+  EnterTrance;
+  CheckEqual(42, OuterRoom, 'MODE saves MIECHO into MIECHO2');
+  CheckEqual(1000, Room, 'MODE switches MIECHO to 1000');
 end;
 
 procedure TestKomendy;
 begin
-  wpisz := 'PN'; KOMENDY;
-  CheckStrEqual('POLNOC', wpisz, 'PN expands to POLNOC');
-  wpisz := 'PD'; KOMENDY;
-  CheckStrEqual('POLODNIE', wpisz, 'PD expands to POLODNIE');
-  wpisz := 'W'; KOMENDY;
-  CheckStrEqual('WSCHOD', wpisz, 'W expands to WSCHOD');
-  wpisz := 'Z'; KOMENDY;
-  CheckStrEqual('ZACHOD', wpisz, 'Z expands to ZACHOD');
-  wpisz := 'G'; KOMENDY;
-  CheckStrEqual('GORA', wpisz, 'G expands to GORA');
-  wpisz := 'D'; KOMENDY;
-  CheckStrEqual('DOL', wpisz, 'D expands to DOL');
-  wpisz := 'E'; KOMENDY;
-  CheckStrEqual('EXIT', wpisz, 'E expands to EXIT');
-  wpisz := 'M'; KOMENDY;
-  CheckStrEqual('MODE', wpisz, 'M expands to MODE');
-  wpisz := 'POLNOC'; KOMENDY;
-  CheckStrEqual('POLNOC', wpisz, 'full command passes through KOMENDY');
+  Command := 'PN'; ExpandAbbrev;
+  CheckStrEqual('POLNOC', Command, 'PN expands to POLNOC');
+  Command := 'PD'; ExpandAbbrev;
+  CheckStrEqual('POLODNIE', Command, 'PD expands to POLODNIE');
+  Command := 'W'; ExpandAbbrev;
+  CheckStrEqual('WSCHOD', Command, 'W expands to WSCHOD');
+  Command := 'Z'; ExpandAbbrev;
+  CheckStrEqual('ZACHOD', Command, 'Z expands to ZACHOD');
+  Command := 'G'; ExpandAbbrev;
+  CheckStrEqual('GORA', Command, 'G expands to GORA');
+  Command := 'D'; ExpandAbbrev;
+  CheckStrEqual('DOL', Command, 'D expands to DOL');
+  Command := 'E'; ExpandAbbrev;
+  CheckStrEqual('EXIT', Command, 'E expands to EXIT');
+  Command := 'M'; ExpandAbbrev;
+  CheckStrEqual('MODE', Command, 'M expands to MODE');
+  Command := 'POLNOC'; ExpandAbbrev;
+  CheckStrEqual('POLNOC', Command, 'full command passes through KOMENDY');
 end;
 
 procedure TestTrainSila;
 begin
-  SIL := 10; MAXSIL := 20; PRA := 10; wpisz := 'TRENUJ SILA';
-  TRAIN;
-  CheckEqual(11, SIL, 'TRENUJ SILA raises SIL by one');
-  CheckEqual(7, PRA, 'TRENUJ SILA spends three PRA');
+  Strength := 10; MaxStrength := 20; Practice := 10; Command := 'TRENUJ SILA';
+  HandleTrain;
+  CheckEqual(11, Strength, 'TRENUJ SILA raises SIL by one');
+  CheckEqual(7, Practice, 'TRENUJ SILA spends three PRA');
 end;
 
 procedure TestTrainZrecznosc;
 begin
-  ZRE := 10; MAXZRE := 20; PRA := 10; wpisz := 'TRENUJ ZRECZNOSC';
-  TRAIN;
-  CheckEqual(11, ZRE, 'TRENUJ ZRECZNOSC raises ZRE by one');
-  CheckEqual(8, PRA, 'TRENUJ ZRECZNOSC spends two PRA');
+  Dexterity := 10; MaxDexterity := 20; Practice := 10; Command := 'TRENUJ ZRECZNOSC';
+  HandleTrain;
+  CheckEqual(11, Dexterity, 'TRENUJ ZRECZNOSC raises ZRE by one');
+  CheckEqual(8, Practice, 'TRENUJ ZRECZNOSC spends two PRA');
 end;
 
 procedure TestTrainMadrosc;
 begin
-  MAD := 10; MAXMAD := 20; PRA := 10; wpisz := 'TRENUJ MADROSC';
-  TRAIN;
-  CheckEqual(11, MAD, 'TRENUJ MADROSC raises MAD by one');
-  CheckEqual(7, PRA, 'TRENUJ MADROSC spends three PRA');
+  Wisdom := 10; MaxWisdom := 20; Practice := 10; Command := 'TRENUJ MADROSC';
+  HandleTrain;
+  CheckEqual(11, Wisdom, 'TRENUJ MADROSC raises MAD by one');
+  CheckEqual(7, Practice, 'TRENUJ MADROSC spends three PRA');
 end;
 
 procedure TestTrainNeedsPracticePoints;
 begin
-  SIL := 10; MAXSIL := 20; PRA := 2; wpisz := 'TRENUJ SILA';
-  TRAIN;
-  CheckEqual(10, SIL, 'TRENUJ SILA refuses with two PRA');
-  CheckEqual(2, PRA, 'TRENUJ SILA spends nothing with two PRA');
+  Strength := 10; MaxStrength := 20; Practice := 2; Command := 'TRENUJ SILA';
+  HandleTrain;
+  CheckEqual(10, Strength, 'TRENUJ SILA refuses with two PRA');
+  CheckEqual(2, Practice, 'TRENUJ SILA spends nothing with two PRA');
 end;
 
 procedure TestTrainCapsAtMaximum;
 begin
-  SIL := 20; MAXSIL := 20; PRA := 10; wpisz := 'TRENUJ SILA';
-  TRAIN;
-  CheckEqual(20, SIL, 'TRENUJ SILA stops at MAXSIL');
-  CheckEqual(10, PRA, 'TRENUJ SILA spends nothing at MAXSIL');
+  Strength := 20; MaxStrength := 20; Practice := 10; Command := 'TRENUJ SILA';
+  HandleTrain;
+  CheckEqual(20, Strength, 'TRENUJ SILA stops at MAXSIL');
+  CheckEqual(10, Practice, 'TRENUJ SILA spends nothing at MAXSIL');
 end;
 
 procedure TestPotworyRanges;
 begin
-  POTWORY;
+  SpawnMonsters;
   { Random(38) + 20 redrawn until above 32: [33, 57]. }
-  CheckRange('BAKTERIA', BAKTERIA, 33, 57);
-  CheckRange('SLIMAK', SLIMAK, 33, 57);
-  CheckRange('ZUK', ZUK, 33, 57);
-  CheckRange('KARALUCH', KARALUCH, 33, 57);
-  CheckRange('MROWKA', MROWKA, 33, 57);
-  CheckRange('PAJAK', PAJAK, 33, 57);
-  CheckRange('DZIK', DZIK, 33, 57);
-  CheckRange('LIS', LIS, 33, 57);
-  CheckRange('SZCZUR', SZCZUR, 33, 57);
-  CheckRange('KUROPATWA', KUROPATWA, 33, 57);
-  CheckRange('SARNA', SARNA, 33, 57);
-  CheckRange('ORZEL', ORZEL, 33, 57);
-  CheckRange('ZAJAC', ZAJAC, 33, 57);
-  CheckRange('WILCZUR', WILCZUR, 33, 57);
-  CheckRange('KORNIK', KORNIK, 33, 57);
-  CheckRange('MUCHA', MUCHA, 33, 57);
-  CheckRange('SLON', SLON, 33, 57);
-  CheckRange('LEW', LEW, 33, 57);
-  CheckRange('ZYRAFA', ZYRAFA, 33, 57);
-  CheckRange('WIELBLAD', WIELBLAD, 33, 57);
-  CheckRange('STRUS', STRUS, 33, 57);
-  CheckRange('BOA', BOA, 33, 57);
-  CheckRange('WILK', WILK, 33, 57);
-  CheckRange('BIZON', BIZON, 33, 57);
-  CheckRange('PANTERA', PANTERA, 33, 57);
-  CheckRange('GLADIATOR', GLADIATOR, 33, 57);
-  CheckRange('WOJOWNIK', WOJOWNIK, 33, 57);
-  CheckRange('TRENER', TRENER, 33, 57);
+  CheckRange('BAKTERIA', Bacterium, 33, 57);
+  CheckRange('SLIMAK', Snail, 33, 57);
+  CheckRange('ZUK', Beetle, 33, 57);
+  CheckRange('KARALUCH', Cockroach, 33, 57);
+  CheckRange('MROWKA', Ant, 33, 57);
+  CheckRange('PAJAK', Spider, 33, 57);
+  CheckRange('DZIK', Boar, 33, 57);
+  CheckRange('LIS', Fox, 33, 57);
+  CheckRange('SZCZUR', Rat, 33, 57);
+  CheckRange('KUROPATWA', Partridge, 33, 57);
+  CheckRange('SARNA', Deer, 33, 57);
+  CheckRange('ORZEL', Eagle, 33, 57);
+  CheckRange('ZAJAC', Hare, 33, 57);
+  CheckRange('WILCZUR', Mongrel, 33, 57);
+  CheckRange('KORNIK', Woodworm, 33, 57);
+  CheckRange('MUCHA', Fly, 33, 57);
+  CheckRange('SLON', Elephant, 33, 57);
+  CheckRange('LEW', Lion, 33, 57);
+  CheckRange('ZYRAFA', Giraffe, 33, 57);
+  CheckRange('WIELBLAD', Camel, 33, 57);
+  CheckRange('STRUS', Ostrich, 33, 57);
+  CheckRange('BOA', Boa, 33, 57);
+  CheckRange('WILK', Wolf, 33, 57);
+  CheckRange('BIZON', Bison, 33, 57);
+  CheckRange('PANTERA', Panther, 33, 57);
+  CheckRange('GLADIATOR', Gladiator, 33, 57);
+  CheckRange('WOJOWNIK', Warrior, 33, 57);
+  CheckRange('TRENER', Tamer, 33, 57);
   { Random(7) + 60 redrawn until above 60: [61, 66]. }
-  CheckRange('DZIECKO', DZIECKO, 61, 66);
-  CheckRange('REPORTER', REPORTER, 61, 66);
+  CheckRange('DZIECKO', Kid, 61, 66);
+  CheckRange('REPORTER', Reporter, 61, 66);
   { Random(8) + 60 redrawn until above 60: [61, 67]. }
-  CheckRange('WARIAT', WARIAT, 61, 67);
-  CheckRange('SLUCHACZ', SLUCHACZ, 61, 67);
-  CheckRange('FAN', FAN, 61, 67);
-  CheckRange('CZLOWIEK', CZLOWIEK, 61, 67);
-  CheckRange('DZIADEK', DZIADEK, 61, 67);
+  CheckRange('WARIAT', Lunatic, 61, 67);
+  CheckRange('SLUCHACZ', Listener, 61, 67);
+  CheckRange('FAN', Fan, 61, 67);
+  CheckRange('CZLOWIEK', Man, 61, 67);
+  CheckRange('DZIADEK', OldMan, 61, 67);
   { Random(9) + 60 redrawn until above 60: [61, 68]. }
-  CheckRange('POLICJANT', POLICJANT, 61, 68);
-  CheckRange('OCHRONIARZ', OCHRONIARZ, 61, 68);
-  CheckRange('GORYL', GORYL, 61, 68);
+  CheckRange('POLICJANT', Policeman, 61, 68);
+  CheckRange('OCHRONIARZ', Bouncer, 61, 68);
+  CheckRange('GORYL', Gorilla, 61, 68);
   { Random(3) + 70, drawn once: [70, 72]. }
-  CheckRange('GITARZYSTA', GITARZYSTA, 70, 72);
-  CheckRange('PERKUSISTA', PERKUSISTA, 70, 72);
-  CheckRange('ORGANISTA', ORGANISTA, 70, 72);
-  CheckRange('LIROY', LIROY, 70, 72);
+  CheckRange('GITARZYSTA', Guitarist, 70, 72);
+  CheckRange('PERKUSISTA', Drummer, 70, 72);
+  CheckRange('ORGANISTA', Keyboardist, 70, 72);
+  CheckRange('LIROY', Liroy, 70, 72);
   { Fixed constants from POTWORY. }
-  CheckEqual(67, MINIBARMAN, 'MINIBARMAN is 67');
-  CheckEqual(67, GRUBAS, 'GRUBAS is 67');
+  CheckEqual(67, Minibarman, 'MINIBARMAN is 67');
+  CheckEqual(67, Fatso, 'GRUBAS is 67');
   CheckEqual(69, DJ, 'DJ is 69');
-  CheckEqual(76, PEDAL, 'PEDAL is 76');
-  CheckEqual(76, PARA, 'PARA is 76');
-  CheckEqual(76, MACIEK, 'MACIEK is 76');
-  CheckEqual(1, DRZWI, 'DRZWI is 1');
-  CheckEqual(1, STARUCH, 'STARUCH is 1');
+  CheckEqual(76, Pedal, 'PEDAL is 76');
+  CheckEqual(76, Couple, 'PARA is 76');
+  CheckEqual(76, Maciek, 'MACIEK is 76');
+  CheckEqual(1, Door, 'DRZWI is 1');
+  CheckEqual(1, OldElf, 'STARUCH is 1');
   { Random(7) + 20, condition always true: [20, 26]. }
-  CheckRange('JAMNIK', JAMNIK, 20, 26);
-  CheckRange('OWCZAREK', OWCZAREK, 20, 26);
-  CheckRange('PIESEK', PIESEK, 20, 26);
-  CheckRange('SPANIEL', SPANIEL, 20, 26);
-  CheckRange('PUDEL', PUDEL, 20, 26);
-  CheckRange('TAKSOWKARZ', TAKSOWKARZ, 20, 26);
-  CheckRange('SPRZEDAWCA', SPRZEDAWCA, 20, 26);
-  CheckRange('ZAMIATACZ', ZAMIATACZ, 20, 26);
-  CheckRange('PIJAK', PIJAK, 20, 26);
-  CheckRange('ZEBRAK', ZEBRAK, 20, 26);
+  CheckRange('JAMNIK', Dachshund, 20, 26);
+  CheckRange('OWCZAREK', Shepherd, 20, 26);
+  CheckRange('PIESEK', Pooch, 20, 26);
+  CheckRange('SPANIEL', Spaniel, 20, 26);
+  CheckRange('PUDEL', Poodle, 20, 26);
+  CheckRange('TAKSOWKARZ', Cabman, 20, 26);
+  CheckRange('SPRZEDAWCA', Vendor, 20, 26);
+  CheckRange('ZAMIATACZ', Sweeper, 20, 26);
+  CheckRange('PIJAK', Drunkard, 20, 26);
+  CheckRange('ZEBRAK', SickMan, 20, 26);
   { Random(8) + 77 redrawn until below 84: [77, 83]. }
-  CheckRange('SZCZAW', SZCZAW, 77, 83);
-  CheckRange('STOKROTKA', STOKROTKA, 77, 83);
-  CheckRange('KONICZYNKA', KONICZYNKA, 77, 83);
-  CheckRange('MLECZ', MLECZ, 77, 83);
-  CheckRange('DMUCHAWIEC', DMUCHAWIEC, 77, 83);
-  CheckRange('ROZA', ROZA, 77, 83);
-  CheckRange('OSET', OSET, 77, 83);
-  CheckRange('MALINA', MALINA, 77, 83);
+  CheckRange('SZCZAW', Sorrel, 77, 83);
+  CheckRange('STOKROTKA', Daisy, 77, 83);
+  CheckRange('KONICZYNKA', Clover, 77, 83);
+  CheckRange('MLECZ', SowThistle, 77, 83);
+  CheckRange('DMUCHAWIEC', Dandelion, 77, 83);
+  CheckRange('ROZA', Rose, 77, 83);
+  CheckRange('OSET', Thistle, 77, 83);
+  CheckRange('MALINA', Raspberry, 77, 83);
   { Random(8) + 77, not in the until condition: [77, 84]. }
-  CheckRange('AGREST', AGREST, 77, 84);
-  CheckRange('JEZYNA', JEZYNA, 77, 84);
-  CheckRange('TRAWA', TRAWA, 77, 84);
-  CheckRange('DUNCAN', DUNCAN, 77, 84);
+  CheckRange('AGREST', Gooseberry, 77, 84);
+  CheckRange('JEZYNA', Blackberry, 77, 84);
+  CheckRange('TRAWA', Grass, 77, 84);
+  CheckRange('DUNCAN', Duncan, 77, 84);
 end;
 
 procedure TestTarczaAppliesShield;
 begin
   { PRO at 100 forces the Random(100) roll to succeed. }
-  WPYSK := 50; ILOSC := 30; PRO := 100;
-  TARCZA;
-  CheckEqual(20, WPYSK, 'TARCZA subtracts ILOSC from WPYSK');
+  Damage := 50; WornCount := 30; Armor := 100;
+  ShieldBlock;
+  CheckEqual(20, Damage, 'TARCZA subtracts ILOSC from WPYSK');
 end;
 
 procedure TestTarczaClampsAtZero;
 begin
-  WPYSK := 10; ILOSC := 30; PRO := 100;
-  TARCZA;
-  CheckEqual(0, WPYSK, 'TARCZA clamps WPYSK at zero');
+  Damage := 10; WornCount := 30; Armor := 100;
+  ShieldBlock;
+  CheckEqual(0, Damage, 'TARCZA clamps WPYSK at zero');
 end;
 
 { WALKA: the pre-loop MINIKUNSZT arithmetic (PAS
@@ -222,28 +222,28 @@ end;
 procedure WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
   aZre, aWrogZre, aPar, aKop: Integer);
 begin
-  ENERGIA := 100;
-  PAR := aPar;
-  KOP := aKop;
-  KOPM := 0;
-  KOPHP := 0;
-  MANA := 0;
-  FIREBALL := 0;
-  POISON := 0;
-  ILEPOI := 0;
-  ZWIEJ := 0;
-  WIMP := 0;
-  PASZOL := 0;
-  KUNSZT := 0;
-  FUKSROLL := 0;
-  PRO := 0;
-  ILOSC := 0;
-  MAXE := aMaxE;
-  WROGEN := aWrogE;
-  SIL := aSil;
-  WROGSIL := aWrogSil;
-  ZRE := aZre;
-  WROGZRE := aWrogZre;
+  Energy := 100;
+  Parry := aPar;
+  Kick := aKop;
+  KickMinMana := 0;
+  KickMaxEnergy := 0;
+  Mana := 0;
+  FireballCharges := 0;
+  PoisonCharges := 0;
+  PoisonRounds := 0;
+  Fleeing := 0;
+  FleeEnergy := 0;
+  Fled := 0;
+  Experience := 0;
+  LuckRoll := 0;
+  Armor := 0;
+  WornCount := 0;
+  MaxEnergy := aMaxE;
+  EnemyEnergy := aWrogE;
+  Strength := aSil;
+  EnemyStrength := aWrogSil;
+  Dexterity := aZre;
+  EnemyDexterity := aWrogZre;
 end;
 
 procedure RunWalka(aMaxE, aWrogE, aSil, aWrogSil,
@@ -252,8 +252,8 @@ procedure RunWalka(aMaxE, aWrogE, aSil, aWrogSil,
 begin
   WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
     aZre, aWrogZre, aPar, aKop);
-  WALKA;
-  CheckEqual(ExpectedKunszt, KUNSZT, What);
+  Fight;
+  CheckEqual(ExpectedKunszt, Experience, What);
 end;
 
 procedure RunWalkaRange(aMaxE, aWrogE, aSil, aWrogSil,
@@ -262,8 +262,8 @@ procedure RunWalkaRange(aMaxE, aWrogE, aSil, aWrogSil,
 begin
   WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
     aZre, aWrogZre, aPar, aKop);
-  WALKA;
-  CheckRange(What, KUNSZT, KunsztLo, KunsztHi);
+  Fight;
+  CheckRange(What, Experience, KunsztLo, KunsztHi);
 end;
 
 procedure TestWalkaEqualStats;
@@ -411,494 +411,494 @@ end;
 procedure TestWalkaPoisoned;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  ILEPOI := 10;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy while poisoned');
-  CheckTrue(ENERGIA > 0, 'WALKA survives the poison damage');
+  PoisonRounds := 10;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy while poisoned');
+  CheckTrue(Energy > 0, 'WALKA survives the poison damage');
 end;
 
 procedure TestWalkaFireball;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  FIREBALL := 1;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy under fireball');
-  CheckTrue((FIREBALL = 0) or (FIREBALL = 1),
+  FireballCharges := 1;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy under fireball');
+  CheckTrue((FireballCharges = 0) or (FireballCharges = 1),
     'WALKA spends the fireball or keeps it');
 end;
 
 procedure TestWalkaPoison;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  POISON := 1;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy under poison');
-  CheckTrue((POISON = 0) or (POISON = 1),
+  PoisonCharges := 1;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy under poison');
+  CheckTrue((PoisonCharges = 0) or (PoisonCharges = 1),
     'WALKA spends the poison or keeps it');
 end;
 
 procedure TestWalkaParry;
 begin
   WalkaSetup(0, 0, 1, 20, 10, 10, 139, 0);
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy through parry');
-  CheckTrue(ENERGIA > 0, 'WALKA survives the parried attack');
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy through parry');
+  CheckTrue(Energy > 0, 'WALKA survives the parried attack');
 end;
 
 procedure TestWalkaParryLight;
 begin
   WalkaSetup(0, 10, 3, 3, 10, 10, 139, 0);
-  ENERGIA := 10000;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy through light parry');
-  CheckTrue(ENERGIA > 0, 'WALKA survives the light parry');
+  Energy := 10000;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy through light parry');
+  CheckTrue(Energy > 0, 'WALKA survives the light parry');
 end;
 
 procedure TestWalkaSpecials;
 begin
   WalkaSetup(0, 20, 3, 20, 10, 10, 139, 0);
-  ENERGIA := 10000;
-  FIREBALL := 1;
-  POISON := 1;
-  ILEPOI := 10;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy in the long fight');
-  CheckTrue(ENERGIA > 0, 'WALKA survives the long fight');
+  Energy := 10000;
+  FireballCharges := 1;
+  PoisonCharges := 1;
+  PoisonRounds := 10;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy in the long fight');
+  CheckTrue(Energy > 0, 'WALKA survives the long fight');
 end;
 
 procedure TestWalkaSuperKopHit;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
-  MANA := 100; KOPHP := 100; ENERGIA := 50;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy with the super kop');
-  CheckTrue(MANA < 100, 'WALKA spends mana on the super kop');
+  Mana := 100; KickMaxEnergy := 100; Energy := 50;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy with the super kop');
+  CheckTrue(Mana < 100, 'WALKA spends mana on the super kop');
 end;
 
 procedure TestWalkaSuperKopHitAgain;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
-  MANA := 100; KOPHP := 100; ENERGIA := 50;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy with the kop again');
-  CheckTrue(MANA < 100, 'WALKA spends mana on the kop again');
+  Mana := 100; KickMaxEnergy := 100; Energy := 50;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy with the kop again');
+  CheckTrue(Mana < 100, 'WALKA spends mana on the kop again');
 end;
 
 procedure TestWalkaSuperKopChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 11);
-  MANA := 100; KOPHP := 100; ENERGIA := 50;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy when the kop misses');
-  CheckTrue(MANA < 100, 'WALKA spends mana on the kop attempt');
+  Mana := 100; KickMaxEnergy := 100; Energy := 50;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy when the kop misses');
+  CheckTrue(Mana < 100, 'WALKA spends mana on the kop attempt');
 end;
 
 procedure TestWalkaFlee;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  ZWIEJ := 100; WIMP := 100; ENERGIA := 50; MANA := 100;
-  WALKA;
-  CheckTrue(PASZOL = 1, 'WALKA flees the battle');
+  Fleeing := 100; FleeEnergy := 100; Energy := 50; Mana := 100;
+  Fight;
+  CheckTrue(Fled = 1, 'WALKA flees the battle');
 end;
 
 procedure TestWalkaFleeChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  ZWIEJ := 1; WIMP := 100; ENERGIA := 50; MANA := 100;
-  WALKA;
-  CheckTrue(WROGEN < 1,
+  Fleeing := 1; FleeEnergy := 100; Energy := 50; Mana := 100;
+  Fight;
+  CheckTrue(EnemyEnergy < 1,
     'WALKA finishes the enemy when the flee fails');
 end;
 
 procedure TestWalkaPotrawki;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  POTRAWKI := 99; BIGOS := 50; PRZED := 0;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the enemy for the potrawki');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  Cooking := 99; Bigos := 50; ItemCount := 0;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the enemy for the potrawki');
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'WALKA cooks the bigos or not');
 end;
 
 procedure TestWalkaDeath;
 begin
   WalkaSetup(0, 0, 1, 61, 10, 10, 0, 0);
-  ENERGIA := 1;
-  WALKA;
-  CheckTrue((ENERGIA < 1) or (WROGEN < 1),
+  Energy := 1;
+  Fight;
+  CheckTrue((Energy < 1) or (EnemyEnergy < 1),
     'WALKA ends the fight by death or victory');
 end;
 
 procedure TestWalkaFukroll;
 begin
   WalkaSetup(0, 10, 2, 1, 10, 10, 0, 0);
-  FUKSROLL := 1;
-  WALKA;
-  CheckTrue(WROGEN < 1,
+  LuckRoll := 1;
+  Fight;
+  CheckTrue(EnemyEnergy < 1,
     'WALKA defeats the enemy through the fukroll');
 end;
 
 procedure EncounterSetup;
 begin
   WalkaSetup(127, 0, 127, 1, 127, 1, 0, 0);
-  MTARCZA := 0; POTRAWKI := 0; FIREBALL := 0; POISON := 0;
-  ILEPOI := 0; SERCE := 0;
+  SmallShield := 0; Cooking := 0; FireballCharges := 0; PoisonCharges := 0;
+  PoisonRounds := 0; Heart := 0;
 end;
 
 procedure TestEncounters;
 begin
   EncounterSetup;
-  wpisz := 'ZABIJ MROWKA';
-  SLABO;
-  CheckTrue(WROGEN < 1, 'SLABO defeats the mrowka');
+  Command := 'ZABIJ MROWKA';
+  FightWeak;
+  CheckTrue(EnemyEnergy < 1, 'SLABO defeats the mrowka');
   EncounterSetup;
-  WALKAPIES;
-  CheckTrue(WROGEN < 1, 'WALKAPIES defeats the pies');
+  FightDog;
+  CheckTrue(EnemyEnergy < 1, 'WALKAPIES defeats the pies');
   EncounterSetup;
-  MNIEJSLABO;
-  CheckTrue(WROGEN < 1, 'MNIEJSLABO defeats the enemy');
+  FightWeakish;
+  CheckTrue(EnemyEnergy < 1, 'MNIEJSLABO defeats the enemy');
   EncounterSetup;
-  SREDNIO;
-  CheckTrue(WROGEN < 1, 'SREDNIO defeats the enemy');
+  FightMedium;
+  CheckTrue(EnemyEnergy < 1, 'SREDNIO defeats the enemy');
   EncounterSetup;
-  TRUDNO;
-  CheckTrue(WROGEN < 1, 'TRUDNO defeats the enemy');
+  FightHard;
+  CheckTrue(EnemyEnergy < 1, 'TRUDNO defeats the enemy');
   EncounterSetup;
-  VEASY;
-  CheckTrue((WROGEN < 1) and (ENERGIA > 0),
+  FightVeryEasy;
+  CheckTrue((EnemyEnergy < 1) and (Energy > 0),
     'VEASY defeats the enemy and survives');
   EncounterSetup;
-  EASY;
-  CheckTrue((WROGEN < 1) and (ENERGIA > 0),
+  FightEasy;
+  CheckTrue((EnemyEnergy < 1) and (Energy > 0),
     'EASY defeats the enemy and survives');
   EncounterSetup;
-  NEASY;
-  CheckTrue((WROGEN < 1) and (ENERGIA > 0),
+  FightNotEasy;
+  CheckTrue((EnemyEnergy < 1) and (Energy > 0),
     'NEASY defeats the enemy and survives');
   EncounterSetup;
-  BTRUDNO;
-  CheckTrue(WROGEN < 1, 'BTRUDNO defeats the enemy');
+  FightVeryHard;
+  CheckTrue(EnemyEnergy < 1, 'BTRUDNO defeats the enemy');
 end;
 
 procedure TestWalkaDodge;
 begin
   WalkaSetup(0, 30, 3, 1, 0, 2, 0, 0);
-  ENERGIA := 100;
-  WALKA;
-  CheckTrue(WROGEN < 1, 'WALKA defeats the dodging enemy');
-  CheckTrue(ENERGIA > 0, 'WALKA survives the dodged combat');
+  Energy := 100;
+  Fight;
+  CheckTrue(EnemyEnergy < 1, 'WALKA defeats the dodging enemy');
+  CheckTrue(Energy > 0, 'WALKA survives the dodged combat');
 end;
 
 procedure TestBraniePicksUpSword;
 begin
-  MIECHO2 := 7; MMIECZ := 7; PRZED := 0; wpisz := 'BIERZ STARY';
-  BRANIE;
-  CheckEqual(-10, MMIECZ, 'BIERZ STARY stores the sword as -10');
-  CheckEqual(1, PRZED, 'BIERZ STARY counts one item');
+  OuterRoom := 7; OldSword := 7; ItemCount := 0; Command := 'BIERZ STARY';
+  TakeDrop;
+  CheckEqual(-10, OldSword, 'BIERZ STARY stores the sword as -10');
+  CheckEqual(1, ItemCount, 'BIERZ STARY counts one item');
 end;
 
 procedure TestBranieDropsSword;
 begin
-  MIECHO2 := 7; MMIECZ := -10; PRZED := 1; wpisz := 'ODRZUC STARY';
-  BRANIE;
-  CheckEqual(7, MMIECZ, 'ODRZUC STARY restores the sword marker');
-  CheckEqual(0, PRZED, 'ODRZUC STARY uncounts the item');
+  OuterRoom := 7; OldSword := -10; ItemCount := 1; Command := 'ODRZUC STARY';
+  TakeDrop;
+  CheckEqual(7, OldSword, 'ODRZUC STARY restores the sword marker');
+  CheckEqual(0, ItemCount, 'ODRZUC STARY uncounts the item');
 end;
 
 procedure TestBranieIgnoresMissingSword;
 begin
-  MIECHO2 := 7; MMIECZ := 0; PRZED := 0; wpisz := 'BIERZ STARY';
-  BRANIE;
-  CheckEqual(0, MMIECZ, 'BIERZ STARY needs the sword marker');
-  CheckEqual(0, PRZED, 'BIERZ STARY counts nothing without the sword');
+  OuterRoom := 7; OldSword := 0; ItemCount := 0; Command := 'BIERZ STARY';
+  TakeDrop;
+  CheckEqual(0, OldSword, 'BIERZ STARY needs the sword marker');
+  CheckEqual(0, ItemCount, 'BIERZ STARY counts nothing without the sword');
 end;
 
 procedure TestBraniePicksUpBluszczItems;
 begin
-  MIECHO2 := 7;
-  MTARCZA := 7; SERCE := 7; DYPLOM := 7; FAJKA := 7;
-  PRZED := 0; MAD := 0; MAXMAD := 5; MAXE := 50;
-  wpisz := 'BIERZ MALA'; BRANIE;
-  wpisz := 'BIERZ SERCE'; BRANIE;
-  wpisz := 'BIERZ DYPLOM'; BRANIE;
-  wpisz := 'BIERZ FAJKA'; BRANIE;
-  CheckEqual(-10, MTARCZA, 'BIERZ MALA stores the shield as -10');
-  CheckEqual(-10, SERCE, 'BIERZ SERCE stores the heart as -10');
-  CheckEqual(-10, DYPLOM, 'BIERZ DYPLOM stores the diploma as -10');
-  CheckEqual(-10, FAJKA, 'BIERZ FAJKA stores the pipe as -10');
-  CheckEqual(4, PRZED, 'four BRANIE picks count four items');
-  CheckEqual(55, MAXE, 'BIERZ DYPLOM adds five max energy');
-  CheckEqual(1, MAD, 'BIERZ FAJKA adds one wisdom under the cap');
+  OuterRoom := 7;
+  SmallShield := 7; Heart := 7; Diploma := 7; Pipe := 7;
+  ItemCount := 0; Wisdom := 0; MaxWisdom := 5; MaxEnergy := 50;
+  Command := 'BIERZ MALA'; TakeDrop;
+  Command := 'BIERZ SERCE'; TakeDrop;
+  Command := 'BIERZ DYPLOM'; TakeDrop;
+  Command := 'BIERZ FAJKA'; TakeDrop;
+  CheckEqual(-10, SmallShield, 'BIERZ MALA stores the shield as -10');
+  CheckEqual(-10, Heart, 'BIERZ SERCE stores the heart as -10');
+  CheckEqual(-10, Diploma, 'BIERZ DYPLOM stores the diploma as -10');
+  CheckEqual(-10, Pipe, 'BIERZ FAJKA stores the pipe as -10');
+  CheckEqual(4, ItemCount, 'four BRANIE picks count four items');
+  CheckEqual(55, MaxEnergy, 'BIERZ DYPLOM adds five max energy');
+  CheckEqual(1, Wisdom, 'BIERZ FAJKA adds one wisdom under the cap');
 end;
 
 procedure TestBranieDropsBluszczItems;
 begin
-  MIECHO2 := 7;
-  MTARCZA := -10; SERCE := -10; DYPLOM := -10; FAJKA := -10;
-  PRZED := 4; MAD := 1; MAXE := 55;
-  wpisz := 'ODRZUC FAJKA'; BRANIE;
-  wpisz := 'ODRZUC MALA'; BRANIE;
-  wpisz := 'ODRZUC SERCE'; BRANIE;
-  wpisz := 'ODRZUC DYPLOM'; BRANIE;
-  CheckEqual(7, MTARCZA, 'ODRZUC MALA restores the shield marker');
-  CheckEqual(7, SERCE, 'ODRZUC SERCE restores the heart marker');
-  CheckEqual(7, DYPLOM, 'ODRZUC DYPLOM restores the diploma marker');
-  CheckEqual(7, FAJKA, 'ODRZUC FAJKA restores the pipe marker');
-  CheckEqual(0, PRZED, 'four ODRZUC drops uncount four items');
-  CheckEqual(50, MAXE, 'ODRZUC DYPLOM removes five max energy');
-  CheckEqual(0, MAD, 'ODRZUC FAJKA removes one wisdom');
+  OuterRoom := 7;
+  SmallShield := -10; Heart := -10; Diploma := -10; Pipe := -10;
+  ItemCount := 4; Wisdom := 1; MaxEnergy := 55;
+  Command := 'ODRZUC FAJKA'; TakeDrop;
+  Command := 'ODRZUC MALA'; TakeDrop;
+  Command := 'ODRZUC SERCE'; TakeDrop;
+  Command := 'ODRZUC DYPLOM'; TakeDrop;
+  CheckEqual(7, SmallShield, 'ODRZUC MALA restores the shield marker');
+  CheckEqual(7, Heart, 'ODRZUC SERCE restores the heart marker');
+  CheckEqual(7, Diploma, 'ODRZUC DYPLOM restores the diploma marker');
+  CheckEqual(7, Pipe, 'ODRZUC FAJKA restores the pipe marker');
+  CheckEqual(0, ItemCount, 'four ODRZUC drops uncount four items');
+  CheckEqual(50, MaxEnergy, 'ODRZUC DYPLOM removes five max energy');
+  CheckEqual(0, Wisdom, 'ODRZUC FAJKA removes one wisdom');
 end;
 
 procedure TestUzywaSerce;
 begin
-  SERCE := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ SERCE';
-  UZYWANIE;
-  CheckEqual(0, SERCE, 'UZYJ SERCE consumes the heart');
-  CheckEqual(15, ENERGIA, 'UZYJ SERCE restores five energy');
-  CheckEqual(0, PRZED, 'UZYJ SERCE uncounts the item');
+  Heart := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ SERCE';
+  UseItems;
+  CheckEqual(0, Heart, 'UZYJ SERCE consumes the heart');
+  CheckEqual(15, Energy, 'UZYJ SERCE restores five energy');
+  CheckEqual(0, ItemCount, 'UZYJ SERCE uncounts the item');
 end;
 
 procedure TestUzywaSerceClampsAtMaxE;
 begin
-  SERCE := -10; ENERGIA := 48; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ SERCE';
-  UZYWANIE;
-  CheckEqual(50, ENERGIA, 'UZYJ SERCE clamps energy at MAXE');
+  Heart := -10; Energy := 48; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ SERCE';
+  UseItems;
+  CheckEqual(50, Energy, 'UZYJ SERCE clamps energy at MAXE');
 end;
 
 procedure TestUzywaKomplet;
 begin
-  KOMPLET := -10; JAKIEUB := ''; PRO := 0; CIALO := 0;
-  wpisz := 'UZYJ KOMPLET';
-  UZYWANIE;
-  CheckEqual(7, PRO, 'UZYJ KOMPLET adds seven defense');
-  CheckEqual(1, CIALO, 'UZYJ KOMPLET marks the body dressed');
-  CheckStrEqual('SYF', JAKIEUB, 'UZYJ KOMPLET remembers the suit');
-  wpisz := 'ODLORZ KOMPLET';
-  UZYWANIE;
-  CheckEqual(0, PRO, 'ODLORZ KOMPLET removes the defense');
-  CheckEqual(0, CIALO, 'ODLORZ KOMPLET marks the body bare');
-  CheckStrEqual('', JAKIEUB, 'ODLORZ KOMPLET forgets the suit');
+  Tracksuit := -10; WornGarment := ''; Armor := 0; Wearing := 0;
+  Command := 'UZYJ KOMPLET';
+  UseItems;
+  CheckEqual(7, Armor, 'UZYJ KOMPLET adds seven defense');
+  CheckEqual(1, Wearing, 'UZYJ KOMPLET marks the body dressed');
+  CheckStrEqual('SYF', WornGarment, 'UZYJ KOMPLET remembers the suit');
+  Command := 'ODLORZ KOMPLET';
+  UseItems;
+  CheckEqual(0, Armor, 'ODLORZ KOMPLET removes the defense');
+  CheckEqual(0, Wearing, 'ODLORZ KOMPLET marks the body bare');
+  CheckStrEqual('', WornGarment, 'ODLORZ KOMPLET forgets the suit');
 end;
 
 procedure TestUzywaKompletWorn;
 begin
-  KOMPLET := -10; JAKIEUB := 'SYF'; PRO := 0; CIALO := 1;
-  wpisz := 'UZYJ KOMPLET';
-  UZYWANIE;
-  CheckEqual(0, PRO, 'UZYJ KOMPLET refuses while a suit is worn');
-  CheckEqual(1, CIALO, 'UZYJ KOMPLET keeps the body dressed');
-  CheckStrEqual('SYF', JAKIEUB, 'UZYJ KOMPLET keeps the worn suit');
+  Tracksuit := -10; WornGarment := 'SYF'; Armor := 0; Wearing := 1;
+  Command := 'UZYJ KOMPLET';
+  UseItems;
+  CheckEqual(0, Armor, 'UZYJ KOMPLET refuses while a suit is worn');
+  CheckEqual(1, Wearing, 'UZYJ KOMPLET keeps the body dressed');
+  CheckStrEqual('SYF', WornGarment, 'UZYJ KOMPLET keeps the worn suit');
 end;
 
 procedure TestUzywaGarnitur;
 begin
-  GARNITUR := -10; JAKIEUB := ''; ILOSC := 0; PRO := 0; FUKSROLL := 0;
-  wpisz := 'UZYJ GARNITUR';
-  UZYWANIE;
-  CheckEqual(10, PRO, 'UZYJ GARNITUR adds ten defense');
-  CheckEqual(1, ILOSC, 'UZYJ GARNITUR counts one armor layer');
-  CheckEqual(15, FUKSROLL, 'UZYJ GARNITUR adds fifteen resistance');
-  CheckStrEqual('GARNITUR', JAKIEUB, 'UZYJ GARNITUR remembers the suit');
-  wpisz := 'ODLORZ GARNITUR';
-  UZYWANIE;
-  CheckEqual(0, PRO, 'ODLORZ GARNITUR removes the defense');
-  CheckEqual(0, ILOSC, 'ODLORZ GARNITUR uncounts the armor layer');
-  CheckEqual(0, FUKSROLL, 'ODLORZ GARNITUR removes the resistance');
-  CheckStrEqual('', JAKIEUB, 'ODLORZ GARNITUR forgets the suit');
+  SpikedSuit := -10; WornGarment := ''; WornCount := 0; Armor := 0; LuckRoll := 0;
+  Command := 'UZYJ GARNITUR';
+  UseItems;
+  CheckEqual(10, Armor, 'UZYJ GARNITUR adds ten defense');
+  CheckEqual(1, WornCount, 'UZYJ GARNITUR counts one armor layer');
+  CheckEqual(15, LuckRoll, 'UZYJ GARNITUR adds fifteen resistance');
+  CheckStrEqual('GARNITUR', WornGarment, 'UZYJ GARNITUR remembers the suit');
+  Command := 'ODLORZ GARNITUR';
+  UseItems;
+  CheckEqual(0, Armor, 'ODLORZ GARNITUR removes the defense');
+  CheckEqual(0, WornCount, 'ODLORZ GARNITUR uncounts the armor layer');
+  CheckEqual(0, LuckRoll, 'ODLORZ GARNITUR removes the resistance');
+  CheckStrEqual('', WornGarment, 'ODLORZ GARNITUR forgets the suit');
 end;
 
 procedure TestUzywaButelkaMany;
 begin
-  MBUTELKA := -10; MANA := 10; MAXMANA := 50; PRZED := 1;
-  wpisz := 'UZYJ MALA BUTELKA MANY';
-  UZYWANIE;
-  CheckEqual(40, MANA, 'UZYJ MALA BUTELKA MANY restores thirty mana');
-  CheckEqual(0, PRZED, 'UZYJ MALA BUTELKA MANY uncounts the item');
+  ManaBottle := -10; Mana := 10; MaxMana := 50; ItemCount := 1;
+  Command := 'UZYJ MALA BUTELKA MANY';
+  UseItems;
+  CheckEqual(40, Mana, 'UZYJ MALA BUTELKA MANY restores thirty mana');
+  CheckEqual(0, ItemCount, 'UZYJ MALA BUTELKA MANY uncounts the item');
 end;
 
 procedure TestUzywaButelkaManyClampsAtMaxMana;
 begin
-  MBUTELKA := -10; MANA := 45; MAXMANA := 50; PRZED := 1;
-  wpisz := 'UZYJ MALA BUTELKA MANY';
-  UZYWANIE;
-  CheckEqual(50, MANA, 'UZYJ MALA BUTELKA MANY clamps mana at MAXMANA');
+  ManaBottle := -10; Mana := 45; MaxMana := 50; ItemCount := 1;
+  Command := 'UZYJ MALA BUTELKA MANY';
+  UseItems;
+  CheckEqual(50, Mana, 'UZYJ MALA BUTELKA MANY clamps mana at MAXMANA');
 end;
 
 procedure TestNiszczyPrzepustke;
 begin
-  PRZEPUSTKA := -10; PRZED := 0; wpisz := 'ZNISZCZ PRZEPUSTKA';
-  UZYWANIE;
-  CheckEqual(0, PRZEPUSTKA, 'ZNISZCZ PRZEPUSTKA burns the pass');
-  CheckEqual(1, PRZED, 'ZNISZCZ PRZEPUSTKA counts one item');
+  Permit := -10; ItemCount := 0; Command := 'ZNISZCZ PRZEPUSTKA';
+  UseItems;
+  CheckEqual(0, Permit, 'ZNISZCZ PRZEPUSTKA burns the pass');
+  CheckEqual(1, ItemCount, 'ZNISZCZ PRZEPUSTKA counts one item');
 end;
 
 procedure TestPatrzPrzepustke;
 begin
-  PRZEPUSTKA := -10; PRZED := 0; wpisz := 'PATRZ PRZEPUSTKA';
-  UZYWANIE;
-  CheckEqual(-10, PRZEPUSTKA, 'PATRZ PRZEPUSTKA keeps the pass');
-  CheckEqual(0, PRZED, 'PATRZ PRZEPUSTKA counts nothing');
+  Permit := -10; ItemCount := 0; Command := 'PATRZ PRZEPUSTKA';
+  UseItems;
+  CheckEqual(-10, Permit, 'PATRZ PRZEPUSTKA keeps the pass');
+  CheckEqual(0, ItemCount, 'PATRZ PRZEPUSTKA counts nothing');
 end;
 
 procedure TestUzywaDyplom;
 begin
-  DYPLOM := -10; wpisz := 'UZYJ DYPLOM';
-  UZYWANIE;
-  CheckEqual(-10, DYPLOM, 'UZYJ DYPLOM keeps the diploma');
+  Diploma := -10; Command := 'UZYJ DYPLOM';
+  UseItems;
+  CheckEqual(-10, Diploma, 'UZYJ DYPLOM keeps the diploma');
 end;
 
 procedure TestUzywaPaczek;
 begin
-  PACZEK := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ PACZEK';
-  UZYWANIE;
-  CheckEqual(0, PACZEK, 'UZYJ PACZEK consumes the paczek');
-  CheckEqual(18, ENERGIA, 'UZYJ PACZEK restores eight energy');
-  CheckEqual(0, PRZED, 'UZYJ PACZEK uncounts the item');
+  Doughnut := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ PACZEK';
+  UseItems;
+  CheckEqual(0, Doughnut, 'UZYJ PACZEK consumes the paczek');
+  CheckEqual(18, Energy, 'UZYJ PACZEK restores eight energy');
+  CheckEqual(0, ItemCount, 'UZYJ PACZEK uncounts the item');
 end;
 
 procedure TestUzywaCiastko;
 begin
-  CIASTKO := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ CIASTKO';
-  UZYWANIE;
-  CheckEqual(0, CIASTKO, 'UZYJ CIASTKO consumes the ciastko');
-  CheckEqual(22, ENERGIA, 'UZYJ CIASTKO restores twelve energy');
+  Cookie := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ CIASTKO';
+  UseItems;
+  CheckEqual(0, Cookie, 'UZYJ CIASTKO consumes the ciastko');
+  CheckEqual(22, Energy, 'UZYJ CIASTKO restores twelve energy');
 end;
 
 procedure TestUzywaSuchaRacja;
 begin
-  SUCHA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ SUCHA RACJA';
-  UZYWANIE;
-  CheckEqual(0, SUCHA, 'UZYJ SUCHA RACJA consumes the racja');
-  CheckEqual(26, ENERGIA, 'UZYJ SUCHA RACJA restores sixteen energy');
+  DryRation := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ SUCHA RACJA';
+  UseItems;
+  CheckEqual(0, DryRation, 'UZYJ SUCHA RACJA consumes the racja');
+  CheckEqual(26, Energy, 'UZYJ SUCHA RACJA restores sixteen energy');
 end;
 
 procedure TestUzywaBulka;
 begin
-  BULKA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ BULKA';
-  UZYWANIE;
-  CheckEqual(0, BULKA, 'UZYJ BULKA consumes the bulka');
-  CheckEqual(30, ENERGIA, 'UZYJ BULKA restores twenty energy');
+  BreadRoll := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ BULKA';
+  UseItems;
+  CheckEqual(0, BreadRoll, 'UZYJ BULKA consumes the bulka');
+  CheckEqual(30, Energy, 'UZYJ BULKA restores twenty energy');
 end;
 
 procedure TestUzywaChleb;
 begin
-  CHLEB := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ CHLEB';
-  UZYWANIE;
-  CheckEqual(0, CHLEB, 'UZYJ CHLEB consumes the chleb');
-  CheckEqual(36, ENERGIA, 'UZYJ CHLEB restores twenty-six energy');
+  Bread := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ CHLEB';
+  UseItems;
+  CheckEqual(0, Bread, 'UZYJ CHLEB consumes the chleb');
+  CheckEqual(36, Energy, 'UZYJ CHLEB restores twenty-six energy');
 end;
 
 procedure TestUzyjaWeka;
 begin
-  WEKA := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ WEKA';
-  UZYWANIE;
-  CheckEqual(0, WEKA, 'UZYJ WEKA consumes the weka');
-  CheckEqual(44, ENERGIA, 'UZYJ WEKA restores thirty-four energy');
+  Sausage := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ WEKA';
+  UseItems;
+  CheckEqual(0, Sausage, 'UZYJ WEKA consumes the weka');
+  CheckEqual(44, Energy, 'UZYJ WEKA restores thirty-four energy');
 end;
 
 procedure TestUzywaBigos;
 begin
-  BIGOS := -10; ENERGIA := 10; MAXE := 50; PRZED := 1;
-  wpisz := 'UZYJ BIGOS';
-  UZYWANIE;
-  CheckEqual(0, BIGOS, 'UZYJ BIGOS consumes the bigos');
-  CheckEqual(30, ENERGIA, 'UZYJ BIGOS restores twenty energy');
+  Bigos := -10; Energy := 10; MaxEnergy := 50; ItemCount := 1;
+  Command := 'UZYJ BIGOS';
+  UseItems;
+  CheckEqual(0, Bigos, 'UZYJ BIGOS consumes the bigos');
+  CheckEqual(30, Energy, 'UZYJ BIGOS restores twenty energy');
 end;
 
 procedure TestUzywaPigulkaLow;
 begin
-  PIGULKA := -10; MAD := 5; MAXE := 50; ENERGIA := 40; KUNSZT := 100;
-  wpisz := 'UZYJ PIGULKA';
-  UZYWANIE;
-  CheckEqual(0, PIGULKA, 'UZYJ PIGULKA consumes the pigulka');
-  CheckEqual(1, ENERGIA, 'UZYJ PIGULKA with low MAD drains energy to one');
-  CheckEqual(49, MAXE, 'UZYJ PIGULKA with low MAD lowers max energy');
-  CheckEqual(50, KUNSZT, 'UZYJ PIGULKA with low MAD lowers kunszt');
+  TeleportPill := -10; Wisdom := 5; MaxEnergy := 50; Energy := 40; Experience := 100;
+  Command := 'UZYJ PIGULKA';
+  UseItems;
+  CheckEqual(0, TeleportPill, 'UZYJ PIGULKA consumes the pigulka');
+  CheckEqual(1, Energy, 'UZYJ PIGULKA with low MAD drains energy to one');
+  CheckEqual(49, MaxEnergy, 'UZYJ PIGULKA with low MAD lowers max energy');
+  CheckEqual(50, Experience, 'UZYJ PIGULKA with low MAD lowers kunszt');
 end;
 
 procedure TestUzywaPigulkaMid;
 begin
-  PIGULKA := -10; MAD := 12; ENERGIA := 100; KUNSZT := 100;
-  wpisz := 'UZYJ PIGULKA';
-  UZYWANIE;
-  CheckEqual(60, ENERGIA, 'UZYJ PIGULKA with mid MAD drains forty energy');
-  CheckEqual(70, KUNSZT, 'UZYJ PIGULKA with mid MAD lowers kunszt');
+  TeleportPill := -10; Wisdom := 12; Energy := 100; Experience := 100;
+  Command := 'UZYJ PIGULKA';
+  UseItems;
+  CheckEqual(60, Energy, 'UZYJ PIGULKA with mid MAD drains forty energy');
+  CheckEqual(70, Experience, 'UZYJ PIGULKA with mid MAD lowers kunszt');
 end;
 
 procedure TestUzywaPigulkaHigh;
 begin
-  PIGULKA := -10; MAD := 20; ENERGIA := 100; KUNSZT := 100;
-  wpisz := 'UZYJ PIGULKA';
-  UZYWANIE;
-  CheckEqual(0, PIGULKA, 'UZYJ PIGULKA with high MAD consumes the pigulka');
-  CheckEqual(100, ENERGIA, 'UZYJ PIGULKA with high MAD keeps energy');
-  CheckEqual(100, KUNSZT, 'UZYJ PIGULKA with high MAD keeps kunszt');
+  TeleportPill := -10; Wisdom := 20; Energy := 100; Experience := 100;
+  Command := 'UZYJ PIGULKA';
+  UseItems;
+  CheckEqual(0, TeleportPill, 'UZYJ PIGULKA with high MAD consumes the pigulka');
+  CheckEqual(100, Energy, 'UZYJ PIGULKA with high MAD keeps energy');
+  CheckEqual(100, Experience, 'UZYJ PIGULKA with high MAD keeps kunszt');
 end;
 
 procedure TestGarniturZyskInvariant;
 begin
-  GARNITUR := 50; PRZED := 0;
-  GARNITURZYSK;
-  CheckTrue((GARNITUR = 50) or (GARNITUR = 40),
+  SpikedSuit := 50; ItemCount := 0;
+  SuitGain;
+  CheckTrue((SpikedSuit = 50) or (SpikedSuit = 40),
     'GARNITURZYSK drops GARNITUR by ten or not at all');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'GARNITURZYSK counts at most one item');
 end;
 
 procedure TestPigulkaZyskInvariant;
 begin
-  PIGULKA := 50; PRZED := 0;
-  PIGULKAZYSK;
-  CheckTrue((PIGULKA = 50) or (PIGULKA = 40),
+  TeleportPill := 50; ItemCount := 0;
+  PillGain;
+  CheckTrue((TeleportPill = 50) or (TeleportPill = 40),
     'PIGULKAZYSK drops PIGULKA by ten or not at all');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'PIGULKAZYSK counts at most one item');
 end;
 
 procedure TestKasetaZyskInvariant;
 begin
-  kaseta := 50; MAXE := 0; PRO := 0; PRZED := 0; ZRE := 0;
-  MIECHO := 20;
-  KASETAZYSK;
-  CheckTrue((kaseta = 50) or (kaseta = 40),
+  Cassette := 50; MaxEnergy := 0; Armor := 0; ItemCount := 0; Dexterity := 0;
+  Room := 20;
+  CassetteGain;
+  CheckTrue((Cassette = 50) or (Cassette = 40),
     'KASETAZYSK drops the cassette by ten or not at all');
-  CheckTrue((MAXE = 0) or (MAXE = 5),
+  CheckTrue((MaxEnergy = 0) or (MaxEnergy = 5),
     'KASETAZYSK raises MAXE by five or not at all');
-  CheckTrue((PRO = 0) or (PRO = -8),
+  CheckTrue((Armor = 0) or (Armor = -8),
     'KASETAZYSK lowers PRO by eight or not at all');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'KASETAZYSK counts at most one item');
-  CheckTrue((ZRE = 0) or (ZRE = 1),
+  CheckTrue((Dexterity = 0) or (Dexterity = 1),
     'KASETAZYSK raises ZRE by one or not at all');
 end;
 
 procedure TestListekZyskInvariant;
 begin
-  LISTEK := 50; PRZED := 0; MAXMANA := 0; MIECHO := 20;
-  LISTEKZYSK;
-  CheckTrue((LISTEK = 50) or (LISTEK = 40),
+  LuckyLeaf := 50; ItemCount := 0; MaxMana := 0; Room := 20;
+  LeafGain;
+  CheckTrue((LuckyLeaf = 50) or (LuckyLeaf = 40),
     'LISTEKZYSK drops the leaf by ten or not at all');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'LISTEKZYSK counts at most one item');
-  CheckTrue((MAXMANA = 0) or (MAXMANA = 40),
+  CheckTrue((MaxMana = 0) or (MaxMana = 40),
     'LISTEKZYSK raises MAXMANA by forty or not at all');
 end;
 
 procedure TestScrollPorZyskInvariant;
 begin
-  SCROLLPOR := 50; PRZED := 0; MIECHO := 20;
-  SCROLLPORZYSK;
-  CheckTrue((SCROLLPOR = 50) or (SCROLLPOR = 40),
+  CompareScroll := 50; ItemCount := 0; Room := 20;
+  ScrollGain;
+  CheckTrue((CompareScroll = 50) or (CompareScroll = 40),
     'SCROLLPORZYSK drops the scroll by ten or not at all');
-  CheckTrue((PRZED = 0) or (PRZED = 1),
+  CheckTrue((ItemCount = 0) or (ItemCount = 1),
     'SCROLLPORZYSK counts at most one item');
 end;
 
@@ -910,143 +910,143 @@ end;
 procedure TestGarniturZyskGain;
 var i: Integer;
 begin
-  GARNITUR := 100; PRZED := 0;
+  SpikedSuit := 100; ItemCount := 0;
   i := 0;
-  while (PRZED = 0) and (i < 2000) do begin
-    GARNITURZYSK;
+  while (ItemCount = 0) and (i < 2000) do begin
+    SuitGain;
     i := i + 1;
   end;
-  CheckTrue(PRZED > 0, 'GARNITURZYSK gains the suit');
-  CheckEqual(90, GARNITUR,
+  CheckTrue(ItemCount > 0, 'GARNITURZYSK gains the suit');
+  CheckEqual(90, SpikedSuit,
     'GARNITURZYSK drops GARNITUR by ten');
 end;
 
 procedure TestPigulkaZyskGain;
 var i: Integer;
 begin
-  PIGULKA := 100; PRZED := 0;
+  TeleportPill := 100; ItemCount := 0;
   i := 0;
-  while (PRZED = 0) and (i < 2000) do begin
-    PIGULKAZYSK;
+  while (ItemCount = 0) and (i < 2000) do begin
+    PillGain;
     i := i + 1;
   end;
-  CheckTrue(PRZED > 0, 'PIGULKAZYSK gains the pill');
-  CheckEqual(90, PIGULKA,
+  CheckTrue(ItemCount > 0, 'PIGULKAZYSK gains the pill');
+  CheckEqual(90, TeleportPill,
     'PIGULKAZYSK drops PIGULKA by ten');
 end;
 
 procedure TestKasetaZyskGain;
 var i: Integer;
 begin
-  kaseta := 100; MAXE := 0; PRO := 0; PRZED := 0;
-  ZRE := 0; MIECHO := 20;
+  Cassette := 100; MaxEnergy := 0; Armor := 0; ItemCount := 0;
+  Dexterity := 0; Room := 20;
   i := 0;
-  while (PRZED = 0) and (i < 2000) do begin
-    KASETAZYSK;
+  while (ItemCount = 0) and (i < 2000) do begin
+    CassetteGain;
     i := i + 1;
   end;
-  CheckTrue(PRZED > 0, 'KASETAZYSK gains the cassette');
-  CheckEqual(90, kaseta,
+  CheckTrue(ItemCount > 0, 'KASETAZYSK gains the cassette');
+  CheckEqual(90, Cassette,
     'KASETAZYSK drops the cassette by ten');
-  CheckEqual(5, MAXE, 'KASETAZYSK raises MAXE by five');
-  CheckEqual(-8, PRO, 'KASETAZYSK lowers PRO by eight');
-  CheckEqual(1, ZRE, 'KASETAZYSK raises ZRE by one');
+  CheckEqual(5, MaxEnergy, 'KASETAZYSK raises MAXE by five');
+  CheckEqual(-8, Armor, 'KASETAZYSK lowers PRO by eight');
+  CheckEqual(1, Dexterity, 'KASETAZYSK raises ZRE by one');
 end;
 
 procedure TestListekZyskGain;
 var i: Integer;
 begin
-  LISTEK := 100; PRZED := 0; MAXMANA := 0; MIECHO := 20;
+  LuckyLeaf := 100; ItemCount := 0; MaxMana := 0; Room := 20;
   i := 0;
-  while (PRZED = 0) and (i < 2000) do begin
-    LISTEKZYSK;
+  while (ItemCount = 0) and (i < 2000) do begin
+    LeafGain;
     i := i + 1;
   end;
-  CheckTrue(PRZED > 0, 'LISTEKZYSK gains the leaf');
-  CheckEqual(90, LISTEK,
+  CheckTrue(ItemCount > 0, 'LISTEKZYSK gains the leaf');
+  CheckEqual(90, LuckyLeaf,
     'LISTEKZYSK drops the leaf by ten');
-  CheckEqual(40, MAXMANA,
+  CheckEqual(40, MaxMana,
     'LISTEKZYSK raises MAXMANA by forty');
 end;
 
 procedure TestScrollPorZyskGain;
 var i: Integer;
 begin
-  SCROLLPOR := 100; PRZED := 0; MIECHO := 20;
+  CompareScroll := 100; ItemCount := 0; Room := 20;
   i := 0;
-  while (PRZED = 0) and (i < 2000) do begin
-    SCROLLPORZYSK;
+  while (ItemCount = 0) and (i < 2000) do begin
+    ScrollGain;
     i := i + 1;
   end;
-  CheckTrue(PRZED > 0, 'SCROLLPORZYSK gains the scroll');
-  CheckEqual(90, SCROLLPOR,
+  CheckTrue(ItemCount > 0, 'SCROLLPORZYSK gains the scroll');
+  CheckEqual(90, CompareScroll,
     'SCROLLPORZYSK drops the scroll by ten');
 end;
 
 procedure TestScenaMessages;
 begin
-  MIECHO := 1;
-  GITARZYSTA := 1; PERKUSISTA := 1; ORGANISTA := 1; LIROY := 1;
-  SCENA;
-  CheckEqual(1, MIECHO, 'SCENA leaves MIECHO unchanged');
+  Room := 1;
+  Guitarist := 1; Drummer := 1; Keyboardist := 1; Liroy := 1;
+  DescribeStage;
+  CheckEqual(1, Room, 'SCENA leaves MIECHO unchanged');
 end;
 
 procedure TestTlumMessages;
 begin
-  MIECHO := 1;
-  DZIECKO := 1; WARIAT := 1; SLUCHACZ := 1; FAN := 1;
-  CZLOWIEK := 1; POLICJANT := 1; OCHRONIARZ := 1; GORYL := 1;
-  DZIADEK := 1; REPORTER := 1;
-  TLUM;
-  CheckEqual(1, MIECHO, 'TLUM leaves MIECHO unchanged');
+  Room := 1;
+  Kid := 1; Lunatic := 1; Listener := 1; Fan := 1;
+  Man := 1; Policeman := 1; Bouncer := 1; Gorilla := 1;
+  OldMan := 1; Reporter := 1;
+  DescribeCrowd;
+  CheckEqual(1, Room, 'TLUM leaves MIECHO unchanged');
 end;
 
 procedure TestKtoMessages;
 begin
-  MIECHO := 1;
-  KORNIK := 1; MUCHA := 1; BAKTERIA := 1; SLIMAK := 1; ZUK := 1;
-  KARALUCH := 1; MROWKA := 1; PAJAK := 1; DZIK := 1; SZCZUR := 1;
-  LIS := 1; KUROPATWA := 1; ZAJAC := 1; WILCZUR := 1; ORZEL := 1;
-  SARNA := 1; SLON := 1; LEW := 1; ZYRAFA := 1; WIELBLAD := 1;
-  STRUS := 1; BOA := 1; WILK := 1; BIZON := 1; PANTERA := 1;
-  GLADIATOR := 1; WOJOWNIK := 1; TRENER := 1;
-  KTO;
-  CheckEqual(1, MIECHO, 'KTO leaves MIECHO unchanged');
+  Room := 1;
+  Woodworm := 1; Fly := 1; Bacterium := 1; Snail := 1; Beetle := 1;
+  Cockroach := 1; Ant := 1; Spider := 1; Boar := 1; Rat := 1;
+  Fox := 1; Partridge := 1; Hare := 1; Mongrel := 1; Eagle := 1;
+  Deer := 1; Elephant := 1; Lion := 1; Giraffe := 1; Camel := 1;
+  Ostrich := 1; Boa := 1; Wolf := 1; Bison := 1; Panther := 1;
+  Gladiator := 1; Warrior := 1; Tamer := 1;
+  DescribeBeasts;
+  CheckEqual(1, Room, 'KTO leaves MIECHO unchanged');
 end;
 
 procedure TestUlSklepMessages;
 begin
-  MIECHO := 1;
-  JAMNIK := 1; OWCZAREK := 1; PIESEK := 1;
-  SPANIEL := 1; PUDEL := 1;
-  TAKSOWKARZ := 1; SPRZEDAWCA := 1;
-  ZAMIATACZ := 1; PIJAK := 1; ZEBRAK := 1;
-  ULSKLEPIKOWA;
-  CheckEqual(1, MIECHO, 'ULSKLEPIKOWA leaves MIECHO unchanged');
+  Room := 1;
+  Dachshund := 1; Shepherd := 1; Pooch := 1;
+  Spaniel := 1; Poodle := 1;
+  Cabman := 1; Vendor := 1;
+  Sweeper := 1; Drunkard := 1; SickMan := 1;
+  DescribeStreet;
+  CheckEqual(1, Room, 'ULSKLEPIKOWA leaves MIECHO unchanged');
 end;
 
 procedure TestBluszczMessages;
 begin
-  MIECHO := 1;
-  SZCZAW := 1; STOKROTKA := 1; KONICZYNKA := 1; MLECZ := 1;
-  DMUCHAWIEC := 1; ROZA := 1; OSET := 1; JEZYNA := 1;
-  AGREST := 1; MALINA := 1; TRAWA := 1; DUNCAN := 1;
-  BLUSZCZ;
-  CheckEqual(1, MIECHO, 'BLUSZCZ leaves MIECHO unchanged');
+  Room := 1;
+  Sorrel := 1; Daisy := 1; Clover := 1; SowThistle := 1;
+  Dandelion := 1; Rose := 1; Thistle := 1; Blackberry := 1;
+  Gooseberry := 1; Raspberry := 1; Grass := 1; Duncan := 1;
+  DescribePlants;
+  CheckEqual(1, Room, 'BLUSZCZ leaves MIECHO unchanged');
 end;
 
 procedure TestPierdolyTlo;
 begin
   FeedStdin('1');
-  wpisz := 'ZMIEN TLO';
-  PIERDOLY;
+  Command := 'ZMIEN TLO';
+  DisplayPrefs;
 end;
 
 procedure TestPorownanie;
 begin
-  MANA := 10;
+  Mana := 10;
   FeedStdin('DZIK');
-  POROWNANIE;
+  CompareFoe;
 end;
 
 procedure MiniarenaSetup;
@@ -1056,15 +1056,15 @@ begin
    Raise ZRE so the enemy rarely dodges: each combat
    then ends in one or two rounds, keeping the arena
    tests cheap.}
-  BAKTERIA := 33; SLIMAK := 33; KORNIK := 33; MUCHA := 33;
-  ZUK := 33; KARALUCH := 33; MROWKA := 33; PAJAK := 33;
-  DZIK := 33; WILCZUR := 33; SZCZUR := 33; LIS := 33;
-  KUROPATWA := 33; ZAJAC := 33; ORZEL := 33; SARNA := 33;
-  SLON := 33; LEW := 33; ZYRAFA := 33; WILK := 33;
-  WIELBLAD := 33; STRUS := 33; BOA := 33; BIZON := 33;
-  PANTERA := 33; GLADIATOR := 33; WOJOWNIK := 33; TRENER := 33;
-  MIECHO := 33;
-  SIL := 127; ZRE := 127; ENERGIA := 30000; PASZOL := 0;
+  Bacterium := 33; Snail := 33; Woodworm := 33; Fly := 33;
+  Beetle := 33; Cockroach := 33; Ant := 33; Spider := 33;
+  Boar := 33; Mongrel := 33; Rat := 33; Fox := 33;
+  Partridge := 33; Hare := 33; Eagle := 33; Deer := 33;
+  Elephant := 33; Lion := 33; Giraffe := 33; Wolf := 33;
+  Camel := 33; Ostrich := 33; Boa := 33; Bison := 33;
+  Panther := 33; Gladiator := 33; Warrior := 33; Tamer := 33;
+  Room := 33;
+  Strength := 127; Dexterity := 127; Energy := 30000; Fled := 0;
 end;
 
 procedure TestMiniarenaSlabo;
@@ -1072,7 +1072,7 @@ begin
   MiniarenaSetup;
   FeedStdin('ZABIJ BAKTERIA|ZABIJ SLIMAK|ZABIJ KORNIK|ZABIJ MUCHA|' +
     'ZABIJ ZUK|ZABIJ KARALUCH|ZABIJ MROWKA|ZABIJ PAJAK|MODE');
-  MINIARENA;
+  ArenaMaze;
 end;
 
 procedure TestMiniarenaMniejslabo;
@@ -1080,7 +1080,7 @@ begin
   MiniarenaSetup;
   FeedStdin('ZABIJ DZIK|ZABIJ WILCZUR|ZABIJ SZCZUR|ZABIJ LIS|' +
     'ZABIJ KUROPATWA|ZABIJ ZAJAC|ZABIJ ORZEL|ZABIJ SARNA|MODE');
-  MINIARENA;
+  ArenaMaze;
 end;
 
 procedure TestMiniarenaSrednio;
@@ -1089,21 +1089,21 @@ begin
   FeedStdin('ZABIJ SLON|ZABIJ LEW|ZABIJ ZYRAFA|ZABIJ WILK|' +
     'ZABIJ WIELBLAD|ZABIJ STRUS|ZABIJ BOA|ZABIJ BIZON|' +
     'ZABIJ PANTERA|MODE');
-  MINIARENA;
+  ArenaMaze;
 end;
 
 procedure TestMiniarenaTrudno;
 begin
   MiniarenaSetup;
   FeedStdin('ZABIJ GLADIATOR|ZABIJ WOJOWNIK|ZABIJ TRENER|MODE');
-  MINIARENA;
+  ArenaMaze;
 end;
 
 procedure MiniarenaAt(const cmd: string; miechoVal: integer);
 begin
-  MIECHO := miechoVal;
+  Room := miechoVal;
   FeedStdin(cmd);
-  MINIARENA;
+  ArenaMaze;
 end;
 
 procedure TestMiniarenaExitNav;
@@ -1136,59 +1136,59 @@ begin
   {Give every musician and bluszcz-fight monster the same
    room id so each ZABIJ guard holds, and raise ZRE so the
    enemy rarely dodges: each combat then ends quickly.}
-  MIECHO := 100;
-  PERKUSISTA := 100; GITARZYSTA := 100; ORGANISTA := 100;
-  LIROY := 100; DUNCAN := 100;
-  SZCZAW := 100; STOKROTKA := 100; KONICZYNKA := 100;
-  MLECZ := 100; DMUCHAWIEC := 100; ROZA := 100;
-  OSET := 100; MALINA := 100; AGREST := 100;
-  JEZYNA := 100; TRAWA := 100;
-  SIL := 127; ZRE := 127; ENERGIA := 30000; PASZOL := 0;
-  DUNQ := 0; FORSA := 10000; PRZEPUSTKA := 100;
-  PLECAK := 100; QUEST := 0; KUNSZT := 0;
+  Room := 100;
+  Drummer := 100; Guitarist := 100; Keyboardist := 100;
+  Liroy := 100; Duncan := 100;
+  Sorrel := 100; Daisy := 100; Clover := 100;
+  SowThistle := 100; Dandelion := 100; Rose := 100;
+  Thistle := 100; Raspberry := 100; Gooseberry := 100;
+  Blackberry := 100; Grass := 100;
+  Strength := 127; Dexterity := 127; Energy := 30000; Fled := 0;
+  DuncanQuest := 0; Money := 10000; Permit := 100;
+  Backpack := 100; Quest := 0; Experience := 0;
 end;
 
 procedure TestFightscena;
 begin
   FightSetup;
-  wpisz := 'ZABIJ PERKUSISTA'; FIGHTSCENA;
-  wpisz := 'ZABIJ GITARZYSTA'; FIGHTSCENA;
-  wpisz := 'ZABIJ LIROY'; FIGHTSCENA;
-  wpisz := 'ZABIJ ORGANISTA'; FIGHTSCENA;
+  Command := 'ZABIJ PERKUSISTA'; StageFights;
+  Command := 'ZABIJ GITARZYSTA'; StageFights;
+  Command := 'ZABIJ LIROY'; StageFights;
+  Command := 'ZABIJ ORGANISTA'; StageFights;
 end;
 
 procedure TestFightbluszczZabij;
 begin
   FightSetup;
-  wpisz := 'ZABIJ DUNCAN'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ SZCZAW'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ STOKROTKA'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ KONICZYNKA'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ MLECZ'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ DMUCHAWIEC'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ ROZA'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ OSET'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ MALINA'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ AGREST'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ JEZYNA'; FIGHTBLUSZCZ;
-  wpisz := 'ZABIJ TRAWA'; FIGHTBLUSZCZ;
+  Command := 'ZABIJ DUNCAN'; PlantFights;
+  Command := 'ZABIJ SZCZAW'; PlantFights;
+  Command := 'ZABIJ STOKROTKA'; PlantFights;
+  Command := 'ZABIJ KONICZYNKA'; PlantFights;
+  Command := 'ZABIJ MLECZ'; PlantFights;
+  Command := 'ZABIJ DMUCHAWIEC'; PlantFights;
+  Command := 'ZABIJ ROZA'; PlantFights;
+  Command := 'ZABIJ OSET'; PlantFights;
+  Command := 'ZABIJ MALINA'; PlantFights;
+  Command := 'ZABIJ AGREST'; PlantFights;
+  Command := 'ZABIJ JEZYNA'; PlantFights;
+  Command := 'ZABIJ TRAWA'; PlantFights;
 end;
 
 procedure TestFightbluszczShop;
 begin
   FightSetup;
-  wpisz := 'SECRET LISTA'; FIGHTBLUSZCZ;
-  wpisz := 'KUP DOKUMENT'; FIGHTBLUSZCZ;
-  wpisz := 'KUP PLECAK'; FIGHTBLUSZCZ;
+  Command := 'SECRET LISTA'; PlantFights;
+  Command := 'KUP DOKUMENT'; PlantFights;
+  Command := 'KUP PLECAK'; PlantFights;
 end;
 
 procedure TestFightbluszczDuncan;
 begin
   FightSetup;
-  DUNQ := 0;
-  wpisz := 'ROZMAWIAJ DUNCAN'; FIGHTBLUSZCZ;
-  DUNQ := -125;
-  wpisz := 'ROZMAWIAJ DUNCAN'; FIGHTBLUSZCZ;
+  DuncanQuest := 0;
+  Command := 'ROZMAWIAJ DUNCAN'; PlantFights;
+  DuncanQuest := -125;
+  Command := 'ROZMAWIAJ DUNCAN'; PlantFights;
 end;
 
 procedure PorownanieAsk(const monster: string;
@@ -1199,9 +1199,9 @@ begin
    OGOL (POZIOM + SIL plus the ZRE/PAR/KOP bonuses)
    and SIL, so both are set to reach each band.}
   FeedStdin(monster);
-  MANA := 10; POZIOM := aPoziom; SIL := aSil; ZRE := aZre;
-  PAR := aPar; KOP := aKop;
-  POROWNANIE;
+  Mana := 10; Level := aPoziom; Strength := aSil; Dexterity := aZre;
+  Parry := aPar; Kick := aKop;
+  CompareFoe;
 end;
 
 procedure TestPorownanieBeasts;
@@ -1212,7 +1212,7 @@ begin
   PorownanieAsk('KUROPATWA', 0, 16, 0, 0, 0);
   PorownanieAsk('SARNA', 0, 19, 0, 0, 0);
   PorownanieAsk('DZIADEK', 0, 30, 0, 0, 0);
-  CheckEqual(30, SIL, 'POROWNANIE leaves the last SIL in place');
+  CheckEqual(30, Strength, 'POROWNANIE leaves the last SIL in place');
 end;
 
 procedure TestPorownanieBigBeasts;
@@ -1306,9 +1306,9 @@ begin
   PorownanieAsk('DZIK', 0, 10, 0, 51, 11);
   PorownanieAsk('DZIK', 0, 10, 0, 76, 71);
   FeedStdin('BAKTERIA');
-  MANA := 10;
-  POROWNANIE;
-  CheckEqual(15, MANA, 'BAKTERIA restores five mana');
+  Mana := 10;
+  CompareFoe;
+  CheckEqual(15, Mana, 'BAKTERIA restores five mana');
 end;
 
 procedure LootSetup;
@@ -1320,12 +1320,12 @@ begin
    is independent, so the rare drop lands eventually. SERCE
    must be reset here: earlier tests leave it held, which
    would skip every drop.}
-  SERCE := 0;
-  ENERGIA := 30000; SIL := 127; ZRE := 127; PASZOL := 0;
-  ZWIEJ := 0; WIMP := 0; MANA := 0; FIREBALL := 0;
-  POISON := 0; ILEPOI := 0; KOP := 0; KOPM := 0;
-  KOPHP := 0; PRO := 0; ILOSC := 0; FUKSROLL := 0;
-  PRZED := 0;
+  Heart := 0;
+  Energy := 30000; Strength := 127; Dexterity := 127; Fled := 0;
+  Fleeing := 0; FleeEnergy := 0; Mana := 0; FireballCharges := 0;
+  PoisonCharges := 0; PoisonRounds := 0; Kick := 0; KickMinMana := 0;
+  KickMaxEnergy := 0; Armor := 0; WornCount := 0; LuckRoll := 0;
+  ItemCount := 0;
 end;
 
 procedure TestEncounterHeartVeasy;
@@ -1333,8 +1333,8 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if SERCE = 0 then VEASY;
-  CheckEqual(-10, SERCE, 'VEASY eventually drops the heart');
+    if Heart = 0 then FightVeryEasy;
+  CheckEqual(-10, Heart, 'VEASY eventually drops the heart');
 end;
 
 procedure TestEncounterHeartEasy;
@@ -1342,8 +1342,8 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if SERCE = 0 then EASY;
-  CheckEqual(-10, SERCE, 'EASY eventually drops the heart');
+    if Heart = 0 then FightEasy;
+  CheckEqual(-10, Heart, 'EASY eventually drops the heart');
 end;
 
 procedure TestEncounterHeartNeasy;
@@ -1351,8 +1351,8 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if SERCE = 0 then NEASY;
-  CheckEqual(-10, SERCE, 'NEASY eventually drops the heart');
+    if Heart = 0 then FightNotEasy;
+  CheckEqual(-10, Heart, 'NEASY eventually drops the heart');
 end;
 
 procedure TestEncounterHeartTrudno;
@@ -1360,8 +1360,8 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 110 do
-    if SERCE = 0 then TRUDNO;
-  CheckEqual(-10, SERCE, 'TRUDNO eventually drops the heart');
+    if Heart = 0 then FightHard;
+  CheckEqual(-10, Heart, 'TRUDNO eventually drops the heart');
 end;
 
 procedure TestEncounterHeartBtrudno;
@@ -1369,8 +1369,8 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 150 do
-    if SERCE = 0 then BTRUDNO;
-  CheckEqual(-10, SERCE, 'BTRUDNO eventually drops the heart');
+    if Heart = 0 then FightVeryHard;
+  CheckEqual(-10, Heart, 'BTRUDNO eventually drops the heart');
 end;
 
 procedure TestWalkaPotrawkiLearn;
@@ -1385,9 +1385,9 @@ begin
   learned := false;
   for i := 1 to 800 do begin
     WalkaSetup(0, 0, 127, 1, 127, 1, 0, 0);
-    ENERGIA := 100; POTRAWKI := 1; BIGOS := 0;
-    WALKA;
-    if POTRAWKI > 1 then
+    Energy := 100; Cooking := 1; Bigos := 0;
+    Fight;
+    if Cooking > 1 then
       learned := true;
   end;
   CheckTrue(learned, 'WALKA eventually teaches the potrawki skill');
@@ -1402,12 +1402,12 @@ begin
    once PAR reaches 100, which the loop detects).}
   for i := 1 to 60 do begin
     WalkaSetup(0, 3000, 127, 5, 127, 1, 99, 0);
-    ENERGIA := 30000;
-    WALKA;
-    if PAR > 99 then
+    Energy := 30000;
+    Fight;
+    if Parry > 99 then
       Break;
   end;
-  CheckTrue(PAR > 99, 'WALKA eventually teaches the parry skill');
+  CheckTrue(Parry > 99, 'WALKA eventually teaches the parry skill');
 end;
 
 begin

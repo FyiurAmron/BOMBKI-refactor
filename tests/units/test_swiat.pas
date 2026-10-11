@@ -6,7 +6,7 @@ program test_swiat;
  string ends with a command that leaves the room (a movement,
  MODE, or WYJSCIE) so the loop terminates instead of spinning
  at EOF.}
-uses pastest, GRA;
+uses pastest, Game;
 
 {Write the given lines (separated by '|') to a temp file and
  redirect standard input to it, so the room procedures that
@@ -38,31 +38,31 @@ begin
    start combats, so give the player a full pool, no parry or
    flee skill (which would change the combat flow), and clear
    the leftover markers that alter the room or loot text.}
-  ENERGIA := 30000; KUNSZT := 100; SIL := 127; ZRE := 127;
-  PASZOL := 0; ZWIEJ := 0; WIMP := 0; MANA := 0; PAR := 0;
-  FIREBALL := 0; POISON := 0; ILEPOI := 0; POTRAWKI := 0;
-  KOP := 0; KOPM := 0; KOPHP := 0; PRO := 0; ILOSC := 0;
-  FUKSROLL := 0; MAXE := 50; SILNY := 0;
-  PRZED := 0; QUEST := 0; QUESTWYK := 0; FORSA := 0;
-  PRZEPUSTKA := 0; DYPLOM := 0; FAJKA := 0; PRA := 1;
+  Energy := 30000; Experience := 100; Strength := 127; Dexterity := 127;
+  Fled := 0; Fleeing := 0; FleeEnergy := 0; Mana := 0; Parry := 0;
+  FireballCharges := 0; PoisonCharges := 0; PoisonRounds := 0; Cooking := 0;
+  Kick := 0; KickMinMana := 0; KickMaxEnergy := 0; Armor := 0; WornCount := 0;
+  LuckRoll := 0; MaxEnergy := 50; CageStrong := 0;
+  ItemCount := 0; Quest := 0; QuestKills := 0; Money := 0;
+  Permit := 0; Diploma := 0; Pipe := 0; Practice := 1;
 end;
 
 {Visit one guarded room: set MIECHO, pipe the commands, run.}
 procedure PokojAt(const cmds: string; miechoVal: integer);
 begin
-  MIECHO := miechoVal;
+  Room := miechoVal;
   FeedStdin(cmds);
   case miechoVal of
-    4: POKOJ4;
-    11: POKOJ11;
-    13: POKOJ13;
-    30: POKOJ30;
-    60: POKOJ60;
-    75: POKOJ75;
-    83: POKOJ83;
-    100: POKOJ100;
+    4: Room4;
+    11: Room11;
+    13: Room13;
+    30: Room30;
+    60: Room60;
+    75: Room75;
+    83: Room83;
+    100: Room100;
   else
-    POKOJE;
+    PlainRooms;
   end;
 end;
 
@@ -70,20 +70,20 @@ procedure TestPokoj5Poster;
 begin
   {POKOJ5 lists seven exits and reads a poster on the wall.}
   RoomSetup;
-  MIECHO := 5;
+  Room := 5;
   FeedStdin('EXIT|PATRZ PLAKAT|WYJSCIE');
-  POKOJ5;
-  CheckEqual(5, MIECHO, 'POKOJ5 WYJSCIE leaves without moving');
+  Room5;
+  CheckEqual(5, Room, 'POKOJ5 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj1Poster;
 begin
   {POKOJ1 lists six exits and prints the long poster text.}
   RoomSetup;
-  MIECHO := 1;
+  Room := 1;
   FeedStdin('EXIT|PATRZ PLAKAT|WYJSCIE');
-  POKOJ1;
-  CheckEqual(1, MIECHO, 'POKOJ1 WYJSCIE leaves without moving');
+  Room1;
+  CheckEqual(1, Room, 'POKOJ1 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj4Poster;
@@ -91,37 +91,37 @@ begin
   {POKOJ4 lists two exits and reads the notice on the wall.}
   RoomSetup;
   PokojAt('EXIT|PATRZ AFISZ|WYJSCIE', 4);
-  CheckEqual(4, MIECHO, 'POKOJ4 WYJSCIE leaves without moving');
+  CheckEqual(4, Room, 'POKOJ4 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj13Loot;
 var
   i: Integer;
-  sword, shield, heart: Boolean;
+  sawSword, sawShield, sawHeart: Boolean;
 begin
   {Killing the room-13 monster can drop the sword, the small
    shield, or the heart, each an independent low-probability
    draw, so keep clearing the monster and fighting until all
    three have dropped at least once.}
   RoomSetup;
-  MMIECZ := 0; MTARCZA := 0; SERCE := 0;
-  sword := false; shield := false; heart := false;
+  OldSword := 0; SmallShield := 0; Heart := 0;
+  sawSword := false; sawShield := false; sawHeart := false;
   for i := 1 to 80 do begin
-    ENERGIA := 30000; KUNSZT := 100; SIL := 127; ZRE := 127;
-    PASZOL := 0; ZWIEJ := 0; WIMP := 0; MANA := 0; PAR := 0;
-    FIREBALL := 0; POISON := 0; ILEPOI := 0; POTRAWKI := 0;
-    KOP := 0; KOPM := 0; KOPHP := 0; FUKSROLL := 0;
-    SILNY := 13;
+    Energy := 30000; Experience := 100; Strength := 127; Dexterity := 127;
+    Fled := 0; Fleeing := 0; FleeEnergy := 0; Mana := 0; Parry := 0;
+    FireballCharges := 0; PoisonCharges := 0; PoisonRounds := 0; Cooking := 0;
+    Kick := 0; KickMinMana := 0; KickMaxEnergy := 0; LuckRoll := 0;
+    CageStrong := 13;
     PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
-    if MMIECZ <> 0 then sword := true;
-    if MTARCZA <> 0 then shield := true;
-    if SERCE <> 0 then heart := true;
-    if sword and shield and heart then
+    if OldSword <> 0 then sawSword := true;
+    if SmallShield <> 0 then sawShield := true;
+    if Heart <> 0 then sawHeart := true;
+    if sawSword and sawShield and sawHeart then
       Break;
   end;
-  CheckTrue(sword, 'the room-13 monster drops the sword');
-  CheckTrue(shield, 'the room-13 monster drops the small shield');
-  CheckTrue(heart, 'the room-13 monster drops the heart');
+  CheckTrue(sawSword, 'the room-13 monster drops the sword');
+  CheckTrue(sawShield, 'the room-13 monster drops the small shield');
+  CheckTrue(sawHeart, 'the room-13 monster drops the heart');
 end;
 
 procedure TestPokoj13Flee;
@@ -129,12 +129,12 @@ begin
   {With a flee skill the player runs instead of winning, so
    the monster stays and the procedure clears the flee flag.}
   RoomSetup;
-  SILNY := 13;
-  ENERGIA := 50; WIMP := 100; MANA := 20; ZWIEJ := 100;
+  CageStrong := 13;
+  Energy := 50; FleeEnergy := 100; Mana := 20; Fleeing := 100;
   PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
-  CheckEqual(13, SILNY,
+  CheckEqual(13, CageStrong,
     'fleeing the room-13 monster leaves it alive');
-  CheckEqual(0, PASZOL, 'the flee flag is cleared after the fight');
+  CheckEqual(0, Fled, 'the flee flag is cleared after the fight');
 end;
 
 procedure TestPokoj13Poster;
@@ -142,9 +142,9 @@ begin
   {With the monster gone the room notes the circling remains;
    MODE sets MIECHO to 1000, which ends the loop.}
   RoomSetup;
-  SILNY := 0;
+  CageStrong := 0;
   PokojAt('EXIT|MODE', 13);
-  CheckEqual(1000, MIECHO, 'MODE ends the room-13 loop');
+  CheckEqual(1000, Room, 'MODE ends the room-13 loop');
 end;
 
 procedure TestPokojeSmallRooms;
@@ -160,10 +160,10 @@ begin
   for i := 1 to 4 do begin
     RoomSetup;
     PokojAt('EXIT|MODE', Rooms[i]);
-    CheckEqual(1000, MIECHO, 'MODE ends the small room loop');
+    CheckEqual(1000, Room, 'MODE ends the small room loop');
     RoomSetup;
     PokojAt('WYJSCIE', Rooms[i]);
-    CheckEqual(Rooms[i], MIECHO, 'WYJSCIE leaves the small room in place');
+    CheckEqual(Rooms[i], Room, 'WYJSCIE leaves the small room in place');
   end;
 end;
 
@@ -172,28 +172,28 @@ begin
   {POKOJ11 lists the cage block and reads its poster.}
   RoomSetup;
   PokojAt('EXIT|PATRZ PLAKAT|WYJSCIE', 11);
-  CheckEqual(11, MIECHO, 'POKOJ11 WYJSCIE leaves without moving');
+  CheckEqual(11, Room, 'POKOJ11 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj30Exits;
 begin
   RoomSetup;
   PokojAt('EXIT|WYJSCIE', 30);
-  CheckEqual(30, MIECHO, 'POKOJ30 WYJSCIE leaves without moving');
+  CheckEqual(30, Room, 'POKOJ30 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj60Exits;
 begin
   RoomSetup;
   PokojAt('EXIT|WYJSCIE', 60);
-  CheckEqual(60, MIECHO, 'POKOJ60 WYJSCIE leaves without moving');
+  CheckEqual(60, Room, 'POKOJ60 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj75Exits;
 begin
   RoomSetup;
   PokojAt('EXIT|WYJSCIE', 75);
-  CheckEqual(75, MIECHO, 'POKOJ75 WYJSCIE leaves without moving');
+  CheckEqual(75, Room, 'POKOJ75 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj83Exits;
@@ -203,7 +203,7 @@ begin
    calls from the room loop.}
   RoomSetup;
   PokojAt('EXIT|WYJSCIE', 83);
-  CheckEqual(83, MIECHO, 'POKOJ83 WYJSCIE leaves without moving');
+  CheckEqual(83, Room, 'POKOJ83 WYJSCIE leaves without moving');
 end;
 
 procedure TestPokoj100QuestMaster;
@@ -212,12 +212,12 @@ begin
    killing the master lowers it. FORSA covers the easy quest
    purchase and the fight covers the pass discount.}
   RoomSetup;
-  FORSA := 10000; PRZEPUSTKA := 0;
+  Money := 10000; Permit := 0;
   PokojAt('EXIT|LISTA|ZABIJ QUEST-MASTER|KUP LATWY QUEST|WYJSCIE', 100);
-  CheckEqual(1, QUEST, 'the easy quest is taken');
-  CheckEqual(75, QUESTWYK, 'the easy quest needs 75 kills');
-  CheckEqual(9800, FORSA, 'the easy quest costs 200');
-  CheckEqual(-10, PRZEPUSTKA, 'killing the master lowers the pass');
+  CheckEqual(1, Quest, 'the easy quest is taken');
+  CheckEqual(75, QuestKills, 'the easy quest needs 75 kills');
+  CheckEqual(9800, Money, 'the easy quest costs 200');
+  CheckEqual(-10, Permit, 'killing the master lowers the pass');
 end;
 
 procedure TestPokoj100BlockedRoad;
@@ -225,9 +225,9 @@ begin
   {With no pass the west road is refused, so MIECHO stays in
    the room and the loop keeps going until WYJSCIE.}
   RoomSetup;
-  PRZEPUSTKA := 0;
+  Permit := 0;
   PokojAt('ZACHOD|WYJSCIE', 100);
-  CheckEqual(100, MIECHO, 'the blocked west road keeps the player');
+  CheckEqual(100, Room, 'the blocked west road keeps the player');
 end;
 
 procedure TestPokoj100OpenRoad;
@@ -236,59 +236,59 @@ begin
    its exit; the ZACHOD command then leaves the room, so it is
    the last command in the string.}
   RoomSetup;
-  PRZEPUSTKA := -20;
+  Permit := -20;
   PokojAt('EXIT|ZACHOD', 100);
-  CheckEqual(101, MIECHO, 'the pass opens the west road');
+  CheckEqual(101, Room, 'the pass opens the west road');
 end;
 
 procedure TestPokoj100QuestPrices;
 begin
   RoomSetup;
-  FORSA := 10000;
+  Money := 10000;
   PokojAt('KUP PRZECIETNY QUEST|KUP TRUDNY QUEST|WYJSCIE', 100);
-  CheckEqual(3, QUEST, 'the hard quest is taken');
-  CheckEqual(200, QUESTWYK, 'the hard quest needs 200 kills');
-  CheckEqual(9850, FORSA, 'both quests are paid for');
+  CheckEqual(3, Quest, 'the hard quest is taken');
+  CheckEqual(200, QuestKills, 'the hard quest needs 200 kills');
+  CheckEqual(9850, Money, 'both quests are paid for');
 end;
 
 procedure TestPokoj100SellEasy;
 begin
   RoomSetup;
-  QUEST := 1; QUESTWYK := 0; PRZEPUSTKA := 0; KUNSZT := 100;
+  Quest := 1; QuestKills := 0; Permit := 0; Experience := 100;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
-  CheckEqual(0, QUEST, 'the sold quest is cleared');
-  CheckEqual(0, QUESTWYK, 'the sold quest kill count is cleared');
-  CheckEqual(-10, PRZEPUSTKA, 'selling lowers the pass');
-  CheckEqual(200, KUNSZT, 'the easy quest pays 100 skill');
-  CheckEqual(1, PRZED, 'the easy quest counts one item');
+  CheckEqual(0, Quest, 'the sold quest is cleared');
+  CheckEqual(0, QuestKills, 'the sold quest kill count is cleared');
+  CheckEqual(-10, Permit, 'selling lowers the pass');
+  CheckEqual(200, Experience, 'the easy quest pays 100 skill');
+  CheckEqual(1, ItemCount, 'the easy quest counts one item');
 end;
 
 procedure TestPokoj100SellMedium;
 begin
   RoomSetup;
-  QUEST := 2; QUESTWYK := 0; DYPLOM := -10; MAXE := 50;
-  PRZEPUSTKA := 0; KUNSZT := 100;
+  Quest := 2; QuestKills := 0; Diploma := -10; MaxEnergy := 50;
+  Permit := 0; Experience := 100;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
-  CheckEqual(0, QUEST, 'the sold quest is cleared');
-  CheckEqual(0, DYPLOM, 'the diploma is handed over');
-  CheckEqual(45, MAXE, 'handing in the diploma costs max energy');
-  CheckEqual(-10, PRZEPUSTKA, 'selling lowers the pass');
-  CheckEqual(350, KUNSZT, 'the medium quest pays 250 skill');
+  CheckEqual(0, Quest, 'the sold quest is cleared');
+  CheckEqual(0, Diploma, 'the diploma is handed over');
+  CheckEqual(45, MaxEnergy, 'handing in the diploma costs max energy');
+  CheckEqual(-10, Permit, 'selling lowers the pass');
+  CheckEqual(350, Experience, 'the medium quest pays 250 skill');
 end;
 
 procedure TestPokoj100SellHard;
 begin
   RoomSetup;
-  QUEST := 3; QUESTWYK := 0; FAJKA := -10; PRA := 1;
-  PRZEPUSTKA := 0; KUNSZT := 100; PRZED := 0; MAD := 5;
+  Quest := 3; QuestKills := 0; Pipe := -10; Practice := 1;
+  Permit := 0; Experience := 100; ItemCount := 0; Wisdom := 5;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
-  CheckEqual(0, QUEST, 'the sold quest is cleared');
-  CheckEqual(0, FAJKA, 'the pipe is handed over');
-  CheckEqual(0, PRA, 'one practice point is spent');
-  CheckEqual(-10, PRZEPUSTKA, 'selling lowers the pass');
-  CheckEqual(525, KUNSZT, 'the hard quest pays 425 skill');
-  CheckEqual(-1, PRZED, 'the hard quest uncounts the pipe');
-  CheckEqual(4, MAD, 'the hard quest costs one wisdom');
+  CheckEqual(0, Quest, 'the sold quest is cleared');
+  CheckEqual(0, Pipe, 'the pipe is handed over');
+  CheckEqual(0, Practice, 'one practice point is spent');
+  CheckEqual(-10, Permit, 'selling lowers the pass');
+  CheckEqual(525, Experience, 'the hard quest pays 425 skill');
+  CheckEqual(-1, ItemCount, 'the hard quest uncounts the pipe');
+  CheckEqual(4, Wisdom, 'the hard quest costs one wisdom');
 end;
 
 begin

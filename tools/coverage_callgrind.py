@@ -36,7 +36,7 @@ SOURCES = PROJECT / "src"
 TESTS = PROJECT / "tests"
 SCENARIO_DIR = TESTS / "scenarios"
 UNIT_TEST_DIR = TESTS / "units"
-UNIT_NAMES = ("GRA",)
+UNIT_NAMES = ("Game",)
 # A fixed seed makes the Callgrind runs reproducible: seed-dependent
 # scenarios (cage fights, loot drops, race stats) would otherwise flake
 # on the clock-seeded PRNG. Same seed as tests/behavior_test.py, whose

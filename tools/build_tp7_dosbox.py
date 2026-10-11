@@ -22,10 +22,10 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "src"
 TEMP_ROOT = PROJECT / "build" / "tmp"
-ARTIFACTS = ("GRA.TPU", "BOMBKI.EXE", "BOMBKI.MAP")
+ARTIFACTS = ("Game.TPU", "BOMBKI.EXE", "BOMBKI.MAP")
 SOURCE_TIMES = {
     # the folded core keeps the newest of the three folded units' dates
-    "GRA.PAS": (1999, 6, 12, 12, 56, 34),
+    "Game.PAS": (1999, 6, 12, 12, 56, 34),
 }
 
 
@@ -125,7 +125,7 @@ def main() -> int:
 
         with tempfile.TemporaryDirectory(prefix="bombki-tp7-", dir=TEMP_ROOT) as temporary:
             build_dir = Path(temporary).resolve()
-            for source_name in ("GRA.PAS", "BOMBKI.PAS"):
+            for source_name in ("Game.PAS", "BOMBKI.PAS"):
                 source = SOURCES / source_name
                 target = build_dir / source_name
                 text = source.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")

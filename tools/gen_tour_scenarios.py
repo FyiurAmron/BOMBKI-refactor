@@ -29,7 +29,7 @@ def extract():
     def add(r, d, t):
         graph.setdefault(r, {})[d] = t
 
-    g = (SOURCES / "GRA.PAS").read_text().split("\n")
+    g = (SOURCES / "Game.PAS").read_text().split("\n")
 
     def slice_between(start_marker, end_marker=None):
         a = next(i for i, l in enumerate(g) if l.strip() == start_marker)
@@ -38,21 +38,24 @@ def extract():
         b = next(i for i, l in enumerate(g) if l.strip() == end_marker)
         return g[a:b]
 
-    # The fold carries region markers; bounding each scan to its own
-    # region restores the original two-file scan semantics (the
-    # lowercase PokojN rooms' "until MIECHO <> N;" lines would
-    # otherwise poison the SWIAT-side room tracking).
-    bomb = slice_between(
-        "{ --- the former BOMBKI program-level declarations and routines --- }")
-    swi = slice_between("{ --- folded from unit SWIAT --- }",
-                        "{ --- folded from unit PRZEDM --- }")
+    # The merged unit no longer carries fold-seam comments, so the
+    # two scans are bounded by code lines instead. The former SWIAT
+    # unit is the block of plain uppercase-style rooms between
+    # Room5 and FightExpForEnergy; scanning it with the until-based
+    # state machine keeps the original two-file semantics (the
+    # lowercase RoomN rooms' "until Room <> N;" lines would
+    # otherwise poison that tracking). Everything else is scanned
+    # with the procedure-name state machine.
+    bomb = g
+    swi = slice_between("procedure Room5;",
+                        "function FightExpForEnergy(diff: Integer): Integer;")
 
     def scan(lines, lo, hi, proc_rooms=None, want_text=False):
         cur = None
         for n, l in enumerate(lines, 1):
             if not (lo <= n <= hi):
                 continue
-            m = re.match(r"\s*if MIECHO = (\d+) then begin", l)
+            m = re.match(r"\s*if Room = (\d+) then begin", l)
             if m:
                 cur = int(m.group(1))
                 add(cur, None, None)
@@ -64,7 +67,7 @@ def extract():
                     cur = proc_rooms.get(name) if name in proc_rooms else None
                     if cur is not None:
                         add(cur, None, None)
-            m = re.match(r"\s*if wpisz = '(\w+)' then MIECHO := (\d+);", l)
+            m = re.match(r"\s*if Command = '(\w+)' then Room := (\d+);", l)
             if m and cur is not None:
                 add(cur, m.group(1), int(m.group(2)))
             if want_text and cur is not None and cur not in texts \
@@ -75,9 +78,9 @@ def extract():
 
     proc_rooms = {}
     for l in bomb:
-        m = re.match(r"procedure Pokoj(\d+);", l)
+        m = re.match(r"procedure Room(\d+);", l)
         if m:
-            proc_rooms["Pokoj%s" % m.group(1)] = int(m.group(1))
+            proc_rooms["Room%s" % m.group(1)] = int(m.group(1))
     for r in range(61, 73):
         add(r, None, None)
     scan(bomb, 1, len(bomb), proc_rooms, want_text=True)
@@ -85,25 +88,25 @@ def extract():
     s = swi
     room = None
     for l in s:
-        m = re.match(r"^procedure (POKOJ\w+)", l)
+        m = re.match(r"^procedure (Room\w+)", l)
         if m:
-            mm = re.match(r"POKOJ(\d+)$", m.group(1))
+            mm = re.match(r"Room(\d+)$", m.group(1))
             room = int(mm.group(1)) if mm else None
             if room is not None:
                 add(room, None, None)
             continue
-        m = re.search(r"until MIECHO <> (\d+);", l)
+        m = re.search(r"until Room <> (\d+);", l)
         if m:
             room = int(m.group(1))
             add(room, None, None)
-        # POKOJE guards each of its rooms with "if MIECHO = N", and
+        # PlainRooms guards each of its rooms with "if Room = N", and
         # that guard precedes the movements, so the trailing "until"
         # alone would attribute them to the previous room.
-        m = re.match(r"\s*if MIECHO = (\d+) then begin", l)
+        m = re.match(r"\s*if Room = (\d+) then begin", l)
         if m:
             room = int(m.group(1))
             add(room, None, None)
-        m = re.match(r"\s*if wpisz = '(\w+)' then MIECHO := (\d+);", l)
+        m = re.match(r"\s*if Command = '(\w+)' then Room := (\d+);", l)
         if m and room is not None:
             add(room, m.group(1), int(m.group(2)))
         if room is not None and room not in texts and "WriteLn('" in l:
@@ -121,7 +124,7 @@ def extract():
     graph.setdefault(18, {})["TELEPORT"] = 1
     # Room 86 is only reachable from 85 through a conditional edge
     # ("ZACHOD" and the tree is gone), which the plain
-    # "if wpisz = ... then MIECHO := N" scan cannot see. The
+    # "if Command = ... then Room := N" scan cannot see. The
     # caller must chop the tree first, so the edge is added here
     # and the scenario sends ZABIJ DRZWI on arrival at 85.
     graph.setdefault(85, {}).setdefault("ZACHOD", 86)

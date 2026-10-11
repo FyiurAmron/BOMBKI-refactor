@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""Generate the level-up scenario for BOMBKI.PAS's ZdobadzPoziom.
+"""Generate the level-up scenario for Game.PAS's CheckLevelUp.
 
-ZdobadzPoziom runs once per main-loop pass, at the top of the
+CheckLevelUp runs once per main-loop pass, at the top of the
 repeat block, before the room handlers. A room handler loops on
-ReadLn until MIECHO changes, so commands typed inside one room
+ReadLn until Room changes, so commands typed inside one room
 never start a new pass. MODE then UNMODE is enough to force
 exactly one more pass without leaving the room: MODE sets
-MIECHO2 to the current room and MIECHO to 1000, which ends the
+OuterRoom to the current room and Room to 1000, which ends the
 room's loop and drops into the ground block; UNMODE restores
-MIECHO from MIECHO2, so the ground block ends, the loop
-restarts, ZdobadzPoziom runs, and the room dispatches again.
+Room from OuterRoom, so the ground block ends, the loop
+restarts, CheckLevelUp runs, and the room dispatches again.
 
 DAWAJ KUNSZT lives only in room 86, which sits behind the
-DRZWI, so the prefix has to cross that door once. It escapes
-rather than fights them: WALKA waits two seconds per round, so
-winning costs about eighty rounds while fleeing costs a
-handful. UFOK is used because CWICZ UCIEKAC needs MAD > 10 and
-ZRE > 10, and UFOK reaches both cheaply; ZWIEJ sets WIMP, which
-the flee check needs (ENERGIA < WIMP) and which defaults to
-zero.
+living door, so the prefix has to cross that door once. It
+escapes rather than fights them: Fight waits two seconds per
+round, so winning costs about eighty rounds while fleeing costs
+a handful. UFOK is used because CWICZ UCIEKAC needs Wisdom > 10
+and Dexterity > 10, and UFOK reaches both cheaply; ZWIEJ sets
+FleeEnergy, which the flee check needs (Energy < FleeEnergy)
+and which defaults to zero.
 
 The thresholds are read from the reconstructed source rather
 than hard-coded, so the route always matches the code.
@@ -38,18 +38,18 @@ TWELFTH = "HURRRA TO JUZ DWUNASTY POZIOM"
 
 
 def thresholds() -> dict[int, int]:
-    """KUNSZT needed to advance from each level, read from source.
+    """Experience needed to advance from each level, read from source.
 
-    These come from the level threshold constants in BOMBKI.PAS,
-    not from the KUNSZT subtraction in the body: the two differ
+    These come from the level threshold constants in Game.PAS,
+    not from the Experience subtraction in the body: the two differ
     (level one gates at 700 but subtracts 725).
     """
-    src = (PROJECT / "src" / "BOMBKI.PAS").read_text()
+    src = (PROJECT / "src" / "Game.PAS").read_text()
 
     def const(name: str) -> int:
         found = re.search(rf"^\s*{name} = (\d+);", src, re.M)
         if found is None:
-            raise RuntimeError(f"constant {name} not found in BOMBKI.PAS")
+            raise RuntimeError(f"constant {name} not found in Game.PAS")
         return int(found.group(1))
 
     gate_one = const("Lvl1_Threshold")
@@ -82,19 +82,20 @@ def route_graph() -> tuple[dict, dict]:
 
 
 def prefix(race: str, escape: bool = False) -> list[dict]:
-    """Steps from a fresh game to the old man's room, granting KUNSZT.
+    """Steps from a fresh game to the old man's room, granting experience.
 
     With escape, the route trains the flee skill (UFOK reaches
     MAD > 10 and ZRE > 10 cheaply) and runs from the DRZWI,
-    which costs a handful of rounds. Otherwise the DRZWI is
+    which costs a handful of rounds. Otherwise the living door is
     fought through: slower, but no dice roll in it, so the
     scenario does not go flaky.
     """
     flee = escape
     graph, texts = route_graph()
-    # A fleeing character needs ZWIEJ > 0 before the ZWIEJ command
-    # will prompt for WIMP. CWICZ UCIEKAC needs MAD > 10 and
-    # ZRE > 10, so UFOK trains ZRE once past that gate first.
+    # A fleeing character needs Fleeing > 0 before the ZWIEJ command
+    # will prompt for the flee threshold. CWICZ UCIEKAC needs
+    # Wisdom > 10 and Dexterity > 10, so UFOK trains Dexterity
+    # once past that gate first.
     train: list[dict] = []
     if flee:
         train = [
@@ -105,7 +106,7 @@ def prefix(race: str, escape: bool = False) -> list[dict]:
             {"label": "train agility to 10",
              "expect": f"TRENUJESZ ZRECZNOSC I MASZ 10 ZRECZNOSCI[\\s\\S]*?{PROMPT}",
              "send": "TRENUJ ZRECZNOSC"},
-            {"label": "train agility to 11, past the ZRE > 10 gate",
+            {"label": "train agility to 11, past the Dexterity > 10 gate",
              "expect": f"TRENUJESZ ZRECZNOSC I MASZ 11 ZRECZNOSCI[\\s\\S]*?{PROMPT}",
              "send": "ZACHOD"},
             {"label": "back to the salon",
@@ -133,7 +134,7 @@ def prefix(race: str, escape: bool = False) -> list[dict]:
     # The training detour ends in the salon; the non-flee route is
     # already there. Both continue along the same cave route, which
     # is taken from the room graph rather than written out by hand:
-    # salon -> city centre -> dark street -> bluszcz -> flowers ->
+    # salon -> city centre -> dark street -> the ivy -> flowers ->
     # clearing -> cave -> living door.
     # The harness matches a step's expect against the output the
     # previous step's send produced, so a step's expect names the
@@ -153,7 +154,7 @@ def prefix(race: str, escape: bool = False) -> list[dict]:
         here = room
     steps.append({"label": "in the cave entrance room 84",
                   "expect": f"{texts[84]}[\\s\\S]*?{PROMPT}", "send": "ZACHOD"})
-    steps.append({"label": "living door, DRZWI bar the way",
+    steps.append({"label": "living door bars the way",
                   "expect": f"{DOOR}[\\s\\S]*?TE DRZWI ZYJA[\\s\\S]*?"
                             f"NIE WPUSZCZE[\\s\\S]*?{PROMPT}",
                   "send": "MODE"})
@@ -165,7 +166,8 @@ def prefix(race: str, escape: bool = False) -> list[dict]:
              "expect": r"PONIZEJ ILU ENERGII CHCESZ UCIEKAC\?", "send": "500"},
             {"label": "threshold set above current energy", "expect": PROMPT,
              "send": "DAWAJ EN"},
-            {"label": "energy topped to keep ENERGIA < WIMP", "expect": PROMPT,
+            {"label": "energy topped to keep Energy < FleeEnergy",
+             "expect": PROMPT,
              "send": "DAWAJ EN"},
             {"label": "energy 450", "expect": PROMPT, "send": "UNMODE"},
             {"label": "back at the living door",
@@ -192,7 +194,7 @@ def prefix(race: str, escape: bool = False) -> list[dict]:
             {"label": "defeat the DRZWI",
              "expect": f"[\\s\\S]*?ZABILES GO[\\s\\S]*?{PROMPT}", "send": "ZACHOD"},
         ]
-    steps.append({"label": "past the DRZWI into the dark room",
+    steps.append({"label": "past the living door into the dark room",
                   "expect": f"{DARK}[\\s\\S]*?STARUCHA[\\s\\S]*?{PROMPT}",
                   "send": "DAWAJ KUNSZT"})
     return steps
@@ -217,7 +219,7 @@ def main() -> None:
             steps.append({"label": f"visit {visit}: grant {index + 1}/{grants}",
                           "expect": PROMPT, "send": "DAWAJ KUNSZT"})
         # MODE then UNMODE: one extra main-loop pass, so
-        # ZdobadzPoziom re-reads the gate without leaving the room.
+        # CheckLevelUp re-reads the gate without leaving the room.
         #
         # The harness matches each step's expect against the output
         # of the *previous* step's send, so an expect lags its own
@@ -260,11 +262,11 @@ def main() -> None:
 
     # The level-up body deducts by the NEXT level's threshold, which
     # differs from the gate (level one gates at 700 but subtracts
-    # 725). The route's own KUNSZT drift (the DRZWI escape costs 20)
-    # makes an absolute residue fragile, so the scenario only drives
-    # to the sheet; tests/behavior_test.py then asserts the relation
-    # prompt KUNSZT + sheet residue == 2 * need(2), which holds
-    # exactly when the deduction is need(2) = 725.
+    # 725). The route's own experience drift (the door escape costs
+    # 20) makes an absolute residue fragile, so the scenario only
+    # drives to the sheet; tests/behavior_test.py then asserts the
+    # relation prompt Experience + sheet residue == 2 * need(2),
+    # which holds exactly when the deduction is need(2) = 725.
     deduction = prefix("UFOK", escape=True)
     deduction.append({"label": "second grant to 1000 KUNSZT",
                       "expect": PROMPT, "send": "DAWAJ KUNSZT"})
@@ -285,16 +287,16 @@ def main() -> None:
     path.write_text(json.dumps({"steps": deduction}, indent=2) + "\n",
                     encoding="utf-8")
     print(f"{path.name}: {len(deduction)} steps; behavior_test.py "
-          f"checks prompt KUNSZT + residue == 2 * {need[2]}")
+          f"checks prompt Experience + residue == 2 * {need[2]}")
 
-    # POZIOM <= 0 never levels up (the gate falls through every
-    # threshold check into the POZIOM <= 8 Exit), and the sheet
-    # prints no level line for it. ZABIJ STARUCH drops POZIOM from
-    # 1 to 0; with KUNSZT far above every threshold the pass must
+    # Level <= 0 never levels up (the gate falls through every
+    # threshold check into the Level <= 8 Exit), and the sheet
+    # prints no level line for it. ZABIJ STARUCH drops Level from
+    # 1 to 0; with Experience far above every threshold the pass must
     # not fire the banner, and the JA sheet must go straight from
     # the money line to the attribute line.
     zero = prefix("UFOK", escape=True)
-    zero.append({"label": "staruch drops POZIOM to zero",
+    zero.append({"label": "staruch drops Level to zero",
                  "expect": PROMPT, "send": "ZABIJ STARUCH"})
     zero.append({"label": "second grant to 1000 KUNSZT",
                  "expect": PROMPT, "send": "DAWAJ KUNSZT"})
@@ -313,29 +315,29 @@ def main() -> None:
     path = OUT / "level-zero.json"
     path.write_text(json.dumps({"steps": zero}, indent=2) + "\n",
                     encoding="utf-8")
-    print(f"{path.name}: {len(zero)} steps, POZIOM 0: no level-up, "
+    print(f"{path.name}: {len(zero)} steps, Level 0: no level-up, "
           f"no sheet line")
 
-    # The level-12 block distributes MAXSIL/MAXZRE/MAXMAD by
-    # comparing them, and each ordering of the three takes a
-    # different branch. A single race only produces one ordering,
-    # so one extra scenario per reachable ordering. The MAX values
-    # below are read from WybierzRase and the 1415-1420 gates.
+    # The level-12 block distributes the three maxima by comparing
+    # them, and each ordering of the three takes a different branch.
+    # A single race only produces one ordering, so one extra
+    # scenario per reachable ordering. The max values below are read
+    # from ChooseRace and the training gates.
     variants = {
         # Starts 15/15/15; every gate adds the same amount, so all
         # three stay equal -> the "all +1" branch.
         "level-max-equal.json": ("CZLOWIEK", "all three MAX equal"),
-        # Starts 20/20/7; MAXZRE ties MAXSIL on top -> the
-        # "MAXSIL + 2 / MAXZRE + 1" branch.
+        # Starts 20/20/7; max dexterity ties max strength on top ->
+        # the "max strength + 2 / max dexterity + 1" branch.
         "level-max-zretie.json": ("OLBRZYM", "MAXZRE ties MAXSIL", True),
-        # Starts 15/20/11; after the gates MAXZRE is strictly highest
-        # -> the "MAXZRE + 3" branch. NIMFA rather than POL-ELF,
-        # which also reaches it but has too little SIL to win the
-        # DRZWI fight at level one.
+        # Starts 15/20/11; after the gates max dexterity is strictly
+        # highest -> the "max dexterity + 3" branch. NIMFA rather
+        # than POL-ELF, which also reaches it but has too little
+        # strength to win the door fight at level one.
         "level-max-zre-top.json": ("NIMFA", "MAXZRE on top"),
-        # Starts 13/14/20; after the gates MAXMAD is strictly
-        # highest -> the "MAXMAD + 3" branch, the last ordering in
-        # the level-12 block that no other race reaches.
+        # Starts 13/14/20; after the gates max wisdom is strictly
+        # highest -> the "max wisdom + 3" branch, the last ordering
+        # in the level-12 block that no other race reaches.
         "level-max-mad-top.json": ("UFOK", "MAXMAD on top", False, False),
     }
     for name, spec in variants.items():
@@ -365,19 +367,19 @@ def main() -> None:
                 "send": "DAWAJ KUNSZT"})
             level += 1
         if second_pass:
-            # The level-12 block runs every time POZIOM becomes 12,
-            # and ZABIJ STARUCH in this same room drops POZIOM by
+            # The level-12 block runs every time Level becomes 12,
+            # and ZABIJ STARUCH in this same room drops Level by
             # one, so a second trip through 12 re-runs the block on
-            # MAX values the first pass already shifted. For
-            # OLBRZYM the first pass takes the MAXZRE/MAXSIL tie
-            # branch and leaves MAXZRE below MAXSIL, so the second
-            # pass reports MAXSIL + 3 - an ordering no single pass
-            # of any starting race produces.
+            # max values the first pass already shifted. For
+            # OLBRZYM the first pass takes the dexterity/strength tie
+            # branch and leaves dexterity below strength, so the
+            # second pass reports max strength + 3 - an ordering no
+            # single pass of any starting race produces.
             #
             # Each expect sees the previous step's output, so the
             # banner from a MODE/UNMODE pair lands on the step
             # after it.
-            variant.append({"label": "staruch lowers POZIOM by one",
+            variant.append({"label": "staruch lowers Level by one",
                             "expect": PROMPT, "send": "ZABIJ STARUCH"})
             variant.append({"label": "grant 1/2 back toward 12",
                             "expect": PROMPT, "send": "DAWAJ KUNSZT"})
@@ -386,7 +388,7 @@ def main() -> None:
             variant.append({"label": "UNMODE to force the pass",
                             "expect": PROMPT, "send": "UNMODE"})
             variant.append({
-                "label": "second trip through 12, now with MAXSIL on top",
+                "label": "second trip through 12, max strength on top",
                 "expect": f"{TWELFTH}[\\s\\S]*?MASZ TERAZ",
                 "send": "DAWAJ KUNSZT"})
         variant.append({"label": "leave the room at the end",

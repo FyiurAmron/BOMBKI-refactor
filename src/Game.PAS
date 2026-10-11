@@ -30,7 +30,6 @@ type
     Wearing: Integer;
     WeaponKind, ShieldKind: Integer;
     WornGarment: string;
-    SwordValue, ShieldValue, HeartValue: Integer;
   end;
 
   TBag = record
@@ -2586,7 +2585,6 @@ begin
   Bag.OldSword := -10;
   Player.Money := Player.Money - 70;
   WriteLn('KUPUJESZ ZWYKLY MALY !STARY! MIECZYK ZA 70 MONET');
-  Gear.SwordValue := 500;
 end;
 
 function CanSellOldSword: Boolean;
@@ -3097,7 +3095,6 @@ begin
           if Combat.Roll < 4 then begin
             Bag.OldSword := Session.Room;
             WriteLn('WYCIAGASZ STARY ZARDZEWIALY MIECZ Z CIALA POTWORA');
-            Gear.SwordValue := 500;
           end;
         end;
         if Bag.SmallShield = 0 then begin
@@ -3105,7 +3102,6 @@ begin
           if Combat.Roll < 4 then begin
             Bag.SmallShield := Session.Room;
             WriteLn('WYCIAGASZ ZWYKLA MALA TARCZA Z CIALA POTWORA');
-            Gear.ShieldValue := 300;
           end;
         end;
         if Bag.Heart = 0 then begin
@@ -3113,7 +3109,6 @@ begin
           if Combat.Roll < 6 then begin
             Bag.Heart := Session.Room;
             WriteLn('WYCIAGASZ ZAKRWAWIONE SERCE Z CIALA POTWORA');
-            Gear.HeartValue := 50;
           end;
         end;
       end
@@ -3915,7 +3910,6 @@ begin
           if Combat.Roll < 7 then begin
             Bag.OldSword := Session.Room;
             WriteLn('WYCIAGASZ STARY ZARDZEWIALY MIECZ Z CIALA POTWORA');
-            Gear.SwordValue := 500;
           end;
         end;
         if Bag.SmallShield = 0 then begin
@@ -3923,7 +3917,6 @@ begin
           if Combat.Roll < 7 then begin
             Bag.SmallShield := Session.Room;
             WriteLn('WYCIAGASZ ZWYKLA MALA TARCZA Z CIALA POTWORA');
-            Gear.ShieldValue := 300;
           end;
         end;
         if Bag.Heart = 0 then begin
@@ -3931,7 +3924,6 @@ begin
           if Combat.Roll < 6 then begin
             Bag.Heart := Session.Room;
             WriteLn('WYCIAGASZ ZAKRWAWIONE SERCE Z CIALA POTWORA');
-            Gear.HeartValue := 50;
           end;
         end;
       end else
@@ -3972,7 +3964,6 @@ begin
           if Combat.Roll < 7 then begin
             Bag.OldSword := Session.Room;
             WriteLn('WYCIAGASZ STARY ZARDZEWIALY MIECZ Z CIALA POTWORA');
-            Gear.SwordValue := 500;
           end;
         end;
         if Bag.SmallShield = 0 then begin
@@ -3980,7 +3971,6 @@ begin
           if Combat.Roll < 7 then begin
             Bag.SmallShield := Session.Room;
             WriteLn('WYCIAGASZ ZWYKLA MALA TARCZA Z CIALA POTWORA');
-            Gear.ShieldValue := 300;
           end;
         end;
         if Bag.Heart = 0 then begin
@@ -3988,7 +3978,6 @@ begin
           if Combat.Roll < 6 then begin
             Bag.Heart := Session.Room;
             WriteLn('WYCIAGASZ ZAKRWAWIONE SERCE Z CIALA POTWORA');
-            Gear.HeartValue := 50;
           end;
         end;
       end else
@@ -4022,7 +4011,6 @@ begin
         if Combat.Roll < 10 then begin
           Bag.OldSword := Session.Room;
           WriteLn('WYCIAGASZ STARY ZARDZEWIALY MIECZ Z CIALA POTWORA');
-          Gear.SwordValue := 500;
         end;
       end;
       if Bag.SmallShield = 0 then begin
@@ -4030,7 +4018,6 @@ begin
         if Combat.Roll < 10 then begin
           Bag.SmallShield := Session.Room;
           WriteLn('WYCIAGASZ ZWYKLA MALA TARCZA Z CIALA POTWORA');
-          Gear.ShieldValue := 300;
         end;
       end;
       if Bag.Heart = 0 then begin
@@ -4038,7 +4025,6 @@ begin
         if Combat.Roll < 6 then begin
           Bag.Heart := Session.Room;
           WriteLn('WYCIAGASZ ZAKRWAWIONE SERCE Z CIALA POTWORA');
-          Gear.HeartValue := 50;
         end;
       end;
       goto L1028_AfterFlee;

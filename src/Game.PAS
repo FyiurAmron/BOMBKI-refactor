@@ -141,6 +141,8 @@ procedure Start;
 implementation
 
 procedure ShowIntro;
+var
+  tone, step: Integer;
 begin
   ClrScr;
   Player.MaxEnergy := 50;
@@ -158,29 +160,18 @@ begin
   WriteLn('VERSJA CETA 0.86 23.05.99 - LAST MODYFIKACIONEN');
   WriteLn('NACISNIJ DOWOLNY KLAWISZ ABY ROZPOCZAC GRE');
   WriteLn('KORZYSTAJ Z DUZYCH LITER !!!!!!!!!!!!!!!!!');
+  tone := 100;
+  step := 100;
   repeat
-    Sound(100);
+    Sound(tone);
     Delay(100);
-    Sound(200);
-    Delay(100);
-    Sound(300);
-    Delay(100);
-    Sound(400);
-    Delay(100);
-    Sound(500);
-    Delay(100);
-    Sound(600);
-    Delay(100);
-    Sound(500);
-    Delay(100);
-    Sound(400);
-    Delay(100);
-    Sound(300);
-    Delay(100);
-    Sound(200);
-    Delay(100);
-    WriteLn('TICK !!!');
-  until KeyPressed;
+    if tone = 600 then step := -100;
+    tone := tone + step;
+    if tone = 100 then begin
+      WriteLn('TICK !!!');
+      step := 100;
+    end;
+  until (tone = 100) and KeyPressed;
   NoSound;
 end;
 

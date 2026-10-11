@@ -140,6 +140,7 @@ procedure Start;
 
 implementation
 
+{$I rooms.inc}
 {$I texts.inc}
 
 procedure WriteExits(const items: array of string);
@@ -200,17 +201,17 @@ begin
                     TxtExitGora, TxtPlacePokoj,
                     TxtExitDol, TxtPlacePokoj]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := 4;
-    if Command = CmdZachod then Session.Room := 6;
-    if Command = CmdPolnoc then Session.Room := 7;
-    if Command = CmdPolodnie then Session.Room := 8;
-    if Command = CmdGora then Session.Room := 9;
-    if Command = CmdDol then Session.Room := 10;
+    if Command = CmdWschod then Session.Room := RoomSchoolHall;
+    if Command = CmdZachod then Session.Room := RoomSchoolSide1;
+    if Command = CmdPolnoc then Session.Room := RoomSchoolSide2;
+    if Command = CmdPolodnie then Session.Room := RoomSchoolSide3;
+    if Command = CmdGora then Session.Room := RoomSchoolLanding;
+    if Command = CmdDol then Session.Room := RoomSchoolSide4;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLn(TxtRoom5_10);
       WriteLn(TxtRoom5_11);
     end;
-  until Session.Room <> 5;
+  until Session.Room <> RoomLost;
 end;
 
 procedure Room0;
@@ -221,8 +222,8 @@ begin
     ReadLn(Command);
     if Command = CmdExit then WriteLn(TxtRoom0_02);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdPolnoc then Session.Room := 1;
-  until Session.Room <> 0;
+    if Command = CmdPolnoc then Session.Room := RoomSalon;
+  until Session.Room <> RoomStart;
 end;
 procedure Room1;
 begin
@@ -240,19 +241,19 @@ begin
                     TxtExitZachod, TxtPlaceMudSzkola,
                     TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := 0;
-    if Command = CmdWschod then Session.Room := 2;
-    if Command = CmdDol then Session.Room := 3;
-    if Command = CmdZachod then Session.Room := 4;
-    if Command = CmdPolnoc then Session.Room := 20;
+    if Command = CmdPolodnie then Session.Room := RoomStart;
+    if Command = CmdWschod then Session.Room := RoomTraining;
+    if Command = CmdDol then Session.Room := RoomMeditation;
+    if Command = CmdZachod then Session.Room := RoomSchoolHall;
+    if Command = CmdPolnoc then Session.Room := RoomCityCentre;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom1Lines2);
     end;
-  until Session.Room <> 1;
+  until Session.Room <> RoomSalon;
 end;
 procedure Room4;
 begin
-  if Session.Room <> 4 then Exit;
+  if Session.Room <> RoomSchoolHall then Exit;
   WriteLn(TxtYouAreIn, TxtRoom4_01);
   WriteLn(TxtRoom4_02);
   repeat
@@ -264,20 +265,20 @@ begin
                     TxtExitWschod, TxtPlacePokojCentralny,
                     TxtExitZachod, TxtPlaceMudSzkola2]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := 1;
-    if Command = CmdZachod then Session.Room := 5;
+    if Command = CmdWschod then Session.Room := RoomSalon;
+    if Command = CmdZachod then Session.Room := RoomLost;
     if Command = CmdPatrz + CmdAfisz then begin
       WriteLines(TxtRoom4Lines1);
     end;
-  until Session.Room <> 4;
+  until Session.Room <> RoomSchoolHall;
 
 end;
 procedure Room13;
 begin
-  if Session.Room <> 13 then Exit;
+  if Session.Room <> RoomCageStrong then Exit;
   WriteLn(TxtShared_06);
   case World.CageStrong of
-    13: WriteLn(TxtRoom13_01);
+    RoomCageStrong: WriteLn(TxtRoom13_01);
     0: WriteLn(TxtShared_07);
   end;
   repeat
@@ -288,8 +289,8 @@ begin
                     TxtExitWschod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := 11;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageStrong = 13) then begin
+    if Command = CmdWschod then Session.Room := RoomCageCorridor;
+    if (Command = CmdZabij + CmdPotwor) and (World.CageStrong = RoomCageStrong) then begin
       Combat.EnemyEnergy := 20;
       Combat.EnemyDexterity := 3;
       Combat.EnemyStrength := 10;
@@ -313,7 +314,7 @@ begin
         end;
       end else Combat.Fled := 0;
     end;
-  until Session.Room <> 13;
+  until Session.Room <> RoomCageStrong;
 
 end;
 procedure SimpleRoom(RoomNo, DestRoom: Integer; Direction, ExitDesc: string);
@@ -337,14 +338,14 @@ end;
 
 procedure PlainRooms;
 begin
-  SimpleRoom(6, 5, CmdWschod, CmdMudSzkola2);
-  SimpleRoom(8, 5, CmdPolnoc, CmdMudSzkola2);
-  SimpleRoom(7, 5, CmdPolodnie, CmdMudSzkola2);
-  SimpleRoom(10, 5, CmdGora, CmdMudSzkola2);
+  SimpleRoom(RoomSchoolSide1, RoomLost, CmdWschod, CmdMudSzkola2);
+  SimpleRoom(RoomSchoolSide3, RoomLost, CmdPolnoc, CmdMudSzkola2);
+  SimpleRoom(RoomSchoolSide2, RoomLost, CmdPolodnie, CmdMudSzkola2);
+  SimpleRoom(RoomSchoolSide4, RoomLost, CmdGora, CmdMudSzkola2);
 end;
 procedure Room11;
 begin
-  if Session.Room <> 11 then Exit;
+  if Session.Room <> RoomCageCorridor then Exit;
   WriteLn(TxtYouAreIn, TxtRoom11_01);
   WriteLines(TxtRoom11Lines1);
   repeat
@@ -361,21 +362,21 @@ begin
                     TxtExitGora, TxtPlaceKlatkaSilnegoOdpornegoIZrecznego,
                     TxtExitDol, TxtPlaceJedynaDrogaNieProwadzacaDoKlatek]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := 12;
-    if Command = CmdZachod then Session.Room := 13;
-    if Command = CmdPolnoc then Session.Room := 14;
-    if Command = CmdPolodnie then Session.Room := 15;
-    if Command = CmdGora then Session.Room := 16;
-    if Command = CmdDol then Session.Room := 17;
+    if Command = CmdWschod then Session.Room := RoomCageWeakling;
+    if Command = CmdZachod then Session.Room := RoomCageStrong;
+    if Command = CmdPolnoc then Session.Room := RoomCageAgile;
+    if Command = CmdPolodnie then Session.Room := RoomCageTough;
+    if Command = CmdGora then Session.Room := RoomCageHuge;
+    if Command = CmdDol then Session.Room := RoomCageReward;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom11Lines2);
     end;
-  until Session.Room <> 11;
+  until Session.Room <> RoomCageCorridor;
 
 end;
 procedure Room30;
 begin
-  if Session.Room <> 30 then Exit;
+  if Session.Room <> RoomLongStreet then Exit;
   WriteLn(TxtRoom30_01);
   WriteLn(TxtRoom30_02);
   repeat
@@ -388,15 +389,15 @@ begin
                     TxtExitZachod, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceWejscieNaArene]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := 20;
-    if Command = CmdZachod then Session.Room := 31;
-    if Command = CmdPolnoc then Session.Room := 32;
-  until Session.Room <> 30;
+    if Command = CmdWschod then Session.Room := RoomCityCentre;
+    if Command = CmdZachod then Session.Room := RoomLongStreet2;
+    if Command = CmdPolnoc then Session.Room := RoomArenaEntrance;
+  until Session.Room <> RoomLongStreet;
 
 end;
 procedure Room60;
 begin
-  if Session.Room <> 60 then Exit;
+  if Session.Room <> RoomValley then Exit;
   WriteLn(TxtYouAreIn, TxtRoom60_01);
   WriteLn(TxtRoom60_02);
   WriteLn(TxtRoom60_03);
@@ -409,14 +410,14 @@ begin
                     TxtExitPolodnie, TxtPlaceUlicaDluga,
                     TxtExitWschod, TxtPlaceBudowlaPelnaHalasu]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := 31;
-    if Command = CmdWschod then Session.Room := 61;
-  until Session.Room <> 60;
+    if Command = CmdPolodnie then Session.Room := RoomLongStreet2;
+    if Command = CmdWschod then Session.Room := RoomCrowd1;
+  until Session.Room <> RoomValley;
 
 end;
 procedure Room75;
 begin
-  if Session.Room <> 75 then Exit;
+  if Session.Room <> RoomDarkStreet then Exit;
   WriteLines(TxtRoom75Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -428,15 +429,15 @@ begin
                     TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := 20;
-    if Command = CmdPolnoc then Session.Room := 76;
-    if Command = CmdPolodnie then Session.Room := 77;
-  until Session.Room <> 75;
+    if Command = CmdZachod then Session.Room := RoomCityCentre;
+    if Command = CmdPolnoc then Session.Room := RoomBar;
+    if Command = CmdPolodnie then Session.Room := RoomIvy1;
+  until Session.Room <> RoomDarkStreet;
 
 end;
 procedure Room83;
 begin
-  if Session.Room <> 83 then Exit;
+  if Session.Room <> RoomClearing then Exit;
   WriteLines(TxtRoom83Lines1);
   DescribePlants;
   repeat
@@ -450,14 +451,14 @@ begin
                     TxtExitPolnoc, TxtPlaceBluszcz,
                     TxtExitZachod, TxtPlacePodejrzaneKrzaki]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdPolnoc then Session.Room := 80;
-    if Command = CmdZachod then Session.Room := 84;
-  until Session.Room <> 83;
+    if Command = CmdPolnoc then Session.Room := RoomIvy4;
+    if Command = CmdZachod then Session.Room := RoomCavePath;
+  until Session.Room <> RoomClearing;
 
 end;
 procedure Room100;
 begin
-  if Session.Room <> 100 then Exit;
+  if Session.Room <> RoomQuestMaster then Exit;
   WriteLn(TxtRoom100_01);
   WriteLn(TxtRoom100_02);
   DescribeStreet;
@@ -530,8 +531,8 @@ begin
 
     end;
     if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := 22;
-    if (Command = CmdZachod) and (Bag.Permit <= -10) then Session.Room := 101;
+    if Command = CmdPolodnie then Session.Room := RoomShopStreet2;
+    if (Command = CmdZachod) and (Bag.Permit <= -10) then Session.Room := RoomRoad1;
 if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
     if Command = CmdZabij + CmdQuestMaster then begin
       Combat.PoisonCharges := 10;
@@ -542,7 +543,7 @@ if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
       Fight;
       if Combat.EnemyEnergy < 1 then Bag.Permit := Bag.Permit - 10;
     end;
-  until Session.Room <> 100;
+  until Session.Room <> RoomQuestMaster;
 
 end;
 
@@ -692,98 +693,98 @@ end;
 procedure SpawnMonsters;
 begin
   repeat
-    World.Bacterium := Random(38) + 20;
-    World.Snail := Random(38) + 20;
-    World.Beetle := Random(38) + 20;
-    World.Cockroach := Random(38) + 20;
-    World.Ant := Random(38) + 20;
-    World.Spider := Random(38) + 20;
-    World.Boar := Random(38) + 20;
-    World.Fox := Random(38) + 20;
-    World.Rat := Random(38) + 20;
-    World.Partridge := Random(38) + 20;
-  until (World.Bacterium > 32) and (World.Snail > 32) and (World.Beetle > 32) and (World.Cockroach > 32)
-    and (World.Ant > 32) and (World.Spider > 32) and (World.Boar > 32) and (World.Fox > 32)
-    and (World.Rat > 32) and (World.Partridge > 32);
-  repeat World.Deer := Random(38) + 20;
-    World.Eagle := Random(38) + 20;
-    World.Hare := Random(38) + 20;
-    World.Mongrel := Random(38) + 20;
-    World.Woodworm := Random(38) + 20;
-    World.Fly := Random(38) + 20;
-  until (World.Deer > 32) and (World.Eagle > 32) and (World.Hare > 32) and (World.Mongrel > 32)
-    and (World.Woodworm > 32) and (World.Fly > 32);
-  repeat World.Elephant := Random(38) + 20;
-    World.Lion := Random(38) + 20;
-    World.Giraffe := Random(38) + 20;
-    World.Camel := Random(38) + 20;
-    World.Ostrich := Random(38) + 20;
-    World.Boa := Random(38) + 20;
-    World.Wolf := Random(38) + 20;
-    World.Bison := Random(38) + 20;
-    World.Panther := Random(38) + 20;
-  until (World.Elephant > 32) and (World.Lion > 32) and (World.Giraffe > 32) and (World.Camel > 32)
-    and (World.Ostrich > 32) and (World.Boa > 32) and (World.Wolf > 32) and (World.Bison > 32)
-    and (World.Panther > 32);
-  repeat World.Gladiator := Random(38) + 20;
-    World.Warrior := Random(38) + 20;
-    World.Tamer := Random(38) + 20;
-  until (World.Gladiator > 32) and (World.Warrior > 32) and (World.Tamer > 32);
+    World.Bacterium := Random(38) + RoomCityCentre;
+    World.Snail := Random(38) + RoomCityCentre;
+    World.Beetle := Random(38) + RoomCityCentre;
+    World.Cockroach := Random(38) + RoomCityCentre;
+    World.Ant := Random(38) + RoomCityCentre;
+    World.Spider := Random(38) + RoomCityCentre;
+    World.Boar := Random(38) + RoomCityCentre;
+    World.Fox := Random(38) + RoomCityCentre;
+    World.Rat := Random(38) + RoomCityCentre;
+    World.Partridge := Random(38) + RoomCityCentre;
+  until (World.Bacterium > RoomArenaEntrance) and (World.Snail > RoomArenaEntrance) and (World.Beetle > RoomArenaEntrance) and (World.Cockroach > RoomArenaEntrance)
+    and (World.Ant > RoomArenaEntrance) and (World.Spider > RoomArenaEntrance) and (World.Boar > RoomArenaEntrance) and (World.Fox > RoomArenaEntrance)
+    and (World.Rat > RoomArenaEntrance) and (World.Partridge > RoomArenaEntrance);
+  repeat World.Deer := Random(38) + RoomCityCentre;
+    World.Eagle := Random(38) + RoomCityCentre;
+    World.Hare := Random(38) + RoomCityCentre;
+    World.Mongrel := Random(38) + RoomCityCentre;
+    World.Woodworm := Random(38) + RoomCityCentre;
+    World.Fly := Random(38) + RoomCityCentre;
+  until (World.Deer > RoomArenaEntrance) and (World.Eagle > RoomArenaEntrance) and (World.Hare > RoomArenaEntrance) and (World.Mongrel > RoomArenaEntrance)
+    and (World.Woodworm > RoomArenaEntrance) and (World.Fly > RoomArenaEntrance);
+  repeat World.Elephant := Random(38) + RoomCityCentre;
+    World.Lion := Random(38) + RoomCityCentre;
+    World.Giraffe := Random(38) + RoomCityCentre;
+    World.Camel := Random(38) + RoomCityCentre;
+    World.Ostrich := Random(38) + RoomCityCentre;
+    World.Boa := Random(38) + RoomCityCentre;
+    World.Wolf := Random(38) + RoomCityCentre;
+    World.Bison := Random(38) + RoomCityCentre;
+    World.Panther := Random(38) + RoomCityCentre;
+  until (World.Elephant > RoomArenaEntrance) and (World.Lion > RoomArenaEntrance) and (World.Giraffe > RoomArenaEntrance) and (World.Camel > RoomArenaEntrance)
+    and (World.Ostrich > RoomArenaEntrance) and (World.Boa > RoomArenaEntrance) and (World.Wolf > RoomArenaEntrance) and (World.Bison > RoomArenaEntrance)
+    and (World.Panther > RoomArenaEntrance);
+  repeat World.Gladiator := Random(38) + RoomCityCentre;
+    World.Warrior := Random(38) + RoomCityCentre;
+    World.Tamer := Random(38) + RoomCityCentre;
+  until (World.Gladiator > RoomArenaEntrance) and (World.Warrior > RoomArenaEntrance) and (World.Tamer > RoomArenaEntrance);
   repeat
-    World.Dachshund := Random(7) + 20;
-    World.Shepherd := Random(7) + 20;
-    World.Pooch := Random(7) + 20;
-    World.Spaniel := Random(7) + 20;
-    World.Poodle := Random(7) + 20;
+    World.Dachshund := Random(7) + RoomCityCentre;
+    World.Shepherd := Random(7) + RoomCityCentre;
+    World.Pooch := Random(7) + RoomCityCentre;
+    World.Spaniel := Random(7) + RoomCityCentre;
+    World.Poodle := Random(7) + RoomCityCentre;
   until (World.Dachshund > 19) and (World.Shepherd > 19) and (World.Pooch > 19)
     and (World.Spaniel > 19) and (World.Poodle > 19);
-  repeat World.Cabman := Random(7) + 20;
-    World.Vendor := Random(7) + 20;
-    World.Sweeper := Random(7) + 20;
-    World.Drunkard := Random(7) + 20;
-    World.SickMan := Random(7) + 20;
+  repeat World.Cabman := Random(7) + RoomCityCentre;
+    World.Vendor := Random(7) + RoomCityCentre;
+    World.Sweeper := Random(7) + RoomCityCentre;
+    World.Drunkard := Random(7) + RoomCityCentre;
+    World.SickMan := Random(7) + RoomCityCentre;
   until (World.Cabman > 19) and (World.Vendor > 19)
     and (World.Sweeper > 19) and (World.Drunkard > 19) and (World.SickMan > 19);
-  repeat World.Kid := Random(7) + 60;
-    World.Lunatic := Random(8) + 60;
-    World.Listener := Random(8) + 60;
-    World.Fan := Random(8) + 60;
-    World.Man := Random(8) + 60;
-  until (World.Kid > 60) and (World.Lunatic > 60) and (World.Listener > 60) and (World.Fan > 60)
-    and (World.Man > 60);
-  repeat World.Policeman := Random(9) + 60;
-    World.Bouncer := Random(9) + 60;
-    World.Gorilla := Random(9) + 60;
-    World.OldMan := Random(8) + 60;
-    World.Reporter := Random(7) + 60;
-  until (World.Policeman > 60) and (World.Bouncer > 60) and (World.Gorilla > 60) and (World.OldMan > 60)
-    and (World.Reporter > 60); World.Guitarist := Random(3) + 70;
-  World.Drummer := Random(3) + 70;
-  World.Keyboardist := Random(3) + 70;
-  World.Liroy := Random(3) + 70;
-  World.Minibarman := 67;
+  repeat World.Kid := Random(7) + RoomValley;
+    World.Lunatic := Random(8) + RoomValley;
+    World.Listener := Random(8) + RoomValley;
+    World.Fan := Random(8) + RoomValley;
+    World.Man := Random(8) + RoomValley;
+  until (World.Kid > RoomValley) and (World.Lunatic > RoomValley) and (World.Listener > RoomValley) and (World.Fan > RoomValley)
+    and (World.Man > RoomValley);
+  repeat World.Policeman := Random(9) + RoomValley;
+    World.Bouncer := Random(9) + RoomValley;
+    World.Gorilla := Random(9) + RoomValley;
+    World.OldMan := Random(8) + RoomValley;
+    World.Reporter := Random(7) + RoomValley;
+  until (World.Policeman > RoomValley) and (World.Bouncer > RoomValley) and (World.Gorilla > RoomValley) and (World.OldMan > RoomValley)
+    and (World.Reporter > RoomValley); World.Guitarist := Random(3) + RoomStage1;
+  World.Drummer := Random(3) + RoomStage1;
+  World.Keyboardist := Random(3) + RoomStage1;
+  World.Liroy := Random(3) + RoomStage1;
+  World.Minibarman := RoomPub;
   World.Fatso := 67;
-  World.DJ := 69;
-  World.Pedal := 76;
+  World.DJ := RoomBackstage;
+  World.Pedal := RoomBar;
   World.Couple := 76;
-  World.Maciek := 76;
+  World.Maciek := RoomBar;
   World.Door := 1;
   World.OldElf := 1;
   repeat
-    World.Sorrel := Random(8) + 77;
-    World.Clover := Random(8) + 77;
-    World.Daisy := Random(8) + 77;
-    World.SowThistle := Random(8) + 77;
-    World.Dandelion := Random(8) + 77;
-    World.Rose := Random(8) + 77;
-    World.Thistle := Random(8) + 77;
-    World.Raspberry := Random(8) + 77;
-    World.Gooseberry := Random(8) + 77;
-    World.Blackberry := Random(8) + 77;
-    World.Grass := Random(8) + 77;
-    World.Duncan := Random(8) + 77;
-  until (World.Sorrel < 84) and (World.Daisy < 84) and (World.Clover < 84) and (World.SowThistle < 84)
-    and (World.Dandelion < 84) and (World.Rose < 84) and (World.Thistle < 84) and (World.Raspberry < 84);
+    World.Sorrel := Random(8) + RoomIvy1;
+    World.Clover := Random(8) + RoomIvy1;
+    World.Daisy := Random(8) + RoomIvy1;
+    World.SowThistle := Random(8) + RoomIvy1;
+    World.Dandelion := Random(8) + RoomIvy1;
+    World.Rose := Random(8) + RoomIvy1;
+    World.Thistle := Random(8) + RoomIvy1;
+    World.Raspberry := Random(8) + RoomIvy1;
+    World.Gooseberry := Random(8) + RoomIvy1;
+    World.Blackberry := Random(8) + RoomIvy1;
+    World.Grass := Random(8) + RoomIvy1;
+    World.Duncan := Random(8) + RoomIvy1;
+  until (World.Sorrel < RoomCavePath) and (World.Daisy < RoomCavePath) and (World.Clover < RoomCavePath) and (World.SowThistle < RoomCavePath)
+    and (World.Dandelion < RoomCavePath) and (World.Rose < RoomCavePath) and (World.Thistle < RoomCavePath) and (World.Raspberry < RoomCavePath);
 end;
 procedure TrainAttribute(var Attribute, MaxAttribute: Integer; MinPractice, PracticeCost: Integer; cmdForm, nounForm: string);
 
@@ -1009,7 +1010,7 @@ end;
 procedure CassetteGain;
 begin
   Combat.Roll := Random(100);
-  if (Combat.Roll < 2) and (Session.Room <> 10000) then begin
+  if (Combat.Roll < 2) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtCassetteGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtCassetteGain_02);
     Bag.Cassette := Bag.Cassette - 10;
@@ -1022,7 +1023,7 @@ end;
 procedure LeafGain;
 begin
   Combat.Roll := Random(100);
-  if (Combat.Roll < 6) and (Session.Room <> 10000) then begin
+  if (Combat.Roll < 6) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtLeafGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtLeafGain_02);
     Bag.LuckyLeaf := Bag.LuckyLeaf - 10;
@@ -1033,7 +1034,7 @@ end;
 procedure ScrollGain;
 begin
   Combat.Roll := Random(100);
-  if (Combat.Roll < 10) and (Session.Room <> 10000) then begin
+  if (Combat.Roll < 10) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtScrollGain_01);
     Bag.CompareScroll := Bag.CompareScroll - 10;
     Bag.Count := Bag.Count + 1;
@@ -1043,7 +1044,7 @@ end;
 procedure EnterTrance;
 begin
   Session.OuterRoom := Session.Room;
-  Session.Room := 1000;
+  Session.Room := TranceRoom;
 end;
 procedure DescribeStage;
 begin
@@ -1281,7 +1282,7 @@ begin
   if Player.Energy < 1 then begin
     WriteLn(TxtFightKilled);
     Delay(3000);
-    Session.Room := 10000;
+    Session.Room := DeadRoom;
   end;
   Combat.FightExperience := 0;
 end;
@@ -1488,11 +1489,11 @@ begin
 end;
 procedure ArenaMaze;
 begin
-  if (Session.Room = 33) or (Session.Room = 34) or (Session.Room = 35) or (Session.Room = 36) or (Session.Room = 37) or
-     (Session.Room = 38) or (Session.Room = 39) or (Session.Room = 40) or (Session.Room = 41) or (Session.Room = 42) or
-     (Session.Room = 43) or (Session.Room = 44) or (Session.Room = 45) or (Session.Room = 46) or (Session.Room = 47) or
-     (Session.Room = 48) or (Session.Room = 49) or (Session.Room = 50) or (Session.Room = 51) or (Session.Room = 52) or
-     (Session.Room = 53) or (Session.Room = 54) or (Session.Room = 55) or (Session.Room = 56) or (Session.Room = 57) then
+  if (Session.Room = RoomArena33) or (Session.Room = RoomArena34) or (Session.Room = RoomArena35) or (Session.Room = RoomArena36) or (Session.Room = RoomArena37) or
+     (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or (Session.Room = RoomArena40) or (Session.Room = RoomArena41) or (Session.Room = RoomArena42) or
+     (Session.Room = RoomArena43) or (Session.Room = RoomArena44) or (Session.Room = RoomArena45) or (Session.Room = RoomArena46) or (Session.Room = RoomArena47) or
+     (Session.Room = RoomArena48) or (Session.Room = RoomArena49) or (Session.Room = RoomArena50) or (Session.Room = RoomArena51) or (Session.Room = RoomArena52) or
+     (Session.Room = RoomArena53) or (Session.Room = RoomArena54) or (Session.Room = RoomArena55) or (Session.Room = RoomArena56) or (Session.Room = RoomArena57) then
   begin
     Session.InArena := 1;
     WriteLn(TxtArenaMaze_01);
@@ -1622,54 +1623,54 @@ begin
         SuitGain;
       end;
       if Command = CmdExit then begin
-        if Session.Room = 33 then
+        if Session.Room = RoomArena33 then
             WriteExits([TxtShared_03,
                         TxtExitPolodnie, TxtPlaceWejscieNaArene,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if (Session.Room = 34) or (Session.Room = 37) or (Session.Room = 38) or (Session.Room = 39) or
-                (Session.Room = 42) or (Session.Room = 43) or (Session.Room = 44) or (Session.Room = 48) or
-                (Session.Room = 49) then begin
+        if (Session.Room = RoomArena34) or (Session.Room = RoomArena37) or (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or
+                (Session.Room = RoomArena42) or (Session.Room = RoomArena43) or (Session.Room = RoomArena44) or (Session.Room = RoomArena48) or
+                (Session.Room = RoomArena49) then begin
           WriteExits([TxtShared_03,
                       TxtExitPolodnie, TxtPlaceArena,
                       TxtExitPolnoc, TxtPlaceArena,
                       TxtExitWschod, TxtPlaceArena,
                       TxtExitZachod, TxtPlaceArena]);
         end;
-        if (Session.Room = 35) or (Session.Room = 36) then
+        if (Session.Room = RoomArena35) or (Session.Room = RoomArena36) then
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = 40 then
+        if Session.Room = RoomArena40 then
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = 41 then
+        if Session.Room = RoomArena41 then
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
-        if (Session.Room = 45) or (Session.Room = 50) or (Session.Room = 54) then
+        if (Session.Room = RoomArena45) or (Session.Room = RoomArena50) or (Session.Room = RoomArena54) then
             WriteExits([TxtArenaMaze_08,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if (Session.Room = 46) or (Session.Room = 51) or (Session.Room = 55) then
+        if (Session.Room = RoomArena46) or (Session.Room = RoomArena51) or (Session.Room = RoomArena55) then
             WriteExits([TxtArenaMaze_08,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
-        if (Session.Room = 47) or (Session.Room = 52) or (Session.Room = 53) then
+        if (Session.Room = RoomArena47) or (Session.Room = RoomArena52) or (Session.Room = RoomArena53) then
             WriteExits([TxtArenaMaze_09,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = 56 then
+        if Session.Room = RoomArena56 then
             WriteExits([TxtArenaMaze_10,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = 57 then
+        if Session.Room = RoomArena57 then
             WriteExits([TxtArenaMaze_10,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
@@ -1678,56 +1679,56 @@ begin
       if Command = CmdPolodnie then begin
         Session.InArena := 0;
         case Session.Room of
-          33: Session.Room := 32;
-          34: Session.Room := 33;
+          33: Session.Room := RoomArenaEntrance;
+          34: Session.Room := RoomArena33;
           35, 36, 40, 41: Session.InArena := 1;
-          37: Session.Room := 34;
-          38: Session.Room := 35;
-          39: Session.Room := 36;
-          42: Session.Room := 37;
-          43: Session.Room := 38;
-          44: Session.Room := 39;
-          45: Session.Room := 40;
-          46: Session.Room := 41;
-          47: Session.Room := 42;
-          48: Session.Room := 43;
-          49: Session.Room := 44;
-          50: Session.Room := 45;
-          51: Session.Room := 46;
-          52: Session.Room := 48;
-          53: Session.Room := 49;
-          54: Session.Room := 50;
-          55: Session.Room := 51;
-          56: Session.Room := 54;
-          57: Session.Room := 55;
+          37: Session.Room := RoomArena34;
+          38: Session.Room := RoomArena35;
+          39: Session.Room := RoomArena36;
+          42: Session.Room := RoomArena37;
+          43: Session.Room := RoomArena38;
+          44: Session.Room := RoomArena39;
+          45: Session.Room := RoomArena40;
+          46: Session.Room := RoomArena41;
+          47: Session.Room := RoomArena42;
+          48: Session.Room := RoomArena43;
+          49: Session.Room := RoomArena44;
+          50: Session.Room := RoomArena45;
+          51: Session.Room := RoomArena46;
+          52: Session.Room := RoomArena48;
+          53: Session.Room := RoomArena49;
+          54: Session.Room := RoomArena50;
+          55: Session.Room := RoomArena51;
+          56: Session.Room := RoomArena54;
+          57: Session.Room := RoomArena55;
         end;
       end;
       if Command = CmdPolnoc then begin
         Session.InArena := 0;
         case Session.Room of
-          33: Session.Room := 34;
-          34: Session.Room := 37;
-          35: Session.Room := 38;
-          36: Session.Room := 39;
-          37: Session.Room := 42;
-          38: Session.Room := 43;
-          39: Session.Room := 44;
-          40: Session.Room := 45;
-          41: Session.Room := 46;
-          42: Session.Room := 47;
-          43: Session.Room := 48;
-          44: Session.Room := 49;
-          45: Session.Room := 50;
-          46: Session.Room := 51;
+          33: Session.Room := RoomArena34;
+          34: Session.Room := RoomArena37;
+          35: Session.Room := RoomArena38;
+          36: Session.Room := RoomArena39;
+          37: Session.Room := RoomArena42;
+          38: Session.Room := RoomArena43;
+          39: Session.Room := RoomArena44;
+          40: Session.Room := RoomArena45;
+          41: Session.Room := RoomArena46;
+          42: Session.Room := RoomArena47;
+          43: Session.Room := RoomArena48;
+          44: Session.Room := RoomArena49;
+          45: Session.Room := RoomArena50;
+          46: Session.Room := RoomArena51;
           47: Session.InArena := 1;
-          48: Session.Room := 52;
-          49: Session.Room := 53;
-          50: Session.Room := 54;
-          51: Session.Room := 55;
+          48: Session.Room := RoomArena52;
+          49: Session.Room := RoomArena53;
+          50: Session.Room := RoomArena54;
+          51: Session.Room := RoomArena55;
           52: Session.InArena := 1;
           53: Session.InArena := 1;
-          54: Session.Room := 56;
-          55: Session.Room := 57;
+          54: Session.Room := RoomArena56;
+          55: Session.Room := RoomArena57;
           56: Session.InArena := 1;
           57: Session.InArena := 1;
         end;
@@ -1736,67 +1737,67 @@ begin
       if Command = CmdWschod then begin
         Session.InArena := 0;
         case Session.Room of
-          33: Session.Room := 35;
-          34: Session.Room := 38;
-          35: Session.Room := 40;
-          36: Session.Room := 33;
-          37: Session.Room := 43;
-          38: Session.Room := 45;
-          39: Session.Room := 34;
+          33: Session.Room := RoomArena35;
+          34: Session.Room := RoomArena38;
+          35: Session.Room := RoomArena40;
+          36: Session.Room := RoomArena33;
+          37: Session.Room := RoomArena43;
+          38: Session.Room := RoomArena45;
+          39: Session.Room := RoomArena34;
           40: Session.InArena := 1;
-          41: Session.Room := 36;
-          42: Session.Room := 48;
-          43: Session.Room := 50;
-          44: Session.Room := 37;
+          41: Session.Room := RoomArena36;
+          42: Session.Room := RoomArena48;
+          43: Session.Room := RoomArena50;
+          44: Session.Room := RoomArena37;
           45: Session.InArena := 1;
-          46: Session.Room := 39;
-          47: Session.Room := 52;
-          48: Session.Room := 54;
-          49: Session.Room := 42;
+          46: Session.Room := RoomArena39;
+          47: Session.Room := RoomArena52;
+          48: Session.Room := RoomArena54;
+          49: Session.Room := RoomArena42;
           50: Session.InArena := 1;
-          51: Session.Room := 44;
-          52: Session.Room := 56;
-          53: Session.Room := 47;
+          51: Session.Room := RoomArena44;
+          52: Session.Room := RoomArena56;
+          53: Session.Room := RoomArena47;
           54: Session.InArena := 1;
-          55: Session.Room := 49;
+          55: Session.Room := RoomArena49;
           56: Session.InArena := 1;
-          57: Session.Room := 53;
+          57: Session.Room := RoomArena53;
         end;
         Session.MoveGuard := 1;
       end;
       if Command = CmdZachod then begin
         Session.InArena := 0;
         case Session.Room of
-          33: Session.Room := 36;
-          34: Session.Room := 39;
-          35: Session.Room := 33;
-          36: Session.Room := 41;
-          37: Session.Room := 44;
-          38: Session.Room := 34;
-          39: Session.Room := 46;
-          40: Session.Room := 35;
+          33: Session.Room := RoomArena36;
+          34: Session.Room := RoomArena39;
+          35: Session.Room := RoomArena33;
+          36: Session.Room := RoomArena41;
+          37: Session.Room := RoomArena44;
+          38: Session.Room := RoomArena34;
+          39: Session.Room := RoomArena46;
+          40: Session.Room := RoomArena35;
           41: Session.InArena := 1;
-          42: Session.Room := 49;
-          43: Session.Room := 37;
-          44: Session.Room := 51;
-          45: Session.Room := 38;
+          42: Session.Room := RoomArena49;
+          43: Session.Room := RoomArena37;
+          44: Session.Room := RoomArena51;
+          45: Session.Room := RoomArena38;
           46: Session.InArena := 1;
-          47: Session.Room := 53;
-          48: Session.Room := 42;
-          49: Session.Room := 55;
-          50: Session.Room := 43;
+          47: Session.Room := RoomArena53;
+          48: Session.Room := RoomArena42;
+          49: Session.Room := RoomArena55;
+          50: Session.Room := RoomArena43;
           51: Session.InArena := 1;
-          52: Session.Room := 47;
-          53: Session.Room := 57;
-          54: Session.Room := 48;
+          52: Session.Room := RoomArena47;
+          53: Session.Room := RoomArena57;
+          54: Session.Room := RoomArena48;
           55: Session.InArena := 1;
-          56: Session.Room := 52;
+          56: Session.Room := RoomArena52;
           57: Session.InArena := 1;
         end;
         Session.MoveGuard := 1;
       end;
       Session.MoveGuard := 0;
-      until (Session.InArena = 0) or (Session.Room = 1000);
+      until (Session.InArena = 0) or (Session.Room = TranceRoom);
   end;
 end;
 procedure StageFights;
@@ -1813,7 +1814,7 @@ begin
   end;
   if (Command = CmdZabij + CmdLiroy) and (World.Liroy = Session.Room) then begin
     FightNotEasy;
-    if (Session.Room <> 10000) and (Player.Energy > 0) and (Combat.Fled = 0) then begin
+    if (Session.Room <> DeadRoom) and (Player.Energy > 0) and (Combat.Fled = 0) then begin
       WriteLn(TxtStageFights_01);
       Player.Money := Player.Money + 30;
       CassetteGain;
@@ -1932,8 +1933,6 @@ begin
 end;
 
 const
-  TranceRoom = 1000;
-  DeadRoom = 10000;
 
   Lvl1_Threshold = 700;
   Lvl2_Threshold = 725;
@@ -2176,12 +2175,12 @@ begin
   ReadLn(Command);
   Player.Energy := 50;
   Player.Practice := 10;
-  World.CageWeakling := 12;
+  World.CageWeakling := RoomCageWeakling;
 
-  World.CageStrong := 13;
-  World.CageAgile := 14;
-  World.CageTough := 15;
-  World.CageHuge := 16;
+  World.CageStrong := RoomCageStrong;
+  World.CageAgile := RoomCageAgile;
+  World.CageTough := RoomCageTough;
+  World.CageHuge := RoomCageHuge;
 
   Player.Level := 1;
   Player.MaxMana := Player.MaxMana + 100;
@@ -2478,7 +2477,7 @@ begin
   if World.Quest > 1 then World.QuestKills := 200;
   Player.Energy := Player.MaxEnergy;
   Player.Experience := Player.Experience - 250 + Random(50) - (5 * Player.Level);
-  Session.Room := 20;
+  Session.Room := RoomCityCentre;
   SpawnMonsters;
   Command := CmdPamietaj;
   ReadLn;
@@ -2947,7 +2946,7 @@ end;
 procedure Room2;
 
 begin
-  if Session.Room <> 2 then Exit;
+  if Session.Room <> RoomTraining then Exit;
   WriteLn(TxtYouAreIn, TxtRoom2_01);
   WriteLn(TxtRoom2_02);
   WriteLn(TxtShared_04);
@@ -2959,18 +2958,18 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlacePok224JCentralny]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := 1;
+    if Command = CmdZachod then Session.Room := RoomSalon;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom2Lines1);
     end;
     HandleTrain;
-  until Session.Room <> 2;
+  until Session.Room <> RoomTraining;
 end;
 
 procedure Room3;
 
 begin
-  if Session.Room <> 3 then Exit;
+  if Session.Room <> RoomMeditation then Exit;
   WriteLines(TxtRoom3Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -2979,9 +2978,9 @@ begin
     if Command = CmdExit then
       WriteLn(TxtRoom3_04);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdGora then Session.Room := 1;
+    if Command = CmdGora then Session.Room := RoomSalon;
     Training;
-  until Session.Room <> 3;
+  until Session.Room <> RoomMeditation;
 end;
 
 procedure Room9;
@@ -2998,18 +2997,18 @@ begin
                     TxtExitDol, TxtPlaceMudSzkola2,
                     TxtExitGora, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdWyjscie then Exit;
-    if Command = CmdDol then Session.Room := 5;
-    if Command = CmdGora then Session.Room := 11;
-  until Session.Room <> 9;
+    if Command = CmdDol then Session.Room := RoomLost;
+    if Command = CmdGora then Session.Room := RoomCageCorridor;
+  until Session.Room <> RoomSchoolLanding;
 end;
 
 procedure Room12;
 
 begin
-  if Session.Room <> 12 then Exit;
+  if Session.Room <> RoomCageWeakling then Exit;
   WriteLn(TxtShared_06);
   case World.CageWeakling of
-    12: WriteLn(TxtRoom12_01);
+    RoomCageWeakling: WriteLn(TxtRoom12_01);
     0: WriteLn(TxtShared_07);
   end;
   repeat
@@ -3020,8 +3019,8 @@ begin
                     TxtExitZachod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := 11;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageWeakling = 12) then begin
+    if Command = CmdZachod then Session.Room := RoomCageCorridor;
+    if (Command = CmdZabij + CmdPotwor) and (World.CageWeakling = RoomCageWeakling) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
@@ -3054,13 +3053,13 @@ begin
       else
         Combat.Fled := 0;
     end;
-  until Session.Room <> 12;
+  until Session.Room <> RoomCageWeakling;
 end;
 
 procedure ConcertRooms;
 
 begin
-  if Session.Room = 61 then begin
+  if Session.Room = RoomCrowd1 then begin
 
     WriteLines(TxtConcertRoomsLines1);
     DescribeCrowd;
@@ -3075,17 +3074,17 @@ begin
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := 60;
-      if Command = CmdPolnoc then Session.Room := 63;
-      if Command = CmdPolodnie then Session.Room := 62;
-      if Command = CmdWschod then Session.Room := 64;
+      if Command = CmdZachod then Session.Room := RoomValley;
+      if Command = CmdPolnoc then Session.Room := RoomCrowd3;
+      if Command = CmdPolodnie then Session.Room := RoomCrowd2;
+      if Command = CmdWschod then Session.Room := RoomCrowd4;
       if Command = CmdPatrz + CmdPlakat then begin
         WriteLn(TxtConcertRooms_07);
         WriteLn(TxtConcertRooms_08);
       end;
-    until Session.Room <> 61;
+    until Session.Room <> RoomCrowd1;
   end;
-  if Session.Room = 62 then begin
+  if Session.Room = RoomCrowd2 then begin
 
     WriteLn(TxtConcertRooms_09);
     DescribeCrowd;
@@ -3100,11 +3099,11 @@ begin
                       TxtExitWschod, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 61;
-      if Command = CmdWschod then Session.Room := 65;
-    until Session.Room <> 62;
+      if Command = CmdPolnoc then Session.Room := RoomCrowd1;
+      if Command = CmdWschod then Session.Room := RoomCrowd5;
+    until Session.Room <> RoomCrowd2;
   end;
-  if Session.Room = 63 then begin
+  if Session.Room = RoomCrowd3 then begin
 
     WriteLn(TxtConcertRooms_11);
     DescribeCrowd;
@@ -3120,12 +3119,12 @@ begin
                       TxtExitPolnoc, TxtPlacePiwiarnia]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := 61;
-      if Command = CmdWschod then Session.Room := 66;
-      if Command = CmdPolnoc then Session.Room := 67;
-    until Session.Room <> 63;
+      if Command = CmdPolodnie then Session.Room := RoomCrowd1;
+      if Command = CmdWschod then Session.Room := RoomCrowd6;
+      if Command = CmdPolnoc then Session.Room := RoomPub;
+    until Session.Room <> RoomCrowd3;
   end;
-  if Session.Room = 64 then begin
+  if Session.Room = RoomCrowd4 then begin
 
     WriteLn(TxtYouAreIn, TxtConcertRooms_13);
     WriteLn(TxtConcertRooms_14);
@@ -3142,12 +3141,12 @@ begin
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 66;
-      if Command = CmdZachod then Session.Room := 61;
-      if Command = CmdPolodnie then Session.Room := 65;
-    until Session.Room <> 64;
+      if Command = CmdPolnoc then Session.Room := RoomCrowd6;
+      if Command = CmdZachod then Session.Room := RoomCrowd1;
+      if Command = CmdPolodnie then Session.Room := RoomCrowd5;
+    until Session.Room <> RoomCrowd4;
   end;
-  if Session.Room = 65 then begin
+  if Session.Room = RoomCrowd5 then begin
 
     WriteLn(TxtConcertRooms_16);
     WriteLn(TxtConcertRooms_14);
@@ -3163,11 +3162,11 @@ begin
                       TxtExitPolnoc, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 64;
-      if Command = CmdZachod then Session.Room := 62;
-    until Session.Room <> 65;
+      if Command = CmdPolnoc then Session.Room := RoomCrowd4;
+      if Command = CmdZachod then Session.Room := RoomCrowd2;
+    until Session.Room <> RoomCrowd5;
   end;
-  if Session.Room = 66 then begin
+  if Session.Room = RoomCrowd6 then begin
 
     WriteLn(TxtConcertRooms_17);
     DescribeCrowd;
@@ -3182,11 +3181,11 @@ begin
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := 64;
-      if Command = CmdZachod then Session.Room := 63;
-    until Session.Room <> 66;
+      if Command = CmdPolodnie then Session.Room := RoomCrowd4;
+      if Command = CmdZachod then Session.Room := RoomCrowd3;
+    until Session.Room <> RoomCrowd6;
   end;
-  if Session.Room = 67 then begin
+  if Session.Room = RoomPub then begin
 
     WriteLn(TxtYouAreIn, TxtConcertRooms_18);
     WriteLn(TxtConcertRooms_19);
@@ -3231,11 +3230,11 @@ begin
         end;
       end;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := 63;
-      if Command = CmdWschod then Session.Room := 68;
-    until Session.Room <> 67;
+      if Command = CmdPolodnie then Session.Room := RoomCrowd3;
+      if Command = CmdWschod then Session.Room := RoomStageEntrance;
+    until Session.Room <> RoomPub;
   end;
-  if Session.Room = 68 then begin
+  if Session.Room = RoomStageEntrance then begin
 
     WriteLn(TxtConcertRooms_27);
     WriteLn(TxtConcertRooms_28);
@@ -3253,13 +3252,13 @@ begin
       end;
       ConcertFights;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := 67;
-      if Command = CmdWschod then Session.Room := 69;
+      if Command = CmdZachod then Session.Room := RoomPub;
+      if Command = CmdWschod then Session.Room := RoomBackstage;
       if Command = CmdPatrz + CmdTabliczka then
         WriteLn(TxtConcertRooms_32);
-    until Session.Room <> 68;
+    until Session.Room <> RoomStageEntrance;
   end;
-  if Session.Room = 69 then begin
+  if Session.Room = RoomBackstage then begin
 
     WriteLn(TxtConcertRooms_33);
     WriteLn(TxtConcertRooms_34);
@@ -3297,11 +3296,11 @@ begin
         end;
       end;
       if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := 68;
-      if Command = CmdPolodnie then Session.Room := 70;
-    until Session.Room <> 69;
+      if Command = CmdZachod then Session.Room := RoomStageEntrance;
+      if Command = CmdPolodnie then Session.Room := RoomStage1;
+    until Session.Room <> RoomBackstage;
   end;
-  if Session.Room = 70 then begin
+  if Session.Room = RoomStage1 then begin
 
     WriteLines(TxtConcertRoomsLines2);
     DescribeStage;
@@ -3314,12 +3313,12 @@ begin
                       TxtExitPolnoc, TxtPlaceScena,
                       TxtExitPolodnie, TxtPlaceSrodekSceny]);
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 69;
-      if Command = CmdPolodnie then Session.Room := 71;
+      if Command = CmdPolnoc then Session.Room := RoomBackstage;
+      if Command = CmdPolodnie then Session.Room := RoomStage2;
       StageFights;
-    until Session.Room <> 70;
+    until Session.Room <> RoomStage1;
   end;
-  if Session.Room = 71 then begin
+  if Session.Room = RoomStage2 then begin
 
     WriteLn(TxtConcertRooms_46);
     WriteLn(TxtConcertRooms_47);
@@ -3333,12 +3332,12 @@ begin
                       TxtExitPolnoc, TxtPlaceScena,
                       TxtExitPolodnie, TxtPlaceScena]);
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 70;
-      if Command = CmdPolodnie then Session.Room := 72;
+      if Command = CmdPolnoc then Session.Room := RoomStage1;
+      if Command = CmdPolodnie then Session.Room := RoomStage3;
       StageFights;
-    until Session.Room <> 71;
+    until Session.Room <> RoomStage2;
   end;
-  if Session.Room = 72 then begin
+  if Session.Room = RoomStage3 then begin
 
     WriteLn(TxtConcertRooms_48);
     WriteLn(TxtConcertRooms_49);
@@ -3351,9 +3350,9 @@ begin
           WriteExits([TxtShared_03,
                       TxtExitPolnoc, TxtPlaceSrodekSceny]);
       if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := 71;
+      if Command = CmdPolnoc then Session.Room := RoomStage2;
       StageFights;
-    until Session.Room <> 72;
+    until Session.Room <> RoomStage3;
   end;
 end;
 
@@ -3710,7 +3709,7 @@ begin
     if Combat.Roll <= Skills.Returning then begin
       WriteLn(TxtCmdOpenPortal_01);
       Player.Mana := Player.Mana - 15;
-      Session.OuterRoom := 20;
+      Session.OuterRoom := RoomCityCentre;
     end;
     if (Combat.Roll > Skills.Returning) and (Skills.Returning + 30 > Combat.Roll) then begin
       WriteLn(TxtCmdOpenPortal_02);
@@ -3810,7 +3809,7 @@ begin
 
   WriteLn(TxtShared_06);
   case World.CageAgile of
-    14: WriteLn(TxtRoom14_01);
+    RoomCageAgile: WriteLn(TxtRoom14_01);
     0: WriteLn(TxtRoom14_02);
   end;
   repeat
@@ -3821,8 +3820,8 @@ begin
                     TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 11;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageAgile = 14) then begin
+    if Command = CmdPolodnie then Session.Room := RoomCageCorridor;
+    if (Command = CmdZabij + CmdPotwor) and (World.CageAgile = RoomCageAgile) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 30; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
@@ -3854,7 +3853,7 @@ begin
       end else
         Combat.Fled := 0;
     end;
-  until Session.Room <> 14;
+  until Session.Room <> RoomCageAgile;
 
 end;
 procedure Room15;
@@ -3863,7 +3862,7 @@ begin
 
   WriteLn(TxtShared_06);
   case World.CageTough of
-    15: WriteLn(TxtRoom15_01);
+    RoomCageTough: WriteLn(TxtRoom15_01);
     0: WriteLn(TxtShared_07);
   end;
   repeat
@@ -3874,8 +3873,8 @@ begin
                     TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := 11;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageTough = 15) then begin
+    if Command = CmdPolnoc then Session.Room := RoomCageCorridor;
+    if (Command = CmdZabij + CmdPotwor) and (World.CageTough = RoomCageTough) then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
@@ -3907,7 +3906,7 @@ begin
       end else
         Combat.Fled := 0;
     end;
-  until Session.Room <> 15;
+  until Session.Room <> RoomCageTough;
 
 end;
 procedure Room16;
@@ -3918,11 +3917,11 @@ begin
 
   WriteLn(TxtShared_06);
   case World.CageHuge of
-    16: WriteLn(TxtRoom16_01);
+    RoomCageHuge: WriteLn(TxtRoom16_01);
     0: WriteLn(TxtShared_07);
   end;
   repeat
-    if World.CageHuge = 16 then begin
+    if World.CageHuge = RoomCageHuge then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;
       Fight;
       if Combat.Fled <> 0 then goto L1027_Flee;
@@ -3954,7 +3953,7 @@ begin
       goto L1028_AfterFlee;
       L1027_Flee:
       Combat.Fled := 0;
-      Session.Room := 11;
+      Session.Room := RoomCageCorridor;
       L1028_AfterFlee:
     end;
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -3964,8 +3963,8 @@ begin
                     TxtExitDol, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdDol then Session.Room := 11;
-  until Session.Room <> 16;
+    if Command = CmdDol then Session.Room := RoomCageCorridor;
+  until Session.Room <> RoomCageHuge;
 
 end;
 procedure Room17;
@@ -3986,12 +3985,12 @@ begin
       if (World.CageWeakling = 0) and (World.CageAgile = 0) and
       (World.CageStrong = 0) and (World.CageTough = 0) and
       (World.CageHuge = 0) and (Bag.Diploma = 0) then
-        Bag.Diploma := 17;
+        Bag.Diploma := RoomCageReward;
     end;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdGora then Session.Room := 11;
-    if Command = CmdDol then Session.Room := 18;
-  until Session.Room <> 17;
+    if Command = CmdGora then Session.Room := RoomCageCorridor;
+    if Command = CmdDol then Session.Room := RoomTeleport;
+  until Session.Room <> RoomCageReward;
 
 end;
 procedure Room18;
@@ -3999,7 +3998,7 @@ procedure Room18;
 begin
 
   WriteLines(TxtRoom18Lines1);
-  Session.Room := 1;
+  Session.Room := RoomSalon;
 
 end;
 procedure Room20;
@@ -4021,12 +4020,12 @@ begin
                     TxtExitWschod, TxtPlaceUlCiemna,
                     TxtExitZachod, TxtPlaceUlDluga]);
     if Command = CmdWyjsc0ie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 1;
-    if Command = CmdPolnoc then Session.Room := 21;
-    if Command = CmdZachod then Session.Room := 30;
-    if Command = CmdWschod then Session.Room := 75;
+    if Command = CmdPolodnie then Session.Room := RoomSalon;
+    if Command = CmdPolnoc then Session.Room := RoomShopStreet;
+    if Command = CmdZachod then Session.Room := RoomLongStreet;
+    if Command = CmdWschod then Session.Room := RoomDarkStreet;
     StreetFights;
-  until Session.Room <> 20;
+  until Session.Room <> RoomCityCentre;
 
 end;
 procedure Room76;
@@ -4049,7 +4048,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceUlicaCiemna]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 75;
+    if Command = CmdPolodnie then Session.Room := RoomDarkStreet;
     if Command = CmdLista then begin
       WriteLines(TxtRoom76Lines2);
     end;
@@ -4070,7 +4069,7 @@ begin
     if Command = CmdMam + Cmd18Lat then begin
       WriteLn(TxtRoom76_13);
     end;
-  until Session.Room <> 76;
+  until Session.Room <> RoomBar;
 
 end;
 procedure Room77;
@@ -4093,11 +4092,11 @@ begin
                     TxtExitZachod, TxtPlaceBluszcz,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := 75;
-    if Command = CmdWschod then Session.Room := 78;
-    if Command = CmdZachod then Session.Room := 79;
-    if Command = CmdPolodnie then Session.Room := 80;
-  until Session.Room <> 77;
+    if Command = CmdPolnoc then Session.Room := RoomDarkStreet;
+    if Command = CmdWschod then Session.Room := RoomIvy2;
+    if Command = CmdZachod then Session.Room := RoomIvy3;
+    if Command = CmdPolodnie then Session.Room := RoomIvy4;
+  until Session.Room <> RoomIvy1;
 
 end;
 procedure Room78;
@@ -4117,8 +4116,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := 77;
-  until Session.Room <> 78;
+    if Command = CmdZachod then Session.Room := RoomIvy1;
+  until Session.Room <> RoomIvy2;
 
 end;
 procedure Room79;
@@ -4138,8 +4137,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 77;
-  until Session.Room <> 79;
+    if Command = CmdWschod then Session.Room := RoomIvy1;
+  until Session.Room <> RoomIvy3;
 
 end;
 procedure Room80;
@@ -4161,10 +4160,10 @@ begin
                     TxtExitZachod, TxtPlaceBluszcz,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := 77;
-    if Command = CmdZachod then Session.Room := 81;
-    if Command = CmdWschod then Session.Room := 82;
-    if Command = CmdPolodnie then Session.Room := 83;
+    if Command = CmdPolnoc then Session.Room := RoomIvy1;
+    if Command = CmdZachod then Session.Room := RoomIvy5;
+    if Command = CmdWschod then Session.Room := RoomIvy6;
+    if Command = CmdPolodnie then Session.Room := RoomClearing;
     if Command = CmdPatrz + CmdNapis then
       WriteLn(TxtRoom80_04);
     if Command = CmdPatrz + CmdStudnia then begin
@@ -4181,7 +4180,7 @@ begin
         if Player.Money < 0 then Player.Money := 0;
       end;
     end;
-  until Session.Room <> 80;
+  until Session.Room <> RoomIvy4;
 
 end;
 procedure Room81;
@@ -4201,8 +4200,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 80;
-  until Session.Room <> 81;
+    if Command = CmdWschod then Session.Room := RoomIvy4;
+  until Session.Room <> RoomIvy5;
 
 end;
 procedure Room82;
@@ -4222,8 +4221,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := 80;
-  until Session.Room <> 82;
+    if Command = CmdZachod then Session.Room := RoomIvy4;
+  until Session.Room <> RoomIvy6;
 
 end;
 procedure Room84;
@@ -4244,10 +4243,10 @@ begin
                     TxtExitZachod, TxtPlaceBudynek,
                     TxtExitPolodnie, TxtPlaceWejscieDoGroty]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 83;
-    if Command = CmdZachod then Session.Room := 85;
-    if Command = CmdPolodnie then Session.Room := 87;
-  until Session.Room <> 84;
+    if Command = CmdWschod then Session.Room := RoomClearing;
+    if Command = CmdZachod then Session.Room := RoomLivingDoor;
+    if Command = CmdPolodnie then Session.Room := RoomCaveMouth;
+  until Session.Room <> RoomCavePath;
 
 end;
 procedure Room87;
@@ -4272,9 +4271,9 @@ begin
                     TxtExitPolodnie, TxtPlaceGrota,
                     TxtExitPolnoc, TxtPlacePodejrzaneKrzaki]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := 84;
-    if Command = CmdPolodnie then Session.Room := 88;
-  until Session.Room <> 87;
+    if Command = CmdPolnoc then Session.Room := RoomCavePath;
+    if Command = CmdPolodnie then Session.Room := RoomNettleThrone;
+  until Session.Room <> RoomCaveMouth;
 
 end;
 procedure Room88;
@@ -4297,7 +4296,7 @@ begin
     end;
     if Player.Energy > 0 then begin
       WriteLn(TxtRoom88_07);
-      Session.Room := 87;
+      Session.Room := RoomCaveMouth;
     end;
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
@@ -4307,8 +4306,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceWejscieDoGroty2]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 87;
-  until Session.Room <> 88;
+    if Command = CmdPolodnie then Session.Room := RoomCaveMouth;
+  until Session.Room <> RoomNettleThrone;
 
 end;
 procedure Room85;
@@ -4339,11 +4338,11 @@ begin
         WriteLn(TxtExitZachod, TxtPlaceWejscieDoDomku);
     end;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 84;
-    if (Command = CmdZachod) and (World.Door = 0) then Session.Room := 86;
+    if Command = CmdWschod then Session.Room := RoomCavePath;
+    if (Command = CmdZachod) and (World.Door = 0) then Session.Room := RoomHut;
     if (Command = CmdZachod) and (World.Door <> 0) then
       WriteLn(TxtRoom85_07);
-  until Session.Room <> 85;
+  until Session.Room <> RoomLivingDoor;
 
 end;
 procedure Room86;
@@ -4370,7 +4369,7 @@ begin
     if Command = CmdRozmawiaj + CmdStaruch then begin
       if (Bag.Sausage < -30) and (Player.Money > 199) then begin
         WriteLines(TxtRoom86Lines2);
-        Session.Room := 20;
+        Session.Room := RoomCityCentre;
         Bag.Beer := Bag.Beer - 10;
         Bag.Sausage := Bag.Sausage + 40;
         Player.Money := Player.Money - 200;
@@ -4382,7 +4381,7 @@ begin
     if Command = CmdRozmawiaj + CmdStaruch then begin
       if Bag.ReturnScroll < 0 then begin
         WriteLn(TxtRoom86_13);
-        Session.Room := 16;
+        Session.Room := RoomCageHuge;
       end;
     end;
     if Command = CmdZabij + CmdStaruch then begin
@@ -4399,8 +4398,8 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBudynek]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 85;
-  until Session.Room <> 86;
+    if Command = CmdWschod then Session.Room := RoomLivingDoor;
+  until Session.Room <> RoomHut;
 
 end;
 procedure Room21;
@@ -4421,12 +4420,12 @@ begin
                     TxtExitWschod, TxtPlacePiekarnia,
                     TxtExitZachod, TxtPlaceZbrojownia]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 20;
-    if Command = CmdPolnoc then Session.Room := 22;
-    if Command = CmdWschod then Session.Room := 23;
-    if Command = CmdZachod then Session.Room := 24;
+    if Command = CmdPolodnie then Session.Room := RoomCityCentre;
+    if Command = CmdPolnoc then Session.Room := RoomShopStreet2;
+    if Command = CmdWschod then Session.Room := RoomBakery;
+    if Command = CmdZachod then Session.Room := RoomArmoury;
     StreetFights;
-  until Session.Room <> 21;
+  until Session.Room <> RoomShopStreet;
 
 end;
 procedure Room22;
@@ -4447,12 +4446,12 @@ begin
                     TxtExitWschod, TxtPlaceSklepWielobranzowy,
                     TxtExitZachod, TxtPlaceSklepMagiczny]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 21;
-    if Command = CmdWschod then Session.Room := 25;
-    if Command = CmdZachod then Session.Room := 26;
-    if Command = CmdPolnoc then Session.Room := 100;
+    if Command = CmdPolodnie then Session.Room := RoomShopStreet;
+    if Command = CmdWschod then Session.Room := RoomGeneralStore;
+    if Command = CmdZachod then Session.Room := RoomMagicShop;
+    if Command = CmdPolnoc then Session.Room := RoomQuestMaster;
     StreetFights;
-  until Session.Room <> 22;
+  until Session.Room <> RoomShopStreet2;
 
 end;
 procedure Room101;
@@ -4473,10 +4472,10 @@ begin
     if Command = CmdPatrz + CmdDrogowskaz then
       WriteLn(TxtRoom101_05);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 100;
-    if Command = CmdZachod then Session.Room := 102;
-    if Command = CmdPolnoc then Session.Room := 104;
-  until Session.Room <> 101;
+    if Command = CmdWschod then Session.Room := RoomQuestMaster;
+    if Command = CmdZachod then Session.Room := RoomRoad2;
+    if Command = CmdPolnoc then Session.Room := RoomForest;
+  until Session.Room <> RoomRoad1;
 
 end;
 procedure Room102;
@@ -4496,9 +4495,9 @@ begin
                     TxtExitPolnoc, TxtPlaceLas,
                     TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 101;
-    if Command = CmdZachod then Session.Room := 103;
-  until Session.Room <> 102;
+    if Command = CmdWschod then Session.Room := RoomRoad1;
+    if Command = CmdZachod then Session.Room := RoomRoad3;
+  until Session.Room <> RoomRoad2;
 
 end;
 procedure Room103;
@@ -4516,8 +4515,8 @@ begin
                     TxtExitPolnoc, TxtPlaceLas,
                     TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 102;
-  until Session.Room <> 103;
+    if Command = CmdWschod then Session.Room := RoomRoad2;
+  until Session.Room <> RoomRoad3;
 
 end;
 procedure Room23;
@@ -4540,9 +4539,9 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := 21;
+    if Command = CmdZachod then Session.Room := RoomShopStreet;
     BakeryShop;
-  until Session.Room <> 23;
+  until Session.Room <> RoomBakery;
 
 end;
 procedure Room24;
@@ -4562,11 +4561,11 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 21;
+    if Command = CmdWschod then Session.Room := RoomShopStreet;
     if Command = CmdPatrz + CmdPlakat then
       WriteLn(TxtRoom24_04);
     StreetFights;
-  until Session.Room <> 24;
+  until Session.Room <> RoomArmoury;
 
 end;
 procedure Room25;
@@ -4584,12 +4583,12 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := 22;
+    if Command = CmdZachod then Session.Room := RoomShopStreet2;
     if Command = CmdPatrz + CmdWywieszka then
       WriteLn(TxtRoom25_03);
     StreetFights;
     GeneralStoreShop;
-  until Session.Room <> 25;
+  until Session.Room <> RoomGeneralStore;
 
 end;
 procedure Room26;
@@ -4606,12 +4605,12 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 22;
+    if Command = CmdWschod then Session.Room := RoomShopStreet2;
     if Command = CmdPatrz + CmdPlakat then
       WriteLn(TxtRoom26_02);
     MagicShop;
     StreetFights;
-  until Session.Room <> 26;
+  until Session.Room <> RoomMagicShop;
 
 end;
 procedure Room31;
@@ -4629,9 +4628,9 @@ begin
                     TxtExitWschod, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceDolinaRozrywek]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := 30;
-    if Command = CmdPolnoc then Session.Room := 60;
-  until Session.Room <> 31;
+    if Command = CmdWschod then Session.Room := RoomLongStreet;
+    if Command = CmdPolnoc then Session.Room := RoomValley;
+  until Session.Room <> RoomLongStreet2;
 
 end;
 procedure Room32;
@@ -4653,63 +4652,63 @@ begin
                     TxtExitPolodnie, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceArena]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := 30;
-    if Command = CmdPolnoc then Session.Room := 33;
-  until Session.Room <> 32;
+    if Command = CmdPolodnie then Session.Room := RoomLongStreet;
+    if Command = CmdPolnoc then Session.Room := RoomArena33;
+  until Session.Room <> RoomArenaEntrance;
 
 end;
 
 const
 
   RoomDispatch: array[1..46] of TRoomEntry = (
-    (id: 0; run:Room0),
-    (id: 1; run:Room1),
-    (id: 2; run:Room2),
-    (id: 3; run:Room3),
-    (id: 4; run:Room4),
-    (id: 5; run:Room5),
+    (id: RoomStart; run:Room0),
+    (id: RoomSalon; run:Room1),
+    (id: RoomTraining; run:Room2),
+    (id: RoomMeditation; run:Room3),
+    (id: RoomSchoolHall; run:Room4),
+    (id: RoomLost; run:Room5),
 
-    (id: -1; run:PlainRooms),
-    (id: 9; run:Room9),
-    (id: 11; run:Room11),
-    (id: 12; run:Room12),
-    (id: 13; run:Room13),
-    (id: 14; run:Room14),
-    (id: 15; run:Room15),
-    (id: 16; run:Room16),
-    (id: 17; run:Room17),
-    (id: 18; run:Room18),
-    (id: 20; run:Room20),
-    (id: 75; run:Room75),
-    (id: 30; run:Room30),
-    (id: 76; run:Room76),
-    (id: 77; run:Room77),
-    (id: 78; run:Room78),
-    (id: 79; run:Room79),
-    (id: 80; run:Room80),
-    (id: 81; run:Room81),
-    (id: 82; run:Room82),
-    (id: 83; run:Room83),
-    (id: 84; run:Room84),
-    (id: 87; run:Room87),
-    (id: 88; run:Room88),
-    (id: 85; run:Room85),
-    (id: 86; run:Room86),
-    (id: 21; run:Room21),
-    (id: 22; run:Room22),
-    (id: 101; run:Room101),
-    (id: 102; run:Room102),
-    (id: 103; run:Room103),
-    (id: 100; run:Room100),
-    (id: 23; run:Room23),
-    (id: 24; run:Room24),
-    (id: 25; run:Room25),
-    (id: 26; run:Room26),
-    (id: 31; run:Room31),
-    (id: 60; run:Room60),
+    (id: RoomAny; run:PlainRooms),
+    (id: RoomSchoolLanding; run:Room9),
+    (id: RoomCageCorridor; run:Room11),
+    (id: RoomCageWeakling; run:Room12),
+    (id: RoomCageStrong; run:Room13),
+    (id: RoomCageAgile; run:Room14),
+    (id: RoomCageTough; run:Room15),
+    (id: RoomCageHuge; run:Room16),
+    (id: RoomCageReward; run:Room17),
+    (id: RoomTeleport; run:Room18),
+    (id: RoomCityCentre; run:Room20),
+    (id: RoomDarkStreet; run:Room75),
+    (id: RoomLongStreet; run:Room30),
+    (id: RoomBar; run:Room76),
+    (id: RoomIvy1; run:Room77),
+    (id: RoomIvy2; run:Room78),
+    (id: RoomIvy3; run:Room79),
+    (id: RoomIvy4; run:Room80),
+    (id: RoomIvy5; run:Room81),
+    (id: RoomIvy6; run:Room82),
+    (id: RoomClearing; run:Room83),
+    (id: RoomCavePath; run:Room84),
+    (id: RoomCaveMouth; run:Room87),
+    (id: RoomNettleThrone; run:Room88),
+    (id: RoomLivingDoor; run:Room85),
+    (id: RoomHut; run:Room86),
+    (id: RoomShopStreet; run:Room21),
+    (id: RoomShopStreet2; run:Room22),
+    (id: RoomRoad1; run:Room101),
+    (id: RoomRoad2; run:Room102),
+    (id: RoomRoad3; run:Room103),
+    (id: RoomQuestMaster; run:Room100),
+    (id: RoomBakery; run:Room23),
+    (id: RoomArmoury; run:Room24),
+    (id: RoomGeneralStore; run:Room25),
+    (id: RoomMagicShop; run:Room26),
+    (id: RoomLongStreet2; run:Room31),
+    (id: RoomValley; run:Room60),
 
-    (id: -1; run:ConcertRooms),
-    (id: 32; run:Room32)
+    (id: RoomAny; run:ConcertRooms),
+    (id: RoomArenaEntrance; run:Room32)
   );
 
 procedure Start;
@@ -4773,7 +4772,7 @@ begin
 
     Combat.Fled := 0;
 
-  until Session.Room = 193;
+  until Session.Room = RoomQuit;
 
   L1025_Exit: ;
 

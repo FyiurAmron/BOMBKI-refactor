@@ -35,7 +35,16 @@ def extract():
     # either a remaining literal or a catalog identifier reference.
     catalog = {}
     arrays = {}
+    rooms = {}
     cat_text = (SOURCES / "texts.inc").read_text()
+    for mm in re.finditer(r"^\s*(\w+) = (-?\d+);$",
+                          (SOURCES / "rooms.inc").read_text(), re.M):
+        rooms[mm.group(1)] = int(mm.group(2))
+
+    def room_num(token):
+        if token.isdigit():
+            return int(token)
+        return rooms.get(token)
     for mm in re.finditer(r"^\s*(\w+) = (.+);$", cat_text, re.M):
         catalog[mm.group(1)] = mm.group(2)
     for mm in re.finditer(
@@ -96,11 +105,13 @@ def extract():
         for n, l in enumerate(lines, 1):
             if not (lo <= n <= hi):
                 continue
-            m = re.match(r"\s*if Session\.Room = (\d+) then begin", l)
-            if m:
-                cur = int(m.group(1))
-                add(cur, None, None)
-                continue
+            mm = re.match(r"\s*if Session\.Room = (\w+) then begin", l)
+            if mm:
+                rid = room_num(mm.group(1))
+                if rid is not None:
+                    cur = rid
+                    add(cur, None, None)
+                    continue
             if proc_rooms:
                 m = re.match(r"procedure (\w+)", l)
                 if m:
@@ -110,11 +121,12 @@ def extract():
                         add(cur, None, None)
             m = re.match(
                 r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
-                r" Session\.Room := (\d+);", l)
+                r" Session\.Room := (\w+);", l)
             if m and cur is not None:
                 word = m.group(1) or catalog_word(m.group(2))
-                if word:
-                    add(cur, word, int(m.group(3)))
+                dest = room_num(m.group(3))
+                if word and dest is not None:
+                    add(cur, word, dest)
             if want_text and cur is not None and cur not in texts:
                 found = write_text(l.strip())
                 if found:
@@ -139,24 +151,29 @@ def extract():
             if room is not None:
                 add(room, None, None)
             continue
-        m = re.search(r"until Session\.Room <> (\d+);", l)
+        m = re.search(r"until Session\.Room <> (\w+);", l)
         if m:
-            room = int(m.group(1))
-            add(room, None, None)
+            rid = room_num(m.group(1))
+            if rid is not None:
+                room = rid
+                add(room, None, None)
         # PlainRooms guards each of its rooms with "if Room = N", and
         # that guard precedes the movements, so the trailing "until"
         # alone would attribute them to the previous room.
-        m = re.match(r"\s*if Session\.Room = (\d+) then begin", l)
+        m = re.match(r"\s*if Session\.Room = (\w+) then begin", l)
         if m:
-            room = int(m.group(1))
-            add(room, None, None)
+            rid = room_num(m.group(1))
+            if rid is not None:
+                room = rid
+                add(room, None, None)
         m = re.match(
             r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
-            r" Session\.Room := (\d+);", l)
+            r" Session\.Room := (\w+);", l)
         if m and room is not None:
             word = m.group(1) or catalog_word(m.group(2))
-            if word:
-                add(room, word, int(m.group(3)))
+            dest = room_num(m.group(3))
+            if word and dest is not None:
+                add(room, word, dest)
         if room is not None and room not in texts:
             found = write_text(l.strip())
             if found:

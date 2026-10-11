@@ -79,7 +79,6 @@ type
     Room, OuterRoom, InArena, MoveGuard: Integer;
     CheckpointStage, SavedFlag, SleepHours, Overall: Integer;
     ExitRequested: Boolean;
-    Unused52, Unused76, LoadDummy: Integer;
     SaveFile: Text;
   end;
 
@@ -2436,7 +2435,7 @@ begin
   WriteLn(Session.SaveFile, Player.Wisdom);
   WriteLn(Session.SaveFile, Player.Practice);
   WriteLn(Session.SaveFile, Session.CheckpointStage);
-  WriteLn(Session.SaveFile, Session.Unused52);
+  WriteLn(Session.SaveFile, 0);
   WriteLn(Session.SaveFile, 0);
   WriteLn(Session.SaveFile, Player.Money * Player.Wisdom);
   WriteLn(Session.SaveFile, Combat.Loot);
@@ -2463,7 +2462,7 @@ begin
   WriteLn(Session.SaveFile, Gear.ArmorRating);
   WriteLn(Session.SaveFile, Skills.Cooking);
   WriteLn(Session.SaveFile, Skills.CookingDisplayBug);
-  WriteLn(Session.SaveFile, Session.Unused76);
+  WriteLn(Session.SaveFile, 0);
   WriteLn(Session.SaveFile, Bag.Heart);
   WriteLn(Session.SaveFile, Bag.ManaBottle);
   WriteLn(Session.SaveFile, Bag.Cookie);
@@ -3440,6 +3439,8 @@ begin
 end;
 
 procedure LoadCharacter;
+var
+  dummy: Integer;
 begin
   ReadLn(Command);
   Assign(Session.SaveFile, 'pliki.tpu');
@@ -3465,8 +3466,8 @@ begin
   Read(Session.SaveFile, Player.Wisdom);
   Read(Session.SaveFile, Player.Practice);
   Read(Session.SaveFile, Session.CheckpointStage);
-  Read(Session.SaveFile, Session.Unused52);
-  Read(Session.SaveFile, Session.LoadDummy);
+  Read(Session.SaveFile, dummy);
+  Read(Session.SaveFile, dummy);
   Read(Session.SaveFile, Player.Money);
   Player.Money := Player.Money div Player.Wisdom;
   Read(Session.SaveFile, Combat.Loot);
@@ -3493,7 +3494,7 @@ begin
   Read(Session.SaveFile, Gear.ArmorRating);
   Read(Session.SaveFile, Skills.Cooking);
   Read(Session.SaveFile, Skills.CookingDisplayBug);
-  Read(Session.SaveFile, Session.Unused76);
+  Read(Session.SaveFile, dummy);
   Read(Session.SaveFile, Bag.Heart);
   Read(Session.SaveFile, Bag.ManaBottle);
   Read(Session.SaveFile, Bag.Cookie);

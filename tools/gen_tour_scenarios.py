@@ -31,6 +31,36 @@ def extract():
 
     g = (SOURCES / "Game.PAS").read_text().split("\n")
 
+    # Display texts live in the strings catalog: a room's intro line is
+    # either a remaining literal or a catalog identifier reference.
+    catalog = {}
+    for line in (SOURCES / "texts.inc").read_text().split("\n"):
+        mm = re.match(r"\s*(\w+) = (.+);$", line)
+        if mm:
+            catalog[mm.group(1)] = mm.group(2)
+
+    def catalog_word(name):
+        value = catalog.get(name, "")
+        return value[1:-1] if value.startswith("'") else None
+
+    def strip_quote(value):
+        if value.startswith("'") and value.endswith("'"):
+            return value[1:-1]
+        return None
+
+    def write_text(line):
+        mm = re.search(r"WriteLn\('([^']{8,})'\)", line)
+        if mm:
+            return mm.group(1)
+        mm = re.search(r"WriteLn\(([^()]+)\)", line)
+        if mm:
+            parts = [a.strip() for a in mm.group(1).split(",")]
+            if all(a in catalog for a in parts):
+                texts_ = [strip_quote(catalog[a]) for a in parts]
+                if None not in texts_ and sum(len(t) for t in texts_) >= 8:
+                    return "".join(texts_)
+        return None
+
     def slice_between(start_marker, end_marker=None):
         a = next(i for i, l in enumerate(g) if l.strip() == start_marker)
         if end_marker is None:
@@ -67,14 +97,17 @@ def extract():
                     cur = proc_rooms.get(name) if name in proc_rooms else None
                     if cur is not None:
                         add(cur, None, None)
-            m = re.match(r"\s*if Command = '(\w+)' then Session\.Room := (\d+);", l)
+            m = re.match(
+                r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
+                r" Session\.Room := (\d+);", l)
             if m and cur is not None:
-                add(cur, m.group(1), int(m.group(2)))
-            if want_text and cur is not None and cur not in texts \
-                    and "WriteLn('" in l:
-                mm = re.search(r"WriteLn\('([^']{8,})'\)", l.strip())
-                if mm:
-                    texts[cur] = mm.group(1)[:38]
+                word = m.group(1) or catalog_word(m.group(2))
+                if word:
+                    add(cur, word, int(m.group(3)))
+            if want_text and cur is not None and cur not in texts:
+                found = write_text(l.strip())
+                if found:
+                    texts[cur] = found[:38]
 
     proc_rooms = {}
     for l in bomb:
@@ -106,13 +139,17 @@ def extract():
         if m:
             room = int(m.group(1))
             add(room, None, None)
-        m = re.match(r"\s*if Command = '(\w+)' then Session\.Room := (\d+);", l)
+        m = re.match(
+            r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
+            r" Session\.Room := (\d+);", l)
         if m and room is not None:
-            add(room, m.group(1), int(m.group(2)))
-        if room is not None and room not in texts and "WriteLn('" in l:
-            mm = re.search(r"WriteLn\('([^']{8,})'\)", l.strip())
-            if mm:
-                texts[room] = mm.group(1)[:38]
+            word = m.group(1) or catalog_word(m.group(2))
+            if word:
+                add(room, word, int(m.group(3)))
+        if room is not None and room not in texts:
+            found = write_text(l.strip())
+            if found:
+                texts[room] = found[:38]
     for rid, d in [(6, "WSCHOD"), (8, "POLNOC"), (7, "POLODNIE"),
                    (10, "GORA")]:
         add(rid, d, 5)

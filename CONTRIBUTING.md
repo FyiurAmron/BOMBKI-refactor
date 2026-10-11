@@ -46,7 +46,10 @@ Files always end with a newline; enforced locally by `.githooks/pre-commit`
 **Strings are fixed.** No user-visible text (WriteLn messages, prompts,
 item names, monster descriptions, level names, combat logs, etc.) may be
 changed, reworded, reordered, or reformatted. The exact byte sequence of
-every string literal in `src/` is part of the behavioral contract.
+every string literal in `src/` - the game source and the `texts.inc`
+catalog - is part of the behavioral contract;
+`tests/strings_test.py` pins the union against
+`tests/reference_strings.txt`.
 
 **Behavior is immutable.** The refactor must produce *identical* observable
 behavior for every possible input sequence:

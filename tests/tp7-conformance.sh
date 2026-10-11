@@ -45,7 +45,7 @@ TPCDIR="$(basename "$(dirname "$TPC")")"
 echo "TPC: $TPC"
 echo "TP7 root: $TP7ROOT"
 
-if ! cp "$REC/Game.PAS" "$REC/BOMBKI.PAS" "$BUILD"/; then
+if ! cp "$REC/Game.PAS" "$REC/BOMBKI.PAS" "$REC"/texts*.inc "$BUILD"/; then
   echo "::error::game sources not found under $REC" >&2
   exit 2
 fi

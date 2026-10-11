@@ -125,7 +125,9 @@ def main() -> int:
 
         with tempfile.TemporaryDirectory(prefix="bombki-tp7-", dir=TEMP_ROOT) as temporary:
             build_dir = Path(temporary).resolve()
-            for source_name in ("Game.PAS", "BOMBKI.PAS"):
+            source_names = ["Game.PAS", "BOMBKI.PAS"]
+            source_names += sorted(p.name for p in SOURCES.glob("texts*.inc"))
+            for source_name in source_names:
                 source = SOURCES / source_name
                 target = build_dir / source_name
                 text = source.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")

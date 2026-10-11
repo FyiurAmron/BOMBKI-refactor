@@ -55,7 +55,7 @@ def extract():
         for n, l in enumerate(lines, 1):
             if not (lo <= n <= hi):
                 continue
-            m = re.match(r"\s*if Room = (\d+) then begin", l)
+            m = re.match(r"\s*if Session\.Room = (\d+) then begin", l)
             if m:
                 cur = int(m.group(1))
                 add(cur, None, None)
@@ -67,7 +67,7 @@ def extract():
                     cur = proc_rooms.get(name) if name in proc_rooms else None
                     if cur is not None:
                         add(cur, None, None)
-            m = re.match(r"\s*if Command = '(\w+)' then Room := (\d+);", l)
+            m = re.match(r"\s*if Command = '(\w+)' then Session\.Room := (\d+);", l)
             if m and cur is not None:
                 add(cur, m.group(1), int(m.group(2)))
             if want_text and cur is not None and cur not in texts \
@@ -95,18 +95,18 @@ def extract():
             if room is not None:
                 add(room, None, None)
             continue
-        m = re.search(r"until Room <> (\d+);", l)
+        m = re.search(r"until Session\.Room <> (\d+);", l)
         if m:
             room = int(m.group(1))
             add(room, None, None)
         # PlainRooms guards each of its rooms with "if Room = N", and
         # that guard precedes the movements, so the trailing "until"
         # alone would attribute them to the previous room.
-        m = re.match(r"\s*if Room = (\d+) then begin", l)
+        m = re.match(r"\s*if Session\.Room = (\d+) then begin", l)
         if m:
             room = int(m.group(1))
             add(room, None, None)
-        m = re.match(r"\s*if Command = '(\w+)' then Room := (\d+);", l)
+        m = re.match(r"\s*if Command = '(\w+)' then Session\.Room := (\d+);", l)
         if m and room is not None:
             add(room, m.group(1), int(m.group(2)))
         if room is not None and room not in texts and "WriteLn('" in l:

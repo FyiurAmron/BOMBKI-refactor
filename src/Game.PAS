@@ -288,8 +288,10 @@ procedure Room13;
 begin
   if Session.Room <> 13 then Exit;
   WriteLn('TEN POKOJ JEST CALY OBRYZGANY KRWIA NA SCIANACH FLAKI I MOZGI LODZKIE ');
-  if World.CageStrong = 13 then WriteLn('SILNY , NAPAKOWANY POTWOR STOI POD SCIANA');
-  if World.CageStrong = 0 then WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  case World.CageStrong of
+    13: WriteLn('SILNY , NAPAKOWANY POTWOR STOI POD SCIANA');
+    0: WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  end;
   repeat
     Write(Player.Energy, '%.', Player.Experience, '>');
     ReadLn(Command);
@@ -521,36 +523,38 @@ begin
       Player.Money := Player.Money - 50;
     end;
     if (Command = 'SPRZEDAJ QUEST') and (World.Quest > 0) then begin
-      if (World.Quest = 1) and (World.QuestKills < 1) then begin
-        WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
-        WriteLn(' ------ OTRZYMUJESZ 100 KUNSZTU -----');
-        Player.Experience := Player.Experience + 100;
-        World.Quest := 0;
-        World.QuestKills := 0;
-        Bag.Permit := Bag.Permit - 10;
-        Bag.Count := Bag.Count + 1;
-      end;
-      if (World.Quest = 2) and (World.QuestKills < 1) and (Bag.Diploma <= -10) then begin
-        WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
-        WriteLn(' ------ OTRZYMUJESZ 250 KUNSZTU -----');
-        Player.Experience := Player.Experience + 250;
-        World.Quest := 0;
-        World.QuestKills := 0;
-        Bag.Diploma := 0;
-        Player.MaxEnergy := Player.MaxEnergy - 5;
-        Bag.Permit := Bag.Permit - 10;
-      end;
-      if (World.Quest = 3) and (World.QuestKills < 1) and (Bag.Pipe <= -10) and (Player.Practice > 0) then begin
-        WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
-        WriteLn(' ------ OTRZYMUJESZ 425 KUNSZTU -----');
-        Player.Experience := Player.Experience + 425;
-        Bag.Count := Bag.Count - 1;
-        Player.Wisdom := Player.Wisdom - 1;
-        World.Quest := 0;
-        World.QuestKills := 0;
-        Bag.Pipe := Bag.Pipe + 10;
-        Player.Practice := Player.Practice - 1;
-        Bag.Permit := Bag.Permit - 10;
+      case World.Quest of
+        1: if World.QuestKills < 1 then begin
+             WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
+             WriteLn(' ------ OTRZYMUJESZ 100 KUNSZTU -----');
+             Player.Experience := Player.Experience + 100;
+             World.Quest := 0;
+             World.QuestKills := 0;
+             Bag.Permit := Bag.Permit - 10;
+             Bag.Count := Bag.Count + 1;
+           end;
+        2: if (World.QuestKills < 1) and (Bag.Diploma <= -10) then begin
+             WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
+             WriteLn(' ------ OTRZYMUJESZ 250 KUNSZTU -----');
+             Player.Experience := Player.Experience + 250;
+             World.Quest := 0;
+             World.QuestKills := 0;
+             Bag.Diploma := 0;
+             Player.MaxEnergy := Player.MaxEnergy - 5;
+             Bag.Permit := Bag.Permit - 10;
+           end;
+        3: if (World.QuestKills < 1) and (Bag.Pipe <= -10) and (Player.Practice > 0) then begin
+             WriteLn('AAAAA BARDZO MI MILO ZE UDALO CI SIE WYKONAC TEN QUEST');
+             WriteLn(' ------ OTRZYMUJESZ 425 KUNSZTU -----');
+             Player.Experience := Player.Experience + 425;
+             Bag.Count := Bag.Count - 1;
+             Player.Wisdom := Player.Wisdom - 1;
+             World.Quest := 0;
+             World.QuestKills := 0;
+             Bag.Pipe := Bag.Pipe + 10;
+             Player.Practice := Player.Practice - 1;
+             Bag.Permit := Bag.Permit - 10;
+           end;
       end;
 
     end;
@@ -1171,26 +1175,30 @@ begin
     end;
     if Combat.PlayerDodged = 0 then begin
       Combat.Damage := Random(Combat.EnemyStrength);
-      if Combat.Damage < 6 then WriteLn('PRZECIWNIK CIE TYLKO DRASNA I TRACISZ ', Combat.Damage, '% ENERGII');
-      if (Combat.Damage > 5) and (Combat.Damage < 21) then WriteLn('DOSTALES I TRACISZ ', Combat.Damage, '% ENERGII');
-      if (Combat.Damage > 20) and (Combat.Damage < 51) then WriteLn('PRZECIWNIK !MASAKRUJE! CIEBIE I TRACISZ AZ ', Combat.Damage, '% ENERGII');
-      if Combat.Damage > 50 then WriteLn('PRZECIWNIK !!!WYPRUWA FLAKI!!! Z CIEBIE I TRACISZ !!! ', Combat.Damage, '% ENERGII');
+      case Combat.Damage of
+        0..5: WriteLn('PRZECIWNIK CIE TYLKO DRASNA I TRACISZ ', Combat.Damage, '% ENERGII');
+        6..20: WriteLn('DOSTALES I TRACISZ ', Combat.Damage, '% ENERGII');
+        21..50: WriteLn('PRZECIWNIK !MASAKRUJE! CIEBIE I TRACISZ AZ ', Combat.Damage, '% ENERGII');
+        else WriteLn('PRZECIWNIK !!!WYPRUWA FLAKI!!! Z CIEBIE I TRACISZ !!! ', Combat.Damage, '% ENERGII');
+      end;
       Combat.FightExperience := Combat.FightExperience + 1;
       ShieldBlock;
       if (Skills.Parry > 0) and (Combat.Damage > 0) then begin
         Combat.Roll := Random(140);
         if Combat.Roll <= Skills.Parry then begin
-          if Combat.Damage < 3 then begin
-            WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ 0% ENERGI');
-            Combat.Damage := 0;
-          end;
-          if (Combat.Damage > 2) and (Combat.Damage < 10) then begin
-            Combat.Damage := Combat.Damage - 2;
-            WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ ', Combat.Damage, '% ENERGI');
-          end;
-          if Combat.Damage > 9 then begin
-            Combat.Damage := Combat.Damage - 3;
-            WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ ', Combat.Damage, '% ENERGI');
+          case Combat.Damage of
+            0..2: begin
+              WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ 0% ENERGI');
+              Combat.Damage := 0;
+            end;
+            3..9: begin
+              Combat.Damage := Combat.Damage - 2;
+              WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ ', Combat.Damage, '% ENERGI');
+            end;
+            else begin
+              Combat.Damage := Combat.Damage - 3;
+              WriteLn('            <<<<<ODPAROWUJESZ ATAK PRZECIWNIKA !!! TRACISZ ', Combat.Damage, '% ENERGI');
+            end;
           end;
           if (Combat.Roll < 1) and (Skills.Parry < 100) then begin
             WriteLn('*************** UCZYSZ SIE ZDOLNOSCI PAROWANIE !!!!! ***************');
@@ -1237,13 +1245,14 @@ begin
         until (Combat.Damage * 10) > Gear.LuckRoll;
       end;
       Combat.EnemyEnergy := Combat.EnemyEnergy - Combat.Damage;
-      if Combat.Damage < 6 then
-        WriteLn('MASZ PECHA : LEKKO POPCHNALES GO I STRACIL TYLKO ', Combat.Damage, '% ENERGII');
-
-      if (Combat.Damage > 5) and (Combat.Damage < 21) then
-        WriteLn('DOSTAL I STRACIL ', Combat.Damage, '% ENERGII');
-      if (Combat.Damage > 20) and (Combat.Damage < 51) then WriteLn(' !MASAKRUJESZ! PRZECIWNIKA I TRACI ON AZ ', Combat.Damage, '% ENERGII');
-      if Combat.Damage > 50 then WriteLn(' !!!WYPRUWASZ FLAKI!!! Z PRZECIWNIKA I TRACI ON  !!!! ', Combat.Damage, '% ENERGII');
+      case Combat.Damage of
+        0..5:
+          WriteLn('MASZ PECHA : LEKKO POPCHNALES GO I STRACIL TYLKO ', Combat.Damage, '% ENERGII');
+        6..20:
+          WriteLn('DOSTAL I STRACIL ', Combat.Damage, '% ENERGII');
+        21..50: WriteLn(' !MASAKRUJESZ! PRZECIWNIKA I TRACI ON AZ ', Combat.Damage, '% ENERGII');
+        else WriteLn(' !!!WYPRUWASZ FLAKI!!! Z PRZECIWNIKA I TRACI ON  !!!! ', Combat.Damage, '% ENERGII');
+      end;
     end;
     Delay(2000);
     if (Skills.Kick > 0) and (Player.Mana > Skills.KickMinMana) and (Player.Energy < Skills.KickMaxEnergy) then begin
@@ -1722,112 +1731,123 @@ begin
       if Command = 'WYJSCIE' then exit;
       if Command = 'POLODNIE' then begin
         Session.InArena := 0;
-        if Session.Room = 33 then Session.Room := 32;
-        if Session.Room = 34 then Session.Room := 33;
-        if (Session.Room = 35) or (Session.Room = 36) or (Session.Room = 40) or (Session.Room = 41) then Session.InArena := 1;
-        if Session.Room = 37 then Session.Room := 34;
-        if Session.Room = 38 then Session.Room := 35;
-        if Session.Room = 39 then Session.Room := 36;
-        if Session.Room = 42 then Session.Room := 37;
-        if Session.Room = 43 then Session.Room := 38;
-        if Session.Room = 44 then Session.Room := 39;
-        if Session.Room = 45 then Session.Room := 40;
-        if Session.Room = 46 then Session.Room := 41;
-        if Session.Room = 47 then Session.Room := 42;
-        if Session.Room = 48 then Session.Room := 43;
-        if Session.Room = 49 then Session.Room := 44;
-        if Session.Room = 50 then Session.Room := 45;
-        if Session.Room = 51 then Session.Room := 46;
-        if Session.Room = 52 then Session.Room := 48;
-        if Session.Room = 53 then Session.Room := 49;
-        if Session.Room = 54 then Session.Room := 50;
-        if Session.Room = 55 then Session.Room := 51;
-        if Session.Room = 56 then Session.Room := 54;
-        if Session.Room = 57 then Session.Room := 55;
+        case Session.Room of
+          33: Session.Room := 32;
+          34: Session.Room := 33;
+          35, 36, 40, 41: Session.InArena := 1;
+          37: Session.Room := 34;
+          38: Session.Room := 35;
+          39: Session.Room := 36;
+          42: Session.Room := 37;
+          43: Session.Room := 38;
+          44: Session.Room := 39;
+          45: Session.Room := 40;
+          46: Session.Room := 41;
+          47: Session.Room := 42;
+          48: Session.Room := 43;
+          49: Session.Room := 44;
+          50: Session.Room := 45;
+          51: Session.Room := 46;
+          52: Session.Room := 48;
+          53: Session.Room := 49;
+          54: Session.Room := 50;
+          55: Session.Room := 51;
+          56: Session.Room := 54;
+          57: Session.Room := 55;
+        end;
       end;
       if Command = 'POLNOC' then begin
         Session.InArena := 0;
-        if Session.Room = 33 then begin Session.Room := 34; Session.MoveGuard := 1; end;
-        if (Session.Room = 34) and (Session.MoveGuard = 0) then begin Session.Room := 37; Session.MoveGuard := 1; end;
-        if (Session.Room = 35) and (Session.MoveGuard = 0) then begin Session.Room := 38; Session.MoveGuard := 1; end;
-        if (Session.Room = 36) and (Session.MoveGuard = 0) then begin Session.Room := 39; Session.MoveGuard := 1; end;
-        if (Session.Room = 37) and (Session.MoveGuard = 0) then begin Session.Room := 42; Session.MoveGuard := 1; end;
-        if (Session.Room = 38) and (Session.MoveGuard = 0) then begin Session.Room := 43; Session.MoveGuard := 1; end;
-        if (Session.Room = 39) and (Session.MoveGuard = 0) then begin Session.Room := 44; Session.MoveGuard := 1; end;
-        if (Session.Room = 40) and (Session.MoveGuard = 0) then begin Session.Room := 45; Session.MoveGuard := 1; end;
-        if (Session.Room = 41) and (Session.MoveGuard = 0) then begin Session.Room := 46; Session.MoveGuard := 1; end;
-        if (Session.Room = 42) and (Session.MoveGuard = 0) then begin Session.Room := 47; Session.MoveGuard := 1; end;
-        if (Session.Room = 43) and (Session.MoveGuard = 0) then begin Session.Room := 48; Session.MoveGuard := 1; end;
-        if (Session.Room = 44) and (Session.MoveGuard = 0) then begin Session.Room := 49; Session.MoveGuard := 1; end;
-        if (Session.Room = 45) and (Session.MoveGuard = 0) then begin Session.Room := 50; Session.MoveGuard := 1; end;
-        if (Session.Room = 46) and (Session.MoveGuard = 0) then begin Session.Room := 51; Session.MoveGuard := 1; end;
-        if (Session.Room = 47) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 48) and (Session.MoveGuard = 0) then begin Session.Room := 52; Session.MoveGuard := 1; end;
-        if (Session.Room = 49) and (Session.MoveGuard = 0) then begin Session.Room := 53; Session.MoveGuard := 1; end;
-        if (Session.Room = 50) and (Session.MoveGuard = 0) then begin Session.Room := 54; Session.MoveGuard := 1; end;
-        if (Session.Room = 51) and (Session.MoveGuard = 0) then begin Session.Room := 55; Session.MoveGuard := 1; end;
-        if (Session.Room = 52) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 53) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 54) and (Session.MoveGuard = 0) then begin Session.Room := 56; Session.MoveGuard := 1; end;
-        if (Session.Room = 55) and (Session.MoveGuard = 0) then begin Session.Room := 57; Session.MoveGuard := 1; end;
-        if (Session.Room = 56) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 57) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
+        case Session.Room of
+          33: Session.Room := 34;
+          34: Session.Room := 37;
+          35: Session.Room := 38;
+          36: Session.Room := 39;
+          37: Session.Room := 42;
+          38: Session.Room := 43;
+          39: Session.Room := 44;
+          40: Session.Room := 45;
+          41: Session.Room := 46;
+          42: Session.Room := 47;
+          43: Session.Room := 48;
+          44: Session.Room := 49;
+          45: Session.Room := 50;
+          46: Session.Room := 51;
+          47: Session.InArena := 1;
+          48: Session.Room := 52;
+          49: Session.Room := 53;
+          50: Session.Room := 54;
+          51: Session.Room := 55;
+          52: Session.InArena := 1;
+          53: Session.InArena := 1;
+          54: Session.Room := 56;
+          55: Session.Room := 57;
+          56: Session.InArena := 1;
+          57: Session.InArena := 1;
+        end;
+        Session.MoveGuard := 1;
       end;
       if Command = 'WSCHOD' then begin
         Session.InArena := 0;
-        if (Session.Room = 33) and (Session.MoveGuard = 0) then begin Session.Room := 35; Session.MoveGuard := 1; end;
-        if (Session.Room = 34) and (Session.MoveGuard = 0) then begin Session.Room := 38; Session.MoveGuard := 1; end;
-        if (Session.Room = 35) and (Session.MoveGuard = 0) then begin Session.Room := 40; Session.MoveGuard := 1; end;
-        if (Session.Room = 36) and (Session.MoveGuard = 0) then begin Session.Room := 33; Session.MoveGuard := 1; end;
-        if (Session.Room = 37) and (Session.MoveGuard = 0) then begin Session.Room := 43; Session.MoveGuard := 1; end;
-        if (Session.Room = 38) and (Session.MoveGuard = 0) then begin Session.Room := 45; Session.MoveGuard := 1; end;
-        if (Session.Room = 39) and (Session.MoveGuard = 0) then begin Session.Room := 34; Session.MoveGuard := 1; end;
-        if (Session.Room = 40) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 41) and (Session.MoveGuard = 0) then begin Session.Room := 36; Session.MoveGuard := 1; end;
-        if (Session.Room = 42) and (Session.MoveGuard = 0) then begin Session.Room := 48; Session.MoveGuard := 1; end;
-        if (Session.Room = 43) and (Session.MoveGuard = 0) then begin Session.Room := 50; Session.MoveGuard := 1; end;
-        if (Session.Room = 44) and (Session.MoveGuard = 0) then begin Session.Room := 37; Session.MoveGuard := 1; end;
-        if (Session.Room = 45) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 46) and (Session.MoveGuard = 0) then begin Session.Room := 39; Session.MoveGuard := 1; end;
-        if (Session.Room = 47) and (Session.MoveGuard = 0) then begin Session.Room := 52; Session.MoveGuard := 1; end;
-        if (Session.Room = 48) and (Session.MoveGuard = 0) then begin Session.Room := 54; Session.MoveGuard := 1; end;
-        if (Session.Room = 49) and (Session.MoveGuard = 0) then begin Session.Room := 42; Session.MoveGuard := 1; end;
-        if (Session.Room = 50) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 51) and (Session.MoveGuard = 0) then begin Session.Room := 44; Session.MoveGuard := 1; end;
-        if (Session.Room = 52) and (Session.MoveGuard = 0) then begin Session.Room := 56; Session.MoveGuard := 1; end;
-        if (Session.Room = 53) and (Session.MoveGuard = 0) then begin Session.Room := 47; Session.MoveGuard := 1; end;
-        if (Session.Room = 54) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 55) and (Session.MoveGuard = 0) then begin Session.Room := 49; Session.MoveGuard := 1; end;
-        if (Session.Room = 56) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 57) and (Session.MoveGuard = 0) then begin Session.Room := 53; Session.MoveGuard := 1; end;
+        case Session.Room of
+          33: Session.Room := 35;
+          34: Session.Room := 38;
+          35: Session.Room := 40;
+          36: Session.Room := 33;
+          37: Session.Room := 43;
+          38: Session.Room := 45;
+          39: Session.Room := 34;
+          40: Session.InArena := 1;
+          41: Session.Room := 36;
+          42: Session.Room := 48;
+          43: Session.Room := 50;
+          44: Session.Room := 37;
+          45: Session.InArena := 1;
+          46: Session.Room := 39;
+          47: Session.Room := 52;
+          48: Session.Room := 54;
+          49: Session.Room := 42;
+          50: Session.InArena := 1;
+          51: Session.Room := 44;
+          52: Session.Room := 56;
+          53: Session.Room := 47;
+          54: Session.InArena := 1;
+          55: Session.Room := 49;
+          56: Session.InArena := 1;
+          57: Session.Room := 53;
+        end;
+        Session.MoveGuard := 1;
       end;
       if Command = 'ZACHOD' then begin
         Session.InArena := 0;
-        if (Session.Room = 33) and (Session.MoveGuard = 0) then begin Session.Room := 36; Session.MoveGuard := 1; end;
-        if (Session.Room = 34) and (Session.MoveGuard = 0) then begin Session.Room := 39; Session.MoveGuard := 1; end;
-        if (Session.Room = 35) and (Session.MoveGuard = 0) then begin Session.Room := 33; Session.MoveGuard := 1; end;
-        if (Session.Room = 36) and (Session.MoveGuard = 0) then begin Session.Room := 41; Session.MoveGuard := 1; end;
-        if (Session.Room = 37) and (Session.MoveGuard = 0) then begin Session.Room := 44; Session.MoveGuard := 1; end;
-        if (Session.Room = 38) and (Session.MoveGuard = 0) then begin Session.Room := 34; Session.MoveGuard := 1; end;
-        if (Session.Room = 39) and (Session.MoveGuard = 0) then begin Session.Room := 46; Session.MoveGuard := 1; end;
-        if (Session.Room = 40) and (Session.MoveGuard = 0) then begin Session.Room := 35; Session.MoveGuard := 1; end;
-        if (Session.Room = 41) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 42) and (Session.MoveGuard = 0) then begin Session.Room := 49; Session.MoveGuard := 1; end;
-        if (Session.Room = 43) and (Session.MoveGuard = 0) then begin Session.Room := 37; Session.MoveGuard := 1; end;
-        if (Session.Room = 44) and (Session.MoveGuard = 0) then begin Session.Room := 51; Session.MoveGuard := 1; end;
-        if (Session.Room = 45) and (Session.MoveGuard = 0) then begin Session.Room := 38; Session.MoveGuard := 1; end;
-        if (Session.Room = 46) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 47) and (Session.MoveGuard = 0) then begin Session.Room := 53; Session.MoveGuard := 1; end;
-        if (Session.Room = 48) and (Session.MoveGuard = 0) then begin Session.Room := 42; Session.MoveGuard := 1; end;
-        if (Session.Room = 49) and (Session.MoveGuard = 0) then begin Session.Room := 55; Session.MoveGuard := 1; end;
-        if (Session.Room = 50) and (Session.MoveGuard = 0) then begin Session.Room := 43; Session.MoveGuard := 1; end;
-        if (Session.Room = 51) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 52) and (Session.MoveGuard = 0) then begin Session.Room := 47; Session.MoveGuard := 1; end;
-        if (Session.Room = 53) and (Session.MoveGuard = 0) then begin Session.Room := 57; Session.MoveGuard := 1; end;
-        if (Session.Room = 54) and (Session.MoveGuard = 0) then begin Session.Room := 48; Session.MoveGuard := 1; end;
-        if (Session.Room = 55) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
-        if (Session.Room = 56) and (Session.MoveGuard = 0) then begin Session.Room := 52; Session.MoveGuard := 1; end;
-        if (Session.Room = 57) and (Session.MoveGuard = 0) then begin Session.InArena := 1; Session.MoveGuard := 1; end;
+        case Session.Room of
+          33: Session.Room := 36;
+          34: Session.Room := 39;
+          35: Session.Room := 33;
+          36: Session.Room := 41;
+          37: Session.Room := 44;
+          38: Session.Room := 34;
+          39: Session.Room := 46;
+          40: Session.Room := 35;
+          41: Session.InArena := 1;
+          42: Session.Room := 49;
+          43: Session.Room := 37;
+          44: Session.Room := 51;
+          45: Session.Room := 38;
+          46: Session.InArena := 1;
+          47: Session.Room := 53;
+          48: Session.Room := 42;
+          49: Session.Room := 55;
+          50: Session.Room := 43;
+          51: Session.InArena := 1;
+          52: Session.Room := 47;
+          53: Session.Room := 57;
+          54: Session.Room := 48;
+          55: Session.InArena := 1;
+          56: Session.Room := 52;
+          57: Session.InArena := 1;
+        end;
+        Session.MoveGuard := 1;
       end;
       Session.MoveGuard := 0;
       until (Session.InArena = 0) or (Session.Room = 1000);
@@ -2160,8 +2180,7 @@ begin
     1: WriteLn('JESTES NA PIERWSZYM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
     2: WriteLn('JESTES NA DRUGIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
     3: WriteLn('JESTES NA TRZECIM LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, 'KUNSZTU');
-    4..8: WriteLn('JESTES NA ', LevelName(Player.Level), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
-    9..13: WriteLn('JESTES NA ', LevelName(Player.Level), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
+    4..13: WriteLn('JESTES NA ', LevelName(Player.Level), ' LEVELU A DO NASTEPNEGO BRAKUJE CI ', gap, ' KUNSZTU');
   end;
   if Player.Level > 13 then
     WriteLn('JESTES NA BARDZO WYSOKIM LEVELU A DO NASTEPNEGO BRAKUJE CI TYLKO', gap, ' KUNSZTU');
@@ -3089,10 +3108,10 @@ procedure Room12;
 begin
   if Session.Room <> 12 then Exit;
   WriteLn('TEN POKOJ JEST CALY OBRYZGANY KRWIA NA SCIANACH FLAKI I MOZGI LODZKIE ');
-  if World.CageWeakling = 12 then
-    WriteLn('POTWOR - CIENIAS STOI NA 1 NODZE POD SCIANA');
-  if World.CageWeakling = 0 then
-    WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  case World.CageWeakling of
+    12: WriteLn('POTWOR - CIENIAS STOI NA 1 NODZE POD SCIANA');
+    0: WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  end;
   repeat
     Write(Player.Energy, '%.', Player.Experience, '>');
     ReadLn(Command);
@@ -3568,15 +3587,19 @@ begin
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
   WriteLn('<<<<<<<<<=+=+=+!!!#####ZDOBYLES LEVEL#####!!!+=+=+=<<<<<<<<<<<<<');
 
-  if Player.Level = 1 then Player.Experience := Player.Experience - 725
-  else if Player.Level = 2 then Player.Experience := Player.Experience - 730
-  else if Player.Level = 3 then Player.Experience := Player.Experience - 735
-  else if Player.Level <= 8 then Player.Experience := (Player.Experience - Lvl4_Base) - Player.Level
-  else Player.Experience := (Player.Experience - (Player.Level * 2)) - Lvl9_Base;
-  if Player.Wisdom < 11 then Player.Practice := Player.Practice + 3;
-  if (Player.Wisdom > 10) and (Player.Wisdom < 16) then Player.Practice := Player.Practice + 4;
-  if (Player.Wisdom > 15) and (Player.Wisdom < 23) then Player.Practice := Player.Practice + 5;
-  if Player.Wisdom > 22 then Player.Practice := Player.Practice + 6;
+  case Player.Level of
+    1: Player.Experience := Player.Experience - 725;
+    2: Player.Experience := Player.Experience - 730;
+    3: Player.Experience := Player.Experience - 735;
+    4..8: Player.Experience := (Player.Experience - Lvl4_Base) - Player.Level;
+    else Player.Experience := (Player.Experience - (Player.Level * 2)) - Lvl9_Base;
+  end;
+  case Player.Wisdom of
+    -128..10: Player.Practice := Player.Practice + 3;
+    11..15: Player.Practice := Player.Practice + 4;
+    16..22: Player.Practice := Player.Practice + 5;
+    else Player.Practice := Player.Practice + 6;
+  end;
   WriteLn('<<<<<<<<<<<<ZYSKALES ', Player.Practice, ' PRAKTYK >>>>>>>>>>>>>>>');
   if Player.Dexterity > 12 then Player.MaxEnergy := Player.MaxEnergy + 11
   else Player.MaxEnergy := Player.MaxEnergy + 10;
@@ -3905,10 +3928,10 @@ procedure Room14;
 begin
 
   WriteLn('TEN POKOJ JEST CALY OBRYZGANY KRWIA NA SCIANACH FLAKI I MOZGI LODZKIE ');
-  if World.CageAgile = 14 then
-    WriteLn('ZRECZNY POTWOR SMIGA MIEDZY SCIANAMI');
-  if World.CageAgile = 0 then
-    WriteLn('PAROJACE WNETRZNOSCI POTWORA SMIERDZA DOSYC MOCNO');
+  case World.CageAgile of
+    14: WriteLn('ZRECZNY POTWOR SMIGA MIEDZY SCIANAMI');
+    0: WriteLn('PAROJACE WNETRZNOSCI POTWORA SMIERDZA DOSYC MOCNO');
+  end;
   repeat
     Write(Player.Energy, '%.', Player.Experience, '>');
     ReadLn(Command);
@@ -3959,10 +3982,10 @@ procedure Room15;
 begin
 
   WriteLn('TEN POKOJ JEST CALY OBRYZGANY KRWIA NA SCIANACH FLAKI I MOZGI LODZKIE ');
-  if World.CageTough = 15 then
-    WriteLn('POWOLNY ACZ ODPORNY NA BOL POTWOR SPOKOJNIE LEZY POD SCIANA');
-  if World.CageTough = 0 then
-    WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  case World.CageTough of
+    15: WriteLn('POWOLNY ACZ ODPORNY NA BOL POTWOR SPOKOJNIE LEZY POD SCIANA');
+    0: WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  end;
   repeat
     Write(Player.Energy, '%.', Player.Experience, '>');
     ReadLn(Command);
@@ -4015,10 +4038,10 @@ label
 begin
 
   WriteLn('TEN POKOJ JEST CALY OBRYZGANY KRWIA NA SCIANACH FLAKI I MOZGI LODZKIE ');
-  if World.CageHuge = 16 then
-    WriteLn('OGROMNY POTWOR WIDZAC MIESO RZUCA SIE NA CIEBIE');
-  if World.CageHuge = 0 then
-    WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  case World.CageHuge of
+    16: WriteLn('OGROMNY POTWOR WIDZAC MIESO RZUCA SIE NA CIEBIE');
+    0: WriteLn('PAROJACE WNETRZNOSCI POTWORA SA ROZWLECZONE DOOKOLA');
+  end;
   repeat
     if World.CageHuge = 16 then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;

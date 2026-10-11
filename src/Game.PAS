@@ -2436,11 +2436,6 @@ begin
   Read(Session.SaveFile, value);
 end;
 
-procedure LoadSlotLine(var value: Shortint);
-begin
-  ReadLn(Session.SaveFile, value);
-end;
-
 procedure LoadSlotText(var value: string);
 begin
   Read(Session.SaveFile, value);
@@ -3561,7 +3556,8 @@ begin
   LoadSlot(World.OldElf);
   LoadSlotShort(World.DuncanQuest);
   LoadSlotShort(Bag.Backpack);
-  LoadSlotLine(World.Duncan);
+  LoadSlotShort(World.Duncan);
+  ReadLn(Session.SaveFile);
   LoadSlotText(Gear.WornGarment);
   Close(Session.SaveFile);
   WriteLn('suckemall:', Gear.WornGarment);

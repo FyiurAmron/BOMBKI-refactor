@@ -4479,23 +4479,17 @@ end;
 procedure Room101;
 
 begin
-
-  WriteLines(TxtRoom101Lines1);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceRozjazd,
-                    TxtExitZachod, TxtPlaceDroga,
-                    TxtExitPolnoc, TxtPlaceLas,
-                    TxtExitPolodnie, TxtPlaceLas]);
-    if Command = CmdPatrz + CmdDrogowskaz then
-      WriteLn(TxtRoom101_05);
-    if MoveWhenOrQuit([Go(CmdWschod, RoomQuestMaster), Go(CmdZachod, RoomRoad2), Go(CmdPolnoc, RoomForest)]) then Exit;
-  until Session.Room <> RoomRoad1;
-
+  BasicRoomQuitGeneric(RoomRoad1,
+            TxtRoom101Lines1,
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceRozjazd,
+             TxtExitZachod, TxtPlaceDroga,
+             TxtExitPolnoc, TxtPlaceLas,
+             TxtExitPolodnie, TxtPlaceLas],
+            [Go(CmdWschod, RoomQuestMaster), Go(CmdZachod, RoomRoad2),
+             Go(CmdPolnoc, RoomForest)],
+            CmdPatrz + CmdDrogowskaz,
+            [TxtRoom101_05]);
 end;
 procedure Room102;
 begin

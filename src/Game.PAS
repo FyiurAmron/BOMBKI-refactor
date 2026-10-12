@@ -274,6 +274,20 @@ begin
   BasicRoomQuitGeneric(RoomNo, intro, exits, moves, '', []);
 end;
 
+{ One bag slot of the fight loot: an empty slot rolls Random(20) and,
+  below the threshold, marks the find with the current room and
+  announces it. }
+procedure TryLoot(var slot: Integer; threshold: Integer; foundMsg: string);
+begin
+  if slot = 0 then begin
+    Combat.Roll := Random(20);
+    if Combat.Roll < threshold then begin
+      slot := Session.Room;
+      WriteLn(TxtShared_08, foundMsg);
+    end;
+  end;
+end;
+
 
 procedure ShowIntro;
 var
@@ -382,18 +396,9 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        if Bag.OldSword = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin Bag.OldSword := Session.Room; WriteLn(TxtShared_08, TxtShared_10); end;
-        end;
-        if Bag.SmallShield = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin Bag.SmallShield := Session.Room; WriteLn(TxtShared_08, TxtShared_11); end;
-        end;
-        if Bag.Heart = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 6 then begin Bag.Heart := Session.Room; WriteLn(TxtShared_08, TxtShared_12); end;
-        end;
+        TryLoot(Bag.OldSword, 7, TxtShared_10);
+        TryLoot(Bag.SmallShield, 7, TxtShared_11);
+        TryLoot(Bag.Heart, 6, TxtShared_12);
       end else Combat.Fled := 0;
     end;
   until Session.Room <> RoomCageStrong;
@@ -731,11 +736,7 @@ begin
   Combat.Loot := Random(15);
   WriteLn(TxtShared_08, Combat.Loot, TxtFightDog_01);
   Player.Money := Player.Money + Combat.Loot;
-  if Bag.Heart = 0 then begin
-    Combat.Roll := Random(20);
-    if Combat.Roll < 5 then begin Bag.Heart := Session.Room; WriteLn(TxtShared_08, TxtFightDog_02);
-    end;
-  end;
+  TryLoot(Bag.Heart, 5, TxtFightDog_02);
 end;
 
 type
@@ -3099,27 +3100,9 @@ begin
         Combat.Loot := Random(10);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        if Bag.OldSword = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 4 then begin
-            Bag.OldSword := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_10);
-          end;
-        end;
-        if Bag.SmallShield = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 4 then begin
-            Bag.SmallShield := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_11);
-          end;
-        end;
-        if Bag.Heart = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 6 then begin
-            Bag.Heart := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_12);
-          end;
-        end;
+        TryLoot(Bag.OldSword, 4, TxtShared_10);
+        TryLoot(Bag.SmallShield, 4, TxtShared_11);
+        TryLoot(Bag.Heart, 6, TxtShared_12);
       end
       else
         Combat.Fled := 0;
@@ -3875,27 +3858,9 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        if Bag.OldSword = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin
-            Bag.OldSword := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_10);
-          end;
-        end;
-        if Bag.SmallShield = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin
-            Bag.SmallShield := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_11);
-          end;
-        end;
-        if Bag.Heart = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 6 then begin
-            Bag.Heart := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_12);
-          end;
-        end;
+        TryLoot(Bag.OldSword, 7, TxtShared_10);
+        TryLoot(Bag.SmallShield, 7, TxtShared_11);
+        TryLoot(Bag.Heart, 6, TxtShared_12);
       end else
         Combat.Fled := 0;
     end;
@@ -3927,27 +3892,9 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        if Bag.OldSword = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin
-            Bag.OldSword := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_10);
-          end;
-        end;
-        if Bag.SmallShield = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 7 then begin
-            Bag.SmallShield := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_11);
-          end;
-        end;
-        if Bag.Heart = 0 then begin
-          Combat.Roll := Random(20);
-          if Combat.Roll < 6 then begin
-            Bag.Heart := Session.Room;
-            WriteLn(TxtShared_08, TxtShared_12);
-          end;
-        end;
+        TryLoot(Bag.OldSword, 7, TxtShared_10);
+        TryLoot(Bag.SmallShield, 7, TxtShared_11);
+        TryLoot(Bag.Heart, 6, TxtShared_12);
       end else
         Combat.Fled := 0;
     end;
@@ -3974,27 +3921,9 @@ begin
       Combat.Loot := Random(30);
       WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
       Player.Money := Player.Money + Combat.Loot;
-      if Bag.OldSword = 0 then begin
-        Combat.Roll := Random(20);
-        if Combat.Roll < 10 then begin
-          Bag.OldSword := Session.Room;
-          WriteLn(TxtShared_08, TxtShared_10);
-        end;
-      end;
-      if Bag.SmallShield = 0 then begin
-        Combat.Roll := Random(20);
-        if Combat.Roll < 10 then begin
-          Bag.SmallShield := Session.Room;
-          WriteLn(TxtShared_08, TxtShared_11);
-        end;
-      end;
-      if Bag.Heart = 0 then begin
-        Combat.Roll := Random(20);
-        if Combat.Roll < 6 then begin
-          Bag.Heart := Session.Room;
-          WriteLn(TxtShared_08, TxtShared_12);
-        end;
-      end;
+      TryLoot(Bag.OldSword, 10, TxtShared_10);
+      TryLoot(Bag.SmallShield, 10, TxtShared_11);
+      TryLoot(Bag.Heart, 6, TxtShared_12);
       goto L1028_AfterFlee;
       L1027_Flee:
       Combat.Fled := 0;

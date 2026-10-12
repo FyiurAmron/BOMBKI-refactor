@@ -1013,6 +1013,29 @@ begin
   CompositeFight(100, 20, 16, 0, 18, 2, 30, 30, 4, True, False);
 end;
 
+type
+  TFight = procedure;
+
+{ One arena beast: the kill command in the beast's room starts the
+  given fight and the beast is removed when it falls. }
+procedure KillBeast(cmd: string; var beast: Integer; fight: TFight);
+begin
+  if (Command = cmd) and (Session.Room = beast) then begin
+    fight;
+    beast := 0;
+  end;
+end;
+
+{ The same, but a beast that fled the fight stays in the room. }
+procedure KillBeastUnlessFled(cmd: string; var beast: Integer; fight: TFight);
+begin
+  if (Command = cmd) and (Session.Room = beast) then begin
+    fight;
+    if Combat.Fled = 0 then
+      beast := 0;
+  end;
+end;
+
 procedure FightNotEasy;
 begin
   CompositeFight(130, 20, 20, 0, 19, 2, 20, 45, 4, True, False);
@@ -1587,7 +1610,47 @@ begin
     TextBackground(Combat.Roll);
   end;
 end;
+type
+  TBeastKill = record
+    cmd: string;
+    beast: ^Integer;
+    fight: TFight;
+    unlessFled: Boolean;
+  end;
+
+const
+  { The arena beasts: the kill command in the beast's room starts the
+    tier's fight; unlessFled leaves a beast that fled standing. The
+    blocks with extra side effects stay hand-written in ArenaMaze. }
+  BeastKills: array[1..23] of TBeastKill = (
+    (cmd: CmdZabij + CmdSlimak; beast: @World.Snail; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdKornik; beast: @World.Woodworm; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdMucha; beast: @World.Fly; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdZuk; beast: @World.Beetle; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdKaraluch; beast: @World.Cockroach; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdMrowka; beast: @World.Ant; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdPajak; beast: @World.Spider; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdDzik; beast: @World.Boar; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSzczur; beast: @World.Rat; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdLis; beast: @World.Fox; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdKuropatwa; beast: @World.Partridge; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdZajac; beast: @World.Hare; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdOrzel; beast: @World.Eagle; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSarna; beast: @World.Deer; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSlon; beast: @World.Elephant; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdLew; beast: @World.Lion; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdZyrafa; beast: @World.Giraffe; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdWilk; beast: @World.Wolf; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdWielblad; beast: @World.Camel; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdStrus; beast: @World.Ostrich; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdBoa; beast: @World.Boa; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdBizon; beast: @World.Bison; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdPantera; beast: @World.Panther; fight: FightMedium; unlessFled: False)
+  );
+
 procedure ArenaMaze;
+var
+  bi: Integer;
 begin
   if (Session.Room = RoomArena33) or (Session.Room = RoomArena34) or (Session.Room = RoomArena35) or (Session.Room = RoomArena36) or (Session.Room = RoomArena37) or
      (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or (Session.Room = RoomArena40) or (Session.Room = RoomArena41) or (Session.Room = RoomArena42) or
@@ -1608,105 +1671,18 @@ begin
         World.Bacterium := 0;
         WriteLn(TxtArenaMaze_02);
       end;
-      if (Command = CmdZabij + CmdSlimak) and (Session.Room = World.Snail) then
-      begin FightWeak;
-        if Combat.Fled = 0 then World.Snail := 0;
-      end;
-      if (Command = CmdZabij + CmdKornik) and (Session.Room = World.Woodworm) then
-      begin FightWeak;
-        if Combat.Fled = 0 then World.Woodworm := 0;
-      end;
-      if (Command = CmdZabij + CmdMucha) and (Session.Room = World.Fly) then
-      begin FightWeak;
-        if Combat.Fled = 0 then World.Fly := 0;
-      end;
-
-      if (Command = CmdZabij + CmdZuk) and (Session.Room = World.Beetle) then
-      begin FightWeak;
-        if Combat.Fled = 0 then World.Beetle := 0;
-      end;
-      if (Command = CmdZabij + CmdKaraluch) and (Session.Room = World.Cockroach) then
-      begin FightWeak;
-        World.Cockroach := 0;
-      end;
-      if (Command = CmdZabij + CmdMrowka) and (Session.Room = World.Ant) then
-      begin FightWeak;
-        World.Ant := 0;
-      end;
-      if (Command = CmdZabij + CmdPajak) and (Session.Room = World.Spider) then
-      begin FightWeak;
-        World.Spider := 0;
-      end;
-      if (Command = CmdZabij + CmdDzik) and (Session.Room = World.Boar) then
-      begin FightWeakish;
-        World.Boar := 0;
-      end;
+      for bi := Low(BeastKills) to High(BeastKills) do
+        with BeastKills[bi] do
+          if unlessFled then
+            KillBeastUnlessFled(cmd, beast^, fight)
+          else
+            KillBeast(cmd, beast^, fight);
       if (Command = CmdZabij + CmdWilczur) and (Session.Room = World.Mongrel) then
       begin WriteLn(TxtArenaMaze_03);
         FightWeakish;
         World.Mongrel := 0;
       end;
 
-      if (Command = CmdZabij + CmdSzczur) and (Session.Room = World.Rat) then
-      begin FightWeakish;
-        World.Rat := 0;
-      end;
-      if (Command = CmdZabij + CmdLis) and (Session.Room = World.Fox) then
-      begin FightWeakish;
-        World.Fox := 0;
-      end;
-      if (Command = CmdZabij + CmdKuropatwa) and (Session.Room = World.Partridge) then
-      begin FightWeakish;
-        World.Partridge := 0;
-      end;
-      if (Command = CmdZabij + CmdZajac) and (Session.Room = World.Hare) then
-      begin FightWeakish;
-        World.Hare := 0;
-      end;
-      if (Command = CmdZabij + CmdOrzel) and (Session.Room = World.Eagle) then
-      begin FightWeakish;
-        World.Eagle := 0;
-      end;
-      if (Command = CmdZabij + CmdSarna) and (Session.Room = World.Deer) then
-      begin FightWeakish;
-        World.Deer := 0;
-      end;
-      if (Command = CmdZabij + CmdSlon) and (Session.Room = World.Elephant) then
-      begin FightMedium;
-        World.Elephant := 0;
-      end;
-      if (Command = CmdZabij + CmdLew) and (Session.Room = World.Lion) then
-      begin FightMedium;
-        World.Lion := 0;
-      end;
-      if (Command = CmdZabij + CmdZyrafa) and (Session.Room = World.Giraffe) then
-      begin FightMedium;
-        World.Giraffe := 0;
-      end;
-      if (Command = CmdZabij + CmdWilk) and (Session.Room = World.Wolf) then
-      begin FightMedium;
-        World.Wolf := 0;
-      end;
-      if (Command = CmdZabij + CmdWielblad) and (Session.Room = World.Camel) then
-      begin FightMedium;
-        World.Camel := 0;
-      end;
-      if (Command = CmdZabij + CmdStrus) and (Session.Room = World.Ostrich) then
-      begin FightMedium;
-        World.Ostrich := 0;
-      end;
-      if (Command = CmdZabij + CmdBoa) and (Session.Room = World.Boa) then
-      begin FightMedium;
-        World.Boa := 0;
-      end;
-      if (Command = CmdZabij + CmdBizon) and (Session.Room = World.Bison) then
-      begin FightMedium;
-        World.Bison := 0;
-      end;
-      if (Command = CmdZabij + CmdPantera) and (Session.Room = World.Panther) then
-      begin FightMedium;
-        World.Panther := 0;
-      end;
       if (Command = CmdZabij + CmdGladiator) and (Session.Room = World.Gladiator) then
       begin FightHard;
         World.Gladiator := 0;

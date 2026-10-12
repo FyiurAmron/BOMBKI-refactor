@@ -288,6 +288,30 @@ begin
   end;
 end;
 
+{ An item carried into the trance: if its recorded room is the room the
+  player left, announce it. }
+procedure TranceItemLine(itemRoom: Integer; line: string);
+begin
+  if itemRoom = Session.OuterRoom then
+    WriteLn(line);
+end;
+
+type
+  TTranceItem = record
+    item: ^Integer;
+    line: string;
+  end;
+
+const
+  { The items carried into the trance, announced in dispatch order. }
+  TranceItems: array[1..5] of TTranceItem = (
+    (item: @Bag.OldSword; line: TxtStart_07),
+    (item: @Bag.SmallShield; line: TxtTranceItemLabel + TxtStart_08),
+    (item: @Bag.Heart; line: TxtTranceItemLabel + TxtStart_09),
+    (item: @Bag.Diploma; line: TxtTranceItemLabel + TxtStart_10),
+    (item: @Bag.Pipe; line: TxtStart_11)
+  );
+
 
 procedure ShowIntro;
 var
@@ -4609,7 +4633,7 @@ procedure Start;
 label
   L1012_TrancePrompt, L1025_Exit;
 var
-  gi, ri: Integer;
+  gi, ri, ti: Integer;
 begin
 
   Randomize;
@@ -4642,16 +4666,9 @@ begin
     if Session.Room = DeadRoom then Death;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
     if Session.Room = TranceRoom then begin
-      if Bag.OldSword = Session.OuterRoom then
-        WriteLn(TxtStart_07);
-      if Bag.SmallShield = Session.OuterRoom then
-        WriteLn(TxtTranceItemLabel, TxtStart_08);
-      if Bag.Heart = Session.OuterRoom then
-        WriteLn(TxtTranceItemLabel, TxtStart_09);
-      if Bag.Diploma = Session.OuterRoom then
-        WriteLn(TxtTranceItemLabel, TxtStart_10);
-      if Bag.Pipe = Session.OuterRoom then
-        WriteLn(TxtStart_11);
+      for ti := Low(TranceItems) to High(TranceItems) do
+        with TranceItems[ti] do
+          TranceItemLine(item^, line);
       L1012_TrancePrompt: Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
 

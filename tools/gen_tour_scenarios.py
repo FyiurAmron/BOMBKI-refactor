@@ -168,6 +168,16 @@ def extract():
                         if found:
                             texts[cur] = found[:38]
                             break
+            mt = re.search(r"TranceItemLine\([^,]+, (.*)\);", l)
+            if mt and cur is not None and cur not in texts:
+                found = write_text("WriteLn(%s);" % mt.group(1).replace(" + ", ", "))
+                if found:
+                    texts[cur] = found[:38]
+            mt2 = re.match(r"\s*\(item: @Bag\.\w+; line: (.+)\),?$", l)
+            if mt2 and cur is None and 1000 not in texts:
+                found = write_text("WriteLn(%s);" % mt2.group(1).replace(" + ", ", "))
+                if found:
+                    texts[1000] = found[:38]
             m = re.match(
                 r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
                 r" Session\.Room := (\w+);", l)

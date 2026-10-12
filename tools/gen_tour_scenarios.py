@@ -31,6 +31,24 @@ def extract():
 
     g = (SOURCES / "Game.PAS").read_text().split("\n")
 
+    # merge wrapped MoveWhen calls onto their opening line so the
+    # per-line edge scan sees the whole constructor
+    merged, buf = [], None
+    for l in g:
+        if buf is not None:
+            buf = buf.rstrip() + ' ' + l.strip()
+            if l.rstrip().endswith(';'):
+                merged.append(buf)
+                buf = None
+        elif re.search(r"MoveWhen(?:OrExit|OrQuit)?\(\[", l) \
+                and not l.rstrip().endswith(';'):
+            buf = l
+        else:
+            merged.append(l)
+    if buf is not None:
+        merged.append(buf)
+    g = merged
+
     # Display texts live in the strings catalog: a room's intro line is
     # either a remaining literal or a catalog identifier reference.
     catalog = {}
@@ -119,6 +137,13 @@ def extract():
                     cur = proc_rooms.get(name) if name in proc_rooms else None
                     if cur is not None:
                         add(cur, None, None)
+            mm = re.search(r"MoveWhen(?:OrExit|OrQuit)?\(\[([^]]+)\]", l)
+            if mm and cur is not None:
+                for m3 in re.finditer(r"Go\((\w+), (\w+)\)", mm.group(1)):
+                    word = catalog_word(m3.group(1))
+                    dest = room_num(m3.group(2))
+                    if word and dest is not None:
+                        add(cur, word, dest)
             m = re.match(
                 r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
                 r" Session\.Room := (\w+);", l)
@@ -166,6 +191,13 @@ def extract():
             if rid is not None:
                 room = rid
                 add(room, None, None)
+        mm = re.search(r"MoveWhen(?:OrExit|OrQuit)?\(\[([^]]+)\]", l)
+        if mm and room is not None:
+            for m3 in re.finditer(r"Go\((\w+), (\w+)\)", mm.group(1)):
+                word = catalog_word(m3.group(1))
+                dest = room_num(m3.group(2))
+                if word and dest is not None:
+                    add(room, word, dest)
         m = re.match(
             r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
             r" Session\.Room := (\w+);", l)

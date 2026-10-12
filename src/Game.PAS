@@ -154,6 +154,47 @@ begin
   end;
 end;
 
+type
+  TMovement = record
+    cmd: string;
+    dest: Integer;
+  end;
+
+function Go(cmd: string; dest: Integer): TMovement;
+begin
+  Go.cmd := cmd;
+  Go.dest := dest;
+end;
+
+procedure MoveWhen(const moves: array of TMovement);
+var
+  i: Integer;
+begin
+  for i := Low(moves) to High(moves) do
+    if Command = moves[i].cmd then
+      Session.Room := moves[i].dest;
+end;
+
+function MoveWhenOrExit(const moves: array of TMovement): Boolean;
+begin
+  MoveWhenOrExit := False;
+  if Command = CmdWyjscie then begin
+    MoveWhenOrExit := True;
+    Exit;
+  end;
+  MoveWhen(moves);
+end;
+
+function MoveWhenOrQuit(const moves: array of TMovement): Boolean;
+var
+  leave: Boolean;
+begin
+  leave := MoveWhenOrExit(moves);
+  if leave then
+    Session.ExitRequested := True;
+  MoveWhenOrQuit := leave;
+end;
+
 procedure WriteLines(const lines: array of string);
 var
   i: Integer;
@@ -200,13 +241,12 @@ begin
                     TxtExitPolodnie, TxtPlacePokoj,
                     TxtExitGora, TxtPlacePokoj,
                     TxtExitDol, TxtPlacePokoj]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := RoomSchoolHall;
-    if Command = CmdZachod then Session.Room := RoomSchoolSide1;
-    if Command = CmdPolnoc then Session.Room := RoomSchoolSide2;
-    if Command = CmdPolodnie then Session.Room := RoomSchoolSide3;
-    if Command = CmdGora then Session.Room := RoomSchoolLanding;
-    if Command = CmdDol then Session.Room := RoomSchoolSide4;
+    if MoveWhenOrExit([Go(CmdWschod, RoomSchoolHall),
+              Go(CmdZachod, RoomSchoolSide1),
+              Go(CmdPolnoc, RoomSchoolSide2),
+              Go(CmdPolodnie, RoomSchoolSide3),
+              Go(CmdGora, RoomSchoolLanding),
+              Go(CmdDol, RoomSchoolSide4)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLn(TxtRoom5_10);
       WriteLn(TxtRoom5_11);
@@ -221,8 +261,7 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdExit then WriteLn(TxtRoom0_02);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdPolnoc then Session.Room := RoomSalon;
+    if MoveWhenOrExit([Go(CmdPolnoc, RoomSalon)]) then Exit;
   until Session.Room <> RoomStart;
 end;
 procedure Room1;
@@ -240,12 +279,11 @@ begin
                     TxtExitWschod, TxtPlacePokojTreningowy1,
                     TxtExitZachod, TxtPlaceMudSzkola,
                     TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := RoomStart;
-    if Command = CmdWschod then Session.Room := RoomTraining;
-    if Command = CmdDol then Session.Room := RoomMeditation;
-    if Command = CmdZachod then Session.Room := RoomSchoolHall;
-    if Command = CmdPolnoc then Session.Room := RoomCityCentre;
+    if MoveWhenOrExit([Go(CmdPolodnie, RoomStart),
+              Go(CmdWschod, RoomTraining),
+              Go(CmdDol, RoomMeditation),
+              Go(CmdZachod, RoomSchoolHall),
+              Go(CmdPolnoc, RoomCityCentre)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom1Lines2);
     end;
@@ -264,9 +302,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlacePokojCentralny,
                     TxtExitZachod, TxtPlaceMudSzkola2]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := RoomSalon;
-    if Command = CmdZachod then Session.Room := RoomLost;
+    if MoveWhenOrExit([Go(CmdWschod, RoomSalon), Go(CmdZachod, RoomLost)]) then Exit;
     if Command = CmdPatrz + CmdAfisz then begin
       WriteLines(TxtRoom4Lines1);
     end;
@@ -288,8 +324,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := RoomCageCorridor;
+    if MoveWhenOrExit([Go(CmdWschod, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.CageStrong = RoomCageStrong) then begin
       Combat.EnemyEnergy := 20;
       Combat.EnemyDexterity := 3;
@@ -330,8 +365,7 @@ begin
         WriteLn(TxtShared_03);
         WriteLn(Direction + TxtSimpleRoom_02 + ExitDesc);
       end;
-      if Command = CmdWyjscie then Exit;
-      if Command = Direction then Session.Room := DestRoom;
+      if MoveWhenOrExit([Go(Direction, DestRoom)]) then Exit;
     until Session.Room <> RoomNo;
   end;
 end;
@@ -361,13 +395,12 @@ begin
                     TxtExitPolodnie, TxtPlaceKlatkaOdpornego,
                     TxtExitGora, TxtPlaceKlatkaSilnegoOdpornegoIZrecznego,
                     TxtExitDol, TxtPlaceJedynaDrogaNieProwadzacaDoKlatek]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := RoomCageWeakling;
-    if Command = CmdZachod then Session.Room := RoomCageStrong;
-    if Command = CmdPolnoc then Session.Room := RoomCageAgile;
-    if Command = CmdPolodnie then Session.Room := RoomCageTough;
-    if Command = CmdGora then Session.Room := RoomCageHuge;
-    if Command = CmdDol then Session.Room := RoomCageReward;
+    if MoveWhenOrExit([Go(CmdWschod, RoomCageWeakling),
+              Go(CmdZachod, RoomCageStrong),
+              Go(CmdPolnoc, RoomCageAgile),
+              Go(CmdPolodnie, RoomCageTough),
+              Go(CmdGora, RoomCageHuge),
+              Go(CmdDol, RoomCageReward)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom11Lines2);
     end;
@@ -388,10 +421,9 @@ begin
                     TxtExitWschod, TxtPlaceCentrumMiasta,
                     TxtExitZachod, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceWejscieNaArene]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdWschod then Session.Room := RoomCityCentre;
-    if Command = CmdZachod then Session.Room := RoomLongStreet2;
-    if Command = CmdPolnoc then Session.Room := RoomArenaEntrance;
+    if MoveWhenOrExit([Go(CmdWschod, RoomCityCentre),
+              Go(CmdZachod, RoomLongStreet2),
+              Go(CmdPolnoc, RoomArenaEntrance)]) then Exit;
   until Session.Room <> RoomLongStreet;
 
 end;
@@ -409,9 +441,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceUlicaDluga,
                     TxtExitWschod, TxtPlaceBudowlaPelnaHalasu]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := RoomLongStreet2;
-    if Command = CmdWschod then Session.Room := RoomCrowd1;
+    if MoveWhenOrExit([Go(CmdPolodnie, RoomLongStreet2), Go(CmdWschod, RoomCrowd1)]) then Exit;
   until Session.Room <> RoomValley;
 
 end;
@@ -428,10 +458,7 @@ begin
                     TxtExitZachod, TxtPlaceCentrumMiasta,
                     TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := RoomCityCentre;
-    if Command = CmdPolnoc then Session.Room := RoomBar;
-    if Command = CmdPolodnie then Session.Room := RoomIvy1;
+    if MoveWhenOrExit([Go(CmdZachod, RoomCityCentre), Go(CmdPolnoc, RoomBar), Go(CmdPolodnie, RoomIvy1)]) then Exit;
   until Session.Room <> RoomDarkStreet;
 
 end;
@@ -450,9 +477,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolnoc, TxtPlaceBluszcz,
                     TxtExitZachod, TxtPlacePodejrzaneKrzaki]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdPolnoc then Session.Room := RoomIvy4;
-    if Command = CmdZachod then Session.Room := RoomCavePath;
+    if MoveWhenOrExit([Go(CmdPolnoc, RoomIvy4), Go(CmdZachod, RoomCavePath)]) then Exit;
   until Session.Room <> RoomClearing;
 
 end;
@@ -530,8 +555,7 @@ begin
       end;
 
     end;
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdPolodnie then Session.Room := RoomShopStreet2;
+    if MoveWhenOrExit([Go(CmdPolodnie, RoomShopStreet2)]) then Exit;
     if (Command = CmdZachod) and (Bag.Permit <= -10) then Session.Room := RoomRoad1;
 if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
     if Command = CmdZabij + CmdQuestMaster then begin
@@ -2992,8 +3016,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlacePok224JCentralny]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := RoomSalon;
+    if MoveWhenOrExit([Go(CmdZachod, RoomSalon)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom2Lines1);
     end;
@@ -3012,8 +3035,7 @@ begin
     if Command = CmdMode then EnterTrance;
     if Command = CmdExit then
       WriteLn(TxtRoom3_04);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdGora then Session.Room := RoomSalon;
+    if MoveWhenOrExit([Go(CmdGora, RoomSalon)]) then Exit;
     Training;
   until Session.Room <> RoomMeditation;
 end;
@@ -3031,9 +3053,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitDol, TxtPlaceMudSzkola2,
                     TxtExitGora, TxtPlaceKlatkiPelneGajdy]);
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdDol then Session.Room := RoomLost;
-    if Command = CmdGora then Session.Room := RoomCageCorridor;
+    if MoveWhenOrExit([Go(CmdDol, RoomLost), Go(CmdGora, RoomCageCorridor)]) then Exit;
   until Session.Room <> RoomSchoolLanding;
 end;
 
@@ -3053,8 +3073,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdWyjscie then Exit;
-    if Command = CmdZachod then Session.Room := RoomCageCorridor;
+    if MoveWhenOrExit([Go(CmdZachod, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.CageWeakling = RoomCageWeakling) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
@@ -3108,11 +3127,10 @@ begin
                       TxtExitPolnoc, TxtPlaceTlum,
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := RoomValley;
-      if Command = CmdPolnoc then Session.Room := RoomCrowd3;
-      if Command = CmdPolodnie then Session.Room := RoomCrowd2;
-      if Command = CmdWschod then Session.Room := RoomCrowd4;
+      if MoveWhenOrExit([Go(CmdZachod, RoomValley),
+                Go(CmdPolnoc, RoomCrowd3),
+                Go(CmdPolodnie, RoomCrowd2),
+                Go(CmdWschod, RoomCrowd4)]) then Exit;
       if Command = CmdPatrz + CmdPlakat then begin
         WriteLn(TxtConcertRooms_07);
         WriteLn(TxtConcertRooms_08);
@@ -3133,9 +3151,7 @@ begin
                       TxtExitPolnoc, TxtPlaceTlum,
                       TxtExitWschod, TxtPlaceTlum]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomCrowd1;
-      if Command = CmdWschod then Session.Room := RoomCrowd5;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomCrowd1), Go(CmdWschod, RoomCrowd5)]) then Exit;
     until Session.Room <> RoomCrowd2;
   end;
   if Session.Room = RoomCrowd3 then begin
@@ -3153,10 +3169,7 @@ begin
                       TxtExitWschod, TxtPlaceTlum,
                       TxtExitPolnoc, TxtPlacePiwiarnia]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := RoomCrowd1;
-      if Command = CmdWschod then Session.Room := RoomCrowd6;
-      if Command = CmdPolnoc then Session.Room := RoomPub;
+      if MoveWhenOrExit([Go(CmdPolodnie, RoomCrowd1), Go(CmdWschod, RoomCrowd6), Go(CmdPolnoc, RoomPub)]) then Exit;
     until Session.Room <> RoomCrowd3;
   end;
   if Session.Room = RoomCrowd4 then begin
@@ -3175,10 +3188,7 @@ begin
                       TxtExitPolnoc, TxtPlaceTlum,
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomCrowd6;
-      if Command = CmdZachod then Session.Room := RoomCrowd1;
-      if Command = CmdPolodnie then Session.Room := RoomCrowd5;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomCrowd6), Go(CmdZachod, RoomCrowd1), Go(CmdPolodnie, RoomCrowd5)]) then Exit;
     until Session.Room <> RoomCrowd4;
   end;
   if Session.Room = RoomCrowd5 then begin
@@ -3196,9 +3206,7 @@ begin
                       TxtExitZachod, TxtPlaceTlum,
                       TxtExitPolnoc, TxtPlaceTlum]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomCrowd4;
-      if Command = CmdZachod then Session.Room := RoomCrowd2;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomCrowd4), Go(CmdZachod, RoomCrowd2)]) then Exit;
     until Session.Room <> RoomCrowd5;
   end;
   if Session.Room = RoomCrowd6 then begin
@@ -3215,9 +3223,7 @@ begin
                       TxtExitZachod, TxtPlaceTlum,
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := RoomCrowd4;
-      if Command = CmdZachod then Session.Room := RoomCrowd3;
+      if MoveWhenOrExit([Go(CmdPolodnie, RoomCrowd4), Go(CmdZachod, RoomCrowd3)]) then Exit;
     until Session.Room <> RoomCrowd6;
   end;
   if Session.Room = RoomPub then begin
@@ -3264,9 +3270,7 @@ begin
           end;
         end;
       end;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolodnie then Session.Room := RoomCrowd3;
-      if Command = CmdWschod then Session.Room := RoomStageEntrance;
+      if MoveWhenOrExit([Go(CmdPolodnie, RoomCrowd3), Go(CmdWschod, RoomStageEntrance)]) then Exit;
     until Session.Room <> RoomPub;
   end;
   if Session.Room = RoomStageEntrance then begin
@@ -3286,9 +3290,7 @@ begin
         WriteLn(TxtConcertRooms_31);
       end;
       ConcertFights;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := RoomPub;
-      if Command = CmdWschod then Session.Room := RoomBackstage;
+      if MoveWhenOrExit([Go(CmdZachod, RoomPub), Go(CmdWschod, RoomBackstage)]) then Exit;
       if Command = CmdPatrz + CmdTabliczka then
         WriteLn(TxtConcertRooms_32);
     until Session.Room <> RoomStageEntrance;
@@ -3330,9 +3332,7 @@ begin
           end;
         end;
       end;
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdZachod then Session.Room := RoomStageEntrance;
-      if Command = CmdPolodnie then Session.Room := RoomStage1;
+      if MoveWhenOrExit([Go(CmdZachod, RoomStageEntrance), Go(CmdPolodnie, RoomStage1)]) then Exit;
     until Session.Room <> RoomBackstage;
   end;
   if Session.Room = RoomStage1 then begin
@@ -3347,9 +3347,7 @@ begin
           WriteExits([TxtShared_03,
                       TxtExitPolnoc, TxtPlaceScena,
                       TxtExitPolodnie, TxtPlaceSrodekSceny]);
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomBackstage;
-      if Command = CmdPolodnie then Session.Room := RoomStage2;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomBackstage), Go(CmdPolodnie, RoomStage2)]) then Exit;
       StageFights;
     until Session.Room <> RoomStage1;
   end;
@@ -3366,9 +3364,7 @@ begin
           WriteExits([TxtShared_03,
                       TxtExitPolnoc, TxtPlaceScena,
                       TxtExitPolodnie, TxtPlaceScena]);
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomStage1;
-      if Command = CmdPolodnie then Session.Room := RoomStage3;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomStage1), Go(CmdPolodnie, RoomStage3)]) then Exit;
       StageFights;
     until Session.Room <> RoomStage2;
   end;
@@ -3384,8 +3380,7 @@ begin
       if Command = CmdExit then
           WriteExits([TxtShared_03,
                       TxtExitPolnoc, TxtPlaceSrodekSceny]);
-      if Command = CmdWyjscie then Exit;
-      if Command = CmdPolnoc then Session.Room := RoomStage2;
+      if MoveWhenOrExit([Go(CmdPolnoc, RoomStage2)]) then Exit;
       StageFights;
     until Session.Room <> RoomStage3;
   end;
@@ -3854,8 +3849,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomCageCorridor;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.CageAgile = RoomCageAgile) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 30; Combat.EnemyStrength := 3;
       Fight;
@@ -3907,8 +3901,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := RoomCageCorridor;
+    if MoveWhenOrQuit([Go(CmdPolnoc, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.CageTough = RoomCageTough) then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
@@ -3997,8 +3990,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitDol, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdDol then Session.Room := RoomCageCorridor;
+    if MoveWhenOrQuit([Go(CmdDol, RoomCageCorridor)]) then Exit;
   until Session.Room <> RoomCageHuge;
 
 end;
@@ -4022,9 +4014,7 @@ begin
       (World.CageHuge = 0) and (Bag.Diploma = 0) then
         Bag.Diploma := RoomCageReward;
     end;
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdGora then Session.Room := RoomCageCorridor;
-    if Command = CmdDol then Session.Room := RoomTeleport;
+    if MoveWhenOrQuit([Go(CmdGora, RoomCageCorridor), Go(CmdDol, RoomTeleport)]) then Exit;
   until Session.Room <> RoomCageReward;
 
 end;
@@ -4055,10 +4045,10 @@ begin
                     TxtExitWschod, TxtPlaceUlCiemna,
                     TxtExitZachod, TxtPlaceUlDluga]);
     if Command = CmdWyjsc0ie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomSalon;
-    if Command = CmdPolnoc then Session.Room := RoomShopStreet;
-    if Command = CmdZachod then Session.Room := RoomLongStreet;
-    if Command = CmdWschod then Session.Room := RoomDarkStreet;
+    MoveWhen([Go(CmdPolodnie, RoomSalon),
+              Go(CmdPolnoc, RoomShopStreet),
+              Go(CmdZachod, RoomLongStreet),
+              Go(CmdWschod, RoomDarkStreet)]);
     StreetFights;
   until Session.Room <> RoomCityCentre;
 
@@ -4082,8 +4072,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceUlicaCiemna]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomDarkStreet;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomDarkStreet)]) then Exit;
     if Command = CmdLista then begin
       WriteLines(TxtRoom76Lines2);
     end;
@@ -4126,11 +4115,10 @@ begin
                     TxtExitWschod, TxtPlaceBluszcz,
                     TxtExitZachod, TxtPlaceBluszcz,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := RoomDarkStreet;
-    if Command = CmdWschod then Session.Room := RoomIvy2;
-    if Command = CmdZachod then Session.Room := RoomIvy3;
-    if Command = CmdPolodnie then Session.Room := RoomIvy4;
+    if MoveWhenOrQuit([Go(CmdPolnoc, RoomDarkStreet),
+              Go(CmdWschod, RoomIvy2),
+              Go(CmdZachod, RoomIvy3),
+              Go(CmdPolodnie, RoomIvy4)]) then Exit;
   until Session.Room <> RoomIvy1;
 
 end;
@@ -4150,8 +4138,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := RoomIvy1;
+    if MoveWhenOrQuit([Go(CmdZachod, RoomIvy1)]) then Exit;
   until Session.Room <> RoomIvy2;
 
 end;
@@ -4171,8 +4158,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomIvy1;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomIvy1)]) then Exit;
   until Session.Room <> RoomIvy3;
 
 end;
@@ -4194,11 +4180,10 @@ begin
                     TxtExitWschod, TxtPlaceBluszcz,
                     TxtExitZachod, TxtPlaceBluszcz,
                     TxtExitPolodnie, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := RoomIvy1;
-    if Command = CmdZachod then Session.Room := RoomIvy5;
-    if Command = CmdWschod then Session.Room := RoomIvy6;
-    if Command = CmdPolodnie then Session.Room := RoomClearing;
+    if MoveWhenOrQuit([Go(CmdPolnoc, RoomIvy1),
+              Go(CmdZachod, RoomIvy5),
+              Go(CmdWschod, RoomIvy6),
+              Go(CmdPolodnie, RoomClearing)]) then Exit;
     if Command = CmdPatrz + CmdNapis then
       WriteLn(TxtRoom80_04);
     if Command = CmdPatrz + CmdStudnia then begin
@@ -4234,8 +4219,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomIvy4;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomIvy4)]) then Exit;
   until Session.Room <> RoomIvy5;
 
 end;
@@ -4255,8 +4239,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceBluszcz]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := RoomIvy4;
+    if MoveWhenOrQuit([Go(CmdZachod, RoomIvy4)]) then Exit;
   until Session.Room <> RoomIvy6;
 
 end;
@@ -4277,10 +4260,7 @@ begin
                     TxtExitWschod, TxtPlaceBluszcz,
                     TxtExitZachod, TxtPlaceBudynek,
                     TxtExitPolodnie, TxtPlaceWejscieDoGroty]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomClearing;
-    if Command = CmdZachod then Session.Room := RoomLivingDoor;
-    if Command = CmdPolodnie then Session.Room := RoomCaveMouth;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomClearing), Go(CmdZachod, RoomLivingDoor), Go(CmdPolodnie, RoomCaveMouth)]) then Exit;
   until Session.Room <> RoomCavePath;
 
 end;
@@ -4305,9 +4285,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceGrota,
                     TxtExitPolnoc, TxtPlacePodejrzaneKrzaki]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolnoc then Session.Room := RoomCavePath;
-    if Command = CmdPolodnie then Session.Room := RoomNettleThrone;
+    if MoveWhenOrQuit([Go(CmdPolnoc, RoomCavePath), Go(CmdPolodnie, RoomNettleThrone)]) then Exit;
   until Session.Room <> RoomCaveMouth;
 
 end;
@@ -4340,8 +4318,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceWejscieDoGroty2]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomCaveMouth;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomCaveMouth)]) then Exit;
   until Session.Room <> RoomNettleThrone;
 
 end;
@@ -4372,8 +4349,7 @@ begin
       if World.Door = 0 then
         WriteLn(TxtExitZachod, TxtPlaceWejscieDoDomku);
     end;
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomCavePath;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomCavePath)]) then Exit;
     if (Command = CmdZachod) and (World.Door = 0) then Session.Room := RoomHut;
     if (Command = CmdZachod) and (World.Door <> 0) then
       WriteLn(TxtRoom85_07);
@@ -4432,8 +4408,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceBudynek]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomLivingDoor;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomLivingDoor)]) then Exit;
   until Session.Room <> RoomHut;
 
 end;
@@ -4454,11 +4429,10 @@ begin
                     TxtExitPolnoc, TxtPlaceUlSklepikowa,
                     TxtExitWschod, TxtPlacePiekarnia,
                     TxtExitZachod, TxtPlaceZbrojownia]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomCityCentre;
-    if Command = CmdPolnoc then Session.Room := RoomShopStreet2;
-    if Command = CmdWschod then Session.Room := RoomBakery;
-    if Command = CmdZachod then Session.Room := RoomArmoury;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomCityCentre),
+              Go(CmdPolnoc, RoomShopStreet2),
+              Go(CmdWschod, RoomBakery),
+              Go(CmdZachod, RoomArmoury)]) then Exit;
     StreetFights;
   until Session.Room <> RoomShopStreet;
 
@@ -4480,11 +4454,10 @@ begin
                     TxtExitPolnoc, TxtPlaceRozjazd,
                     TxtExitWschod, TxtPlaceSklepWielobranzowy,
                     TxtExitZachod, TxtPlaceSklepMagiczny]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomShopStreet;
-    if Command = CmdWschod then Session.Room := RoomGeneralStore;
-    if Command = CmdZachod then Session.Room := RoomMagicShop;
-    if Command = CmdPolnoc then Session.Room := RoomQuestMaster;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomShopStreet),
+              Go(CmdWschod, RoomGeneralStore),
+              Go(CmdZachod, RoomMagicShop),
+              Go(CmdPolnoc, RoomQuestMaster)]) then Exit;
     StreetFights;
   until Session.Room <> RoomShopStreet2;
 
@@ -4506,10 +4479,7 @@ begin
                     TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdPatrz + CmdDrogowskaz then
       WriteLn(TxtRoom101_05);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomQuestMaster;
-    if Command = CmdZachod then Session.Room := RoomRoad2;
-    if Command = CmdPolnoc then Session.Room := RoomForest;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomQuestMaster), Go(CmdZachod, RoomRoad2), Go(CmdPolnoc, RoomForest)]) then Exit;
   until Session.Room <> RoomRoad1;
 
 end;
@@ -4529,9 +4499,7 @@ begin
                     TxtExitZachod, TxtPlaceDroga,
                     TxtExitPolnoc, TxtPlaceLas,
                     TxtExitPolodnie, TxtPlaceLas]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomRoad1;
-    if Command = CmdZachod then Session.Room := RoomRoad3;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomRoad1), Go(CmdZachod, RoomRoad3)]) then Exit;
   until Session.Room <> RoomRoad2;
 
 end;
@@ -4549,8 +4517,7 @@ begin
                     TxtExitWschod, TxtPlaceDroga,
                     TxtExitPolnoc, TxtPlaceLas,
                     TxtExitPolodnie, TxtPlaceLas]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomRoad2;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomRoad2)]) then Exit;
   until Session.Room <> RoomRoad3;
 
 end;
@@ -4573,8 +4540,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceUlicaSklepikowa]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := RoomShopStreet;
+    if MoveWhenOrQuit([Go(CmdZachod, RoomShopStreet)]) then Exit;
     BakeryShop;
   until Session.Room <> RoomBakery;
 
@@ -4595,8 +4561,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceUlicaSklepikowa]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomShopStreet;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomShopStreet)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then
       WriteLn(TxtRoom24_04);
     StreetFights;
@@ -4617,8 +4582,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitZachod, TxtPlaceUlicaSklepikowa]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdZachod then Session.Room := RoomShopStreet2;
+    if MoveWhenOrQuit([Go(CmdZachod, RoomShopStreet2)]) then Exit;
     if Command = CmdPatrz + CmdWywieszka then
       WriteLn(TxtRoom25_03);
     StreetFights;
@@ -4639,8 +4603,7 @@ begin
     if Command = CmdExit then
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceUlicaSklepikowa]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomShopStreet2;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomShopStreet2)]) then Exit;
     if Command = CmdPatrz + CmdPlakat then
       WriteLn(TxtRoom26_02);
     MagicShop;
@@ -4662,9 +4625,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitWschod, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceDolinaRozrywek]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdWschod then Session.Room := RoomLongStreet;
-    if Command = CmdPolnoc then Session.Room := RoomValley;
+    if MoveWhenOrQuit([Go(CmdWschod, RoomLongStreet), Go(CmdPolnoc, RoomValley)]) then Exit;
   until Session.Room <> RoomLongStreet2;
 
 end;
@@ -4686,9 +4647,7 @@ begin
         WriteExits([TxtShared_03,
                     TxtExitPolodnie, TxtPlaceUlicaDluga,
                     TxtExitPolnoc, TxtPlaceArena]);
-    if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
-    if Command = CmdPolodnie then Session.Room := RoomLongStreet;
-    if Command = CmdPolnoc then Session.Room := RoomArena33;
+    if MoveWhenOrQuit([Go(CmdPolodnie, RoomLongStreet), Go(CmdPolnoc, RoomArena33)]) then Exit;
   until Session.Room <> RoomArenaEntrance;
 
 end;

@@ -560,8 +560,7 @@ end;
 procedure Room100;
 begin
   if Session.Room <> RoomQuestMaster then Exit;
-  WriteLn(TxtRoom100_01);
-  WriteLn(TxtRoom100_02);
+  WriteLines([TxtRoom100_01, TxtRoom100_02]);
   DescribeStreet;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -3116,9 +3115,7 @@ procedure Room2;
 
 begin
   if Session.Room <> RoomTraining then Exit;
-  WriteLn(TxtYouAreIn, TxtRoom2_01);
-  WriteLn(TxtRoom2_02);
-  WriteLn(TxtShared_04);
+  WriteLines([TxtYouAreIn + TxtRoom2_01, TxtRoom2_02, TxtShared_04]);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
@@ -4123,8 +4120,7 @@ procedure Room77;
 
 begin
 
-  WriteLn(TxtRoom77_01);
-  WriteLn(TxtRoom77_02);
+  WriteLines([TxtRoom77_01, TxtRoom77_02]);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4149,8 +4145,7 @@ procedure Room78;
 
 begin
 
-  WriteLn(TxtRoom78_01);
-  WriteLn(TxtRoom78_02);
+  WriteLines([TxtRoom78_01, TxtRoom78_02]);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4169,8 +4164,7 @@ procedure Room79;
 
 begin
 
-  WriteLn(TxtRoom79_01);
-  WriteLn(TxtRoom79_02);
+  WriteLines([TxtRoom79_01, TxtRoom79_02]);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4230,8 +4224,7 @@ procedure Room81;
 
 begin
 
-  WriteLn(TxtRoom81_01);
-  WriteLn(TxtRoom81_02);
+  WriteLines([TxtRoom81_01, TxtRoom81_02]);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4250,8 +4243,7 @@ procedure Room82;
 
 begin
 
-  WriteLn(TxtRoom82_01);
-  WriteLn(TxtRoom82_02);
+  WriteLines([TxtRoom82_01, TxtRoom82_02]);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4349,8 +4341,7 @@ procedure Room85;
 
 begin
 
-  WriteLn(TxtRoom85_01);
-  WriteLn(TxtRoom85_02);
+  WriteLines([TxtRoom85_01, TxtRoom85_02]);
   if World.Door <> 0 then
     WriteLn(TxtRoom85_03);
   repeat
@@ -4531,9 +4522,7 @@ procedure Room23;
 
 begin
 
-  WriteLn(TxtYouAreIn, TxtRoom23_01);
-  WriteLn(TxtRoom23_02);
-  WriteLn(TxtRoom23_03);
+  WriteLines([TxtYouAreIn + TxtRoom23_01, TxtRoom23_02, TxtRoom23_03]);
   DescribeStreet;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4555,9 +4544,7 @@ procedure Room24;
 
 begin
 
-  WriteLn(TxtYouAreIn, TxtRoom24_01);
-  WriteLn(TxtRoom24_02);
-  WriteLn(TxtRoom24_03);
+  WriteLines([TxtYouAreIn + TxtRoom24_01, TxtRoom24_02, TxtRoom24_03]);
   DescribeStreet;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4578,8 +4565,7 @@ procedure Room25;
 
 begin
 
-  WriteLn(TxtRoom25_01);
-  WriteLn(TxtRoom25_02);
+  WriteLines([TxtRoom25_01, TxtRoom25_02]);
   DescribeStreet;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);

@@ -83,6 +83,10 @@ def extract():
         return None
 
     def write_text(line):
+        # an inline-array WriteLines contributes its first line
+        mm = re.search(r"WriteLines\(\[([^]]*)\]\)", line)
+        if mm:
+            line = "WriteLn(%s);" % mm.group(1).split(",")[0].strip().replace(" + ", ", ")
         mm = re.search(r"WriteLn\('([^']{8,})'\)", line)
         if mm:
             return mm.group(1)

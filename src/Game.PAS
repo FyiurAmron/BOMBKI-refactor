@@ -3797,13 +3797,23 @@ begin
   Player.Money := Player.Money + 5000;
 end;
 
+const
+  { The food commands the player cannot drop. }
+  RefusedFood: array[1..8] of string = (
+    CmdOdrzuc + CmdPaczek, CmdOdrzuc + CmdCiastko,
+    CmdOdrzuc + CmdSuchaRacja, CmdOdrzuc + CmdBulka,
+    CmdOdrzuc + CmdChleb, CmdOdrzuc + CmdWeka,
+    CmdOdrzuc + CmdSerce, CmdOdrzuc + CmdBigos);
+
 procedure CmdRefuseFoodDrop;
+var
+  i: Integer;
 begin
-  if (Command = CmdOdrzuc + CmdPaczek) or (Command = CmdOdrzuc + CmdCiastko) or
-   (Command = CmdOdrzuc + CmdSuchaRacja) or (Command = CmdOdrzuc + CmdBulka) or
-   (Command = CmdOdrzuc + CmdChleb) or (Command = CmdOdrzuc + CmdWeka) or
-   (Command = CmdOdrzuc + CmdSerce) or (Command = CmdOdrzuc + CmdBigos) then
-    WriteLn(TxtCmdRefuseFoodDrop_01);
+  for i := Low(RefusedFood) to High(RefusedFood) do
+    if Command = RefusedFood[i] then begin
+      WriteLn(TxtCmdRefuseFoodDrop_01);
+      Break;
+    end;
 end;
 
 procedure CmdOpenPortal;

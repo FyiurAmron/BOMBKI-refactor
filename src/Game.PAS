@@ -690,99 +690,80 @@ begin
   end;
 end;
 
+type
+  PInteger = ^Integer;
+  PShortint = ^Shortint;
+
+procedure SpawnGroup(const targets: array of PInteger; spread, base: Integer);
+var
+  i: Integer;
+begin
+  for i := Low(targets) to High(targets) do
+    targets[i]^ := Random(spread) + base;
+end;
+
+procedure SpawnGroupShort(const targets: array of PShortint; spread, base: Integer);
+var
+  i: Integer;
+begin
+  for i := Low(targets) to High(targets) do
+    targets[i]^ := Random(spread) + base;
+end;
+
 procedure SpawnMonsters;
 begin
   repeat
-    World.Bacterium := Random(38) + RoomCityCentre;
-    World.Snail := Random(38) + RoomCityCentre;
-    World.Beetle := Random(38) + RoomCityCentre;
-    World.Cockroach := Random(38) + RoomCityCentre;
-    World.Ant := Random(38) + RoomCityCentre;
-    World.Spider := Random(38) + RoomCityCentre;
-    World.Boar := Random(38) + RoomCityCentre;
-    World.Fox := Random(38) + RoomCityCentre;
-    World.Rat := Random(38) + RoomCityCentre;
-    World.Partridge := Random(38) + RoomCityCentre;
+    SpawnGroup([@World.Bacterium, @World.Snail, @World.Beetle, @World.Cockroach, @World.Ant,
+                @World.Spider, @World.Boar, @World.Fox, @World.Rat, @World.Partridge], 38, RoomCityCentre);
   until (World.Bacterium > RoomArenaEntrance) and (World.Snail > RoomArenaEntrance) and (World.Beetle > RoomArenaEntrance) and (World.Cockroach > RoomArenaEntrance)
     and (World.Ant > RoomArenaEntrance) and (World.Spider > RoomArenaEntrance) and (World.Boar > RoomArenaEntrance) and (World.Fox > RoomArenaEntrance)
     and (World.Rat > RoomArenaEntrance) and (World.Partridge > RoomArenaEntrance);
-  repeat World.Deer := Random(38) + RoomCityCentre;
-    World.Eagle := Random(38) + RoomCityCentre;
-    World.Hare := Random(38) + RoomCityCentre;
-    World.Mongrel := Random(38) + RoomCityCentre;
-    World.Woodworm := Random(38) + RoomCityCentre;
-    World.Fly := Random(38) + RoomCityCentre;
+  repeat
+    SpawnGroup([@World.Deer, @World.Eagle, @World.Hare, @World.Mongrel, @World.Woodworm, @World.Fly], 38, RoomCityCentre);
   until (World.Deer > RoomArenaEntrance) and (World.Eagle > RoomArenaEntrance) and (World.Hare > RoomArenaEntrance) and (World.Mongrel > RoomArenaEntrance)
     and (World.Woodworm > RoomArenaEntrance) and (World.Fly > RoomArenaEntrance);
-  repeat World.Elephant := Random(38) + RoomCityCentre;
-    World.Lion := Random(38) + RoomCityCentre;
-    World.Giraffe := Random(38) + RoomCityCentre;
-    World.Camel := Random(38) + RoomCityCentre;
-    World.Ostrich := Random(38) + RoomCityCentre;
-    World.Boa := Random(38) + RoomCityCentre;
-    World.Wolf := Random(38) + RoomCityCentre;
-    World.Bison := Random(38) + RoomCityCentre;
-    World.Panther := Random(38) + RoomCityCentre;
+  repeat
+    SpawnGroup([@World.Elephant, @World.Lion, @World.Giraffe, @World.Camel, @World.Ostrich,
+                @World.Boa, @World.Wolf, @World.Bison, @World.Panther], 38, RoomCityCentre);
   until (World.Elephant > RoomArenaEntrance) and (World.Lion > RoomArenaEntrance) and (World.Giraffe > RoomArenaEntrance) and (World.Camel > RoomArenaEntrance)
     and (World.Ostrich > RoomArenaEntrance) and (World.Boa > RoomArenaEntrance) and (World.Wolf > RoomArenaEntrance) and (World.Bison > RoomArenaEntrance)
     and (World.Panther > RoomArenaEntrance);
-  repeat World.Gladiator := Random(38) + RoomCityCentre;
-    World.Warrior := Random(38) + RoomCityCentre;
-    World.Tamer := Random(38) + RoomCityCentre;
+  repeat
+    SpawnGroup([@World.Gladiator, @World.Warrior, @World.Tamer], 38, RoomCityCentre);
   until (World.Gladiator > RoomArenaEntrance) and (World.Warrior > RoomArenaEntrance) and (World.Tamer > RoomArenaEntrance);
   repeat
-    World.Dachshund := Random(7) + RoomCityCentre;
-    World.Shepherd := Random(7) + RoomCityCentre;
-    World.Pooch := Random(7) + RoomCityCentre;
-    World.Spaniel := Random(7) + RoomCityCentre;
-    World.Poodle := Random(7) + RoomCityCentre;
+    SpawnGroup([@World.Dachshund, @World.Shepherd, @World.Pooch, @World.Spaniel, @World.Poodle], 7, RoomCityCentre);
   until (World.Dachshund > 19) and (World.Shepherd > 19) and (World.Pooch > 19)
     and (World.Spaniel > 19) and (World.Poodle > 19);
-  repeat World.Cabman := Random(7) + RoomCityCentre;
-    World.Vendor := Random(7) + RoomCityCentre;
-    World.Sweeper := Random(7) + RoomCityCentre;
-    World.Drunkard := Random(7) + RoomCityCentre;
-    World.SickMan := Random(7) + RoomCityCentre;
+  repeat
+    SpawnGroup([@World.Cabman, @World.Vendor, @World.Sweeper, @World.Drunkard, @World.SickMan], 7, RoomCityCentre);
   until (World.Cabman > 19) and (World.Vendor > 19)
     and (World.Sweeper > 19) and (World.Drunkard > 19) and (World.SickMan > 19);
-  repeat World.Kid := Random(7) + RoomValley;
-    World.Lunatic := Random(8) + RoomValley;
-    World.Listener := Random(8) + RoomValley;
-    World.Fan := Random(8) + RoomValley;
-    World.Man := Random(8) + RoomValley;
+  repeat
+    SpawnGroupShort([@World.Kid], 7, RoomValley);
+    SpawnGroupShort([@World.Lunatic, @World.Listener, @World.Fan, @World.Man], 8, RoomValley);
   until (World.Kid > RoomValley) and (World.Lunatic > RoomValley) and (World.Listener > RoomValley) and (World.Fan > RoomValley)
     and (World.Man > RoomValley);
-  repeat World.Policeman := Random(9) + RoomValley;
-    World.Bouncer := Random(9) + RoomValley;
-    World.Gorilla := Random(9) + RoomValley;
-    World.OldMan := Random(8) + RoomValley;
-    World.Reporter := Random(7) + RoomValley;
+  repeat
+    SpawnGroupShort([@World.Policeman, @World.Bouncer, @World.Gorilla], 9, RoomValley);
+    SpawnGroupShort([@World.OldMan], 8, RoomValley);
+    SpawnGroupShort([@World.Reporter], 7, RoomValley);
   until (World.Policeman > RoomValley) and (World.Bouncer > RoomValley) and (World.Gorilla > RoomValley) and (World.OldMan > RoomValley)
-    and (World.Reporter > RoomValley); World.Guitarist := Random(3) + RoomStage1;
-  World.Drummer := Random(3) + RoomStage1;
-  World.Keyboardist := Random(3) + RoomStage1;
-  World.Liroy := Random(3) + RoomStage1;
+    and (World.Reporter > RoomValley);
+    SpawnGroup([@World.Guitarist, @World.Drummer, @World.Keyboardist, @World.Liroy], 3, RoomStage1);
   World.Minibarman := RoomPub;
-  World.Fatso := 67;
+  World.Fatso := RoomPub;
   World.DJ := RoomBackstage;
   World.Pedal := RoomBar;
-  World.Couple := 76;
+  World.Couple := RoomBar;
   World.Maciek := RoomBar;
   World.Door := 1;
   World.OldElf := 1;
   repeat
-    World.Sorrel := Random(8) + RoomIvy1;
-    World.Clover := Random(8) + RoomIvy1;
-    World.Daisy := Random(8) + RoomIvy1;
-    World.SowThistle := Random(8) + RoomIvy1;
-    World.Dandelion := Random(8) + RoomIvy1;
-    World.Rose := Random(8) + RoomIvy1;
-    World.Thistle := Random(8) + RoomIvy1;
-    World.Raspberry := Random(8) + RoomIvy1;
-    World.Gooseberry := Random(8) + RoomIvy1;
-    World.Blackberry := Random(8) + RoomIvy1;
-    World.Grass := Random(8) + RoomIvy1;
-    World.Duncan := Random(8) + RoomIvy1;
+    SpawnGroup([@World.Sorrel, @World.Clover, @World.Daisy, @World.SowThistle, @World.Dandelion,
+                @World.Rose, @World.Thistle, @World.Raspberry, @World.Gooseberry, @World.Blackberry,
+                @World.Grass], 8, RoomIvy1);
+    SpawnGroupShort([@World.Duncan], 8, RoomIvy1);
   until (World.Sorrel < RoomCavePath) and (World.Daisy < RoomCavePath) and (World.Clover < RoomCavePath) and (World.SowThistle < RoomCavePath)
     and (World.Dandelion < RoomCavePath) and (World.Rose < RoomCavePath) and (World.Thistle < RoomCavePath) and (World.Raspberry < RoomCavePath);
 end;
@@ -807,20 +788,102 @@ begin
     TrainAttribute(Player.Wisdom, Player.MaxWisdom, 2, 3, CmdMadrosc, CmdMadrosci);
 end;
 
+type
+  TSpot = record
+    where: PInteger;
+    text: string;
+  end;
+  TCrowdSpot = record
+    where: PShortint;
+    text: string;
+  end;
+
+const
+  PlantSpots: array[1..11] of TSpot = (
+    (where: @World.Sorrel; text: TxtDescribePlants_01),
+    (where: @World.Daisy; text: TxtDescribePlants_02),
+    (where: @World.Clover; text: TxtDescribePlants_03),
+    (where: @World.SowThistle; text: TxtDescribePlants_04),
+    (where: @World.Dandelion; text: TxtDescribePlants_05),
+    (where: @World.Rose; text: TxtDescribePlants_06),
+    (where: @World.Thistle; text: TxtDescribePlants_07),
+    (where: @World.Blackberry; text: TxtDescribePlants_08),
+    (where: @World.Gooseberry; text: TxtDescribePlants_09),
+    (where: @World.Raspberry; text: TxtDescribePlants_10),
+    (where: @World.Grass; text: TxtDescribePlants_11)
+  );
+  BeastSpots: array[1..28] of TSpot = (
+    (where: @World.Woodworm; text: TxtDescribeBeasts_01),
+    (where: @World.Fly; text: TxtDescribeBeasts_02),
+    (where: @World.Bacterium; text: TxtDescribeBeasts_03),
+    (where: @World.Snail; text: TxtDescribeBeasts_04),
+    (where: @World.Beetle; text: TxtDescribeBeasts_05),
+    (where: @World.Cockroach; text: TxtDescribeBeasts_06),
+    (where: @World.Ant; text: TxtDescribeBeasts_07),
+    (where: @World.Spider; text: TxtDescribeBeasts_08),
+    (where: @World.Boar; text: TxtDescribeBeasts_09),
+    (where: @World.Rat; text: TxtDescribeBeasts_10),
+    (where: @World.Fox; text: TxtDescribeBeasts_11),
+    (where: @World.Partridge; text: TxtDescribeBeasts_12),
+    (where: @World.Hare; text: TxtDescribeBeasts_13),
+    (where: @World.Mongrel; text: TxtDescribeBeasts_14),
+    (where: @World.Eagle; text: TxtDescribeBeasts_15),
+    (where: @World.Deer; text: TxtDescribeBeasts_16),
+    (where: @World.Elephant; text: TxtDescribeBeasts_17),
+    (where: @World.Lion; text: TxtDescribeBeasts_18),
+    (where: @World.Giraffe; text: TxtDescribeBeasts_19),
+    (where: @World.Camel; text: TxtDescribeBeasts_20),
+    (where: @World.Ostrich; text: TxtDescribeBeasts_21),
+    (where: @World.Boa; text: TxtDescribeBeasts_22),
+    (where: @World.Wolf; text: TxtDescribeBeasts_23),
+    (where: @World.Bison; text: TxtDescribeBeasts_24),
+    (where: @World.Panther; text: TxtDescribeBeasts_25),
+    (where: @World.Gladiator; text: TxtDescribeBeasts_26),
+    (where: @World.Warrior; text: TxtDescribeBeasts_27),
+    (where: @World.Tamer; text: TxtDescribeBeasts_28)
+  );
+  StreetSpots: array[1..10] of TSpot = (
+    (where: @World.Dachshund; text: TxtDescribeStreet_01),
+    (where: @World.Shepherd; text: TxtDescribeStreet_02),
+    (where: @World.Pooch; text: TxtDescribeStreet_03),
+    (where: @World.Spaniel; text: TxtDescribeStreet_04),
+    (where: @World.Poodle; text: TxtDescribeStreet_05),
+    (where: @World.Cabman; text: TxtDescribeStreet_06),
+    (where: @World.Vendor; text: TxtDescribeStreet_07),
+    (where: @World.Sweeper; text: TxtDescribeStreet_08),
+    (where: @World.Drunkard; text: TxtDescribeStreet_09),
+    (where: @World.SickMan; text: TxtDescribeStreet_10)
+  );
+  StageSpots: array[1..4] of TSpot = (
+    (where: @World.Guitarist; text: TxtDescribeStage_01),
+    (where: @World.Drummer; text: TxtDescribeStage_02),
+    (where: @World.Keyboardist; text: TxtDescribeStage_03),
+    (where: @World.Liroy; text: TxtDescribeStage_04)
+  );
+  CrowdSpots: array[1..10] of TCrowdSpot = (
+    (where: @World.Kid; text: TxtDescribeCrowd_01),
+    (where: @World.Lunatic; text: TxtDescribeCrowd_02),
+    (where: @World.Listener; text: TxtDescribeCrowd_03),
+    (where: @World.Fan; text: TxtDescribeCrowd_04),
+    (where: @World.Man; text: TxtDescribeCrowd_05),
+    (where: @World.Policeman; text: TxtDescribeCrowd_06),
+    (where: @World.Bouncer; text: TxtDescribeCrowd_07),
+    (where: @World.Gorilla; text: TxtDescribeCrowd_08),
+    (where: @World.OldMan; text: TxtDescribeCrowd_09),
+    (where: @World.Reporter; text: TxtDescribeCrowd_10)
+  );
+
+
+
 procedure DescribePlants;
+var
+  i: Integer;
 begin
-  if World.Sorrel = Session.Room then WriteLn(TxtDescribePlants_01);
-  if World.Daisy = Session.Room then WriteLn(TxtDescribePlants_02);
-  if World.Clover = Session.Room then WriteLn(TxtDescribePlants_03);
-  if World.SowThistle = Session.Room then WriteLn(TxtDescribePlants_04);
-  if World.Dandelion = Session.Room then WriteLn(TxtDescribePlants_05);
-  if World.Rose = Session.Room then WriteLn(TxtDescribePlants_06);
-  if World.Thistle = Session.Room then WriteLn(TxtDescribePlants_07);
-  if World.Blackberry = Session.Room then WriteLn(TxtDescribePlants_08);
-  if World.Gooseberry = Session.Room then WriteLn(TxtDescribePlants_09);
-  if World.Raspberry = Session.Room then WriteLn(TxtDescribePlants_10);
-  if World.Grass = Session.Room then WriteLn(TxtDescribePlants_11);
-  if Session.Room = World.Duncan then WriteLn(TxtDescribePlants_12);
+  for i := Low(PlantSpots) to High(PlantSpots) do
+    if PlantSpots[i].where^ = Session.Room then
+      WriteLn(PlantSpots[i].text);
+  if Session.Room = World.Duncan then
+    WriteLn(TxtDescribePlants_12);
 end;
 
 procedure CompositeFight(EnemyEnergyBase, EnemyEnergyRand, EnemyDexterityBase, EnemyDexterityRand, EnemyStrengthBase, EnemyStrengthRand,
@@ -973,19 +1036,14 @@ begin
   end;
 end;
 
+
 procedure DescribeStreet;
+var
+  i: Integer;
 begin
-  if World.Dachshund = Session.Room then WriteLn(TxtDescribeStreet_01);
-  if World.Shepherd = Session.Room then WriteLn(TxtDescribeStreet_02);
-  if World.Pooch = Session.Room then WriteLn(TxtDescribeStreet_03);
-  if World.Spaniel = Session.Room then WriteLn(TxtDescribeStreet_04);
-  if World.Poodle = Session.Room then WriteLn(TxtDescribeStreet_05);
-  if World.Cabman = Session.Room then WriteLn(TxtDescribeStreet_06);
-  if World.Vendor = Session.Room then
-    WriteLn(TxtDescribeStreet_07);
-  if World.Sweeper = Session.Room then WriteLn(TxtDescribeStreet_08);
-  if World.Drunkard = Session.Room then WriteLn(TxtDescribeStreet_09);
-  if World.SickMan = Session.Room then WriteLn(TxtDescribeStreet_10);
+  for i := Low(StreetSpots) to High(StreetSpots) do
+    if StreetSpots[i].where^ = Session.Room then
+      WriteLn(StreetSpots[i].text);
 end;
 
 procedure SuitGain;
@@ -1046,57 +1104,34 @@ begin
   Session.OuterRoom := Session.Room;
   Session.Room := TranceRoom;
 end;
+
 procedure DescribeStage;
+var
+  i: Integer;
 begin
-  if World.Guitarist = Session.Room then WriteLn(TxtDescribeStage_01);
-  if World.Drummer = Session.Room then WriteLn(TxtDescribeStage_02);
-  if World.Keyboardist = Session.Room then WriteLn(TxtDescribeStage_03);
-  if World.Liroy = Session.Room then WriteLn(TxtDescribeStage_04);
-end;
-procedure DescribeCrowd;
-begin
-  if Session.Room = World.Kid then WriteLn(TxtDescribeCrowd_01);
-  if Session.Room = World.Lunatic then WriteLn(TxtDescribeCrowd_02);
-  if Session.Room = World.Listener then WriteLn(TxtDescribeCrowd_03);
-  if Session.Room = World.Fan then WriteLn(TxtDescribeCrowd_04);
-  if Session.Room = World.Man then WriteLn(TxtDescribeCrowd_05);
-  if Session.Room = World.Policeman then WriteLn(TxtDescribeCrowd_06);
-  if Session.Room = World.Bouncer then WriteLn(TxtDescribeCrowd_07);
-  if Session.Room = World.Gorilla then WriteLn(TxtDescribeCrowd_08);
-  if Session.Room = World.OldMan then WriteLn(TxtDescribeCrowd_09);
-  if Session.Room = World.Reporter then WriteLn(TxtDescribeCrowd_10);
+  for i := Low(StageSpots) to High(StageSpots) do
+    if StageSpots[i].where^ = Session.Room then
+      WriteLn(StageSpots[i].text);
 end;
 
-procedure DescribeBeasts;
+procedure DescribeCrowd;
+var
+  i: Integer;
 begin
-  if World.Woodworm = Session.Room then WriteLn(TxtDescribeBeasts_01);
-  if World.Fly = Session.Room then WriteLn(TxtDescribeBeasts_02);
-  if World.Bacterium = Session.Room then WriteLn(TxtDescribeBeasts_03);
-  if World.Snail = Session.Room then WriteLn(TxtDescribeBeasts_04);
-  if World.Beetle = Session.Room then WriteLn(TxtDescribeBeasts_05);
-  if World.Cockroach = Session.Room then WriteLn(TxtDescribeBeasts_06);
-  if World.Ant = Session.Room then WriteLn(TxtDescribeBeasts_07);
-  if World.Spider = Session.Room then WriteLn(TxtDescribeBeasts_08);
-  if World.Boar = Session.Room then WriteLn(TxtDescribeBeasts_09);
-  if World.Rat = Session.Room then WriteLn(TxtDescribeBeasts_10);
-  if World.Fox = Session.Room then WriteLn(TxtDescribeBeasts_11);
-  if World.Partridge = Session.Room then WriteLn(TxtDescribeBeasts_12);
-  if World.Hare = Session.Room then WriteLn(TxtDescribeBeasts_13);
-  if World.Mongrel = Session.Room then WriteLn(TxtDescribeBeasts_14);
-  if World.Eagle = Session.Room then WriteLn(TxtDescribeBeasts_15);
-  if World.Deer = Session.Room then WriteLn(TxtDescribeBeasts_16);
-  if World.Elephant = Session.Room then WriteLn(TxtDescribeBeasts_17);
-  if World.Lion = Session.Room then WriteLn(TxtDescribeBeasts_18);
-  if World.Giraffe = Session.Room then WriteLn(TxtDescribeBeasts_19);
-  if World.Camel = Session.Room then WriteLn(TxtDescribeBeasts_20);
-  if World.Ostrich = Session.Room then WriteLn(TxtDescribeBeasts_21);
-  if World.Boa = Session.Room then WriteLn(TxtDescribeBeasts_22);
-  if World.Wolf = Session.Room then WriteLn(TxtDescribeBeasts_23);
-  if World.Bison = Session.Room then WriteLn(TxtDescribeBeasts_24);
-  if World.Panther = Session.Room then WriteLn(TxtDescribeBeasts_25);
-  if World.Gladiator = Session.Room then WriteLn(TxtDescribeBeasts_26);
-  if World.Warrior = Session.Room then WriteLn(TxtDescribeBeasts_27);
-  if World.Tamer = Session.Room then WriteLn(TxtDescribeBeasts_28);
+  for i := Low(CrowdSpots) to High(CrowdSpots) do
+    if CrowdSpots[i].where^ = Session.Room then
+      WriteLn(CrowdSpots[i].text);
+end;
+
+
+
+procedure DescribeBeasts;
+var
+  i: Integer;
+begin
+  for i := Low(BeastSpots) to High(BeastSpots) do
+    if BeastSpots[i].where^ = Session.Room then
+      WriteLn(BeastSpots[i].text);
 end;
 
 procedure ShieldBlock;

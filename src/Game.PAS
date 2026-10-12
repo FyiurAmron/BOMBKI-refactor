@@ -3869,14 +3869,40 @@ begin
   Bag.Permit := Bag.Permit - 10;
 end;
 
-procedure CmdShowSkills;
+type
+  TSkillLine = record
+    wisdom, strength, dexterity: Integer;  { required levels; -1 skips }
+    text1: string;
+    skill: ^Integer;
+    text2: string;
+  end;
+
+const
+  SkillLines: array[1..6] of TSkillLine = (
+    (wisdom: 10; strength: 11; dexterity: -1; text1: TxtCmdShowSkills_01; skill: @Skills.Kick; text2: TxtShared_26),
+    (wisdom: 10; strength: -1; dexterity: 10; text1: TxtCmdShowSkills_02; skill: @Skills.Fleeing; text2: TxtShared_26),
+    (wisdom: 15; strength: -1; dexterity: 11; text1: TxtCmdShowSkills_03; skill: @Skills.Parry; text2: TxtShared_26),
+    (wisdom: 11; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_04; skill: @Skills.Comparing; text2: TxtShared_26),
+    (wisdom: 18; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_05; skill: @Skills.CookingDisplayBug; text2: TxtShared_26),
+    (wisdom: 19; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_06; skill: @Skills.Returning; text2: TxtShared_26)
+  );
+
+function SkillLineShown(const line: TSkillLine): Boolean;
 begin
-  if (Player.Wisdom > 10) and (Player.Strength > 11) then WriteLn(TxtCmdShowSkills_01, Skills.Kick, TxtShared_26);
-  if (Player.Wisdom > 10) and (Player.Dexterity > 10) then WriteLn(TxtCmdShowSkills_02, Skills.Fleeing, TxtShared_26);
-  if (Player.Wisdom > 15) and (Player.Dexterity > 11) then WriteLn(TxtCmdShowSkills_03, Skills.Parry, TxtShared_26);
-  if Player.Wisdom > 11 then WriteLn(TxtCmdShowSkills_04, Skills.Comparing, TxtShared_26);
-  if Player.Wisdom > 18 then WriteLn(TxtCmdShowSkills_05, Skills.CookingDisplayBug, TxtShared_26);
-  if Player.Wisdom > 19 then WriteLn(TxtCmdShowSkills_06, Skills.Returning, TxtShared_26);
+  SkillLineShown :=
+    ((line.wisdom = -1) or (Player.Wisdom > line.wisdom)) and
+    ((line.strength = -1) or (Player.Strength > line.strength)) and
+    ((line.dexterity = -1) or (Player.Dexterity > line.dexterity));
+end;
+
+procedure CmdShowSkills;
+var
+  i: Integer;
+begin
+  for i := Low(SkillLines) to High(SkillLines) do
+    if SkillLineShown(SkillLines[i]) then
+      with SkillLines[i] do
+        WriteLn(text1, skill^, text2);
 end;
 
 procedure CmdLeaveTrance;

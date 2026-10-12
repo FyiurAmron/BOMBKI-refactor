@@ -43,6 +43,9 @@ def extract():
         elif re.search(r"MoveWhen(?:OrExit|OrQuit)?\(\[", l) \
                 and not l.rstrip().endswith(';'):
             buf = l
+        elif re.search(r"BasicRoom(?:Quit)?(?:Simple|Poster|Generic)?\(\w", l) \
+                and not l.rstrip().endswith(';'):
+            buf = l
         else:
             merged.append(l)
     if buf is not None:
@@ -144,6 +147,27 @@ def extract():
                     dest = room_num(m3.group(2))
                     if word and dest is not None:
                         add(cur, word, dest)
+            mb = re.search(r"BasicRoom(?:Quit)?(?:Simple|Poster|Generic)?\(\w+, ", l)
+            if mb and cur is not None:
+                for m3 in re.finditer(r"Go\((\w+), (\w+)\)", l):
+                    word = catalog_word(m3.group(1))
+                    dest = room_num(m3.group(2))
+                    if word and dest is not None:
+                        add(cur, word, dest)
+                if cur not in texts:
+                    rest = l[mb.end():]
+                    if rest.startswith("["):
+                        intro_text = rest[1:rest.index("]")]
+                    else:
+                        intro_text = rest.split(",")[0].strip()
+                    for el in [a.strip() for a in intro_text.split(",")]:
+                        if el in arrays:
+                            found = write_text("WriteLines(%s);" % el)
+                        else:
+                            found = write_text("WriteLn(%s);" % el.replace(" + ", ", "))
+                        if found:
+                            texts[cur] = found[:38]
+                            break
             m = re.match(
                 r"\s*if Command = (?:'(\w+)'|(Txt\w+|Cmd\w+)) then"
                 r" Session\.Room := (\w+);", l)

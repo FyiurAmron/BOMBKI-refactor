@@ -203,6 +203,77 @@ begin
     WriteLn(lines[i]);
 end;
 
+{ The plain room shell, fully parametrized: posterCmd names the poster
+  command and poster carries its lines; an empty array means the room
+  has no poster. On WYJSCIE the room is left and shown again on the
+  next dispatch pass. }
+procedure BasicRoomGeneric(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement; posterCmd: string;
+  const poster: array of string);
+begin
+  if Session.Room <> RoomNo then Exit;
+  WriteLines(intro);
+  repeat
+    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
+    ReadLn(Command);
+    if Command = CmdMode then EnterTrance;
+    if Command = CmdExit then
+        WriteExits(exits);
+    if MoveWhenOrExit(moves) then Exit;
+    if (Low(poster) <= High(poster)) and (Command = posterCmd) then
+        WriteLines(poster);
+  until Session.Room <> RoomNo;
+end;
+
+{ The shell with the standard PATRZ PLAKAT poster. }
+procedure BasicRoomPoster(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement; const poster: array of string);
+begin
+  BasicRoomGeneric(RoomNo, intro, exits, moves, CmdPatrz + CmdPlakat, poster);
+end;
+
+{ The shell without a poster. }
+procedure BasicRoomSimple(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement);
+begin
+  BasicRoomGeneric(RoomNo, intro, exits, moves, '', []);
+end;
+
+{ The quit shell, fully parametrized: WYJSCIE requests the game exit;
+  posterCmd and poster carry an optional poster as in BasicRoomGeneric. }
+procedure BasicRoomQuitGeneric(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement; posterCmd: string;
+  const poster: array of string);
+begin
+  if Session.Room <> RoomNo then Exit;
+  WriteLines(intro);
+  repeat
+    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
+    ReadLn(Command);
+    if Command = CmdMode then EnterTrance;
+    if Command = CmdExit then
+        WriteExits(exits);
+    if MoveWhenOrQuit(moves) then Exit;
+    if (Low(poster) <= High(poster)) and (Command = posterCmd) then
+        WriteLines(poster);
+  until Session.Room <> RoomNo;
+end;
+
+{ The quit shell with the standard PATRZ PLAKAT poster. }
+procedure BasicRoomQuitPoster(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement; const poster: array of string);
+begin
+  BasicRoomQuitGeneric(RoomNo, intro, exits, moves, CmdPatrz + CmdPlakat,
+    poster);
+end;
+
+{ The quit shell without a poster. }
+procedure BasicRoomQuit(RoomNo: Integer; const intro, exits: array of string;
+  const moves: array of TMovement);
+begin
+  BasicRoomQuitGeneric(RoomNo, intro, exits, moves, '', []);
+end;
+
 
 procedure ShowIntro;
 var
@@ -228,30 +299,22 @@ end;
 
 procedure Room5;
 begin
-  WriteLines(TxtRoom5Lines1);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceMudSzkola,
-                    TxtExitZachod, TxtPlacePokoj,
-                    TxtExitPolnoc, TxtPlacePokoj,
-                    TxtExitPolodnie, TxtPlacePokoj,
-                    TxtExitGora, TxtPlacePokoj,
-                    TxtExitDol, TxtPlacePokoj]);
-    if MoveWhenOrExit([Go(CmdWschod, RoomSchoolHall),
-              Go(CmdZachod, RoomSchoolSide1),
-              Go(CmdPolnoc, RoomSchoolSide2),
-              Go(CmdPolodnie, RoomSchoolSide3),
-              Go(CmdGora, RoomSchoolLanding),
-              Go(CmdDol, RoomSchoolSide4)]) then Exit;
-    if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtRoom5_10);
-      WriteLn(TxtRoom5_11);
-    end;
-  until Session.Room <> RoomLost;
+  BasicRoomPoster(RoomLost,
+            TxtRoom5Lines1,
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceMudSzkola,
+             TxtExitZachod, TxtPlacePokoj,
+             TxtExitPolnoc, TxtPlacePokoj,
+             TxtExitPolodnie, TxtPlacePokoj,
+             TxtExitGora, TxtPlacePokoj,
+             TxtExitDol, TxtPlacePokoj],
+            [Go(CmdWschod, RoomSchoolHall),
+             Go(CmdZachod, RoomSchoolSide1),
+             Go(CmdPolnoc, RoomSchoolSide2),
+             Go(CmdPolodnie, RoomSchoolSide3),
+             Go(CmdGora, RoomSchoolLanding),
+             Go(CmdDol, RoomSchoolSide4)],
+            [TxtRoom5_10, TxtRoom5_11]);
 end;
 
 procedure Room0;
@@ -266,48 +329,32 @@ begin
 end;
 procedure Room1;
 begin
-  WriteLn(TxtYouAreIn, TxtRoom1_01);
-  WriteLines(TxtRoom1Lines1);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitPolodnie, TxtPlaceTamGdzieZaczynaszGre,
-                    TxtExitPolnoc, TxtPlaceMiasto,
-                    TxtExitWschod, TxtPlacePokojTreningowy1,
-                    TxtExitZachod, TxtPlaceMudSzkola,
-                    TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2]);
-    if MoveWhenOrExit([Go(CmdPolodnie, RoomStart),
-              Go(CmdWschod, RoomTraining),
-              Go(CmdDol, RoomMeditation),
-              Go(CmdZachod, RoomSchoolHall),
-              Go(CmdPolnoc, RoomCityCentre)]) then Exit;
-    if Command = CmdPatrz + CmdPlakat then begin
-      WriteLines(TxtRoom1Lines2);
-    end;
-  until Session.Room <> RoomSalon;
+  BasicRoomPoster(RoomSalon,
+            [TxtYouAreIn + TxtRoom1_01, TxtRoom1Lines1[1], TxtRoom1Lines1[2],
+             TxtRoom1Lines1[3]],
+            [TxtShared_03,
+             TxtExitPolodnie, TxtPlaceTamGdzieZaczynaszGre,
+             TxtExitPolnoc, TxtPlaceMiasto,
+             TxtExitWschod, TxtPlacePokojTreningowy1,
+             TxtExitZachod, TxtPlaceMudSzkola,
+             TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2],
+            [Go(CmdPolodnie, RoomStart),
+             Go(CmdWschod, RoomTraining),
+             Go(CmdDol, RoomMeditation),
+             Go(CmdZachod, RoomSchoolHall),
+             Go(CmdPolnoc, RoomCityCentre)],
+            TxtRoom1Lines2);
 end;
 procedure Room4;
 begin
-  if Session.Room <> RoomSchoolHall then Exit;
-  WriteLn(TxtYouAreIn, TxtRoom4_01);
-  WriteLn(TxtRoom4_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlacePokojCentralny,
-                    TxtExitZachod, TxtPlaceMudSzkola2]);
-    if MoveWhenOrExit([Go(CmdWschod, RoomSalon), Go(CmdZachod, RoomLost)]) then Exit;
-    if Command = CmdPatrz + CmdAfisz then begin
-      WriteLines(TxtRoom4Lines1);
-    end;
-  until Session.Room <> RoomSchoolHall;
-
+  BasicRoomGeneric(RoomSchoolHall,
+            [TxtYouAreIn + TxtRoom4_01, TxtRoom4_02],
+            [TxtShared_03,
+             TxtExitWschod, TxtPlacePokojCentralny,
+             TxtExitZachod, TxtPlaceMudSzkola2],
+            [Go(CmdWschod, RoomSalon), Go(CmdZachod, RoomLost)],
+            CmdPatrz + CmdAfisz,
+            TxtRoom4Lines1);
 end;
 procedure Room13;
 begin
@@ -409,58 +456,35 @@ begin
 end;
 procedure Room30;
 begin
-  if Session.Room <> RoomLongStreet then Exit;
-  WriteLn(TxtRoom30_01);
-  WriteLn(TxtRoom30_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceCentrumMiasta,
-                    TxtExitZachod, TxtPlaceUlicaDluga,
-                    TxtExitPolnoc, TxtPlaceWejscieNaArene]);
-    if MoveWhenOrExit([Go(CmdWschod, RoomCityCentre),
-              Go(CmdZachod, RoomLongStreet2),
-              Go(CmdPolnoc, RoomArenaEntrance)]) then Exit;
-  until Session.Room <> RoomLongStreet;
-
+  BasicRoomSimple(RoomLongStreet,
+            [TxtRoom30_01, TxtRoom30_02],
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceCentrumMiasta,
+             TxtExitZachod, TxtPlaceUlicaDluga,
+             TxtExitPolnoc, TxtPlaceWejscieNaArene],
+            [Go(CmdWschod, RoomCityCentre),
+             Go(CmdZachod, RoomLongStreet2),
+             Go(CmdPolnoc, RoomArenaEntrance)]);
 end;
 procedure Room60;
 begin
-  if Session.Room <> RoomValley then Exit;
-  WriteLn(TxtYouAreIn, TxtRoom60_01);
-  WriteLn(TxtRoom60_02);
-  WriteLn(TxtRoom60_03);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitPolodnie, TxtPlaceUlicaDluga,
-                    TxtExitWschod, TxtPlaceBudowlaPelnaHalasu]);
-    if MoveWhenOrExit([Go(CmdPolodnie, RoomLongStreet2), Go(CmdWschod, RoomCrowd1)]) then Exit;
-  until Session.Room <> RoomValley;
-
+  BasicRoomSimple(RoomValley,
+            [TxtYouAreIn + TxtRoom60_01, TxtRoom60_02, TxtRoom60_03],
+            [TxtShared_03,
+             TxtExitPolodnie, TxtPlaceUlicaDluga,
+             TxtExitWschod, TxtPlaceBudowlaPelnaHalasu],
+            [Go(CmdPolodnie, RoomLongStreet2), Go(CmdWschod, RoomCrowd1)]);
 end;
 procedure Room75;
 begin
-  if Session.Room <> RoomDarkStreet then Exit;
-  WriteLines(TxtRoom75Lines1);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitZachod, TxtPlaceCentrumMiasta,
-                    TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami,
-                    TxtExitPolodnie, TxtPlaceBluszcz]);
-    if MoveWhenOrExit([Go(CmdZachod, RoomCityCentre), Go(CmdPolnoc, RoomBar), Go(CmdPolodnie, RoomIvy1)]) then Exit;
-  until Session.Room <> RoomDarkStreet;
-
+  BasicRoomSimple(RoomDarkStreet,
+            TxtRoom75Lines1,
+            [TxtShared_03,
+             TxtExitZachod, TxtPlaceCentrumMiasta,
+             TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami,
+             TxtExitPolodnie, TxtPlaceBluszcz],
+            [Go(CmdZachod, RoomCityCentre), Go(CmdPolnoc, RoomBar),
+             Go(CmdPolodnie, RoomIvy1)]);
 end;
 procedure Room83;
 begin
@@ -3041,20 +3065,13 @@ begin
 end;
 
 procedure Room9;
-
 begin
-  WriteLn(TxtYouAreIn, TxtRoom9_01);
-  WriteLn(TxtRoom9_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitDol, TxtPlaceMudSzkola2,
-                    TxtExitGora, TxtPlaceKlatkiPelneGajdy]);
-    if MoveWhenOrExit([Go(CmdDol, RoomLost), Go(CmdGora, RoomCageCorridor)]) then Exit;
-  until Session.Room <> RoomSchoolLanding;
+  BasicRoomSimple(RoomSchoolLanding,
+            [TxtYouAreIn + TxtRoom9_01, TxtRoom9_02],
+            [TxtShared_03,
+             TxtExitDol, TxtPlaceMudSzkola2,
+             TxtExitGora, TxtPlaceKlatkiPelneGajdy],
+            [Go(CmdDol, RoomLost), Go(CmdGora, RoomCageCorridor)]);
 end;
 
 procedure Room12;
@@ -4484,42 +4501,25 @@ begin
 
 end;
 procedure Room102;
-
 begin
-
-  WriteLn(TxtRoom102_01);
-  WriteLn(TxtRoom102_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceDroga,
-                    TxtExitZachod, TxtPlaceDroga,
-                    TxtExitPolnoc, TxtPlaceLas,
-                    TxtExitPolodnie, TxtPlaceLas]);
-    if MoveWhenOrQuit([Go(CmdWschod, RoomRoad1), Go(CmdZachod, RoomRoad3)]) then Exit;
-  until Session.Room <> RoomRoad2;
-
+  BasicRoomQuit(RoomRoad2,
+            [TxtRoom102_01, TxtRoom102_02],
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceDroga,
+             TxtExitZachod, TxtPlaceDroga,
+             TxtExitPolnoc, TxtPlaceLas,
+             TxtExitPolodnie, TxtPlaceLas],
+            [Go(CmdWschod, RoomRoad1), Go(CmdZachod, RoomRoad3)]);
 end;
 procedure Room103;
-
 begin
-
-  WriteLines(TxtRoom103Lines1);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceDroga,
-                    TxtExitPolnoc, TxtPlaceLas,
-                    TxtExitPolodnie, TxtPlaceLas]);
-    if MoveWhenOrQuit([Go(CmdWschod, RoomRoad2)]) then Exit;
-  until Session.Room <> RoomRoad3;
-
+  BasicRoomQuit(RoomRoad3,
+            TxtRoom103Lines1,
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceDroga,
+             TxtExitPolnoc, TxtPlaceLas,
+             TxtExitPolodnie, TxtPlaceLas],
+            [Go(CmdWschod, RoomRoad2)]);
 end;
 procedure Room23;
 
@@ -4612,44 +4612,23 @@ begin
 
 end;
 procedure Room31;
-
 begin
-
-  WriteLn(TxtRoom31_01);
-  WriteLn(TxtRoom31_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitWschod, TxtPlaceUlicaDluga,
-                    TxtExitPolnoc, TxtPlaceDolinaRozrywek]);
-    if MoveWhenOrQuit([Go(CmdWschod, RoomLongStreet), Go(CmdPolnoc, RoomValley)]) then Exit;
-  until Session.Room <> RoomLongStreet2;
-
+  BasicRoomQuit(RoomLongStreet2,
+            [TxtRoom31_01, TxtRoom31_02],
+            [TxtShared_03,
+             TxtExitWschod, TxtPlaceUlicaDluga,
+             TxtExitPolnoc, TxtPlaceDolinaRozrywek],
+            [Go(CmdWschod, RoomLongStreet), Go(CmdPolnoc, RoomValley)]);
 end;
 procedure Room32;
-
 begin
-
-  WriteLn(TxtRoom32_01);
-  WriteLn(TxtRoom32_02);
-  repeat
-    Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-    ReadLn(Command);
-    if Command = CmdMode then EnterTrance;
-    if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtRoom32_03);
-      WriteLn(TxtRoom32_04);
-    end;
-    if Command = CmdExit then
-        WriteExits([TxtShared_03,
-                    TxtExitPolodnie, TxtPlaceUlicaDluga,
-                    TxtExitPolnoc, TxtPlaceArena]);
-    if MoveWhenOrQuit([Go(CmdPolodnie, RoomLongStreet), Go(CmdPolnoc, RoomArena33)]) then Exit;
-  until Session.Room <> RoomArenaEntrance;
-
+  BasicRoomQuitPoster(RoomArenaEntrance,
+            [TxtRoom32_01, TxtRoom32_02],
+            [TxtShared_03,
+             TxtExitPolodnie, TxtPlaceUlicaDluga,
+             TxtExitPolnoc, TxtPlaceArena],
+            [Go(CmdPolodnie, RoomLongStreet), Go(CmdPolnoc, RoomArena33)],
+            [TxtRoom32_03, TxtRoom32_04]);
 end;
 
 const

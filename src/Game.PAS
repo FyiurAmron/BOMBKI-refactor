@@ -288,6 +288,15 @@ begin
   end;
 end;
 
+{ The cage loot roll: the sword and shield slots share the threshold,
+  the heart rolls against 6. }
+procedure TryCageLoot(threshold: Integer);
+begin
+  TryLoot(Bag.OldSword, threshold, TxtShared_10);
+  TryLoot(Bag.SmallShield, threshold, TxtShared_11);
+  TryLoot(Bag.Heart, 6, TxtShared_12);
+end;
+
 { An item carried into the trance: if its recorded room is the room the
   player left, announce it. }
 procedure TranceItemLine(itemRoom: Integer; line: string);
@@ -420,9 +429,7 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        TryLoot(Bag.OldSword, 7, TxtShared_10);
-        TryLoot(Bag.SmallShield, 7, TxtShared_11);
-        TryLoot(Bag.Heart, 6, TxtShared_12);
+        TryCageLoot(7);
       end else Combat.Fled := 0;
     end;
   until Session.Room <> RoomCageStrong;
@@ -3116,9 +3123,7 @@ begin
         Combat.Loot := Random(10);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        TryLoot(Bag.OldSword, 4, TxtShared_10);
-        TryLoot(Bag.SmallShield, 4, TxtShared_11);
-        TryLoot(Bag.Heart, 6, TxtShared_12);
+        TryCageLoot(4);
       end
       else
         Combat.Fled := 0;
@@ -3874,9 +3879,7 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        TryLoot(Bag.OldSword, 7, TxtShared_10);
-        TryLoot(Bag.SmallShield, 7, TxtShared_11);
-        TryLoot(Bag.Heart, 6, TxtShared_12);
+        TryCageLoot(7);
       end else
         Combat.Fled := 0;
     end;
@@ -3908,9 +3911,7 @@ begin
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
-        TryLoot(Bag.OldSword, 7, TxtShared_10);
-        TryLoot(Bag.SmallShield, 7, TxtShared_11);
-        TryLoot(Bag.Heart, 6, TxtShared_12);
+        TryCageLoot(7);
       end else
         Combat.Fled := 0;
     end;
@@ -3937,9 +3938,7 @@ begin
       Combat.Loot := Random(30);
       WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
       Player.Money := Player.Money + Combat.Loot;
-      TryLoot(Bag.OldSword, 10, TxtShared_10);
-      TryLoot(Bag.SmallShield, 10, TxtShared_11);
-      TryLoot(Bag.Heart, 6, TxtShared_12);
+      TryCageLoot(10);
       goto L1028_AfterFlee;
       L1027_Flee:
       Combat.Fled := 0;

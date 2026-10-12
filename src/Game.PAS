@@ -422,12 +422,28 @@ begin
   end;
 end;
 
+type
+  TSideRoom = record
+    room, dest: Integer;
+    direction, exitDesc: string;
+  end;
+
+const
+  { The four plain side rooms off the lost room, in dispatch order. }
+  SideRooms: array[1..4] of TSideRoom = (
+    (room: RoomSchoolSide1; dest: RoomLost; direction: CmdWschod; exitDesc: CmdMudSzkola2),
+    (room: RoomSchoolSide3; dest: RoomLost; direction: CmdPolnoc; exitDesc: CmdMudSzkola2),
+    (room: RoomSchoolSide2; dest: RoomLost; direction: CmdPolodnie; exitDesc: CmdMudSzkola2),
+    (room: RoomSchoolSide4; dest: RoomLost; direction: CmdGora; exitDesc: CmdMudSzkola2)
+  );
+
 procedure PlainRooms;
+var
+  i: Integer;
 begin
-  SimpleRoom(RoomSchoolSide1, RoomLost, CmdWschod, CmdMudSzkola2);
-  SimpleRoom(RoomSchoolSide3, RoomLost, CmdPolnoc, CmdMudSzkola2);
-  SimpleRoom(RoomSchoolSide2, RoomLost, CmdPolodnie, CmdMudSzkola2);
-  SimpleRoom(RoomSchoolSide4, RoomLost, CmdGora, CmdMudSzkola2);
+  for i := Low(SideRooms) to High(SideRooms) do
+    with SideRooms[i] do
+      SimpleRoom(room, dest, direction, exitDesc);
 end;
 procedure Room11;
 begin

@@ -2407,40 +2407,62 @@ begin
   KillSickMan;
 end;
 
-procedure Training;
+type
+  TTrainingLine = record
+    wisdom, strength, dexterity: Integer;  { required levels; -1 skips }
+    text1: string;
+  end;
 
+const
+  { The training poster: a line shows when every listed stat gate is
+    met (-1 skips the stat). }
+  TrainingLines: array[1..24] of TTrainingLine = (
+    (wisdom: 10; strength: 11; dexterity: -1; text1: TxtTraining_03),
+    (wisdom: 10; strength: -1; dexterity: 10; text1: TxtTraining_04),
+    (wisdom: 15; strength: -1; dexterity: 11; text1: TxtTraining_05),
+    (wisdom: 11; strength: -1; dexterity: -1; text1: TxtTraining_06),
+    (wisdom: 18; strength: -1; dexterity: -1; text1: TxtTraining_07),
+    (wisdom: 17; strength: -1; dexterity: -1; text1: TxtTraining_08),
+    (wisdom: -1; strength: -1; dexterity: 20; text1: TxtTraining_09),
+    (wisdom: -1; strength: 20; dexterity: 10; text1: TxtTraining_10),
+    (wisdom: 19; strength: 10; dexterity: 10; text1: TxtTraining_11),
+    (wisdom: 12; strength: 25; dexterity: -1; text1: TxtTraining_12),
+    (wisdom: 14; strength: 29; dexterity: -1; text1: TxtTraining_13),
+    (wisdom: -1; strength: -1; dexterity: 22; text1: TxtTraining_14),
+    (wisdom: -1; strength: -1; dexterity: 28; text1: TxtTraining_15),
+    (wisdom: 22; strength: -1; dexterity: -1; text1: TxtTraining_16),
+    (wisdom: 23; strength: -1; dexterity: -1; text1: TxtTraining_17),
+    (wisdom: 14; strength: 14; dexterity: 24; text1: TxtTraining_18),
+    (wisdom: 24; strength: -1; dexterity: -1; text1: TxtTraining_19),
+    (wisdom: 26; strength: -1; dexterity: -1; text1: TxtTraining_20),
+    (wisdom: 19; strength: 12; dexterity: 12; text1: TxtTraining_21),
+    (wisdom: 16; strength: -1; dexterity: 22; text1: TxtTraining_22),
+    (wisdom: -1; strength: -1; dexterity: 30; text1: TxtTraining_23),
+    (wisdom: 29; strength: -1; dexterity: -1; text1: TxtTraining_24),
+    (wisdom: 19; strength: -1; dexterity: -1; text1: TxtTraining_25),
+    (wisdom: 23; strength: -1; dexterity: 12; text1: TxtTraining_26)
+  );
+
+function GatesMet(wisdom, strength, dexterity: Integer): Boolean;
+begin
+  GatesMet :=
+    ((wisdom = -1) or (Player.Wisdom > wisdom)) and
+    ((strength = -1) or (Player.Strength > strength)) and
+    ((dexterity = -1) or (Player.Dexterity > dexterity));
+end;
+
+procedure Training;
+var
+  i: Integer;
 begin
   if Command = CmdPatrz + CmdPlakat then begin
     WriteLn(TxtShared_13);
     WriteLn(TxtTraining_01);
     if Player.Wisdom < 11 then WriteLn(TxtTraining_02);
-    if (Player.Wisdom > 10) and (Player.Strength > 11) then WriteLn(TxtTraining_03);
-    if (Player.Wisdom > 10) and (Player.Dexterity > 10) then WriteLn(TxtTraining_04);
-    if (Player.Wisdom > 15) and (Player.Dexterity > 11) then WriteLn(TxtTraining_05);
-    if Player.Wisdom > 11 then WriteLn(TxtTraining_06);
-    if Player.Wisdom > 18 then WriteLn(TxtTraining_07);
-    if Player.Wisdom > 17 then WriteLn(TxtTraining_08);
-    if Player.Dexterity > 20 then WriteLn(TxtTraining_09);
-    if (Player.Strength > 20) and (Player.Dexterity > 10) then WriteLn(TxtTraining_10);
-    if (Player.Wisdom > 19) and (Player.Dexterity > 10) and (Player.Strength > 10) then
-      WriteLn(TxtTraining_11);
-    if (Player.Strength > 25) and (Player.Wisdom > 12) then WriteLn(TxtTraining_12);
-    if (Player.Strength > 29) and (Player.Wisdom > 14) then WriteLn(TxtTraining_13);
-    if Player.Dexterity > 22 then WriteLn(TxtTraining_14);
-    if Player.Dexterity > 28 then WriteLn(TxtTraining_15);
-    if Player.Wisdom > 22 then WriteLn(TxtTraining_16);
-    if Player.Wisdom > 23 then WriteLn(TxtTraining_17);
-    if (Player.Dexterity > 24) and (Player.Wisdom > 14) and (Player.Strength > 14) then
-      WriteLn(TxtTraining_18);
-    if Player.Wisdom > 24 then WriteLn(TxtTraining_19);
-    if Player.Wisdom > 26 then WriteLn(TxtTraining_20);
-    if (Player.Strength > 12) and (Player.Wisdom > 19) and (Player.Dexterity > 12) then
-      WriteLn(TxtTraining_21);
-    if (Player.Dexterity > 22) and (Player.Wisdom > 16) then WriteLn(TxtTraining_22);
-    if Player.Dexterity > 30 then WriteLn(TxtTraining_23);
-    if Player.Wisdom > 29 then WriteLn(TxtTraining_24);
-    if Player.Wisdom > 19 then WriteLn(TxtTraining_25);
-    if (Player.Wisdom > 23) and (Player.Dexterity > 12) then WriteLn(TxtTraining_26);
+    for i := Low(TrainingLines) to High(TrainingLines) do
+      if GatesMet(TrainingLines[i].wisdom, TrainingLines[i].strength,
+                  TrainingLines[i].dexterity) then
+        WriteLn(TrainingLines[i].text1);
     WriteLn(TxtTraining_27);
   end;
 
@@ -3887,20 +3909,13 @@ const
     (wisdom: 19; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_06; skill: @Skills.Returning; text2: TxtShared_26)
   );
 
-function SkillLineShown(const line: TSkillLine): Boolean;
-begin
-  SkillLineShown :=
-    ((line.wisdom = -1) or (Player.Wisdom > line.wisdom)) and
-    ((line.strength = -1) or (Player.Strength > line.strength)) and
-    ((line.dexterity = -1) or (Player.Dexterity > line.dexterity));
-end;
-
 procedure CmdShowSkills;
 var
   i: Integer;
 begin
   for i := Low(SkillLines) to High(SkillLines) do
-    if SkillLineShown(SkillLines[i]) then
+    if GatesMet(SkillLines[i].wisdom, SkillLines[i].strength,
+                SkillLines[i].dexterity) then
       with SkillLines[i] do
         WriteLn(text1, skill^, text2);
 end;

@@ -2647,19 +2647,37 @@ begin
   end;
 end;
 
+type
+  TBakeryItem = record
+    cmd: string;
+    item: ^Integer;
+    price: Integer;
+    desc: string;
+  end;
+
+const
+  { The bakery's stock, in counter order. }
+  BakeryItems: array[1..6] of TBakeryItem = (
+    (cmd: CmdKup + CmdPaczek; item: @Bag.Doughnut; price: 8; desc: TxtItemPaczek),
+    (cmd: CmdKup + CmdCiastko; item: @Bag.Cookie; price: 12; desc: TxtItemCiastko),
+    (cmd: CmdKup + CmdSuchaRacja; item: @Bag.DryRation; price: 15; desc: TxtItemSuchaRacje),
+    (cmd: CmdKup + CmdBulka; item: @Bag.BreadRoll; price: 19; desc: TxtItemBulke),
+    (cmd: CmdKup + CmdChleb; item: @Bag.Bread; price: 24; desc: TxtItemChleb),
+    (cmd: CmdKup + CmdWeka; item: @Bag.Sausage; price: 29; desc: TxtItemWeke)
+  );
+
 procedure BakeryShop;
 
+var
+  bi2: Integer;
 begin
   if Command = CmdLista then begin
     WriteLines(TxtBakeryShopLines1);
   end;
   StreetFights;
-  BuyItem(CmdKup + CmdPaczek, Bag.Doughnut, 8, TxtItemPaczek, True);
-  BuyItem(CmdKup + CmdCiastko, Bag.Cookie, 12, TxtItemCiastko, True);
-  BuyItem(CmdKup + CmdSuchaRacja, Bag.DryRation, 15, TxtItemSuchaRacje, True);
-  BuyItem(CmdKup + CmdBulka, Bag.BreadRoll, 19, TxtItemBulke, True);
-  BuyItem(CmdKup + CmdChleb, Bag.Bread, 24, TxtItemChleb, True);
-  BuyItem(CmdKup + CmdWeka, Bag.Sausage, 29, TxtItemWeke, True);
+  for bi2 := Low(BakeryItems) to High(BakeryItems) do
+    with BakeryItems[bi2] do
+      BuyItem(cmd, item^, price, desc, True);
 end;
 
 procedure RunShopRules(const rules: array of TShopRule);

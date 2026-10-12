@@ -2172,10 +2172,47 @@ begin
     WriteLn(desc, val div 10);
 end;
 
+type
+  TSheetKind = (ikShown, ikDiv10, ikPlain);
+  TSheetItem = record
+    item: ^Integer;
+    desc: string;
+    width: Integer;
+    kind: TSheetKind;
+  end;
+
+const
+  { The character sheet: an item shows when its slot holds a room
+    number (<= -10 marks it found). }
+  SheetItems: array[1..22] of TSheetItem = (
+    (item: @Bag.OldSword; desc: CmdStaryZardzewialyMiecz; width: 0; kind: ikShown),
+    (item: @Bag.SmallShield; desc: CmdOkraglaMalaTarcza; width: 0; kind: ikShown),
+    (item: @Bag.Heart; desc: CmdZakrwawioneSerce; width: 0; kind: ikShown),
+    (item: @Bag.Diploma; desc: CmdDyplomMudSzkoly; width: 0; kind: ikShown),
+    (item: @Bag.Doughnut; desc: CmdSmacznyPolanyLikieremPaczek; width: 10; kind: ikShown),
+    (item: @Bag.Cookie; desc: CmdSmaczneCiastko; width: 10; kind: ikShown),
+    (item: @Bag.DryRation; desc: CmdTwardaSuchaRacje; width: 10; kind: ikShown),
+    (item: @Bag.BreadRoll; desc: CmdOkraglaPachnacaBulka; width: 10; kind: ikShown),
+    (item: @Bag.Bread; desc: CmdDuzyCieplyChleb; width: 10; kind: ikShown),
+    (item: @Bag.Sausage; desc: CmdDlugaISmacznaWeke; width: 10; kind: ikShown),
+    (item: @Bag.Bigos; desc: CmdPysznyBigosZKapustaZWroga; width: 10; kind: ikShown),
+    (item: @Bag.Beer; desc: CmdOzewiajacePiwskoZKonkretnymKlimatem; width: 0; kind: ikDiv10),
+    (item: @Bag.Pipe; desc: CmdCiezkaFajkaOdDziadaMroza; width: 0; kind: ikPlain),
+    (item: @Bag.Tracksuit; desc: CmdKompletUbranFirmySyf; width: 0; kind: ikPlain),
+    (item: @Bag.SpikedSuit; desc: CmdGarniturZKolcami; width: 0; kind: ikPlain),
+    (item: @Bag.ManaBottle; desc: CmdMalaButelkeMany; width: 0; kind: ikPlain),
+    (item: @Bag.LuckyLeaf; desc: CmdDelikatnyChocSzorstkiListek; width: 0; kind: ikPlain),
+    (item: @Bag.Cassette; desc: CmdKasetaLiroyaLJakLiroy; width: 0; kind: ikPlain),
+    (item: @Bag.TeleportPill; desc: CmdPigulkaTransportujacaMG; width: 0; kind: ikPlain),
+    (item: @Bag.Permit; desc: CmdPrzepustkaWlasnoreczniePodpisanaPrzezQuestMastera; width: 0; kind: ikPlain),
+    (item: @Bag.CompareScroll; desc: CmdScrollZCzaremPorownywanie; width: 0; kind: ikPlain),
+    (item: @Bag.ReturnScroll; desc: CmdScrollZCzaremPowrot; width: 0; kind: ikPlain)
+  );
+
 procedure ShowCharacter;
 
 var
-  i, gap: Integer;
+  i, gap, si: Integer;
 begin
 
   for i := High(DexterityItemLimits) downto Low(DexterityItemLimits) do
@@ -2185,28 +2222,13 @@ begin
     end;
   if Bag.Backpack < 0 then Bag.Limit := Bag.Limit + 4;
   WriteLn(TxtShowCharacter_01);
-  ShowItem(Bag.OldSword, CmdStaryZardzewialyMiecz, 0);
-  ShowItem(Bag.SmallShield, CmdOkraglaMalaTarcza, 0);
-  ShowItem(Bag.Heart, CmdZakrwawioneSerce, 0);
-  ShowItem(Bag.Diploma, CmdDyplomMudSzkoly, 0);
-  ShowItem(Bag.Doughnut, CmdSmacznyPolanyLikieremPaczek, 10);
-  ShowItem(Bag.Cookie, CmdSmaczneCiastko, 10);
-  ShowItem(Bag.DryRation, CmdTwardaSuchaRacje, 10);
-  ShowItem(Bag.BreadRoll, CmdOkraglaPachnacaBulka, 10);
-  ShowItem(Bag.Bread, CmdDuzyCieplyChleb, 10);
-  ShowItem(Bag.Sausage, CmdDlugaISmacznaWeke, 10);
-  ShowItem(Bag.Bigos, CmdPysznyBigosZKapustaZWroga, 10);
-  ShowItemDiv10(Bag.Beer, CmdOzewiajacePiwskoZKonkretnymKlimatem);
-  ShowItemPlain(Bag.Pipe, CmdCiezkaFajkaOdDziadaMroza);
-  ShowItemPlain(Bag.Tracksuit, CmdKompletUbranFirmySyf);
-  ShowItemPlain(Bag.SpikedSuit, CmdGarniturZKolcami);
-  ShowItemPlain(Bag.ManaBottle, CmdMalaButelkeMany);
-  ShowItemPlain(Bag.LuckyLeaf, CmdDelikatnyChocSzorstkiListek);
-  ShowItemPlain(Bag.Cassette, CmdKasetaLiroyaLJakLiroy);
-  ShowItemPlain(Bag.TeleportPill, CmdPigulkaTransportujacaMG);
-  ShowItemPlain(Bag.Permit, CmdPrzepustkaWlasnoreczniePodpisanaPrzezQuestMastera);
-  ShowItemPlain(Bag.CompareScroll, CmdScrollZCzaremPorownywanie);
-  ShowItemPlain(Bag.ReturnScroll, CmdScrollZCzaremPowrot);
+  for si := Low(SheetItems) to High(SheetItems) do
+    with SheetItems[si] do
+      case kind of
+        ikShown: ShowItem(item^, desc, width);
+        ikDiv10: ShowItemDiv10(item^, desc);
+        ikPlain: ShowItemPlain(item^, desc);
+      end;
   WriteLn(TxtShowCharacter_02, Bag.Count, TxtShowCharacter_03, Bag.Limit, TxtShowCharacter_04);
   if Gear.WeaponKind = 0 then WriteLn(TxtShowCharacter_05);
   if Gear.ShieldKind = 0 then WriteLn(TxtShowCharacter_06);

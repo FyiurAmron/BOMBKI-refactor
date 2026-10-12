@@ -34,10 +34,14 @@ def extract():
     # Display texts live in the strings catalog: a room's intro line is
     # either a remaining literal or a catalog identifier reference.
     catalog = {}
-    for line in (SOURCES / "texts.inc").read_text().split("\n"):
-        mm = re.match(r"\s*(\w+) = (.+);$", line)
-        if mm:
-            catalog[mm.group(1)] = mm.group(2)
+    arrays = {}
+    cat_text = (SOURCES / "texts.inc").read_text()
+    for mm in re.finditer(r"^\s*(\w+) = (.+);$", cat_text, re.M):
+        catalog[mm.group(1)] = mm.group(2)
+    for mm in re.finditer(
+            r"^\s*(\w+): array\[\d+\.\.\d+\] of string = \(([^)]*)\);",
+            cat_text, re.M):
+        arrays[mm.group(1)] = [a.strip() for a in mm.group(2).split(",")]
 
     def catalog_word(name):
         value = catalog.get(name, "")
@@ -52,6 +56,13 @@ def extract():
         mm = re.search(r"WriteLn\('([^']{8,})'\)", line)
         if mm:
             return mm.group(1)
+        mm = re.search(r"WriteLines\((\w+)\)", line)
+        if mm:
+            elements = arrays.get(mm.group(1), [])
+            if elements:
+                first = strip_quote(catalog.get(elements[0], ""))
+                if first is not None and len(first) >= 8:
+                    return first
         mm = re.search(r"WriteLn\(([^()]+)\)", line)
         if mm:
             parts = [a.strip() for a in mm.group(1).split(",")]

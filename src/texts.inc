@@ -978,3 +978,67 @@ const
   TxtItemWeke = 'WEKE';
   TxtPiwoTail = 'NAPOJ BOGOW : PIWO !!!';
   TxtEatVerb = 'ZJADASZ ';
+  TxtRoom5Lines1: array[1..3] of string = (TxtRoom5_01, TxtRoom5_02, TxtRoom5_03);
+  TxtRoom1Lines1: array[1..3] of string = (TxtRoom1_02, TxtShared_04, TxtRoom1_03);
+  TxtRoom4Lines1: array[1..5] of string = (
+    TxtRoom4_05, TxtRoom4_06, TxtRoom4_07, TxtRoom4_08, TxtRoom4_09);
+  TxtRoom11Lines1: array[1..3] of string = (TxtRoom11_02, TxtRoom11_03, TxtShared_04);
+  TxtRoom11Lines2: array[1..3] of string = (TxtShared_13, TxtRoom11_10, TxtRoom11_11);
+  TxtRoom75Lines1: array[1..3] of string = (TxtRoom75_01, TxtRoom75_02, TxtRoom75_03);
+  TxtRoom83Lines1: array[1..3] of string = (TxtRoom83_01, TxtRoom83_02, TxtRoom83_03);
+  TxtRoom100Lines1: array[1..4] of string = (
+    TxtRoom100_05, TxtRoom100_06, TxtRoom100_07, TxtRoom100_08);
+  TxtPlantFightsLines1: array[1..4] of string = (
+    TxtPlantFights_01, TxtPlantFights_02, TxtPlantFights_03, TxtPlantFights_04);
+  TxtKillDogLines1: array[1..3] of string = (TxtKillDog_01, TxtKillDog_02, TxtKillDog_03);
+  TxtDeathLines1: array[1..7] of string = (
+    TxtDeath_01, TxtDeath_02, TxtDeath_03, TxtDeath_04, TxtDeath_05, TxtDeath_06, TxtDeath_07);
+  TxtGeneralStoreShopLines1: array[1..3] of string = (
+    TxtGeneralStoreShop_03, TxtGeneralStoreShop_04, TxtGeneralStoreShop_05);
+  TxtRoom2Lines1: array[1..3] of string = (TxtShared_05, TxtRoom2_04, TxtRoom2_05);
+  TxtRoom3Lines1: array[1..3] of string = (TxtRoom3_01, TxtRoom3_02, TxtRoom3_03);
+  TxtConcertRoomsLines1: array[1..3] of string = (
+    TxtConcertRooms_01, TxtConcertRooms_02, TxtConcertRooms_03);
+  TxtConcertRoomsLines2: array[1..3] of string = (
+    TxtConcertRooms_41, TxtConcertRooms_42, TxtConcertRooms_43);
+  TxtCheckLevelUpLines1: array[1..4] of string = (
+    TxtCheckLevelUp_01, TxtCheckLevelUp_01, TxtCheckLevelUp_01, TxtCheckLevelUp_01);
+  TxtRoom17Lines1: array[1..4] of string = (TxtShared_13, TxtRoom17_03, TxtRoom17_04, TxtRoom17_05);
+  TxtRoom18Lines1: array[1..4] of string = (TxtRoom18_01, TxtRoom18_02, TxtRoom18_03, TxtRoom18_04);
+  TxtRoom76Lines1: array[1..3] of string = (TxtRoom76_02, TxtRoom76_03, TxtRoom76_04);
+  TxtRoom76Lines2: array[1..4] of string = (TxtRoom76_09, TxtRoom76_10, TxtRoom76_11, TxtRoom76_12);
+  TxtRoom80Lines1: array[1..3] of string = (TxtRoom80_01, TxtRoom80_02, TxtRoom80_03);
+  TxtRoom84Lines1: array[1..4] of string = (TxtRoom84_01, TxtRoom84_02, TxtRoom84_03, TxtRoom84_04);
+  TxtRoom88Lines1: array[1..4] of string = (TxtRoom88_01, TxtRoom88_02, TxtRoom88_03, TxtRoom88_04);
+  TxtRoom86Lines1: array[1..3] of string = (TxtRoom86_05, TxtRoom86_06, TxtRoom86_07);
+  TxtRoom86Lines2: array[1..5] of string = (
+    TxtRoom86_08, TxtRoom86_09, TxtRoom86_10, TxtRoom86_11, TxtRoom86_12);
+  TxtRoom101Lines1: array[1..3] of string = (TxtRoom101_01, TxtRoom101_02, TxtRoom101_03);
+  TxtRoom103Lines1: array[1..4] of string = (
+    TxtRoom103_01, TxtRoom103_02, TxtRoom103_03, TxtRoom103_04);
+  TxtShowIntroLines1: array[1..14] of string = (
+    TxtShowIntro_01, TxtShowIntro_02, TxtShowIntro_03, TxtShowIntro_04, TxtShowIntro_05,
+    TxtShowIntro_06, TxtShowIntro_07, TxtShowIntro_08, TxtShowIntro_09, TxtShowIntro_10,
+    TxtShowIntro_11, TxtShowIntro_12, TxtShowIntro_13, TxtShowIntro_14);
+  TxtRoom1Lines2: array[1..11] of string = (
+    TxtShared_05, TxtRoom1_09, TxtRoom1_10, TxtRoom1_11, TxtRoom1_12, TxtRoom1_13, TxtRoom1_14,
+    TxtRoom1_15, TxtRoom1_16, TxtRoom1_17, TxtRoom1_18);
+  TxtUseItemsLines1: array[1..11] of string = (
+    TxtUseItems_03, TxtUseItems_04, TxtUseItems_05, TxtUseItems_06, TxtUseItems_06,
+    TxtUseItems_06, TxtUseItems_07, TxtUseItems_08, TxtUseItems_09, TxtUseItems_10,
+    TxtUseItems_11);
+  TxtUseItemsLines2: array[1..7] of string = (
+    TxtUseItems_17, TxtUseItems_18, TxtUseItems_19, TxtUseItems_20, TxtUseItems_21,
+    TxtUseItems_22, TxtUseItems_17);
+  TxtPlantFightsLines2: array[1..6] of string = (
+    TxtPlantFights_07, TxtPlantFights_08, TxtPlantFights_09, TxtPlantFights_10,
+    TxtPlantFights_11, TxtPlantFights_12);
+  TxtChooseRaceLines1: array[1..10] of string = (
+    TxtChooseRace_03, TxtChooseRace_04, TxtChooseRace_05, TxtChooseRace_06, TxtChooseRace_07,
+    TxtChooseRace_08, TxtChooseRace_09, TxtChooseRace_10, TxtChooseRace_11, TxtChooseRace_12);
+  TxtBakeryShopLines1: array[1..7] of string = (
+    TxtShared_24, TxtBakeryShop_01, TxtBakeryShop_02, TxtBakeryShop_03, TxtBakeryShop_04,
+    TxtBakeryShop_05, TxtBakeryShop_06);
+  TxtMagicShopLines1: array[1..8] of string = (
+    TxtMagicShop_01, TxtMagicShop_02, TxtMagicShop_03, TxtMagicShop_04, TxtMagicShop_05,
+    TxtMagicShop_06, TxtMagicShop_07, TxtMagicShop_08);

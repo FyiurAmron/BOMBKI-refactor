@@ -142,26 +142,33 @@ implementation
 
 {$I texts.inc}
 
+procedure WriteExits(const items: array of string);
+var
+  i: Integer;
+begin
+  WriteLn(items[0]);
+  for i := 1 to High(items) div 2 do begin
+    Write(items[2 * i - 1]);
+    WriteLn(items[2 * i]);
+  end;
+end;
+
+procedure WriteLines(const lines: array of string);
+var
+  i: Integer;
+begin
+  for i := Low(lines) to High(lines) do
+    WriteLn(lines[i]);
+end;
+
+
 procedure ShowIntro;
 var
   tone, step: Integer;
 begin
   ClrScr;
   Player.MaxEnergy := 50;
-  WriteLn(TxtShowIntro_01);
-  WriteLn(TxtShowIntro_02);
-  WriteLn(TxtShowIntro_03);
-  WriteLn(TxtShowIntro_04);
-  WriteLn(TxtShowIntro_05);
-  WriteLn(TxtShowIntro_06);
-  WriteLn(TxtShowIntro_07);
-  WriteLn(TxtShowIntro_08);
-  WriteLn(TxtShowIntro_09);
-  WriteLn(TxtShowIntro_10);
-  WriteLn(TxtShowIntro_11);
-  WriteLn(TxtShowIntro_12);
-  WriteLn(TxtShowIntro_13);
-  WriteLn(TxtShowIntro_14);
+  WriteLines(TxtShowIntroLines1);
   tone := 100;
   step := 100;
   repeat
@@ -179,22 +186,19 @@ end;
 
 procedure Room5;
 begin
-  WriteLn(TxtRoom5_01);
-  WriteLn(TxtRoom5_02);
-  WriteLn(TxtRoom5_03);
+  WriteLines(TxtRoom5Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceMudSzkola);
-      WriteLn(TxtExitZachod, TxtPlacePokoj);
-      WriteLn(TxtExitPolnoc, TxtPlacePokoj);
-      WriteLn(TxtExitPolodnie, TxtPlacePokoj);
-      WriteLn(TxtExitGora, TxtPlacePokoj);
-      WriteLn(TxtExitDol, TxtPlacePokoj);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceMudSzkola,
+                    TxtExitZachod, TxtPlacePokoj,
+                    TxtExitPolnoc, TxtPlacePokoj,
+                    TxtExitPolodnie, TxtPlacePokoj,
+                    TxtExitGora, TxtPlacePokoj,
+                    TxtExitDol, TxtPlacePokoj]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdWschod then Session.Room := 4;
     if Command = CmdZachod then Session.Room := 6;
@@ -223,21 +227,18 @@ end;
 procedure Room1;
 begin
   WriteLn(TxtYouAreIn, TxtRoom1_01);
-  WriteLn(TxtRoom1_02);
-  WriteLn(TxtShared_04);
-  WriteLn(TxtRoom1_03);
+  WriteLines(TxtRoom1Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceTamGdzieZaczynaszGre);
-      WriteLn(TxtExitPolnoc, TxtPlaceMiasto);
-      WriteLn(TxtExitWschod, TxtPlacePokojTreningowy1);
-      WriteLn(TxtExitZachod, TxtPlaceMudSzkola);
-      WriteLn(TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceTamGdzieZaczynaszGre,
+                    TxtExitPolnoc, TxtPlaceMiasto,
+                    TxtExitWschod, TxtPlacePokojTreningowy1,
+                    TxtExitZachod, TxtPlaceMudSzkola,
+                    TxtExitDol, TxtPlacePoddziemnyPokojTreningowy2]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdPolodnie then Session.Room := 0;
     if Command = CmdWschod then Session.Room := 2;
@@ -245,17 +246,7 @@ begin
     if Command = CmdZachod then Session.Room := 4;
     if Command = CmdPolnoc then Session.Room := 20;
     if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtShared_05);
-      WriteLn(TxtRoom1_09);
-      WriteLn(TxtRoom1_10);
-      WriteLn(TxtRoom1_11);
-      WriteLn(TxtRoom1_12);
-      WriteLn(TxtRoom1_13);
-      WriteLn(TxtRoom1_14);
-      WriteLn(TxtRoom1_15);
-      WriteLn(TxtRoom1_16);
-      WriteLn(TxtRoom1_17);
-      WriteLn(TxtRoom1_18);
+      WriteLines(TxtRoom1Lines2);
     end;
   until Session.Room <> 1;
 end;
@@ -268,20 +259,15 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlacePokojCentralny);
-      WriteLn(TxtExitZachod, TxtPlaceMudSzkola2);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlacePokojCentralny,
+                    TxtExitZachod, TxtPlaceMudSzkola2]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdWschod then Session.Room := 1;
     if Command = CmdZachod then Session.Room := 5;
     if Command = CmdPatrz + CmdAfisz then begin
-      WriteLn(TxtRoom4_05);
-      WriteLn(TxtRoom4_06);
-      WriteLn(TxtRoom4_07);
-      WriteLn(TxtRoom4_08);
-      WriteLn(TxtRoom4_09);
+      WriteLines(TxtRoom4Lines1);
     end;
   until Session.Room <> 4;
 
@@ -297,10 +283,9 @@ begin
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then Exit;
     if Command = CmdWschod then Session.Room := 11;
@@ -361,23 +346,20 @@ procedure Room11;
 begin
   if Session.Room <> 11 then Exit;
   WriteLn(TxtYouAreIn, TxtRoom11_01);
-  WriteLn(TxtRoom11_02);
-  WriteLn(TxtRoom11_03);
-  WriteLn(TxtShared_04);
+  WriteLines(TxtRoom11Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     ExpandAbbrev;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceKlatkaCieniasa);
-      WriteLn(TxtExitZachod, TxtPlaceKlatkaSilnego);
-      WriteLn(TxtExitPolnoc, TxtPlaceKlatkaZrecznego);
-      WriteLn(TxtExitPolodnie, TxtPlaceKlatkaOdpornego);
-      WriteLn(TxtExitGora, TxtPlaceKlatkaSilnegoOdpornegoIZrecznego);
-      WriteLn(TxtExitDol, TxtPlaceJedynaDrogaNieProwadzacaDoKlatek);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceKlatkaCieniasa,
+                    TxtExitZachod, TxtPlaceKlatkaSilnego,
+                    TxtExitPolnoc, TxtPlaceKlatkaZrecznego,
+                    TxtExitPolodnie, TxtPlaceKlatkaOdpornego,
+                    TxtExitGora, TxtPlaceKlatkaSilnegoOdpornegoIZrecznego,
+                    TxtExitDol, TxtPlaceJedynaDrogaNieProwadzacaDoKlatek]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdWschod then Session.Room := 12;
     if Command = CmdZachod then Session.Room := 13;
@@ -386,9 +368,7 @@ begin
     if Command = CmdGora then Session.Room := 16;
     if Command = CmdDol then Session.Room := 17;
     if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtShared_13);
-      WriteLn(TxtRoom11_10);
-      WriteLn(TxtRoom11_11);
+      WriteLines(TxtRoom11Lines2);
     end;
   until Session.Room <> 11;
 
@@ -402,12 +382,11 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceCentrumMiasta);
-      WriteLn(TxtExitZachod, TxtPlaceUlicaDluga);
-      WriteLn(TxtExitPolnoc, TxtPlaceWejscieNaArene);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceCentrumMiasta,
+                    TxtExitZachod, TxtPlaceUlicaDluga,
+                    TxtExitPolnoc, TxtPlaceWejscieNaArene]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdWschod then Session.Room := 20;
     if Command = CmdZachod then Session.Room := 31;
@@ -425,11 +404,10 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceUlicaDluga);
-      WriteLn(TxtExitWschod, TxtPlaceBudowlaPelnaHalasu);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceUlicaDluga,
+                    TxtExitWschod, TxtPlaceBudowlaPelnaHalasu]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdPolodnie then Session.Room := 31;
     if Command = CmdWschod then Session.Room := 61;
@@ -439,19 +417,16 @@ end;
 procedure Room75;
 begin
   if Session.Room <> 75 then Exit;
-  WriteLn(TxtRoom75_01);
-  WriteLn(TxtRoom75_02);
-  WriteLn(TxtRoom75_03);
+  WriteLines(TxtRoom75Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceCentrumMiasta);
-      WriteLn(TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami);
-      WriteLn(TxtExitPolodnie, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceCentrumMiasta,
+                    TxtExitPolnoc, TxtPlaceBarPodDwomaPedalami,
+                    TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdZachod then Session.Room := 20;
     if Command = CmdPolnoc then Session.Room := 76;
@@ -462,9 +437,7 @@ end;
 procedure Room83;
 begin
   if Session.Room <> 83 then Exit;
-  WriteLn(TxtRoom83_01);
-  WriteLn(TxtRoom83_02);
-  WriteLn(TxtRoom83_03);
+  WriteLines(TxtRoom83Lines1);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -472,11 +445,10 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolnoc, TxtPlaceBluszcz);
-      WriteLn(TxtExitZachod, TxtPlacePodejrzaneKrzaki);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolnoc, TxtPlaceBluszcz,
+                    TxtExitZachod, TxtPlacePodejrzaneKrzaki]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdPolnoc then Session.Room := 80;
     if Command = CmdZachod then Session.Room := 84;
@@ -494,17 +466,14 @@ begin
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
     if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceUlSklepikowa);
-      WriteLn(TxtExitWschod, TxtPlaceDrogaOKtorejMozeszPomazycBoJestWProdukcji);
+      WriteExits([TxtShared_03,
+                  TxtExitPolodnie, TxtPlaceUlSklepikowa,
+                  TxtExitWschod, TxtPlaceDrogaOKtorejMozeszPomazycBoJestWProdukcji]);
       if Bag.Permit = 0 then WriteLn(TxtExitZachod, TxtPlaceDrogaZablokowanaPrzezQuestMastera);
       if Bag.Permit < 0 then WriteLn(TxtExitZachod, TxtPlaceDroga);
     end;
     if Command = CmdLista then begin
-      WriteLn(TxtRoom100_05);
-      WriteLn(TxtRoom100_06);
-      WriteLn(TxtRoom100_07);
-      WriteLn(TxtRoom100_08);
+      WriteLines(TxtRoom100Lines1);
     end;
     if (Command = CmdKup + CmdLatwyQuest) and (Player.Money > 199) then begin
       WriteLn(TxtRoom100_09);
@@ -1385,17 +1354,7 @@ begin
     Bag.Count := Bag.Count - 1;
   end;
   if (Command = CmdUzyj + CmdDyplom) and (Bag.Diploma = -10) then begin
-    WriteLn(TxtUseItems_03);
-    WriteLn(TxtUseItems_04);
-    WriteLn(TxtUseItems_05);
-    WriteLn(TxtUseItems_06);
-    WriteLn(TxtUseItems_06);
-    WriteLn(TxtUseItems_06);
-    WriteLn(TxtUseItems_07);
-    WriteLn(TxtUseItems_08);
-    WriteLn(TxtUseItems_09);
-    WriteLn(TxtUseItems_10);
-    WriteLn(TxtUseItems_11);
+    WriteLines(TxtUseItemsLines1);
   end;
   if (Command = CmdUzyj + CmdPaczek) and (Bag.Doughnut <= -10) then begin
     Bag.Count := Bag.Count - 1;
@@ -1431,13 +1390,7 @@ begin
     Bag.Count := Bag.Count + 1;
   end;
   if (Command = CmdPatrz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
-    WriteLn(TxtUseItems_17);
-    WriteLn(TxtUseItems_18);
-    WriteLn(TxtUseItems_19);
-    WriteLn(TxtUseItems_20);
-    WriteLn(TxtUseItems_21);
-    WriteLn(TxtUseItems_22);
-    WriteLn(TxtUseItems_17);
+    WriteLines(TxtUseItemsLines2);
   end;
   if (Command = CmdUzyj + CmdChleb) and (Bag.Bread <= -10) then begin
     Bag.Count := Bag.Count - 1;
@@ -1669,66 +1622,57 @@ begin
         SuitGain;
       end;
       if Command = CmdExit then begin
-        if Session.Room = 33 then begin
-          WriteLn(TxtShared_03);
-          WriteLn(TxtExitPolodnie, TxtPlaceWejscieNaArene);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
+        if Session.Room = 33 then
+            WriteExits([TxtShared_03,
+                        TxtExitPolodnie, TxtPlaceWejscieNaArene,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
         if (Session.Room = 34) or (Session.Room = 37) or (Session.Room = 38) or (Session.Room = 39) or
                 (Session.Room = 42) or (Session.Room = 43) or (Session.Room = 44) or (Session.Room = 48) or
                 (Session.Room = 49) then begin
-          WriteLn(TxtShared_03);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
+          WriteExits([TxtShared_03,
+                      TxtExitPolodnie, TxtPlaceArena,
+                      TxtExitPolnoc, TxtPlaceArena,
+                      TxtExitWschod, TxtPlaceArena,
+                      TxtExitZachod, TxtPlaceArena]);
         end;
-        if (Session.Room = 35) or (Session.Room = 36) then begin
-          WriteLn(TxtShared_03);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
-        if Session.Room = 40 then begin
-          WriteLn(TxtShared_03);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
-        if Session.Room = 41 then begin
-          WriteLn(TxtShared_03);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-        end;
-        if (Session.Room = 45) or (Session.Room = 50) or (Session.Room = 54) then begin
-          WriteLn(TxtArenaMaze_08);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
-        if (Session.Room = 46) or (Session.Room = 51) or (Session.Room = 55) then begin
-          WriteLn(TxtArenaMaze_08);
-          WriteLn(TxtExitPolnoc, TxtPlaceArena);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-        end;
-        if (Session.Room = 47) or (Session.Room = 52) or (Session.Room = 53) then begin
-          WriteLn(TxtArenaMaze_09);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
-        if Session.Room = 56 then begin
-          WriteLn(TxtArenaMaze_10);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitZachod, TxtPlaceArena);
-        end;
-        if Session.Room = 57 then begin
-          WriteLn(TxtArenaMaze_10);
-          WriteLn(TxtExitPolodnie, TxtPlaceArena);
-          WriteLn(TxtExitWschod, TxtPlaceArena);
-        end;
+        if (Session.Room = 35) or (Session.Room = 36) then
+            WriteExits([TxtShared_03,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+        if Session.Room = 40 then
+            WriteExits([TxtShared_03,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+        if Session.Room = 41 then
+            WriteExits([TxtShared_03,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena]);
+        if (Session.Room = 45) or (Session.Room = 50) or (Session.Room = 54) then
+            WriteExits([TxtArenaMaze_08,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+        if (Session.Room = 46) or (Session.Room = 51) or (Session.Room = 55) then
+            WriteExits([TxtArenaMaze_08,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena]);
+        if (Session.Room = 47) or (Session.Room = 52) or (Session.Room = 53) then
+            WriteExits([TxtArenaMaze_09,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+        if Session.Room = 56 then
+            WriteExits([TxtArenaMaze_10,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+        if Session.Room = 57 then
+            WriteExits([TxtArenaMaze_10,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena]);
       end;
       if Command = CmdWyjscie then exit;
       if Command = CmdPolodnie then begin
@@ -1917,10 +1861,7 @@ begin
     if Combat.EnemyEnergy < 1 then World.Duncan := 0;
   end;
   if (Command = CmdSecret + CmdLista) and (World.Duncan = Session.Room) then begin
-    WriteLn(TxtPlantFights_01);
-    WriteLn(TxtPlantFights_02);
-    WriteLn(TxtPlantFights_03);
-    WriteLn(TxtPlantFights_04);
+    WriteLines(TxtPlantFightsLines1);
   end;
   if Command = CmdKup + CmdDokument then begin if Player.Money > 399 then begin
       WriteLn(TxtPlantFights_05);
@@ -1936,12 +1877,7 @@ begin
   end;
   if (Command = CmdRozmawiaj + CmdDuncan) and (World.Duncan = Session.Room) then begin
     if World.DuncanQuest = 0 then begin
-      WriteLn(TxtPlantFights_07);
-      WriteLn(TxtPlantFights_08);
-      WriteLn(TxtPlantFights_09);
-      WriteLn(TxtPlantFights_10);
-      WriteLn(TxtPlantFights_11);
-      WriteLn(TxtPlantFights_12);
+      WriteLines(TxtPlantFightsLines2);
       World.DuncanQuest := 75;
     end;
     if World.DuncanQuest <> 0 then
@@ -2251,16 +2187,7 @@ begin
   Player.MaxMana := Player.MaxMana + 100;
   Player.Mana := Player.MaxMana;
   SpawnMonsters;
-  WriteLn(TxtChooseRace_03);
-  WriteLn(TxtChooseRace_04);
-  WriteLn(TxtChooseRace_05);
-  WriteLn(TxtChooseRace_06);
-  WriteLn(TxtChooseRace_07);
-  WriteLn(TxtChooseRace_08);
-  WriteLn(TxtChooseRace_09);
-  WriteLn(TxtChooseRace_10);
-  WriteLn(TxtChooseRace_11);
-  WriteLn(TxtChooseRace_12);
+  WriteLines(TxtChooseRaceLines1);
 end;
 
 procedure KillDog(cmd: string; var Dog: Integer; extraMsg: Boolean);
@@ -2270,9 +2197,7 @@ begin
     FightDog;
     Dog := 0;
     if extraMsg then begin
-      WriteLn(TxtKillDog_01);
-      WriteLn(TxtKillDog_02);
-      WriteLn(TxtKillDog_03);
+      WriteLines(TxtKillDogLines1);
     end;
   end;
 end;
@@ -2548,13 +2473,7 @@ end;
 procedure Death;
 
 begin
-  WriteLn(TxtDeath_01);
-  WriteLn(TxtDeath_02);
-  WriteLn(TxtDeath_03);
-  WriteLn(TxtDeath_04);
-  WriteLn(TxtDeath_05);
-  WriteLn(TxtDeath_06);
-  WriteLn(TxtDeath_07);
+  WriteLines(TxtDeathLines1);
   if World.Quest = 1 then World.QuestKills := 50;
   if World.Quest > 1 then World.QuestKills := 200;
   Player.Energy := Player.MaxEnergy;
@@ -2582,13 +2501,7 @@ procedure BakeryShop;
 
 begin
   if Command = CmdLista then begin
-    WriteLn(TxtShared_24);
-    WriteLn(TxtBakeryShop_01);
-    WriteLn(TxtBakeryShop_02);
-    WriteLn(TxtBakeryShop_03);
-    WriteLn(TxtBakeryShop_04);
-    WriteLn(TxtBakeryShop_05);
-    WriteLn(TxtBakeryShop_06);
+    WriteLines(TxtBakeryShopLines1);
   end;
   StreetFights;
   BuyItem(CmdKup + CmdPaczek, Bag.Doughnut, 8, TxtItemPaczek, True);
@@ -2923,9 +2836,7 @@ begin
     WriteLn(TxtGeneralStoreShop_01);
     if Bag.Pipe = 0 then WriteLn(TxtGeneralStoreShop_02);
     if Bag.Tracksuit = 0 then
-      WriteLn(TxtGeneralStoreShop_03);
-    WriteLn(TxtGeneralStoreShop_04);
-    WriteLn(TxtGeneralStoreShop_05);
+      WriteLines(TxtGeneralStoreShopLines1);
   end;
   if Command = CmdPatrz + CmdPoster then
     WriteLn(TxtGeneralStoreShop_06);
@@ -2936,14 +2847,7 @@ procedure MagicShop;
 
 begin
   if Command = CmdLista then begin
-    WriteLn(TxtMagicShop_01);
-    WriteLn(TxtMagicShop_02);
-    WriteLn(TxtMagicShop_03);
-    WriteLn(TxtMagicShop_04);
-    WriteLn(TxtMagicShop_05);
-    WriteLn(TxtMagicShop_06);
-    WriteLn(TxtMagicShop_07);
-    WriteLn(TxtMagicShop_08);
+    WriteLines(TxtMagicShopLines1);
   end;
   RunShopRules(MagicShopRules);
 end;
@@ -3051,16 +2955,13 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlacePok224JCentralny);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlacePok224JCentralny]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdZachod then Session.Room := 1;
     if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtShared_05);
-      WriteLn(TxtRoom2_04);
-      WriteLn(TxtRoom2_05);
+      WriteLines(TxtRoom2Lines1);
     end;
     HandleTrain;
   until Session.Room <> 2;
@@ -3070,9 +2971,7 @@ procedure Room3;
 
 begin
   if Session.Room <> 3 then Exit;
-  WriteLn(TxtRoom3_01);
-  WriteLn(TxtRoom3_02);
-  WriteLn(TxtRoom3_03);
+  WriteLines(TxtRoom3Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
@@ -3094,11 +2993,10 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitDol, TxtPlaceMudSzkola2);
-      WriteLn(TxtExitGora, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitDol, TxtPlaceMudSzkola2,
+                    TxtExitGora, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdWyjscie then Exit;
     if Command = CmdDol then Session.Room := 5;
     if Command = CmdGora then Session.Room := 11;
@@ -3117,10 +3015,9 @@ begin
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then Exit;
     if Command = CmdZachod then Session.Room := 11;
@@ -3165,20 +3062,17 @@ procedure ConcertRooms;
 begin
   if Session.Room = 61 then begin
 
-    WriteLn(TxtConcertRooms_01);
-    WriteLn(TxtConcertRooms_02);
-    WriteLn(TxtConcertRooms_03);
+    WriteLines(TxtConcertRoomsLines1);
     DescribeCrowd;
     repeat
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlaceDolinaRozrywek);
-        WriteLn(TxtExitPolnoc, TxtPlaceTlum);
-        WriteLn(TxtExitPolodnie, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitZachod, TxtPlaceDolinaRozrywek,
+                      TxtExitPolnoc, TxtPlaceTlum,
+                      TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdZachod then Session.Room := 60;
@@ -3200,11 +3094,10 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitPolnoc, TxtPlaceTlum);
-        WriteLn(TxtExitWschod, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitPolnoc, TxtPlaceTlum,
+                      TxtExitWschod, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 61;
@@ -3220,12 +3113,11 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitPolodnie, TxtPlaceTlum);
-        WriteLn(TxtExitWschod, TxtPlaceTlum);
-        WriteLn(TxtExitPolnoc, TxtPlacePiwiarnia);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitPolodnie, TxtPlaceTlum,
+                      TxtExitWschod, TxtPlaceTlum,
+                      TxtExitPolnoc, TxtPlacePiwiarnia]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolodnie then Session.Room := 61;
@@ -3243,12 +3135,11 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlaceTlum);
-        WriteLn(TxtExitPolnoc, TxtPlaceTlum);
-        WriteLn(TxtExitPolodnie, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitZachod, TxtPlaceTlum,
+                      TxtExitPolnoc, TxtPlaceTlum,
+                      TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 66;
@@ -3266,11 +3157,10 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlaceTlum);
-        WriteLn(TxtExitPolnoc, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitZachod, TxtPlaceTlum,
+                      TxtExitPolnoc, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 64;
@@ -3286,11 +3176,10 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlaceTlum);
-        WriteLn(TxtExitPolodnie, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitZachod, TxtPlaceTlum,
+                      TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolodnie then Session.Room := 64;
@@ -3311,11 +3200,10 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitWschod, TxtPlaceWejscieNaEstrade);
-        WriteLn(TxtExitPolodnie, TxtPlaceTlum);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitWschod, TxtPlaceWejscieNaEstrade,
+                      TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
       if (Command = CmdZabij + CmdMiniBarman) and (World.Minibarman = 67) then begin
         WriteLn(TxtConcertRooms_23);
@@ -3358,9 +3246,9 @@ begin
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
       if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlacePiwiarnia);
-        WriteLn(TxtExitWschod, TxtPlaceScena);
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlacePiwiarnia,
+                    TxtExitWschod, TxtPlaceScena]);
         WriteLn(TxtConcertRooms_31);
       end;
       ConcertFights;
@@ -3381,11 +3269,10 @@ begin
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitZachod, TxtPlaceWejscieNaScene);
-        WriteLn(TxtExitPolodnie, TxtPlaceScena);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitZachod, TxtPlaceWejscieNaScene,
+                      TxtExitPolodnie, TxtPlaceScena]);
       if Command = CmdZabij + CmdDJ then begin
         if World.DJ = 69 then begin
           FightVeryHard;
@@ -3416,19 +3303,16 @@ begin
   end;
   if Session.Room = 70 then begin
 
-    WriteLn(TxtConcertRooms_41);
-    WriteLn(TxtConcertRooms_42);
-    WriteLn(TxtConcertRooms_43);
+    WriteLines(TxtConcertRoomsLines2);
     DescribeStage;
     repeat
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitPolnoc, TxtPlaceScena);
-        WriteLn(TxtExitPolodnie, TxtPlaceSrodekSceny);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitPolnoc, TxtPlaceScena,
+                      TxtExitPolodnie, TxtPlaceSrodekSceny]);
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 69;
       if Command = CmdPolodnie then Session.Room := 71;
@@ -3444,11 +3328,10 @@ begin
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitPolnoc, TxtPlaceScena);
-        WriteLn(TxtExitPolodnie, TxtPlaceScena);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitPolnoc, TxtPlaceScena,
+                      TxtExitPolodnie, TxtPlaceScena]);
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 70;
       if Command = CmdPolodnie then Session.Room := 72;
@@ -3464,10 +3347,9 @@ begin
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       if Command = CmdMode then EnterTrance;
-      if Command = CmdExit then begin
-        WriteLn(TxtShared_03);
-        WriteLn(TxtExitPolnoc, TxtPlaceSrodekSceny);
-      end;
+      if Command = CmdExit then
+          WriteExits([TxtShared_03,
+                      TxtExitPolnoc, TxtPlaceSrodekSceny]);
       if Command = CmdWyjscie then Exit;
       if Command = CmdPolnoc then Session.Room := 71;
       StageFights;
@@ -3584,10 +3466,7 @@ begin
   threshold := LevelThreshold(Player.Level);
   if Player.Experience < threshold then Exit;
 
-  WriteLn(TxtCheckLevelUp_01);
-  WriteLn(TxtCheckLevelUp_01);
-  WriteLn(TxtCheckLevelUp_01);
-  WriteLn(TxtCheckLevelUp_01);
+  WriteLines(TxtCheckLevelUpLines1);
 
   case Player.Level of
     1: Player.Experience := Player.Experience - 725;
@@ -3937,10 +3816,9 @@ begin
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 11;
@@ -3991,10 +3869,9 @@ begin
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolnoc then Session.Room := 11;
@@ -4082,10 +3959,9 @@ begin
     end;
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitDol, TxtPlaceKlatkiPelneGajdy);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitDol, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdDol then Session.Room := 11;
@@ -4101,16 +3977,12 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitGora, TxtPlaceKlatkiPelneGajdy);
-      WriteLn(TxtExitDol, TxtPlaceTeleport);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitGora, TxtPlaceKlatkiPelneGajdy,
+                    TxtExitDol, TxtPlaceTeleport]);
     if Command = CmdPatrz + CmdPlakat then begin
-      WriteLn(TxtShared_13);
-      WriteLn(TxtRoom17_03);
-      WriteLn(TxtRoom17_04);
-      WriteLn(TxtRoom17_05);
+      WriteLines(TxtRoom17Lines1);
       if (World.CageWeakling = 0) and (World.CageAgile = 0) and
       (World.CageStrong = 0) and (World.CageTough = 0) and
       (World.CageHuge = 0) and (Bag.Diploma = 0) then
@@ -4126,10 +3998,7 @@ procedure Room18;
 
 begin
 
-  WriteLn(TxtRoom18_01);
-  WriteLn(TxtRoom18_02);
-  WriteLn(TxtRoom18_03);
-  WriteLn(TxtRoom18_04);
+  WriteLines(TxtRoom18Lines1);
   Session.Room := 1;
 
 end;
@@ -4145,13 +4014,12 @@ begin
     if Command = CmdMode then EnterTrance;
     if Command = CmdPatrz + CmdPlakat then
       WriteLn(TxtRoom20_02);
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlacePokojCentralny);
-      WriteLn(TxtExitPolnoc, TxtPlaceUlSklepikowa);
-      WriteLn(TxtExitWschod, TxtPlaceUlCiemna);
-      WriteLn(TxtExitZachod, TxtPlaceUlDluga);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlacePokojCentralny,
+                    TxtExitPolnoc, TxtPlaceUlSklepikowa,
+                    TxtExitWschod, TxtPlaceUlCiemna,
+                    TxtExitZachod, TxtPlaceUlDluga]);
     if Command = CmdWyjsc0ie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 1;
     if Command = CmdPolnoc then Session.Room := 21;
@@ -4166,9 +4034,7 @@ procedure Room76;
 begin
 
   WriteLn(TxtYouAreIn, TxtRoom76_01);
-  WriteLn(TxtRoom76_02);
-  WriteLn(TxtRoom76_03);
-  WriteLn(TxtRoom76_04);
+  WriteLines(TxtRoom76Lines1);
   if World.Maciek = 76 then
     WriteLn(TxtRoom76_05);
   if World.Pedal = 76 then
@@ -4179,17 +4045,13 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceUlicaCiemna);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceUlicaCiemna]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 75;
     if Command = CmdLista then begin
-      WriteLn(TxtRoom76_09);
-      WriteLn(TxtRoom76_10);
-      WriteLn(TxtRoom76_11);
-      WriteLn(TxtRoom76_12);
+      WriteLines(TxtRoom76Lines2);
     end;
     if Command = CmdZabij + CmdPedal then begin
       FightEasy;
@@ -4224,13 +4086,12 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolnoc, TxtPlaceUlCiemna);
-      WriteLn(TxtExitWschod, TxtPlaceBluszcz);
-      WriteLn(TxtExitZachod, TxtPlaceBluszcz);
-      WriteLn(TxtExitPolodnie, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolnoc, TxtPlaceUlCiemna,
+                    TxtExitWschod, TxtPlaceBluszcz,
+                    TxtExitZachod, TxtPlaceBluszcz,
+                    TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolnoc then Session.Room := 75;
     if Command = CmdWschod then Session.Room := 78;
@@ -4252,10 +4113,9 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdZachod then Session.Room := 77;
   until Session.Room <> 78;
@@ -4274,10 +4134,9 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 77;
   until Session.Room <> 79;
@@ -4287,9 +4146,7 @@ procedure Room80;
 
 begin
 
-  WriteLn(TxtRoom80_01);
-  WriteLn(TxtRoom80_02);
-  WriteLn(TxtRoom80_03);
+  WriteLines(TxtRoom80Lines1);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4297,13 +4154,12 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolnoc, TxtPlaceBluszcz);
-      WriteLn(TxtExitWschod, TxtPlaceBluszcz);
-      WriteLn(TxtExitZachod, TxtPlaceBluszcz);
-      WriteLn(TxtExitPolodnie, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolnoc, TxtPlaceBluszcz,
+                    TxtExitWschod, TxtPlaceBluszcz,
+                    TxtExitZachod, TxtPlaceBluszcz,
+                    TxtExitPolodnie, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolnoc then Session.Room := 77;
     if Command = CmdZachod then Session.Room := 81;
@@ -4341,10 +4197,9 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 80;
   until Session.Room <> 81;
@@ -4363,10 +4218,9 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceBluszcz);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceBluszcz]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdZachod then Session.Room := 80;
   until Session.Room <> 82;
@@ -4376,10 +4230,7 @@ procedure Room84;
 
 begin
 
-  WriteLn(TxtRoom84_01);
-  WriteLn(TxtRoom84_02);
-  WriteLn(TxtRoom84_03);
-  WriteLn(TxtRoom84_04);
+  WriteLines(TxtRoom84Lines1);
   DescribePlants;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -4387,12 +4238,11 @@ begin
     ExpandAbbrev;
     PlantFights;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceBluszcz);
-      WriteLn(TxtExitZachod, TxtPlaceBudynek);
-      WriteLn(TxtExitPolodnie, TxtPlaceWejscieDoGroty);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceBluszcz,
+                    TxtExitZachod, TxtPlaceBudynek,
+                    TxtExitPolodnie, TxtPlaceWejscieDoGroty]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 83;
     if Command = CmdZachod then Session.Room := 85;
@@ -4417,11 +4267,10 @@ begin
     ReadLn(Command);
     ExpandAbbrev;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceGrota);
-      WriteLn(TxtExitPolnoc, TxtPlacePodejrzaneKrzaki);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceGrota,
+                    TxtExitPolnoc, TxtPlacePodejrzaneKrzaki]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolnoc then Session.Room := 84;
     if Command = CmdPolodnie then Session.Room := 88;
@@ -4432,10 +4281,7 @@ procedure Room88;
 
 begin
 
-  WriteLn(TxtRoom88_01);
-  WriteLn(TxtRoom88_02);
-  WriteLn(TxtRoom88_03);
-  WriteLn(TxtRoom88_04);
+  WriteLines(TxtRoom88Lines1);
   Write(TxtRoom88_05);
   ReadLn(Command);
   WriteLn(TxtRoom88_06);
@@ -4457,10 +4303,9 @@ begin
     ReadLn(Command);
     ExpandAbbrev;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceWejscieDoGroty2);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceWejscieDoGroty2]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 87;
   until Session.Room <> 88;
@@ -4486,8 +4331,8 @@ begin
     end;
     if Command = CmdMode then EnterTrance;
     if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlacePodejrzaneKrzaki);
+      WriteExits([TxtShared_03,
+                  TxtExitWschod, TxtPlacePodejrzaneKrzaki]);
       if World.Door <> 0 then
         WriteLn(TxtExitZachod, TxtPlaceGdybyNieTeCholerneDrzwi);
       if World.Door = 0 then
@@ -4519,18 +4364,12 @@ begin
       WriteLn(TxtRoom86_04);
     if Command = CmdRozmawiaj + CmdStaruch then begin
       if (Bag.Sausage > -30) and (Player.Money < 200) and (Bag.ReturnScroll = 0) then begin
-        WriteLn(TxtRoom86_05);
-        WriteLn(TxtRoom86_06);
-        WriteLn(TxtRoom86_07);
+        WriteLines(TxtRoom86Lines1);
       end;
     end;
     if Command = CmdRozmawiaj + CmdStaruch then begin
       if (Bag.Sausage < -30) and (Player.Money > 199) then begin
-        WriteLn(TxtRoom86_08);
-        WriteLn(TxtRoom86_09);
-        WriteLn(TxtRoom86_10);
-        WriteLn(TxtRoom86_11);
-        WriteLn(TxtRoom86_12);
+        WriteLines(TxtRoom86Lines2);
         Session.Room := 20;
         Bag.Beer := Bag.Beer - 10;
         Bag.Sausage := Bag.Sausage + 40;
@@ -4556,10 +4395,9 @@ begin
       end;
     end;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceBudynek);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceBudynek]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 85;
   until Session.Room <> 86;
@@ -4576,13 +4414,12 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceCentrumMiasta);
-      WriteLn(TxtExitPolnoc, TxtPlaceUlSklepikowa);
-      WriteLn(TxtExitWschod, TxtPlacePiekarnia);
-      WriteLn(TxtExitZachod, TxtPlaceZbrojownia);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceCentrumMiasta,
+                    TxtExitPolnoc, TxtPlaceUlSklepikowa,
+                    TxtExitWschod, TxtPlacePiekarnia,
+                    TxtExitZachod, TxtPlaceZbrojownia]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 20;
     if Command = CmdPolnoc then Session.Room := 22;
@@ -4603,13 +4440,12 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceUlSklepikowa);
-      WriteLn(TxtExitPolnoc, TxtPlaceRozjazd);
-      WriteLn(TxtExitWschod, TxtPlaceSklepWielobranzowy);
-      WriteLn(TxtExitZachod, TxtPlaceSklepMagiczny);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceUlSklepikowa,
+                    TxtExitPolnoc, TxtPlaceRozjazd,
+                    TxtExitWschod, TxtPlaceSklepWielobranzowy,
+                    TxtExitZachod, TxtPlaceSklepMagiczny]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 21;
     if Command = CmdWschod then Session.Room := 25;
@@ -4623,20 +4459,17 @@ procedure Room101;
 
 begin
 
-  WriteLn(TxtRoom101_01);
-  WriteLn(TxtRoom101_02);
-  WriteLn(TxtRoom101_03);
+  WriteLines(TxtRoom101Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceRozjazd);
-      WriteLn(TxtExitZachod, TxtPlaceDroga);
-      WriteLn(TxtExitPolnoc, TxtPlaceLas);
-      WriteLn(TxtExitPolodnie, TxtPlaceLas);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceRozjazd,
+                    TxtExitZachod, TxtPlaceDroga,
+                    TxtExitPolnoc, TxtPlaceLas,
+                    TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdPatrz + CmdDrogowskaz then
       WriteLn(TxtRoom101_05);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
@@ -4656,13 +4489,12 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceDroga);
-      WriteLn(TxtExitZachod, TxtPlaceDroga);
-      WriteLn(TxtExitPolnoc, TxtPlaceLas);
-      WriteLn(TxtExitPolodnie, TxtPlaceLas);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceDroga,
+                    TxtExitZachod, TxtPlaceDroga,
+                    TxtExitPolnoc, TxtPlaceLas,
+                    TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 101;
     if Command = CmdZachod then Session.Room := 103;
@@ -4673,20 +4505,16 @@ procedure Room103;
 
 begin
 
-  WriteLn(TxtRoom103_01);
-  WriteLn(TxtRoom103_02);
-  WriteLn(TxtRoom103_03);
-  WriteLn(TxtRoom103_04);
+  WriteLines(TxtRoom103Lines1);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceDroga);
-      WriteLn(TxtExitPolnoc, TxtPlaceLas);
-      WriteLn(TxtExitPolodnie, TxtPlaceLas);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceDroga,
+                    TxtExitPolnoc, TxtPlaceLas,
+                    TxtExitPolodnie, TxtPlaceLas]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 102;
   until Session.Room <> 103;
@@ -4708,10 +4536,9 @@ begin
       WriteLn(TxtRoom23_04);
       WriteLn(TxtRoom23_05);
     end;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceUlicaSklepikowa);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdZachod then Session.Room := 21;
     BakeryShop;
@@ -4731,10 +4558,9 @@ begin
     ReadLn(Command);
     ArmouryShop;
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceUlicaSklepikowa);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 21;
     if Command = CmdPatrz + CmdPlakat then
@@ -4754,10 +4580,9 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitZachod, TxtPlaceUlicaSklepikowa);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitZachod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdZachod then Session.Room := 22;
     if Command = CmdPatrz + CmdWywieszka then
@@ -4777,10 +4602,9 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceUlicaSklepikowa);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceUlicaSklepikowa]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 22;
     if Command = CmdPatrz + CmdPlakat then
@@ -4800,11 +4624,10 @@ begin
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);
     if Command = CmdMode then EnterTrance;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitWschod, TxtPlaceUlicaDluga);
-      WriteLn(TxtExitPolnoc, TxtPlaceDolinaRozrywek);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitWschod, TxtPlaceUlicaDluga,
+                    TxtExitPolnoc, TxtPlaceDolinaRozrywek]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdWschod then Session.Room := 30;
     if Command = CmdPolnoc then Session.Room := 60;
@@ -4825,11 +4648,10 @@ begin
       WriteLn(TxtRoom32_03);
       WriteLn(TxtRoom32_04);
     end;
-    if Command = CmdExit then begin
-      WriteLn(TxtShared_03);
-      WriteLn(TxtExitPolodnie, TxtPlaceUlicaDluga);
-      WriteLn(TxtExitPolnoc, TxtPlaceArena);
-    end;
+    if Command = CmdExit then
+        WriteExits([TxtShared_03,
+                    TxtExitPolodnie, TxtPlaceUlicaDluga,
+                    TxtExitPolnoc, TxtPlaceArena]);
     if Command = CmdWyjscie then begin Session.ExitRequested := True; Exit; end;
     if Command = CmdPolodnie then Session.Room := 30;
     if Command = CmdPolnoc then Session.Room := 33;

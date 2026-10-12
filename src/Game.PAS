@@ -2347,20 +2347,42 @@ begin
   end;
 end;
 
-procedure StreetFights;
+type
+  TStreetKill = record
+    cmd: string;
+    target: ^Integer;
+    extra: Boolean;
+  end;
 
+const
+  { The street dogs: extraMsg adds the owner's complaint on a kill. }
+  StreetDogs: array[1..5] of TStreetKill = (
+    (cmd: CmdZabij + CmdOwczarek; target: @World.Shepherd; extra: False),
+    (cmd: CmdZabij + CmdPiesek; target: @World.Pooch; extra: False),
+    (cmd: CmdZabij + CmdJamnik; target: @World.Dachshund; extra: False),
+    (cmd: CmdZabij + CmdSpaniel; target: @World.Spaniel; extra: True),
+    (cmd: CmdZabij + CmdPudel; target: @World.Poodle; extra: False)
+  );
+  { The street townsfolk: suitLoot grants the spiked suit pieces. }
+  StreetFolk: array[1..3] of TStreetKill = (
+    (cmd: CmdZabij + CmdTaksowkarz; target: @World.Cabman; extra: True),
+    (cmd: CmdZabij + CmdSprzedawca; target: @World.Vendor; extra: True),
+    (cmd: CmdZabij + CmdPijak; target: @World.Drunkard; extra: False)
+  );
+
+procedure StreetFights;
+var
+  ki: Integer;
 begin
 
-  KillDog(CmdZabij + CmdOwczarek, World.Shepherd, False);
-  KillDog(CmdZabij + CmdPiesek, World.Pooch, False);
-  KillDog(CmdZabij + CmdJamnik, World.Dachshund, False);
-  KillDog(CmdZabij + CmdSpaniel, World.Spaniel, True);
-  KillDog(CmdZabij + CmdPudel, World.Poodle, False);
+  for ki := Low(StreetDogs) to High(StreetDogs) do
+    with StreetDogs[ki] do
+      KillDog(cmd, target^, extra);
 
-  KillTownsfolk(CmdZabij + CmdTaksowkarz, World.Cabman, True);
-  KillTownsfolk(CmdZabij + CmdSprzedawca, World.Vendor, True);
+  for ki := Low(StreetFolk) to High(StreetFolk) do
+    with StreetFolk[ki] do
+      KillTownsfolk(cmd, target^, extra);
   KillSweeper;
-  KillTownsfolk(CmdZabij + CmdPijak, World.Drunkard, False);
   KillSickMan;
 end;
 

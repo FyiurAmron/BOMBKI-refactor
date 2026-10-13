@@ -682,17 +682,19 @@ begin
     end;
   end else if diff < 0 then begin
     diff := -diff;
-    if diff = 2 then FightExpForEnergy := 12
-    else if diff = 4 then FightExpForEnergy := 13
-    else if diff = 6 then FightExpForEnergy := 14
-    else if diff = 8 then FightExpForEnergy := 15
-    else if diff = 10 then FightExpForEnergy := 16
-    else if diff = 12 then FightExpForEnergy := 17
-    else if diff = 14 then FightExpForEnergy := 18
-    else if diff = 16 then FightExpForEnergy := 19
-    else if diff = 18 then FightExpForEnergy := 20
-    else if diff > 20 then FightExpForEnergy := 21
-    else FightExpForEnergy := 0;
+    case diff of
+      2: FightExpForEnergy := 12;
+      4: FightExpForEnergy := 13;
+      6: FightExpForEnergy := 14;
+      8: FightExpForEnergy := 15;
+      10: FightExpForEnergy := 16;
+      12: FightExpForEnergy := 17;
+      14: FightExpForEnergy := 18;
+      16: FightExpForEnergy := 19;
+      18: FightExpForEnergy := 20;
+      21..MaxInt: FightExpForEnergy := 21;
+      else FightExpForEnergy := 0;
+    end;
   end else
     FightExpForEnergy := 11;
 end;

@@ -1468,59 +1468,59 @@ begin
         World.Monsters[Tamer] := 0;
         SuitGain;
       end;
-      if Command = CmdExit then begin
-        if Session.Room = RoomArena33 then
+      if Command = CmdExit then
+        case Session.Room of
+          RoomArena33:
             WriteExits([TxtShared_03,
                         TxtExitPolodnie, TxtPlaceWejscieNaArene,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if (Session.Room = RoomArena34) or (Session.Room = RoomArena37) or (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or
-                (Session.Room = RoomArena42) or (Session.Room = RoomArena43) or (Session.Room = RoomArena44) or (Session.Room = RoomArena48) or
-                (Session.Room = RoomArena49) then begin
-          WriteExits([TxtShared_03,
-                      TxtExitPolodnie, TxtPlaceArena,
-                      TxtExitPolnoc, TxtPlaceArena,
-                      TxtExitWschod, TxtPlaceArena,
-                      TxtExitZachod, TxtPlaceArena]);
-        end;
-        if (Session.Room = RoomArena35) or (Session.Room = RoomArena36) then
+          RoomArena34, RoomArena37, RoomArena38, RoomArena39,
+          RoomArena42, RoomArena43, RoomArena44, RoomArena48,
+          RoomArena49:
+            WriteExits([TxtShared_03,
+                        TxtExitPolodnie, TxtPlaceArena,
+                        TxtExitPolnoc, TxtPlaceArena,
+                        TxtExitWschod, TxtPlaceArena,
+                        TxtExitZachod, TxtPlaceArena]);
+          RoomArena35, RoomArena36:
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = RoomArena40 then
+          RoomArena40:
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = RoomArena41 then
+          RoomArena41:
             WriteExits([TxtShared_03,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
-        if (Session.Room = RoomArena45) or (Session.Room = RoomArena50) or (Session.Room = RoomArena54) then
+          RoomArena45, RoomArena50, RoomArena54:
             WriteExits([TxtArenaMaze_08,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if (Session.Room = RoomArena46) or (Session.Room = RoomArena51) or (Session.Room = RoomArena55) then
+          RoomArena46, RoomArena51, RoomArena55:
             WriteExits([TxtArenaMaze_08,
                         TxtExitPolnoc, TxtPlaceArena,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
-        if (Session.Room = RoomArena47) or (Session.Room = RoomArena52) or (Session.Room = RoomArena53) then
+          RoomArena47, RoomArena52, RoomArena53:
             WriteExits([TxtArenaMaze_09,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = RoomArena56 then
+          RoomArena56:
             WriteExits([TxtArenaMaze_10,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitZachod, TxtPlaceArena]);
-        if Session.Room = RoomArena57 then
+          RoomArena57:
             WriteExits([TxtArenaMaze_10,
                         TxtExitPolodnie, TxtPlaceArena,
                         TxtExitWschod, TxtPlaceArena]);
-      end;
+        end;
       if Command = CmdWyjscie then exit;
       if Command = CmdPolodnie then begin
         Session.InArena := 0;

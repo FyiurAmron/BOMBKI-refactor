@@ -6,7 +6,7 @@ program test_swiat;
  string ends with a command that leaves the room (a movement,
  MODE, or WYJSCIE) so the loop terminates instead of spinning
  at EOF.}
-uses pastest, Game;
+uses pastest, Game, Rooms;
 
 {Write the given lines (separated by '|') to a temp file and
  redirect standard input to it, so the room procedures that

@@ -29,7 +29,7 @@ def extract():
     def add(r, d, t):
         graph.setdefault(r, {})[d] = t
 
-    g = (SOURCES / "Game.PAS").read_text().split("\n")
+    g = (SOURCES / "Rooms.PAS").read_text().split("\n")
 
     # merge wrapped MoveWhen calls onto their opening line so the
     # per-line edge scan sees the whole constructor
@@ -113,17 +113,16 @@ def extract():
         b = next(i for i, l in enumerate(g) if l.strip() == end_marker)
         return g[a:b]
 
-    # The merged unit no longer carries fold-seam comments, so the
-    # two scans are bounded by code lines instead. The former SWIAT
-    # unit is the block of plain uppercase-style rooms between
-    # Room5 and FightExpForEnergy; scanning it with the until-based
-    # state machine keeps the original two-file semantics (the
-    # lowercase RoomN rooms' "until Room <> N;" lines would
-    # otherwise poison that tracking). Everything else is scanned
-    # with the procedure-name state machine.
+    # The rooms live in their own unit, so both scans run over
+    # Rooms.PAS. The former SWIAT unit is the block of plain
+    # uppercase-style rooms from Room5 to the end of the unit;
+    # scanning it with the until-based state machine keeps the
+    # original two-file semantics (the lowercase RoomN rooms'
+    # "until Room <> N;" lines would otherwise poison that
+    # tracking). Everything else is scanned with the
+    # procedure-name state machine.
     bomb = g
-    swi = slice_between("procedure Room5;",
-                        "function FightExpForEnergy(diff: Integer): Integer;")
+    swi = slice_between("procedure Room5;")
 
     def scan(lines, lo, hi, proc_rooms=None, want_text=False):
         cur = None

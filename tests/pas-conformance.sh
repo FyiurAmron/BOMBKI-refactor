@@ -70,6 +70,7 @@ compile_and_check_binary() {
 
 echo "required targets (must compile):"
 compile_unit "$RECON/Game.PAS"
+compile_unit "$RECON/Rooms.PAS"
 compile_and_check_binary "$RECON/BOMBKI.PAS"
 
 # Export built binaries for CI artifact upload when CONF_ARTIFACTS is set.

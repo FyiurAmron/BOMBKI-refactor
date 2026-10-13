@@ -69,7 +69,8 @@ def tokenize(text):
 
 def collect():
     strings = set()
-    files = [SOURCES / "Game.PAS"] + sorted(SOURCES.glob("texts*.inc"))
+    files = [SOURCES / "Game.PAS", SOURCES / "Rooms.PAS"] \
+        + sorted(SOURCES.glob("texts*.inc"))
     for path in files:
         text = path.read_text(encoding='utf-8', newline='')
         for kind, chunk in tokenize(text):

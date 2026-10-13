@@ -45,7 +45,8 @@ TPCDIR="$(basename "$(dirname "$TPC")")"
 echo "TPC: $TPC"
 echo "TP7 root: $TP7ROOT"
 
-if ! cp "$REC/Game.PAS" "$REC/BOMBKI.PAS" "$REC"/texts*.inc "$BUILD"/; then
+if ! cp "$REC/Game.PAS" "$REC/Rooms.PAS" "$REC/BOMBKI.PAS" \
+      "$REC"/texts*.inc "$REC/rooms.inc" "$BUILD"/; then
   echo "::error::game sources not found under $REC" >&2
   exit 2
 fi
@@ -81,7 +82,8 @@ ver=7.0
 mount c $TP7ROOT
 mount d $BUILD
 d:
-c:\\$TPCDIR\\tpc.exe /GD gra.pas > d:\\tp7-build.log
+c:\\$TPCDIR\\tpc.exe /GD game.pas > d:\\tp7-build.log
+c:\\$TPCDIR\\tpc.exe /GD rooms.pas >> d:\\tp7-build.log
 c:\\$TPCDIR\\tpc.exe /GD bombki.pas >> d:\\tp7-build.log
 exit
 EOF

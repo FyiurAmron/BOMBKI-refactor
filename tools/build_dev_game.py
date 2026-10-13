@@ -54,7 +54,8 @@ def build(out_dir: Path, fpc: str) -> Path:
     # The unit is compiled explicitly: FPC locates unit sources only by
     # lowercase filenames on case-sensitive filesystems, so a search-path
     # lookup of the mixed-case Game.PAS would fail.
-    for source in (SOURCES / f"{UNIT_NAME}.PAS", SOURCES / "BOMBKI.PAS"):
+    for source in (SOURCES / f"{UNIT_NAME}.PAS", SOURCES / "Rooms.PAS",
+                  SOURCES / "BOMBKI.PAS"):
         print("+", subprocess.list2cmdline(command + [str(source)]),
               file=sys.stderr)
         subprocess.run(command + [str(source)], cwd=out_dir, check=True)

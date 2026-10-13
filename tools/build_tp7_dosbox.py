@@ -22,10 +22,11 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "src"
 TEMP_ROOT = PROJECT / "build" / "tmp"
-ARTIFACTS = ("Game.TPU", "BOMBKI.EXE", "BOMBKI.MAP")
+ARTIFACTS = ("Game.TPU", "Rooms.TPU", "BOMBKI.EXE", "BOMBKI.MAP")
 SOURCE_TIMES = {
     # the folded core keeps the newest of the three folded units' dates
     "Game.PAS": (1999, 6, 12, 12, 56, 34),
+    "Rooms.PAS": (1999, 6, 12, 12, 56, 34),
 }
 
 
@@ -73,7 +74,8 @@ def build_config(tp7_root: Path, tpc: Path, build_dir: Path) -> str:
     compiler_relative = tpc.relative_to(tp7_root).as_posix().replace("/", "\\")
     compiler_dos = f"c:\\{compiler_relative}"
     commands = [
-        f'{compiler_dos} /GD gra.pas > d:\\tp7-build.log',
+        f'{compiler_dos} /GD game.pas > d:\\tp7-build.log',
+        f'{compiler_dos} /GD rooms.pas >> d:\\tp7-build.log',
         f'{compiler_dos} /GD bombki.pas >> d:\\tp7-build.log',
     ]
     lines = [
@@ -125,8 +127,8 @@ def main() -> int:
 
         with tempfile.TemporaryDirectory(prefix="bombki-tp7-", dir=TEMP_ROOT) as temporary:
             build_dir = Path(temporary).resolve()
-            source_names = ["Game.PAS", "BOMBKI.PAS"]
-            source_names += sorted(p.name for p in SOURCES.glob("texts*.inc"))
+            source_names = ["Game.PAS", "Rooms.PAS", "BOMBKI.PAS"]
+            source_names += sorted(p.name for p in SOURCES.glob("*.inc"))
             for source_name in source_names:
                 source = SOURCES / source_name
                 target = build_dir / source_name

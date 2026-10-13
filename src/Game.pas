@@ -2692,15 +2692,41 @@ const
     (cmd:CmdSprzedaj + CmdScrollPorownywanie; allowed:CanSellCompareScroll; act:SellCompareScroll)
   );
 
+type
+  TShopStock = record
+    item: TBagItem;
+    lines: array[1..3] of string;
+  end;
+
+const
+  ArmouryStock: array[1..2] of TShopStock = (
+    (item: OldSword; lines: (TxtArmouryShop_01, '', '')),
+    (item: SmallShield; lines: (TxtArmouryShop_02, '', ''))
+  );
+  GeneralStoreStock: array[1..2] of TShopStock = (
+    (item: Pipe; lines: (TxtGeneralStoreShop_02, '', '')),
+    (item: Tracksuit; lines: (TxtGeneralStoreShop_03, TxtGeneralStoreShop_04, TxtGeneralStoreShop_05))
+  );
+
+procedure ShowStock(item: TBagItem; const lines: array of string);
+var
+  si: Integer;
+begin
+  if Bag.Items[item] = 0 then
+    for si := Low(lines) to High(lines) do
+      if lines[si] <> '' then WriteLn(lines[si]);
+end;
+
 procedure ArmouryShop;
 
+var
+  si2: Integer;
 begin
   if Command = CmdLista then begin
     WriteLn(TxtShared_24);
-    if Bag.Items[OldSword] = 0 then
-      WriteLn(TxtArmouryShop_01);
-    if Bag.Items[SmallShield] = 0 then
-      WriteLn(TxtArmouryShop_02);
+    for si2 := Low(ArmouryStock) to High(ArmouryStock) do
+      with ArmouryStock[si2] do
+        ShowStock(item, lines);
     WriteLn(TxtArmouryShop_03);
   end;
   StreetFights;
@@ -2709,12 +2735,14 @@ end;
 
 procedure GeneralStoreShop;
 
+var
+  si2: Integer;
 begin
   if Command = CmdLista then begin
     WriteLn(TxtGeneralStoreShop_01);
-    if Bag.Items[Pipe] = 0 then WriteLn(TxtGeneralStoreShop_02);
-    if Bag.Items[Tracksuit] = 0 then
-      WriteLines(TxtGeneralStoreShopLines1);
+    for si2 := Low(GeneralStoreStock) to High(GeneralStoreStock) do
+      with GeneralStoreStock[si2] do
+        ShowStock(item, lines);
   end;
   if Command = CmdPatrz + CmdPoster then
     WriteLn(TxtGeneralStoreShop_06);

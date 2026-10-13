@@ -712,38 +712,54 @@ begin
     FightExpForDexterity := 11;
 end;
 
+type
+  TDodgeBound = record
+    limit: Integer;
+    player: Integer;
+    enemy: Integer;
+  end;
+
+const
+  { The dodge-roll bounds by the winner's dexterity lead: the
+    first row whose limit the chance exceeds wins, and the last
+    row is the catch-all for a lead of two or less. player is
+    DodgeBound's value, enemy EnemyDodgeBound's. }
+  DodgeBounds: array[1..12] of TDodgeBound = (
+    (limit: 30; player: 12; enemy: 60),
+    (limit: 27; player: 13; enemy: 58),
+    (limit: 24; player: 14; enemy: 56),
+    (limit: 20; player: 15; enemy: 54),
+    (limit: 18; player: 16; enemy: 52),
+    (limit: 16; player: 17; enemy: 51),
+    (limit: 12; player: 18; enemy: 48),
+    (limit:  9; player: 19; enemy: 46),
+    (limit:  6; player: 20; enemy: 42),
+    (limit:  4; player: 21; enemy: 40),
+    (limit:  2; player: 22; enemy: 38),
+    (limit:  0; player: 23; enemy: 35)
+  );
+
+function DodgeBoundRow(chance: Integer): TDodgeBound;
+
+var
+  i: Integer;
+begin
+  i := Low(DodgeBounds);
+  while (i < High(DodgeBounds)) and (chance <= DodgeBounds[i].limit) do
+    Inc(i);
+  DodgeBoundRow := DodgeBounds[i];
+end;
+
 function DodgeBound(chance: Integer): Integer;
 
 begin
-  if chance > 30 then DodgeBound := 12
-  else if chance > 27 then DodgeBound := 13
-  else if chance > 24 then DodgeBound := 14
-  else if chance > 20 then DodgeBound := 15
-  else if chance > 18 then DodgeBound := 16
-  else if chance > 16 then DodgeBound := 17
-  else if chance > 12 then DodgeBound := 18
-  else if chance > 9 then DodgeBound := 19
-  else if chance > 6 then DodgeBound := 20
-  else if chance > 4 then DodgeBound := 21
-  else if chance > 2 then DodgeBound := 22
-  else DodgeBound := 23;
+  DodgeBound := DodgeBoundRow(chance).player;
 end;
 
 function EnemyDodgeBound(chance: Integer): Integer;
 
 begin
-  if chance > 30 then EnemyDodgeBound := 60
-  else if chance > 27 then EnemyDodgeBound := 58
-  else if chance > 24 then EnemyDodgeBound := 56
-  else if chance > 20 then EnemyDodgeBound := 54
-  else if chance > 18 then EnemyDodgeBound := 52
-  else if chance > 16 then EnemyDodgeBound := 51
-  else if chance > 12 then EnemyDodgeBound := 48
-  else if chance > 9 then EnemyDodgeBound := 46
-  else if chance > 6 then EnemyDodgeBound := 42
-  else if chance > 4 then EnemyDodgeBound := 40
-  else if chance > 2 then EnemyDodgeBound := 38
-  else EnemyDodgeBound := 35;
+  EnemyDodgeBound := DodgeBoundRow(chance).enemy;
 end;
 
 function DexterityBonus(value: Integer): Integer;

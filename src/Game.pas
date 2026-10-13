@@ -1136,62 +1136,68 @@ begin
   Combat.FightExperience := 0;
 end;
 
-procedure TakeDrop;
+type
+  TTakeEffect = (teNone, teDiploma, tePipe);
+  TTakeDrop = record
+    cmd: string;
+    item: TBagItem;
+    verb, line: string;
+    effect: TTakeEffect;
+  end;
+
+const
+  TakeItems: array[1..5] of TTakeDrop = (
+    (cmd: CmdBierz + CmdStary; item: OldSword; verb: TxtPickUpVerb; line: TxtTakeDrop_01; effect: teNone),
+    (cmd: CmdBierz + CmdMala; item: SmallShield; verb: TxtPickUpVerb; line: TxtTakeDrop_02; effect: teNone),
+    (cmd: CmdBierz + CmdSerce; item: Heart; verb: TxtPickUpVerb; line: TxtTakeDrop_03; effect: teNone),
+    (cmd: CmdBierz + CmdDyplom; item: Diploma; verb: TxtPickUpVerb; line: TxtTakeDrop_04; effect: teDiploma),
+    (cmd: CmdBierz + CmdFajka; item: Pipe; verb: TxtPickUpVerb; line: TxtTakeDrop_05; effect: tePipe)
+  );
+  DropItems: array[1..5] of TTakeDrop = (
+    (cmd: CmdOdrzuc + CmdStary; item: OldSword; verb: TxtDropVerb; line: TxtTakeDrop_06; effect: teNone),
+    (cmd: CmdOdrzuc + CmdFajka; item: Pipe; verb: ''; line: TxtTakeDrop_07; effect: tePipe),
+    (cmd: CmdOdrzuc + CmdMala; item: SmallShield; verb: TxtDropVerb; line: TxtTakeDrop_08; effect: teNone),
+    (cmd: CmdOdrzuc + CmdSerce; item: Heart; verb: TxtDropVerb; line: TxtTakeDrop_09; effect: teNone),
+    (cmd: CmdOdrzuc + CmdDyplom; item: Diploma; verb: TxtDropVerb; line: TxtTakeDrop_10; effect: teDiploma)
+  );
+
+procedure TakeItem(cmd: string; item: TBagItem; verb, line: string; effect: TTakeEffect);
 begin
-  if (Command = CmdBierz + CmdStary) and (Bag.Items[OldSword] = Session.OuterRoom) then begin
-    WriteLn(TxtPickUpVerb, TxtTakeDrop_01);
-    Bag.Items[OldSword] := -10;
+  if (Command = cmd) and (Bag.Items[item] = Session.OuterRoom) then begin
+    WriteLn(verb, line);
+    Bag.Items[item] := -10;
     Bag.Count := Bag.Count + 1;
+    case effect of
+      teDiploma: Player.MaxEnergy := Player.MaxEnergy + 5;
+      tePipe: if Player.Wisdom < Player.MaxWisdom then Player.Wisdom := Player.Wisdom + 1;
+    end;
   end;
-  if (Command = CmdBierz + CmdMala) and (Bag.Items[SmallShield] = Session.OuterRoom) then begin
-    WriteLn(TxtPickUpVerb, TxtTakeDrop_02);
-    Bag.Items[SmallShield] := -10;
-    Bag.Count := Bag.Count + 1;
-  end;
-  if (Command = CmdBierz + CmdSerce) and (Bag.Items[Heart] = Session.OuterRoom) then begin
-    WriteLn(TxtPickUpVerb, TxtTakeDrop_03);
-    Bag.Items[Heart] := -10;
-    Bag.Count := Bag.Count + 1;
-  end;
-  if (Command = CmdBierz + CmdDyplom) and (Bag.Items[Diploma] = Session.OuterRoom) then begin
-    WriteLn(TxtPickUpVerb, TxtTakeDrop_04);
-    Bag.Items[Diploma] := -10;
-    Player.MaxEnergy := Player.MaxEnergy + 5;
-    Bag.Count := Bag.Count + 1;
-  end;
-  if (Command = CmdBierz + CmdFajka) and (Bag.Items[Pipe] = Session.OuterRoom) then begin
-    WriteLn(TxtPickUpVerb, TxtTakeDrop_05);
-    Bag.Items[Pipe] := -10;
-    Bag.Count := Bag.Count + 1;
-    if Player.Wisdom < Player.MaxWisdom then Player.Wisdom := Player.Wisdom + 1;
-  end;
-  if (Command = CmdOdrzuc + CmdStary) and (Bag.Items[OldSword] = -10) then begin
-    WriteLn(TxtDropVerb, TxtTakeDrop_06);
-    Bag.Items[OldSword] := Session.OuterRoom;
+end;
+
+procedure DropItem(cmd: string; item: TBagItem; verb, line: string; effect: TTakeEffect);
+begin
+  if (Command = cmd) and (Bag.Items[item] = -10) then begin
+    WriteLn(verb, line);
+    Bag.Items[item] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
+    case effect of
+      teDiploma: Player.MaxEnergy := Player.MaxEnergy - 5;
+      tePipe: Player.Wisdom := Player.Wisdom - 1;
+    end;
   end;
-  if (Command = CmdOdrzuc + CmdFajka) and (Bag.Items[Pipe] = -10) then begin
-    WriteLn(TxtTakeDrop_07);
-    Bag.Items[Pipe] := Session.OuterRoom;
-    Bag.Count := Bag.Count - 1;
-    Player.Wisdom := Player.Wisdom - 1;
-  end;
-  if (Command = CmdOdrzuc + CmdMala) and (Bag.Items[SmallShield] = -10) then begin
-    WriteLn(TxtDropVerb, TxtTakeDrop_08);
-    Bag.Items[SmallShield] := Session.OuterRoom;
-    Bag.Count := Bag.Count - 1;
-  end;
-  if (Command = CmdOdrzuc + CmdSerce) and (Bag.Items[Heart] = -10) then begin
-    WriteLn(TxtDropVerb, TxtTakeDrop_09);
-    Bag.Items[Heart] := Session.OuterRoom;
-    Bag.Count := Bag.Count - 1;
-  end;
-  if (Command = CmdOdrzuc + CmdDyplom) and (Bag.Items[Diploma] = -10) then begin
-    WriteLn(TxtDropVerb, TxtTakeDrop_10);
-    Bag.Items[Diploma] := Session.OuterRoom;
-    Player.MaxEnergy := Player.MaxEnergy - 5;
-    Bag.Count := Bag.Count - 1;
-  end;
+end;
+
+procedure TakeDrop;
+
+var
+  ti: Integer;
+begin
+  for ti := Low(TakeItems) to High(TakeItems) do
+    with TakeItems[ti] do
+      TakeItem(cmd, item, verb, line, effect);
+  for ti := Low(DropItems) to High(DropItems) do
+    with DropItems[ti] do
+      DropItem(cmd, item, verb, line, effect);
 end;
 
 procedure UseItems;

@@ -321,7 +321,6 @@ const
     (item: @Bag.Pipe; line: TxtStart_11)
   );
 
-
 procedure ShowIntro;
 var
   tone, step: Integer;
@@ -374,6 +373,7 @@ begin
     if MoveWhenOrExit([Go(CmdPolnoc, RoomSalon)]) then Exit;
   until Session.Room <> RoomStart;
 end;
+
 procedure Room1;
 begin
   BasicRoomPoster(RoomSalon,
@@ -392,6 +392,7 @@ begin
              Go(CmdPolnoc, RoomCityCentre)],
             TxtRoom1Lines2);
 end;
+
 procedure Room4;
 begin
   BasicRoomGeneric(RoomSchoolHall,
@@ -403,6 +404,7 @@ begin
             CmdPatrz + CmdAfisz,
             TxtRoom4Lines1);
 end;
+
 procedure Room13;
 begin
   if Session.Room <> RoomCageStrong then Exit;
@@ -435,6 +437,7 @@ begin
   until Session.Room <> RoomCageStrong;
 
 end;
+
 procedure SimpleRoom(RoomNo, DestRoom: Integer; Direction, ExitDesc: string);
 
 begin
@@ -476,6 +479,7 @@ begin
     with SideRooms[i] do
       SimpleRoom(room, dest, direction, exitDesc);
 end;
+
 procedure Room11;
 begin
   if Session.Room <> RoomCageCorridor then Exit;
@@ -506,6 +510,7 @@ begin
   until Session.Room <> RoomCageCorridor;
 
 end;
+
 procedure Room30;
 begin
   BasicRoomSimple(RoomLongStreet,
@@ -518,6 +523,7 @@ begin
              Go(CmdZachod, RoomLongStreet2),
              Go(CmdPolnoc, RoomArenaEntrance)]);
 end;
+
 procedure Room60;
 begin
   BasicRoomSimple(RoomValley,
@@ -527,6 +533,7 @@ begin
              TxtExitWschod, TxtPlaceBudowlaPelnaHalasu],
             [Go(CmdPolodnie, RoomLongStreet2), Go(CmdWschod, RoomCrowd1)]);
 end;
+
 procedure Room75;
 begin
   BasicRoomSimple(RoomDarkStreet,
@@ -538,6 +545,7 @@ begin
             [Go(CmdZachod, RoomCityCentre), Go(CmdPolnoc, RoomBar),
              Go(CmdPolodnie, RoomIvy1)]);
 end;
+
 procedure Room83;
 begin
   if Session.Room <> RoomClearing then Exit;
@@ -896,6 +904,7 @@ begin
   until (World.Sorrel < RoomCavePath) and (World.Daisy < RoomCavePath) and (World.Clover < RoomCavePath) and (World.SowThistle < RoomCavePath)
     and (World.Dandelion < RoomCavePath) and (World.Rose < RoomCavePath) and (World.Thistle < RoomCavePath) and (World.Raspberry < RoomCavePath);
 end;
+
 procedure TrainAttribute(var Attribute, MaxAttribute: Integer; MinPractice, PracticeCost: Integer; cmdForm, nounForm: string);
 
 begin
@@ -1001,8 +1010,6 @@ const
     (where: @World.OldMan; text: TxtDescribeCrowd_09),
     (where: @World.Reporter; text: TxtDescribeCrowd_10)
   );
-
-
 
 procedure DescribePlants;
 var
@@ -1230,7 +1237,6 @@ begin
   end;
 end;
 
-
 procedure DescribeStreet;
 var
   i: Integer;
@@ -1250,6 +1256,7 @@ begin
     Bag.Count := Bag.Count + 1;
   end;
 end;
+
 procedure PillGain;
 begin
   Combat.Roll := Random(1000);
@@ -1259,6 +1266,7 @@ begin
     Bag.Count := Bag.Count + 1;
   end;
 end;
+
 procedure CassetteGain;
 begin
   Combat.Roll := Random(100);
@@ -1272,6 +1280,7 @@ begin
     Player.Dexterity := Player.Dexterity + 1;
   end;
 end;
+
 procedure LeafGain;
 begin
   Combat.Roll := Random(100);
@@ -1283,6 +1292,7 @@ begin
     Player.MaxMana := Player.MaxMana + 40;
   end;
 end;
+
 procedure ScrollGain;
 begin
   Combat.Roll := Random(100);
@@ -1316,8 +1326,6 @@ begin
     if CrowdSpots[i].where^ = Session.Room then
       WriteLn(CrowdSpots[i].text);
 end;
-
-
 
 procedure DescribeBeasts;
 var
@@ -1592,6 +1600,7 @@ begin
     Bag.Count := Bag.Count - 1;
   end;
 end;
+
 procedure UseItems;
 begin
   if (Command = CmdUzyj + CmdFajka) and (Bag.Pipe = -10) then WriteLn(TxtUseItems_01);
@@ -2001,6 +2010,7 @@ begin
       until (Session.InArena = 0) or (Session.Room = TranceRoom);
   end;
 end;
+
 procedure StageFights;
 begin
   if (Command = CmdZabij + CmdPerkusista) and (World.Drummer = Session.Room) then begin
@@ -2029,6 +2039,7 @@ begin
     CassetteGain;
   end;
 end;
+
 procedure KillPlant(cmd: string; var Plant: Integer);
 
 begin
@@ -2142,6 +2153,7 @@ begin
       WriteLn(TxtPlantFights_18);
   end;
 end;
+
 procedure ExpandAbbrev;
 
 const
@@ -2243,7 +2255,6 @@ procedure SaveCharacter; forward;
 procedure Death; forward;
 procedure LoadCharacter; forward;
 procedure ShowCharacter; forward;
-
 function LevelName(lvl: Integer): string;
 
 const
@@ -4115,6 +4126,7 @@ begin
   until Session.Room <> RoomCageAgile;
 
 end;
+
 procedure Room15;
 
 begin
@@ -4147,6 +4159,7 @@ begin
   until Session.Room <> RoomCageTough;
 
 end;
+
 procedure Room16;
 
 label
@@ -4184,6 +4197,7 @@ begin
   until Session.Room <> RoomCageHuge;
 
 end;
+
 procedure Room17;
 
 begin
@@ -4208,6 +4222,7 @@ begin
   until Session.Room <> RoomCageReward;
 
 end;
+
 procedure Room18;
 
 begin
@@ -4216,6 +4231,7 @@ begin
   Session.Room := RoomSalon;
 
 end;
+
 procedure Room20;
 
 begin
@@ -4243,6 +4259,7 @@ begin
   until Session.Room <> RoomCityCentre;
 
 end;
+
 procedure Room76;
 
 begin
@@ -4286,6 +4303,7 @@ begin
   until Session.Room <> RoomBar;
 
 end;
+
 procedure Room77;
 
 begin
@@ -4311,6 +4329,7 @@ begin
   until Session.Room <> RoomIvy1;
 
 end;
+
 procedure Room78;
 
 begin
@@ -4330,6 +4349,7 @@ begin
   until Session.Room <> RoomIvy2;
 
 end;
+
 procedure Room79;
 
 begin
@@ -4349,6 +4369,7 @@ begin
   until Session.Room <> RoomIvy3;
 
 end;
+
 procedure Room80;
 
 begin
@@ -4390,6 +4411,7 @@ begin
   until Session.Room <> RoomIvy4;
 
 end;
+
 procedure Room81;
 
 begin
@@ -4409,6 +4431,7 @@ begin
   until Session.Room <> RoomIvy5;
 
 end;
+
 procedure Room82;
 
 begin
@@ -4428,6 +4451,7 @@ begin
   until Session.Room <> RoomIvy6;
 
 end;
+
 procedure Room84;
 
 begin
@@ -4449,6 +4473,7 @@ begin
   until Session.Room <> RoomCavePath;
 
 end;
+
 procedure Room87;
 
 begin
@@ -4474,6 +4499,7 @@ begin
   until Session.Room <> RoomCaveMouth;
 
 end;
+
 procedure Room88;
 
 begin
@@ -4507,6 +4533,7 @@ begin
   until Session.Room <> RoomNettleThrone;
 
 end;
+
 procedure Room85;
 
 begin
@@ -4540,6 +4567,7 @@ begin
   until Session.Room <> RoomLivingDoor;
 
 end;
+
 procedure Room86;
 
 begin
@@ -4596,6 +4624,7 @@ begin
   until Session.Room <> RoomHut;
 
 end;
+
 procedure Room21;
 
 begin
@@ -4621,6 +4650,7 @@ begin
   until Session.Room <> RoomShopStreet;
 
 end;
+
 procedure Room22;
 
 begin
@@ -4646,6 +4676,7 @@ begin
   until Session.Room <> RoomShopStreet2;
 
 end;
+
 procedure Room101;
 
 begin
@@ -4661,6 +4692,7 @@ begin
             CmdPatrz + CmdDrogowskaz,
             [TxtRoom101_05]);
 end;
+
 procedure Room102;
 begin
   BasicRoomQuit(RoomRoad2,
@@ -4672,6 +4704,7 @@ begin
              TxtExitPolodnie, TxtPlaceLas],
             [Go(CmdWschod, RoomRoad1), Go(CmdZachod, RoomRoad3)]);
 end;
+
 procedure Room103;
 begin
   BasicRoomQuit(RoomRoad3,
@@ -4682,6 +4715,7 @@ begin
              TxtExitPolodnie, TxtPlaceLas],
             [Go(CmdWschod, RoomRoad2)]);
 end;
+
 procedure Room23;
 
 begin
@@ -4704,6 +4738,7 @@ begin
   until Session.Room <> RoomBakery;
 
 end;
+
 procedure Room24;
 
 begin
@@ -4725,6 +4760,7 @@ begin
   until Session.Room <> RoomArmoury;
 
 end;
+
 procedure Room25;
 
 begin
@@ -4746,6 +4782,7 @@ begin
   until Session.Room <> RoomGeneralStore;
 
 end;
+
 procedure Room26;
 
 begin
@@ -4767,6 +4804,7 @@ begin
   until Session.Room <> RoomMagicShop;
 
 end;
+
 procedure Room31;
 begin
   BasicRoomQuit(RoomLongStreet2,
@@ -4776,6 +4814,7 @@ begin
              TxtExitPolnoc, TxtPlaceDolinaRozrywek],
             [Go(CmdWschod, RoomLongStreet), Go(CmdPolnoc, RoomValley)]);
 end;
+
 procedure Room32;
 begin
   BasicRoomQuitPoster(RoomArenaEntrance,

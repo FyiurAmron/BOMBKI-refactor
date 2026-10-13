@@ -2056,7 +2056,34 @@ begin
   end;
 end;
 
+type
+  TPlantKill = record
+    cmd: string;
+    plant: ^Integer;
+  end;
+
+const
+  { The herbs: a very easy fight clears them even when the
+    player falls. }
+  PlantKills: array[1..4] of TPlantKill = (
+    (cmd: CmdZabij + CmdSzczaw; plant: @World.Sorrel),
+    (cmd: CmdZabij + CmdKoniczynka; plant: @World.Clover),
+    (cmd: CmdZabij + CmdMlecz; plant: @World.SowThistle),
+    (cmd: CmdZabij + CmdDmuchawiec; plant: @World.Dandelion)
+  );
+
+  { The easy plants: only a player still standing clears them. }
+  EasyPlantKills: array[1..5] of TPlantKill = (
+    (cmd: CmdZabij + CmdRoza; plant: @World.Rose),
+    (cmd: CmdZabij + CmdOset; plant: @World.Thistle),
+    (cmd: CmdZabij + CmdMalina; plant: @World.Raspberry),
+    (cmd: CmdZabij + CmdAgrest; plant: @World.Gooseberry),
+    (cmd: CmdZabij + CmdJezyna; plant: @World.Blackberry)
+  );
+
 procedure PlantFights;
+var
+  i: Integer;
 begin
   if (Command = CmdZabij + CmdDuncan) and (World.Duncan = Session.Room) then begin
     FightEasy;
@@ -2095,18 +2122,15 @@ begin
     end;
   end;
 
-  KillPlant(CmdZabij + CmdSzczaw, World.Sorrel);
-  KillPlant(CmdZabij + CmdKoniczynka, World.Clover);
-  KillPlant(CmdZabij + CmdMlecz, World.SowThistle);
-  KillPlant(CmdZabij + CmdDmuchawiec, World.Dandelion);
+  for i := Low(PlantKills) to High(PlantKills) do
+    with PlantKills[i] do
+      KillPlant(cmd, plant^);
 
   KillPlantIfAlive(CmdZabij + CmdStokrotka, World.Daisy);
 
-  KillPlantEasyIfAlive(CmdZabij + CmdRoza, World.Rose);
-  KillPlantEasyIfAlive(CmdZabij + CmdOset, World.Thistle);
-  KillPlantEasyIfAlive(CmdZabij + CmdMalina, World.Raspberry);
-  KillPlantEasyIfAlive(CmdZabij + CmdAgrest, World.Gooseberry);
-  KillPlantEasyIfAlive(CmdZabij + CmdJezyna, World.Blackberry);
+  for i := Low(EasyPlantKills) to High(EasyPlantKills) do
+    with EasyPlantKills[i] do
+      KillPlantEasyIfAlive(cmd, plant^);
 
   if (Command = CmdZabij + CmdTrawa) and (World.Grass = Session.Room) then begin
     WriteLn(TxtPlantFights_17);

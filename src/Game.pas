@@ -25,20 +25,16 @@ type
     Money: Longint;
   end;
 
+  TSkill = (Parry, Kick, KickMinMana, KickMaxEnergy, Fleeing, FleeEnergy,
+    Comparing, Cooking, CookingDisplayBug, Returning);
   TSkills = record
-    Parry, Kick, KickMinMana, KickMaxEnergy: Integer;
-    Fleeing, FleeEnergy: Integer;
-    Comparing, Cooking: Shortint;
-    CookingDisplayBug: Integer;
-    Returning: Integer;
+    Values: array[TSkill] of Integer;
   end;
 
+  TGearItem = (Armor, WornCount, ArmorRating, LuckRoll, Wearing,
+    WeaponKind, ShieldKind);
   TGear = record
-    Armor, WornCount: Integer;
-    ArmorRating: Integer;
-    LuckRoll: Integer;
-    Wearing: Integer;
-    WeaponKind, ShieldKind: Integer;
+    Values: array[TGearItem] of Integer;
     WornGarment: string;
   end;
 
@@ -837,7 +833,7 @@ begin
     Combat.Roll := Random(100);
     WriteLn(TxtCompareFoe_01);
     ReadLn(Command);
-    Session.Overall := Player.Level + Player.Strength + DexterityBonus(Player.Dexterity) + ParryBonus(Skills.Parry) + KickBonus(Skills.Kick);
+    Session.Overall := Player.Level + Player.Strength + DexterityBonus(Player.Dexterity) + ParryBonus(Skills.Values[Parry]) + KickBonus(Skills.Values[Kick]);
     if (Command = CmdDzik) or (Command = CmdSzczur) or (Command = CmdLis) or
        (Command = CmdKuropatwa) or (Command = CmdZajac) or (Command = CmdWilczur) or
        (Command = CmdOrzel) or (Command = CmdSarna) or (Command = CmdDziecko) or (Command = CmdDziadek) then
@@ -865,9 +861,9 @@ begin
       CompareFoeRules(PokrzywaCompareRules);
     if (Command = CmdSpaniel) or (Command = CmdOwczarek) or (Command = CmdPiesek) or (Command=CmdJamnik) or (Command=CmdPudel) then
       WriteLn(TxtCompareFoe_34);
-    if (Combat.Roll < 3) and (Skills.Comparing < 100) then begin
+    if (Combat.Roll < 3) and (Skills.Values[Comparing] < 100) then begin
       WriteLn(TxtFightStars17, TxtLearnVerb, TxtCompareFoe_35);
-      Skills.Comparing := Skills.Comparing + 1;
+      Skills.Values[Comparing] := Skills.Values[Comparing] + 1;
       Player.Experience := Player.Experience + 5;
     end;
     if Command = CmdBakteria then begin
@@ -915,7 +911,7 @@ begin
     WriteLn(TxtBang, TxtUniqeItem, TxtCassetteGain_02);
     Bag.Cassette := Bag.Cassette - 10;
     Player.MaxEnergy := Player.MaxEnergy + 5;
-    Gear.Armor := Gear.Armor - 8;
+    Gear.Values[Armor] := Gear.Values[Armor] - 8;
     Bag.Count := Bag.Count + 1;
     Player.Dexterity := Player.Dexterity + 1;
   end;
@@ -979,8 +975,8 @@ end;
 procedure ShieldBlock;
 begin
   Combat.Roll := Random(100);
-  if Combat.Roll <= Gear.Armor then begin
-    Combat.Damage := Combat.Damage - Gear.WornCount;
+  if Combat.Roll <= Gear.Values[Armor] then begin
+    Combat.Damage := Combat.Damage - Gear.Values[WornCount];
     if Combat.Damage < 0 then Combat.Damage := 0;
     WriteLn(TxtShieldBlock_01, Combat.Damage, TxtShared_20);
   end;
@@ -1051,9 +1047,9 @@ begin
       end;
       Combat.FightExperience := Combat.FightExperience + 1;
       ShieldBlock;
-      if (Skills.Parry > 0) and (Combat.Damage > 0) then begin
+      if (Skills.Values[Parry] > 0) and (Combat.Damage > 0) then begin
         Combat.Roll := Random(140);
-        if Combat.Roll <= Skills.Parry then begin
+        if Combat.Roll <= Skills.Values[Parry] then begin
           case Combat.Damage of
             0..2: begin
               WriteLn(TxtFightParryLabel, TxtFightParryZeroTail);
@@ -1068,9 +1064,9 @@ begin
               WriteLn(TxtFightParryLabel, Combat.Damage, TxtFightTailEnergi);
             end;
           end;
-          if (Combat.Roll < 1) and (Skills.Parry < 100) then begin
+          if (Combat.Roll < 1) and (Skills.Values[Parry] < 100) then begin
             WriteLn(TxtFightStars15, TxtLearnVerb, TxtFightParryLearn);
-            Skills.Parry := Skills.Parry + 1;
+            Skills.Values[Parry] := Skills.Values[Parry] + 1;
             Combat.FightExperience := Combat.FightExperience + 5;
           end;
         end;
@@ -1106,11 +1102,11 @@ begin
     end;
     if Combat.EnemyDodged = 0 then begin
       Combat.Damage := Random(Player.Strength);
-      if Combat.Damage * 10 < Gear.LuckRoll then begin
+      if Combat.Damage * 10 < Gear.Values[LuckRoll] then begin
         repeat
           Combat.Damage := Random(Player.Strength);
           WriteLn(TxtFightLuckRoll);
-        until (Combat.Damage * 10) > Gear.LuckRoll;
+        until (Combat.Damage * 10) > Gear.Values[LuckRoll];
       end;
       Combat.EnemyEnergy := Combat.EnemyEnergy - Combat.Damage;
       case Combat.Damage of
@@ -1123,9 +1119,9 @@ begin
       end;
     end;
     Delay(2000);
-    if (Skills.Kick > 0) and (Player.Mana > Skills.KickMinMana) and (Player.Energy < Skills.KickMaxEnergy) then begin
+    if (Skills.Values[Kick] > 0) and (Player.Mana > Skills.Values[KickMinMana]) and (Player.Energy < Skills.Values[KickMaxEnergy]) then begin
       Combat.Roll := Random(100);
-      if Combat.Roll <= Skills.Kick - 10 then begin
+      if Combat.Roll <= Skills.Values[Kick] - 10 then begin
         Combat.Roll := Random(10) + Random(Player.Level);
         TextColor(14);
         WriteLn(TxtFightKickVerb, TxtFightSuperKickLabel, Combat.Roll, TxtFightTailEnergi);
@@ -1135,10 +1131,10 @@ begin
       end else WriteLn(TxtFightKickVerb, TxtFightSuperKickMiss);
       Player.Mana := Player.Mana - Random(2) - 2;
     end;
-    if (Skills.Fleeing > 0) and (Player.Energy < Skills.FleeEnergy) and (Player.Mana > 14) then begin
+    if (Skills.Values[Fleeing] > 0) and (Player.Energy < Skills.Values[FleeEnergy]) and (Player.Mana > 14) then begin
       Player.Mana := Player.Mana - 15;
       Combat.Roll := Random(100);
-      if Combat.Roll <= Skills.Fleeing then begin
+      if Combat.Roll <= Skills.Values[Fleeing] then begin
         Combat.Fled := 1;
         WriteLn(TxtFightFled);
         Player.Experience := Player.Experience - 20;
@@ -1148,11 +1144,11 @@ begin
   if (Combat.EnemyEnergy < 1) and (Player.Energy > 0) then begin
     if Player.MaxEnergy > 75 then Combat.FightExperience := Combat.FightExperience - 2;
     if Player.MaxEnergy > 115 then Combat.FightExperience := Combat.FightExperience - 3;
-    if Skills.Parry > 50 then Combat.FightExperience := Combat.FightExperience - 2;
-    if Skills.Parry > 75 then Combat.FightExperience := Combat.FightExperience - 2;
-    if Skills.Parry > 95 then Combat.FightExperience := Combat.FightExperience - 1;
-    if Skills.Kick > 50 then Combat.FightExperience := Combat.FightExperience - 5;
-    if Skills.Kick > 95 then Combat.FightExperience := Combat.FightExperience - 2;
+    if Skills.Values[Parry] > 50 then Combat.FightExperience := Combat.FightExperience - 2;
+    if Skills.Values[Parry] > 75 then Combat.FightExperience := Combat.FightExperience - 2;
+    if Skills.Values[Parry] > 95 then Combat.FightExperience := Combat.FightExperience - 1;
+    if Skills.Values[Kick] > 50 then Combat.FightExperience := Combat.FightExperience - 5;
+    if Skills.Values[Kick] > 95 then Combat.FightExperience := Combat.FightExperience - 2;
     if Combat.FightExperience < 0 then Combat.FightExperience := 0;
     WriteLn(TxtFightVictoryLabel, Combat.FightExperience, TxtFightVictoryTail);
     Player.Experience := Combat.FightExperience + Player.Experience;
@@ -1160,15 +1156,15 @@ begin
     Combat.PoisonCharges := 0;
 
     if World.Quest > 0 then World.QuestKills := World.QuestKills - 1;
-    if Skills.Cooking > 0 then begin
+    if Skills.Values[Cooking] > 0 then begin
       Combat.Roll := Random(100);
-      if Skills.Cooking > Combat.Roll then begin
+      if Skills.Values[Cooking] > Combat.Roll then begin
         WriteLn(TxtFightMadeBigos);
         Bag.Bigos := Bag.Bigos - 10;
         Bag.Count := Bag.Count + 1;
-        if (Combat.Roll < 1) and (Skills.Cooking < 100) then begin
+        if (Combat.Roll < 1) and (Skills.Values[Cooking] < 100) then begin
           WriteLn(TxtFightCookingLearn);
-          Skills.Cooking := Skills.Cooking + 1;
+          Skills.Values[Cooking] := Skills.Values[Cooking] + 1;
           Player.Experience := Player.Experience + 10;
 
         end;
@@ -1322,23 +1318,23 @@ begin
   end;
   if (Command = CmdUzyj + CmdKomplet) and (Bag.Tracksuit <= -10) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_28);
-    Gear.Armor := Gear.Armor + 7;
-    Gear.Wearing := 1;
+    Gear.Values[Armor] := Gear.Values[Armor] + 7;
+    Gear.Values[Wearing] := 1;
     Gear.WornGarment := TxtWornSyf;
   end;
   if (Command = CmdOdlorz + CmdKomplet) and (Bag.Tracksuit <= -10) and (Gear.WornGarment = TxtWornSyf) then begin
     WriteLn(TxtUseItems_29);
-    Gear.Wearing := 0;
-    Gear.Armor := Gear.Armor - 7;
+    Gear.Values[Wearing] := 0;
+    Gear.Values[Armor] := Gear.Values[Armor] - 7;
     Gear.WornGarment := TxtEmpty;
   end;
   if (Command = CmdUzyj + CmdListek) and (Bag.LuckyLeaf <= -10) then WriteLn(TxtUseItems_30);
   if (Command = CmdUzyj + TxtWornGarnitur) and (Bag.SpikedSuit <= -10) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_31);
-    Gear.Wearing := 1;
-    Gear.WornCount := Gear.WornCount + 1;
-    Gear.Armor := Gear.Armor + 10;
-    Gear.LuckRoll := Gear.LuckRoll + 15;
+    Gear.Values[Wearing] := 1;
+    Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
+    Gear.Values[Armor] := Gear.Values[Armor] + 10;
+    Gear.Values[LuckRoll] := Gear.Values[LuckRoll] + 15;
     Gear.WornGarment := TxtWornGarnitur;
   end;
   if (Command = CmdUzyj + CmdPigulka) and (Bag.TeleportPill <= -10) then begin
@@ -1363,10 +1359,10 @@ begin
   end;
   if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.SpikedSuit <= -10) and (Gear.WornGarment = TxtWornGarnitur) then begin
     WriteLn(TxtUseItems_38);
-    Gear.Wearing := 0;
-    Gear.WornCount := Gear.WornCount - 1;
-    Gear.Armor := Gear.Armor - 10;
-    Gear.LuckRoll := Gear.LuckRoll - 15;
+    Gear.Values[Wearing] := 0;
+    Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
+    Gear.Values[Armor] := Gear.Values[Armor] - 10;
+    Gear.Values[LuckRoll] := Gear.Values[LuckRoll] - 15;
     Gear.WornGarment := TxtEmpty;
   end;
 end;
@@ -1981,14 +1977,14 @@ begin
         ikPlain: ShowItemPlain(item^, desc);
       end;
   WriteLn(TxtShowCharacter_02, Bag.Count, TxtShowCharacter_03, Bag.Limit, TxtShowCharacter_04);
-  if Gear.WeaponKind = 0 then WriteLn(TxtShowCharacter_05);
-  if Gear.ShieldKind = 0 then WriteLn(TxtShowCharacter_06);
+  if Gear.Values[WeaponKind] = 0 then WriteLn(TxtShowCharacter_05);
+  if Gear.Values[ShieldKind] = 0 then WriteLn(TxtShowCharacter_06);
   if Gear.WornGarment = TxtEmpty then WriteLn(TxtShowCharacter_07);
   if Gear.WornGarment = TxtWornSyf then WriteLn(TxtWearingLabel, TxtShowCharacter_08);
   if Gear.WornGarment = TxtWornGarnitur then WriteLn(TxtWearingLabel, TxtShowCharacter_09);
-  if (Gear.ShieldKind = 1) and (Bag.SmallShield = -100) then
+  if (Gear.Values[ShieldKind] = 1) and (Bag.SmallShield = -100) then
     WriteLn(TxtShowCharacter_10);
-  if (Gear.WeaponKind = 1) and (Bag.OldSword = -100) then
+  if (Gear.Values[WeaponKind] = 1) and (Bag.OldSword = -100) then
     WriteLn(TxtShowCharacter_11);
   WriteLn(TxtShowCharacter_12, Player.Money, TxtShowCharacter_13, Player.Practice, TxtShared_19);
 
@@ -2005,9 +2001,9 @@ begin
   WriteLn(TxtShowCharacter_21, Player.Strength, TxtShowCharacter_03, Player.MaxStrength,
          TxtShowCharacter_22, Player.Dexterity, TxtShowCharacter_03, Player.MaxDexterity,
          TxtShowCharacter_23, Player.Wisdom, TxtShowCharacter_03, Player.MaxWisdom);
-  Gear.ArmorRating := 10 * Gear.WornCount + Gear.Armor;
-  WriteLn(TxtShowCharacter_24, Gear.ArmorRating,
-         TxtShowCharacter_25, Gear.LuckRoll);
+  Gear.Values[ArmorRating] := 10 * Gear.Values[WornCount] + Gear.Values[Armor];
+  WriteLn(TxtShowCharacter_24, Gear.Values[ArmorRating],
+         TxtShowCharacter_25, Gear.Values[LuckRoll]);
   WriteLn(TxtShowCharacter_12, Player.Mana, TxtShowCharacter_03, Player.MaxMana, TxtShowCharacter_26);
   WriteLn(TxtShowCharacter_12, Player.Energy, TxtShowCharacter_03, Player.MaxEnergy, TxtShared_20);
   if World.Quest = 1 then WriteLn(TxtShowCharacter_27, World.QuestKills, TxtShowCharacter_28);
@@ -2220,53 +2216,53 @@ begin
 
   if Command = CmdCwicz + CmdKopac then
     if (Player.Wisdom > 10) and (Player.Strength > 11) and (Player.Practice > 0) then begin
-      Skills.Kick := Skills.Kick + Player.Wisdom;
+      Skills.Values[Kick] := Skills.Values[Kick] + Player.Wisdom;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingDigging, TxtTrainingThreshold, Skills.Kick,
+      WriteLn(TxtTrainingVerb, TxtTrainingDigging, TxtTrainingThreshold, Skills.Values[Kick],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + CmdUciekac then begin
     if Player.Wisdom > 10 then
       if Player.Dexterity > 10 then
-        if (Player.Practice > 0) and (Skills.Fleeing < 85) then begin
-          Skills.Fleeing := Skills.Fleeing + Player.Wisdom + Player.Dexterity - 5;
+        if (Player.Practice > 0) and (Skills.Values[Fleeing] < 85) then begin
+          Skills.Values[Fleeing] := Skills.Values[Fleeing] + Player.Wisdom + Player.Dexterity - 5;
           Player.Practice := Player.Practice - 1;
-          WriteLn(TxtTrainingVerb, TxtTrainingFleeing, TxtTrainingThreshold, Skills.Fleeing,
+          WriteLn(TxtTrainingVerb, TxtTrainingFleeing, TxtTrainingThreshold, Skills.Values[Fleeing],
                   TxtTraining_29, Player.Practice, TxtShared_19);
         end else
           WriteLn(TxtTraining_31);
   end;
 
   if Command = CmdCwicz + CmdPowrot then
-    if (Player.Wisdom > 17) and (Skills.Returning < 90) and (Player.Practice > 0) then begin
-      Skills.Returning := Skills.Returning + 2 * Player.Wisdom - 3;
+    if (Player.Wisdom > 17) and (Skills.Values[Returning] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Returning] := Skills.Values[Returning] + 2 * Player.Wisdom - 3;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingReturning, TxtTrainingThreshold, Skills.Returning,
+      WriteLn(TxtTrainingVerb, TxtTrainingReturning, TxtTrainingThreshold, Skills.Values[Returning],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + TxtTrainingParrying then
-    if (Player.Wisdom > 15) and (Player.Dexterity > 11) and (Skills.Parry < 90) and (Player.Practice > 0) then begin
-      Skills.Parry := Skills.Parry + Player.Wisdom + Player.Dexterity - 14;
+    if (Player.Wisdom > 15) and (Player.Dexterity > 11) and (Skills.Values[Parry] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Parry] := Skills.Values[Parry] + Player.Wisdom + Player.Dexterity - 14;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingParrying, TxtTrainingThreshold, Skills.Parry,
+      WriteLn(TxtTrainingVerb, TxtTrainingParrying, TxtTrainingThreshold, Skills.Values[Parry],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + CmdPorownanie then
-    if (Player.Wisdom > 11) and (Skills.Comparing < 90) and (Player.Practice > 0) then begin
-      Skills.Comparing := Skills.Comparing + 3 * Player.Wisdom - 9;
+    if (Player.Wisdom > 11) and (Skills.Values[Comparing] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Comparing] := Skills.Values[Comparing] + 3 * Player.Wisdom - 9;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingComparing, TxtTrainingThreshold, Skills.Comparing,
+      WriteLn(TxtTrainingVerb, TxtTrainingComparing, TxtTrainingThreshold, Skills.Values[Comparing],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + TxtTrainingCooking then
-    if (Player.Wisdom > 18) and (Skills.Cooking < 90) and (Player.Practice > 0) then begin
-      Skills.Cooking := Skills.Cooking + Player.Wisdom + 1;
+    if (Player.Wisdom > 18) and (Skills.Values[Cooking] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Cooking] := Skills.Values[Cooking] + Player.Wisdom + 1;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingCooking, TxtTrainingThreshold, Skills.Cooking,
+      WriteLn(TxtTrainingVerb, TxtTrainingCooking, TxtTrainingThreshold, Skills.Values[Cooking],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 end;
@@ -2330,16 +2326,16 @@ begin
   SaveSlot(Combat.Loot);
   SaveSlot(Player.MaxEnergy);
   SaveSlot(Bag.Limit);
-  SaveSlot(Skills.Comparing);
+  SaveSlot(Skills.Values[Comparing]);
   SaveSlot(Player.MaxMana);
   SaveSlot(Player.MaxStrength);
   SaveSlot(Player.MaxDexterity);
   SaveSlot(Player.MaxWisdom);
   SaveSlot(Bag.Count);
-  SaveSlot(Gear.Armor);
-  SaveSlot(Gear.LuckRoll);
-  SaveSlot(Gear.WeaponKind);
-  SaveSlot(Gear.Wearing);
+  SaveSlot(Gear.Values[Armor]);
+  SaveSlot(Gear.Values[LuckRoll]);
+  SaveSlot(Gear.Values[WeaponKind]);
+  SaveSlot(Gear.Values[Wearing]);
   SaveSlot(Session.Overall);
   SaveSlot(Session.SavedFlag);
   SaveSlot(World.Monsters[CageWeakling]);
@@ -2347,10 +2343,10 @@ begin
   SaveSlot(World.Monsters[CageAgile]);
   SaveSlot(World.Monsters[CageTough]);
   SaveSlot(World.Monsters[CageHuge]);
-  SaveSlot(Gear.ShieldKind);
-  SaveSlot(Gear.ArmorRating);
-  SaveSlot(Skills.Cooking);
-  SaveSlot(Skills.CookingDisplayBug);
+  SaveSlot(Gear.Values[ShieldKind]);
+  SaveSlot(Gear.Values[ArmorRating]);
+  SaveSlot(Skills.Values[Cooking]);
+  SaveSlot(Skills.Values[CookingDisplayBug]);
   SaveSlot(0);
   SaveSlot(Bag.Heart);
   SaveSlot(Bag.ManaBottle);
@@ -2361,13 +2357,13 @@ begin
   SaveSlot(Bag.Sausage);
   SaveSlot(Bag.Bread);
   SaveSlot(Bag.BreadRoll);
-  SaveSlot(Gear.WornCount);
-  SaveSlot(Skills.Parry);
-  SaveSlot(Skills.Kick);
-  SaveSlot(Skills.KickMinMana);
-  SaveSlot(Skills.KickMaxEnergy);
-  SaveSlot(Skills.Fleeing);
-  SaveSlot(Skills.FleeEnergy);
+  SaveSlot(Gear.Values[WornCount]);
+  SaveSlot(Skills.Values[Parry]);
+  SaveSlot(Skills.Values[Kick]);
+  SaveSlot(Skills.Values[KickMinMana]);
+  SaveSlot(Skills.Values[KickMaxEnergy]);
+  SaveSlot(Skills.Values[Fleeing]);
+  SaveSlot(Skills.Values[FleeEnergy]);
   SaveSlot(Combat.Fled);
   SaveSlot(Session.InArena);
   SaveSlot(Bag.Tracksuit);
@@ -2380,7 +2376,7 @@ begin
   SaveSlot(World.QuestKills);
   SaveSlot(World.Monsters[Snail]);
   SaveSlot(Bag.LuckyLeaf);
-  SaveSlot(Skills.Returning);
+  SaveSlot(Skills.Values[Returning]);
   SaveSlot(Bag.Bigos);
   SaveSlot(Bag.Beer);
   SaveSlot(Bag.CompareScroll);
@@ -2591,7 +2587,7 @@ begin
   WriteLn(TxtShopVerb, TxtBuyCassette_01, TxtSpaceZa, 1999, TxtSpaceMonet);
   Player.Money := Player.Money - 1999;
   Bag.Cassette := Bag.Cassette - 10;
-  Gear.Armor := Gear.Armor - 8;
+  Gear.Values[Armor] := Gear.Values[Armor] - 8;
   Player.MaxEnergy := Player.MaxEnergy + 5;
   Player.Dexterity := Player.Dexterity + 1;
   Bag.Count := Bag.Count + 1;
@@ -2633,7 +2629,7 @@ begin
   WriteLn(TxtSellVerb, TxtSellCassette_01);
   Player.Money := Player.Money + 1000;
   Bag.Cassette := Bag.Cassette + 10;
-  Gear.Armor := Gear.Armor + 8;
+  Gear.Values[Armor] := Gear.Values[Armor] + 8;
   Player.MaxEnergy := Player.MaxEnergy - 5;
   Player.Dexterity := Player.Dexterity - 1;
   Bag.Count := Bag.Count - 1;
@@ -2920,16 +2916,16 @@ begin
   LoadSlot(Combat.Loot);
   LoadSlot(Player.MaxEnergy);
   LoadSlot(Bag.Limit);
-  LoadSlotShort(Skills.Comparing);
+  LoadSlot(Skills.Values[Comparing]);
   LoadSlot(Player.MaxMana);
   LoadSlot(Player.MaxStrength);
   LoadSlot(Player.MaxDexterity);
   LoadSlot(Player.MaxWisdom);
   LoadSlot(Bag.Count);
-  LoadSlot(Gear.Armor);
-  LoadSlot(Gear.LuckRoll);
-  LoadSlot(Gear.WeaponKind);
-  LoadSlot(Gear.Wearing);
+  LoadSlot(Gear.Values[Armor]);
+  LoadSlot(Gear.Values[LuckRoll]);
+  LoadSlot(Gear.Values[WeaponKind]);
+  LoadSlot(Gear.Values[Wearing]);
   LoadSlot(Session.Overall);
   LoadSlot(Session.SavedFlag);
   LoadSlot(World.Monsters[CageWeakling]);
@@ -2937,10 +2933,10 @@ begin
   LoadSlot(World.Monsters[CageAgile]);
   LoadSlot(World.Monsters[CageTough]);
   LoadSlot(World.Monsters[CageHuge]);
-  LoadSlot(Gear.ShieldKind);
-  LoadSlot(Gear.ArmorRating);
-  LoadSlotShort(Skills.Cooking);
-  LoadSlot(Skills.CookingDisplayBug);
+  LoadSlot(Gear.Values[ShieldKind]);
+  LoadSlot(Gear.Values[ArmorRating]);
+  LoadSlot(Skills.Values[Cooking]);
+  LoadSlot(Skills.Values[CookingDisplayBug]);
   LoadSlot(dummy);
   LoadSlot(Bag.Heart);
   LoadSlot(Bag.ManaBottle);
@@ -2951,13 +2947,13 @@ begin
   LoadSlot(Bag.Sausage);
   LoadSlot(Bag.Bread);
   LoadSlot(Bag.BreadRoll);
-  LoadSlot(Gear.WornCount);
-  LoadSlot(Skills.Parry);
-  LoadSlot(Skills.Kick);
-  LoadSlot(Skills.KickMinMana);
-  LoadSlot(Skills.KickMaxEnergy);
-  LoadSlot(Skills.Fleeing);
-  LoadSlot(Skills.FleeEnergy);
+  LoadSlot(Gear.Values[WornCount]);
+  LoadSlot(Skills.Values[Parry]);
+  LoadSlot(Skills.Values[Kick]);
+  LoadSlot(Skills.Values[KickMinMana]);
+  LoadSlot(Skills.Values[KickMaxEnergy]);
+  LoadSlot(Skills.Values[Fleeing]);
+  LoadSlot(Skills.Values[FleeEnergy]);
   LoadSlot(Combat.Fled);
   LoadSlot(Session.InArena);
   LoadSlot(Bag.Tracksuit);
@@ -2970,7 +2966,7 @@ begin
   LoadSlot(World.QuestKills);
   LoadSlot(World.Monsters[Snail]);
   LoadSlotShort(Bag.LuckyLeaf);
-  LoadSlot(Skills.Returning);
+  LoadSlot(Skills.Values[Returning]);
   LoadSlotShort(Bag.Bigos);
   LoadSlot(Bag.Beer);
   LoadSlot(Bag.CompareScroll);
@@ -3074,16 +3070,16 @@ end;
 
 procedure CmdResetArmor;
 begin
-  Gear.WornCount := 0;
-  Gear.Armor := 0;
-  Gear.LuckRoll := 0;
+  Gear.Values[WornCount] := 0;
+  Gear.Values[Armor] := 0;
+  Gear.Values[LuckRoll] := 0;
 end;
 
 procedure CmdStrip;
 begin
-  Gear.Wearing := 0;
-  Gear.WeaponKind := 0;
-  Gear.ShieldKind := 0;
+  Gear.Values[Wearing] := 0;
+  Gear.Values[WeaponKind] := 0;
+  Gear.Values[ShieldKind] := 0;
   Gear.WornGarment := TxtEmpty;
   Bag.OldSword := -10;
   Bag.SmallShield := -10;
@@ -3122,32 +3118,32 @@ end;
 
 procedure CmdWieldOldSword;
 begin
-  if (Bag.OldSword = -10) and (Gear.WeaponKind = 0) then begin
+  if (Bag.OldSword = -10) and (Gear.Values[WeaponKind] = 0) then begin
     Bag.OldSword := -100;
-    Gear.WeaponKind := 1;
+    Gear.Values[WeaponKind] := 1;
     WriteLn(TxtCmdWieldOldSword_01);
     Player.Strength := Player.Strength + 1;
-    Gear.LuckRoll := Gear.LuckRoll + 3;
+    Gear.Values[LuckRoll] := Gear.Values[LuckRoll] + 3;
   end;
 end;
 
 procedure CmdUnwieldOldSword;
 begin
-  if (Bag.OldSword = -100) and (Gear.WeaponKind = 1) then begin
+  if (Bag.OldSword = -100) and (Gear.Values[WeaponKind] = 1) then begin
     Bag.OldSword := -10;
-    Gear.WeaponKind := 0;
+    Gear.Values[WeaponKind] := 0;
     WriteLn(TxtCmdUnwieldOldSword_01);
     Player.Strength := Player.Strength - 1;
-    Gear.LuckRoll := Gear.LuckRoll - 3;
+    Gear.Values[LuckRoll] := Gear.Values[LuckRoll] - 3;
   end;
 end;
 
 procedure CmdWieldSmallShield;
 begin
-  if (Gear.ShieldKind = 0) and (Bag.SmallShield = -10) then begin
-    Gear.ShieldKind := 1;
-    Gear.Armor := Gear.Armor + 15;
-    Gear.WornCount := Gear.WornCount + 1;
+  if (Gear.Values[ShieldKind] = 0) and (Bag.SmallShield = -10) then begin
+    Gear.Values[ShieldKind] := 1;
+    Gear.Values[Armor] := Gear.Values[Armor] + 15;
+    Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
     Bag.SmallShield := -100;
     WriteLn(TxtCmdWieldSmallShield_01);
   end;
@@ -3155,10 +3151,10 @@ end;
 
 procedure CmdUnwieldSmallShield;
 begin
-  if (Gear.ShieldKind = 1) and (Bag.SmallShield = -100) then begin
-    Gear.ShieldKind := 0;
-    Gear.Armor := Gear.Armor - 15;
-    Gear.WornCount := Gear.WornCount - 1;
+  if (Gear.Values[ShieldKind] = 1) and (Bag.SmallShield = -100) then begin
+    Gear.Values[ShieldKind] := 0;
+    Gear.Values[Armor] := Gear.Values[Armor] - 15;
+    Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
     Bag.SmallShield := -10;
     WriteLn(TxtCmdUnwieldSmallShield_01);
   end;
@@ -3166,9 +3162,9 @@ end;
 
 procedure CmdSetFleeEnergy;
 begin
-  if Skills.Fleeing > 0 then begin
+  if Skills.Values[Fleeing] > 0 then begin
     WriteLn(TxtCmdSetFleeEnergy_01);
-    ReadLn(Skills.FleeEnergy);
+    ReadLn(Skills.Values[FleeEnergy]);
   end;
 end;
 
@@ -3198,9 +3194,9 @@ end;
 
 procedure CmdCompare;
 begin
-  if Skills.Comparing > 0 then begin
+  if Skills.Values[Comparing] > 0 then begin
     Combat.Roll := Random(100);
-    if Skills.Comparing > Combat.Roll then begin
+    if Skills.Values[Comparing] > Combat.Roll then begin
       CompareFoe;
       Player.Mana := Player.Mana - 10;
     end
@@ -3237,7 +3233,7 @@ end;
 
 procedure CmdOpenPortal;
 begin
-  if ((Command = CmdPowrot) and (Skills.Returning > 0)) or
+  if ((Command = CmdPowrot) and (Skills.Values[Returning] > 0)) or
    ((Command = CmdUzyj + CmdScrollPowrot) and (Bag.ReturnScroll < 0)) then begin
     Combat.Roll := Random(100);
     if Command = CmdUzyj + CmdScrollPowrot then begin
@@ -3245,16 +3241,16 @@ begin
       Bag.ReturnScroll := Bag.ReturnScroll + 10;
       Bag.Count := Bag.Count - 1;
     end;
-    if Combat.Roll <= Skills.Returning then begin
+    if Combat.Roll <= Skills.Values[Returning] then begin
       WriteLn(TxtCmdOpenPortal_01);
       Player.Mana := Player.Mana - 15;
       Session.OuterRoom := RoomCityCentre;
     end;
-    if (Combat.Roll > Skills.Returning) and (Skills.Returning + 30 > Combat.Roll) then begin
+    if (Combat.Roll > Skills.Values[Returning]) and (Skills.Values[Returning] + 30 > Combat.Roll) then begin
       WriteLn(TxtCmdOpenPortal_02);
       Player.Mana := Player.Mana - 5;
     end;
-    if Skills.Returning + 29 < Combat.Roll then begin
+    if Skills.Values[Returning] + 29 < Combat.Roll then begin
       WriteLn(TxtCmdOpenPortal_03);
       Player.Mana := Player.Mana - 10;
       Session.OuterRoom := Random(100) + 1;
@@ -3274,12 +3270,12 @@ end;
 
 procedure CmdSetKickThresholds;
 begin
-  if Skills.Kick > 0 then begin
+  if Skills.Values[Kick] > 0 then begin
     WriteLn(TxtCmdSetKickThresholds_01);
     WriteLn(TxtCmdSetKickThresholds_02);
-    ReadLn(Skills.KickMaxEnergy);
+    ReadLn(Skills.Values[KickMaxEnergy]);
     WriteLn(TxtCmdSetKickThresholds_03);
-    ReadLn(Skills.KickMinMana);
+    ReadLn(Skills.Values[KickMinMana]);
   end;
 end;
 
@@ -3298,12 +3294,12 @@ type
 
 const
   SkillLines: array[1..6] of TSkillLine = (
-    (wisdom: 10; strength: 11; dexterity: -1; text1: TxtCmdShowSkills_01; skill: @Skills.Kick; text2: TxtShared_26),
-    (wisdom: 10; strength: -1; dexterity: 10; text1: TxtCmdShowSkills_02; skill: @Skills.Fleeing; text2: TxtShared_26),
-    (wisdom: 15; strength: -1; dexterity: 11; text1: TxtCmdShowSkills_03; skill: @Skills.Parry; text2: TxtShared_26),
-    (wisdom: 11; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_04; skill: @Skills.Comparing; text2: TxtShared_26),
-    (wisdom: 18; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_05; skill: @Skills.CookingDisplayBug; text2: TxtShared_26),
-    (wisdom: 19; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_06; skill: @Skills.Returning; text2: TxtShared_26)
+    (wisdom: 10; strength: 11; dexterity: -1; text1: TxtCmdShowSkills_01; skill: @Skills.Values[Kick]; text2: TxtShared_26),
+    (wisdom: 10; strength: -1; dexterity: 10; text1: TxtCmdShowSkills_02; skill: @Skills.Values[Fleeing]; text2: TxtShared_26),
+    (wisdom: 15; strength: -1; dexterity: 11; text1: TxtCmdShowSkills_03; skill: @Skills.Values[Parry]; text2: TxtShared_26),
+    (wisdom: 11; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_04; skill: @Skills.Values[Comparing]; text2: TxtShared_26),
+    (wisdom: 18; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_05; skill: @Skills.Values[CookingDisplayBug]; text2: TxtShared_26),
+    (wisdom: 19; strength: -1; dexterity: -1; text1: TxtCmdShowSkills_06; skill: @Skills.Values[Returning]; text2: TxtShared_26)
   );
 
 procedure CmdShowSkills;

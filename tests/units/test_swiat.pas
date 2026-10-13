@@ -39,10 +39,10 @@ begin
    flee skill (which would change the combat flow), and clear
    the leftover markers that alter the room or loot text.}
   Player.Energy := 30000; Player.Experience := 100; Player.Strength := 127; Player.Dexterity := 127;
-  Combat.Fled := 0; Skills.Fleeing := 0; Skills.FleeEnergy := 0; Player.Mana := 0; Skills.Parry := 0;
-  Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Cooking := 0;
-  Skills.Kick := 0; Skills.KickMinMana := 0; Skills.KickMaxEnergy := 0; Gear.Armor := 0; Gear.WornCount := 0;
-  Gear.LuckRoll := 0; Player.MaxEnergy := 50; World.Monsters[CageStrong] := 0;
+  Combat.Fled := 0; Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Skills.Values[Parry] := 0;
+  Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Cooking] := 0;
+  Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[Armor] := 0; Gear.Values[WornCount] := 0;
+  Gear.Values[LuckRoll] := 0; Player.MaxEnergy := 50; World.Monsters[CageStrong] := 0;
   Bag.Count := 0; World.Quest := 0; World.QuestKills := 0; Player.Money := 0;
   Bag.Permit := 0; Bag.Diploma := 0; Bag.Pipe := 0; Player.Practice := 1;
 end;
@@ -108,9 +108,9 @@ begin
   sawSword := false; sawShield := false; sawHeart := false;
   for i := 1 to 80 do begin
     Player.Energy := 30000; Player.Experience := 100; Player.Strength := 127; Player.Dexterity := 127;
-    Combat.Fled := 0; Skills.Fleeing := 0; Skills.FleeEnergy := 0; Player.Mana := 0; Skills.Parry := 0;
-    Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Cooking := 0;
-    Skills.Kick := 0; Skills.KickMinMana := 0; Skills.KickMaxEnergy := 0; Gear.LuckRoll := 0;
+    Combat.Fled := 0; Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Skills.Values[Parry] := 0;
+    Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Cooking] := 0;
+    Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[LuckRoll] := 0;
     World.Monsters[CageStrong] := 13;
     PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
     if Bag.OldSword <> 0 then sawSword := true;
@@ -130,7 +130,7 @@ begin
    the monster stays and the procedure clears the flee flag.}
   RoomSetup;
   World.Monsters[CageStrong] := 13;
-  Player.Energy := 50; Skills.FleeEnergy := 100; Player.Mana := 20; Skills.Fleeing := 100;
+  Player.Energy := 50; Skills.Values[FleeEnergy] := 100; Player.Mana := 20; Skills.Values[Fleeing] := 100;
   PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
   CheckEqual(13, World.Monsters[CageStrong],
     'fleeing the room-13 monster leaves it alive');

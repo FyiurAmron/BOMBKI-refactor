@@ -189,14 +189,14 @@ end;
 procedure TestTarczaAppliesShield;
 begin
   { PRO at 100 forces the Random(100) roll to succeed. }
-  Combat.Damage := 50; Gear.WornCount := 30; Gear.Armor := 100;
+  Combat.Damage := 50; Gear.Values[WornCount] := 30; Gear.Values[Armor] := 100;
   ShieldBlock;
   CheckEqual(20, Combat.Damage, 'TARCZA subtracts ILOSC from WPYSK');
 end;
 
 procedure TestTarczaClampsAtZero;
 begin
-  Combat.Damage := 10; Gear.WornCount := 30; Gear.Armor := 100;
+  Combat.Damage := 10; Gear.Values[WornCount] := 30; Gear.Values[Armor] := 100;
   ShieldBlock;
   CheckEqual(0, Combat.Damage, 'TARCZA clamps WPYSK at zero');
 end;
@@ -223,21 +223,21 @@ procedure WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
   aZre, aWrogZre, aPar, aKop: Integer);
 begin
   Player.Energy := 100;
-  Skills.Parry := aPar;
-  Skills.Kick := aKop;
-  Skills.KickMinMana := 0;
-  Skills.KickMaxEnergy := 0;
+  Skills.Values[Parry] := aPar;
+  Skills.Values[Kick] := aKop;
+  Skills.Values[KickMinMana] := 0;
+  Skills.Values[KickMaxEnergy] := 0;
   Player.Mana := 0;
   Combat.FireballCharges := 0;
   Combat.PoisonCharges := 0;
   Combat.PoisonRounds := 0;
-  Skills.Fleeing := 0;
-  Skills.FleeEnergy := 0;
+  Skills.Values[Fleeing] := 0;
+  Skills.Values[FleeEnergy] := 0;
   Combat.Fled := 0;
   Player.Experience := 0;
-  Gear.LuckRoll := 0;
-  Gear.Armor := 0;
-  Gear.WornCount := 0;
+  Gear.Values[LuckRoll] := 0;
+  Gear.Values[Armor] := 0;
+  Gear.Values[WornCount] := 0;
   Player.MaxEnergy := aMaxE;
   Combat.EnemyEnergy := aWrogE;
   Player.Strength := aSil;
@@ -469,7 +469,7 @@ end;
 procedure TestWalkaSuperKopHit;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
-  Player.Mana := 100; Skills.KickMaxEnergy := 100; Player.Energy := 50;
+  Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy with the super kop');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the super kop');
@@ -478,7 +478,7 @@ end;
 procedure TestWalkaSuperKopHitAgain;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
-  Player.Mana := 100; Skills.KickMaxEnergy := 100; Player.Energy := 50;
+  Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy with the kop again');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the kop again');
@@ -487,7 +487,7 @@ end;
 procedure TestWalkaSuperKopChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 11);
-  Player.Mana := 100; Skills.KickMaxEnergy := 100; Player.Energy := 50;
+  Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy when the kop misses');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the kop attempt');
@@ -496,7 +496,7 @@ end;
 procedure TestWalkaFlee;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  Skills.Fleeing := 100; Skills.FleeEnergy := 100; Player.Energy := 50; Player.Mana := 100;
+  Skills.Values[Fleeing] := 100; Skills.Values[FleeEnergy] := 100; Player.Energy := 50; Player.Mana := 100;
   Fight;
   CheckTrue(Combat.Fled = 1, 'WALKA flees the battle');
 end;
@@ -504,7 +504,7 @@ end;
 procedure TestWalkaFleeChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  Skills.Fleeing := 1; Skills.FleeEnergy := 100; Player.Energy := 50; Player.Mana := 100;
+  Skills.Values[Fleeing] := 1; Skills.Values[FleeEnergy] := 100; Player.Energy := 50; Player.Mana := 100;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1,
     'WALKA finishes the enemy when the flee fails');
@@ -513,7 +513,7 @@ end;
 procedure TestWalkaPotrawki;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
-  Skills.Cooking := 99; Bag.Bigos := 50; Bag.Count := 0;
+  Skills.Values[Cooking] := 99; Bag.Bigos := 50; Bag.Count := 0;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy for the potrawki');
   CheckTrue((Bag.Count = 0) or (Bag.Count = 1),
@@ -532,7 +532,7 @@ end;
 procedure TestWalkaFukroll;
 begin
   WalkaSetup(0, 10, 2, 1, 10, 10, 0, 0);
-  Gear.LuckRoll := 1;
+  Gear.Values[LuckRoll] := 1;
   Fight;
   CheckTrue(Combat.EnemyEnergy < 1,
     'WALKA defeats the enemy through the fukroll');
@@ -541,7 +541,7 @@ end;
 procedure EncounterSetup;
 begin
   WalkaSetup(127, 0, 127, 1, 127, 1, 0, 0);
-  Bag.SmallShield := 0; Skills.Cooking := 0; Combat.FireballCharges := 0; Combat.PoisonCharges := 0;
+  Bag.SmallShield := 0; Skills.Values[Cooking] := 0; Combat.FireballCharges := 0; Combat.PoisonCharges := 0;
   Combat.PoisonRounds := 0; Bag.Heart := 0;
 end;
 
@@ -669,43 +669,43 @@ end;
 
 procedure TestUzywaKomplet;
 begin
-  Bag.Tracksuit := -10; Gear.WornGarment := ''; Gear.Armor := 0; Gear.Wearing := 0;
+  Bag.Tracksuit := -10; Gear.WornGarment := ''; Gear.Values[Armor] := 0; Gear.Values[Wearing] := 0;
   Command := 'UZYJ KOMPLET';
   UseItems;
-  CheckEqual(7, Gear.Armor, 'UZYJ KOMPLET adds seven defense');
-  CheckEqual(1, Gear.Wearing, 'UZYJ KOMPLET marks the body dressed');
+  CheckEqual(7, Gear.Values[Armor], 'UZYJ KOMPLET adds seven defense');
+  CheckEqual(1, Gear.Values[Wearing], 'UZYJ KOMPLET marks the body dressed');
   CheckStrEqual('SYF', Gear.WornGarment, 'UZYJ KOMPLET remembers the suit');
   Command := 'ODLORZ KOMPLET';
   UseItems;
-  CheckEqual(0, Gear.Armor, 'ODLORZ KOMPLET removes the defense');
-  CheckEqual(0, Gear.Wearing, 'ODLORZ KOMPLET marks the body bare');
+  CheckEqual(0, Gear.Values[Armor], 'ODLORZ KOMPLET removes the defense');
+  CheckEqual(0, Gear.Values[Wearing], 'ODLORZ KOMPLET marks the body bare');
   CheckStrEqual('', Gear.WornGarment, 'ODLORZ KOMPLET forgets the suit');
 end;
 
 procedure TestUzywaKompletWorn;
 begin
-  Bag.Tracksuit := -10; Gear.WornGarment := 'SYF'; Gear.Armor := 0; Gear.Wearing := 1;
+  Bag.Tracksuit := -10; Gear.WornGarment := 'SYF'; Gear.Values[Armor] := 0; Gear.Values[Wearing] := 1;
   Command := 'UZYJ KOMPLET';
   UseItems;
-  CheckEqual(0, Gear.Armor, 'UZYJ KOMPLET refuses while a suit is worn');
-  CheckEqual(1, Gear.Wearing, 'UZYJ KOMPLET keeps the body dressed');
+  CheckEqual(0, Gear.Values[Armor], 'UZYJ KOMPLET refuses while a suit is worn');
+  CheckEqual(1, Gear.Values[Wearing], 'UZYJ KOMPLET keeps the body dressed');
   CheckStrEqual('SYF', Gear.WornGarment, 'UZYJ KOMPLET keeps the worn suit');
 end;
 
 procedure TestUzywaGarnitur;
 begin
-  Bag.SpikedSuit := -10; Gear.WornGarment := ''; Gear.WornCount := 0; Gear.Armor := 0; Gear.LuckRoll := 0;
+  Bag.SpikedSuit := -10; Gear.WornGarment := ''; Gear.Values[WornCount] := 0; Gear.Values[Armor] := 0; Gear.Values[LuckRoll] := 0;
   Command := 'UZYJ GARNITUR';
   UseItems;
-  CheckEqual(10, Gear.Armor, 'UZYJ GARNITUR adds ten defense');
-  CheckEqual(1, Gear.WornCount, 'UZYJ GARNITUR counts one armor layer');
-  CheckEqual(15, Gear.LuckRoll, 'UZYJ GARNITUR adds fifteen resistance');
+  CheckEqual(10, Gear.Values[Armor], 'UZYJ GARNITUR adds ten defense');
+  CheckEqual(1, Gear.Values[WornCount], 'UZYJ GARNITUR counts one armor layer');
+  CheckEqual(15, Gear.Values[LuckRoll], 'UZYJ GARNITUR adds fifteen resistance');
   CheckStrEqual('GARNITUR', Gear.WornGarment, 'UZYJ GARNITUR remembers the suit');
   Command := 'ODLORZ GARNITUR';
   UseItems;
-  CheckEqual(0, Gear.Armor, 'ODLORZ GARNITUR removes the defense');
-  CheckEqual(0, Gear.WornCount, 'ODLORZ GARNITUR uncounts the armor layer');
-  CheckEqual(0, Gear.LuckRoll, 'ODLORZ GARNITUR removes the resistance');
+  CheckEqual(0, Gear.Values[Armor], 'ODLORZ GARNITUR removes the defense');
+  CheckEqual(0, Gear.Values[WornCount], 'ODLORZ GARNITUR uncounts the armor layer');
+  CheckEqual(0, Gear.Values[LuckRoll], 'ODLORZ GARNITUR removes the resistance');
   CheckStrEqual('', Gear.WornGarment, 'ODLORZ GARNITUR forgets the suit');
 end;
 
@@ -865,14 +865,14 @@ end;
 
 procedure TestKasetaZyskInvariant;
 begin
-  Bag.Cassette := 50; Player.MaxEnergy := 0; Gear.Armor := 0; Bag.Count := 0; Player.Dexterity := 0;
+  Bag.Cassette := 50; Player.MaxEnergy := 0; Gear.Values[Armor] := 0; Bag.Count := 0; Player.Dexterity := 0;
   Session.Room := 20;
   CassetteGain;
   CheckTrue((Bag.Cassette = 50) or (Bag.Cassette = 40),
     'KASETAZYSK drops the cassette by ten or not at all');
   CheckTrue((Player.MaxEnergy = 0) or (Player.MaxEnergy = 5),
     'KASETAZYSK raises MAXE by five or not at all');
-  CheckTrue((Gear.Armor = 0) or (Gear.Armor = -8),
+  CheckTrue((Gear.Values[Armor] = 0) or (Gear.Values[Armor] = -8),
     'KASETAZYSK lowers PRO by eight or not at all');
   CheckTrue((Bag.Count = 0) or (Bag.Count = 1),
     'KASETAZYSK counts at most one item');
@@ -938,7 +938,7 @@ end;
 procedure TestKasetaZyskGain;
 var i: Integer;
 begin
-  Bag.Cassette := 100; Player.MaxEnergy := 0; Gear.Armor := 0; Bag.Count := 0;
+  Bag.Cassette := 100; Player.MaxEnergy := 0; Gear.Values[Armor] := 0; Bag.Count := 0;
   Player.Dexterity := 0; Session.Room := 20;
   i := 0;
   while (Bag.Count = 0) and (i < 2000) do begin
@@ -949,7 +949,7 @@ begin
   CheckEqual(90, Bag.Cassette,
     'KASETAZYSK drops the cassette by ten');
   CheckEqual(5, Player.MaxEnergy, 'KASETAZYSK raises MAXE by five');
-  CheckEqual(-8, Gear.Armor, 'KASETAZYSK lowers PRO by eight');
+  CheckEqual(-8, Gear.Values[Armor], 'KASETAZYSK lowers PRO by eight');
   CheckEqual(1, Player.Dexterity, 'KASETAZYSK raises ZRE by one');
 end;
 
@@ -1200,7 +1200,7 @@ begin
    and SIL, so both are set to reach each band.}
   FeedStdin(monster);
   Player.Mana := 10; Player.Level := aPoziom; Player.Strength := aSil; Player.Dexterity := aZre;
-  Skills.Parry := aPar; Skills.Kick := aKop;
+  Skills.Values[Parry] := aPar; Skills.Values[Kick] := aKop;
   CompareFoe;
 end;
 
@@ -1322,9 +1322,9 @@ begin
    would skip every drop.}
   Bag.Heart := 0;
   Player.Energy := 30000; Player.Strength := 127; Player.Dexterity := 127; Combat.Fled := 0;
-  Skills.Fleeing := 0; Skills.FleeEnergy := 0; Player.Mana := 0; Combat.FireballCharges := 0;
-  Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Kick := 0; Skills.KickMinMana := 0;
-  Skills.KickMaxEnergy := 0; Gear.Armor := 0; Gear.WornCount := 0; Gear.LuckRoll := 0;
+  Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Combat.FireballCharges := 0;
+  Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0;
+  Skills.Values[KickMaxEnergy] := 0; Gear.Values[Armor] := 0; Gear.Values[WornCount] := 0; Gear.Values[LuckRoll] := 0;
   Bag.Count := 0;
 end;
 
@@ -1385,9 +1385,9 @@ begin
   learned := false;
   for i := 1 to 800 do begin
     WalkaSetup(0, 0, 127, 1, 127, 1, 0, 0);
-    Player.Energy := 100; Skills.Cooking := 1; Bag.Bigos := 0;
+    Player.Energy := 100; Skills.Values[Cooking] := 1; Bag.Bigos := 0;
     Fight;
-    if Skills.Cooking > 1 then
+    if Skills.Values[Cooking] > 1 then
       learned := true;
   end;
   CheckTrue(learned, 'WALKA eventually teaches the potrawki skill');
@@ -1404,10 +1404,10 @@ begin
     WalkaSetup(0, 3000, 127, 5, 127, 1, 99, 0);
     Player.Energy := 30000;
     Fight;
-    if Skills.Parry > 99 then
+    if Skills.Values[Parry] > 99 then
       Break;
   end;
-  CheckTrue(Skills.Parry > 99, 'WALKA eventually teaches the parry skill');
+  CheckTrue(Skills.Values[Parry] > 99, 'WALKA eventually teaches the parry skill');
 end;
 
 begin

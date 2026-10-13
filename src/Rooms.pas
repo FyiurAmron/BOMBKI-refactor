@@ -1422,7 +1422,7 @@ begin
               WriteLn(TxtBang, TxtUniqeItem, TxtConcertRooms_40);
               Bag.Cassette := Bag.Cassette - 10;
               Player.MaxEnergy := Player.MaxEnergy + 5;
-              Gear.Armor := Gear.Armor - 8;
+              Gear.Values[Armor] := Gear.Values[Armor] - 8;
               Bag.Count := Bag.Count + 1;
               Player.Dexterity := Player.Dexterity + 1;
             end;

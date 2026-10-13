@@ -1,11 +1,5 @@
 unit Rooms;
 
-{ The rooms: every room procedure, its private data, and the
-  dispatch that runs the current room each turn. The BOMBKI
-  program wires this unit's DispatchRoom into Game's
-  DispatchRooms hook, which keeps the two units free of a
-  circular reference: Rooms uses Game, never the reverse. }
-
 interface
 
 uses Game;
@@ -83,10 +77,6 @@ type
   end;
 
 const
-
-  { The room dispatch: each row runs when its id matches the
-    current room; the two RoomAny rows fall back to the plain
-    and concert rooms. }
 
   RoomDispatch: array[1..46] of TRoomEntry = (
     (id: RoomStart; run:Room0),
@@ -1510,18 +1500,12 @@ begin
   until Session.Room <> RoomNo;
 end;
 
-{ The shell with the standard PATRZ PLAKAT poster. }
-
-{ The shell with the standard PATRZ PLAKAT poster. }
 procedure BasicRoomPoster(RoomNo: Integer; const intro, exits: array of string;
   const moves: array of TMovement; const poster: array of string);
 begin
   BasicRoomGeneric(RoomNo, intro, exits, moves, CmdPatrz + CmdPlakat, poster);
 end;
 
-{ The shell without a poster. }
-
-{ The shell without a poster. }
 procedure BasicRoomQuit(RoomNo: Integer; const intro, exits: array of string;
   const moves: array of TMovement);
 begin
@@ -1546,9 +1530,6 @@ begin
   until Session.Room <> RoomNo;
 end;
 
-{ The quit shell with the standard PATRZ PLAKAT poster. }
-
-{ The quit shell with the standard PATRZ PLAKAT poster. }
 procedure BasicRoomQuitPoster(RoomNo: Integer; const intro, exits: array of string;
   const moves: array of TMovement; const poster: array of string);
 begin
@@ -1556,9 +1537,6 @@ begin
     poster);
 end;
 
-{ The quit shell without a poster. }
-
-{ The quit shell without a poster. }
 procedure BasicRoomSimple(RoomNo: Integer; const intro, exits: array of string;
   const moves: array of TMovement);
 begin

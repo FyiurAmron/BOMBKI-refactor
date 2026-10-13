@@ -90,7 +90,6 @@ type
 
 const
 
-  { The four plain side rooms off the lost room, in dispatch order. }
   SideRooms: array[1..4] of TSideRoom = (
     (room: RoomSchoolSide1; dest: RoomLost; direction: CmdWschod; exitDesc: CmdMudSzkola2),
     (room: RoomSchoolSide3; dest: RoomLost; direction: CmdPolnoc; exitDesc: CmdMudSzkola2),
@@ -98,7 +97,6 @@ const
     (room: RoomSchoolSide4; dest: RoomLost; direction: CmdGora; exitDesc: CmdMudSzkola2)
   );
 
-  { The quest master's three quests, in listing order. }
   QuestOffers: array[1..3] of TQuestOffer = (
     (cmd: CmdKup + CmdLatwyQuest; line: TxtRoom100_09; quest: 1; kills: 75; price: 200),
     (cmd: CmdKup + CmdPrzecietnyQuest; line: TxtRoom100_10; quest: 2; kills: 200; price: 100),
@@ -115,9 +113,6 @@ var
   Session: TSession;
   Command: string;
 
-  { The per-turn room dispatch. The BOMBKI program wires the Rooms
-    unit's DispatchRoom into this hook, which keeps the unit graph
-    acyclic: Rooms uses Game, never the reverse. }
   DispatchRooms: procedure;
   procedure TakeDrop;
   procedure UseItems;
@@ -152,7 +147,6 @@ var
   procedure CompareFoe;
   procedure HandleTrain;
 
-  { The helpers the Rooms unit calls from its rooms. }
   procedure WriteExits(const items: array of string);
   procedure WriteLines(const lines: array of string);
   function Go(cmd: string; dest: Integer): TMovement;
@@ -227,17 +221,6 @@ begin
     WriteLn(lines[i]);
 end;
 
-{ The plain room shell, fully parametrized: posterCmd names the poster
-  command and poster carries its lines; an empty array means the room
-  has no poster. On WYJSCIE the room is left and shown again on the
-  next dispatch pass. }
-
-{ The quit shell, fully parametrized: WYJSCIE requests the game exit;
-  posterCmd and poster carry an optional poster as in BasicRoomGeneric. }
-
-{ One bag slot of the fight loot: an empty slot rolls Random(20) and,
-  below the threshold, marks the find with the current room and
-  announces it. }
 procedure TryLoot(var slot: Integer; threshold: Integer; foundMsg: string);
 begin
   if slot = 0 then begin
@@ -249,8 +232,6 @@ begin
   end;
 end;
 
-{ The cage loot roll: the sword and shield slots share the threshold,
-  the heart rolls against 6. }
 procedure TryCageLoot(threshold: Integer);
 begin
   TryLoot(Bag.OldSword, threshold, TxtShared_10);
@@ -258,8 +239,6 @@ begin
   TryLoot(Bag.Heart, 6, TxtShared_12);
 end;
 
-{ An item carried into the trance: if its recorded room is the room the
-  player left, announce it. }
 procedure TranceItemLine(itemRoom: Integer; line: string);
 begin
   if itemRoom = Session.OuterRoom then
@@ -273,7 +252,6 @@ type
   end;
 
 const
-  { The items carried into the trance, announced in dispatch order. }
   TranceItems: array[1..5] of TTranceItem = (
     (item: @Bag.OldSword; line: TxtStart_07),
     (item: @Bag.SmallShield; line: TxtTranceItemLabel + TxtStart_08),
@@ -391,10 +369,6 @@ type
   end;
 
 const
-  { The dodge-roll bounds by the winner's dexterity lead: the
-    first row whose limit the chance exceeds wins, and the last
-    row is the catch-all for a lead of two or less. player is
-    DodgeBound's value, enemy EnemyDodgeBound's. }
   DodgeBounds: array[1..12] of TDodgeBound = (
     (limit: 30; player: 12; enemy: 60),
     (limit: 27; player: 13; enemy: 58),
@@ -723,8 +697,6 @@ end;
 type
   TFight = procedure;
 
-{ One arena beast: the kill command in the beast's room starts the
-  given fight and the beast is removed when it falls. }
 procedure KillBeast(cmd: string; var beast: Integer; fight: TFight);
 begin
   if (Command = cmd) and (Session.Room = beast) then begin
@@ -733,7 +705,6 @@ begin
   end;
 end;
 
-{ The same, but a beast that fled the fight stays in the room. }
 procedure KillBeastUnlessFled(cmd: string; var beast: Integer; fight: TFight);
 begin
   if (Command = cmd) and (Session.Room = beast) then begin
@@ -773,11 +744,6 @@ begin
 end;
 
 const
-  { The comparison ladders, one table per foe group. A row
-    prints its line when its stat lands in the inclusive band,
-    so the drunks and ivy tables keep the original stacked
-    pair of lines atop their ladders and the musicians table
-    keeps its 21..22 silence. }
   BeastCompareRules: array[1..3] of TCompareFoeRule = (
     (stat: @Session.Overall; lo: -MaxInt - 1; hi: 15; line: TxtCompareFoe_02),
     (stat: @Player.Strength; lo: 16; hi: 18; line: TxtEnemy + TxtCompareFoe_03),
@@ -991,8 +957,6 @@ type
   end;
 
 const
-  { The experience a fight opens with: every combat stat pays
-    its own ladder of the player-enemy difference. }
   FightExpStats: array[1..3] of TFightExpStat = (
     (playerStat: @Player.MaxEnergy; enemyStat: @Combat.EnemyEnergy; expFor: FightExpForEnergy),
     (playerStat: @Player.Strength; enemyStat: @Combat.EnemyStrength; expFor: FightExpForStrength),
@@ -1389,9 +1353,6 @@ type
   end;
 
 const
-  { The arena beasts: the kill command in the beast's room starts the
-    tier's fight; unlessFled leaves a beast that fled standing. The
-    blocks with extra side effects stay hand-written in ArenaMaze. }
   BeastKills: array[1..23] of TBeastKill = (
     (cmd: CmdZabij + CmdSlimak; beast: @World.Monsters[Snail]; fight: FightWeak; unlessFled: True),
     (cmd: CmdZabij + CmdKornik; beast: @World.Monsters[Woodworm]; fight: FightWeak; unlessFled: True),
@@ -1710,8 +1671,6 @@ type
   end;
 
 const
-  { The herbs: a very easy fight clears them even when the
-    player falls. }
   PlantKills: array[1..4] of TPlantKill = (
     (cmd: CmdZabij + CmdSzczaw; plant: @World.Monsters[Sorrel]),
     (cmd: CmdZabij + CmdKoniczynka; plant: @World.Monsters[Clover]),
@@ -1719,7 +1678,6 @@ const
     (cmd: CmdZabij + CmdDmuchawiec; plant: @World.Monsters[Dandelion])
   );
 
-  { The easy plants: only a player still standing clears them. }
   EasyPlantKills: array[1..5] of TPlantKill = (
     (cmd: CmdZabij + CmdRoza; plant: @World.Monsters[Rose]),
     (cmd: CmdZabij + CmdOset; plant: @World.Monsters[Thistle]),
@@ -1929,8 +1887,6 @@ type
   end;
 
 const
-  { The character sheet: an item shows when its slot holds a room
-    number (<= -10 marks it found). }
   SheetItems: array[1..22] of TSheetItem = (
     (item: @Bag.OldSword; desc: CmdStaryZardzewialyMiecz; width: 0; kind: ikShown),
     (item: @Bag.SmallShield; desc: CmdOkraglaMalaTarcza; width: 0; kind: ikShown),
@@ -2124,7 +2080,6 @@ type
   end;
 
 const
-  { The street dogs: extraMsg adds the owner's complaint on a kill. }
   StreetDogs: array[1..5] of TStreetKill = (
     (cmd: CmdZabij + CmdOwczarek; target: @World.Monsters[Shepherd]; extra: False),
     (cmd: CmdZabij + CmdPiesek; target: @World.Monsters[Pooch]; extra: False),
@@ -2132,7 +2087,6 @@ const
     (cmd: CmdZabij + CmdSpaniel; target: @World.Monsters[Spaniel]; extra: True),
     (cmd: CmdZabij + CmdPudel; target: @World.Monsters[Poodle]; extra: False)
   );
-  { The street townsfolk: suitLoot grants the spiked suit pieces. }
   StreetFolk: array[1..3] of TStreetKill = (
     (cmd: CmdZabij + CmdTaksowkarz; target: @World.Monsters[Cabman]; extra: True),
     (cmd: CmdZabij + CmdSprzedawca; target: @World.Monsters[Vendor]; extra: True),
@@ -2157,13 +2111,11 @@ end;
 
 type
   TTrainingLine = record
-    wisdom, strength, dexterity: Integer;  { required levels; -1 skips }
+    wisdom, strength, dexterity: Integer;
     text1: string;
   end;
 
 const
-  { The training poster: a line shows when every listed stat gate is
-    met (-1 skips the stat). }
   TrainingLines: array[1..24] of TTrainingLine = (
     (wisdom: 10; strength: 11; dexterity: -1; text1: TxtTraining_03),
     (wisdom: 10; strength: -1; dexterity: 10; text1: TxtTraining_04),
@@ -2425,7 +2377,6 @@ type
   end;
 
 const
-  { The bakery's stock, in counter order. }
   BakeryItems: array[1..6] of TBakeryItem = (
     (cmd: CmdKup + CmdPaczek; item: @Bag.Doughnut; price: 8; desc: TxtItemPaczek),
     (cmd: CmdKup + CmdCiastko; item: @Bag.Cookie; price: 12; desc: TxtItemCiastko),
@@ -2852,9 +2803,6 @@ type
   end;
 
 const
-  { The experience checkpoints, in firing order: reaching exp with
-    the expected stage and a Strength inside loStr..hiStr advances
-    the stage and respawns the monsters. }
   CheckpointRules: array[1..6] of TCheckpoint = (
     (exp: 400; stage: 0; next: 1; loStr: -MaxInt - 1; hiStr: 19),
     (exp: 180; stage: 0; next: 1; loStr: -MaxInt - 1; hiStr: 7),
@@ -3216,7 +3164,6 @@ begin
 end;
 
 const
-  { The food commands the player cannot drop. }
   RefusedFood: array[1..8] of string = (
     CmdOdrzuc + CmdPaczek, CmdOdrzuc + CmdCiastko,
     CmdOdrzuc + CmdSuchaRacja, CmdOdrzuc + CmdBulka,
@@ -3289,7 +3236,7 @@ end;
 
 type
   TSkillLine = record
-    wisdom, strength, dexterity: Integer;  { required levels; -1 skips }
+    wisdom, strength, dexterity: Integer;
     text1: string;
     skill: ^Integer;
     text2: string;

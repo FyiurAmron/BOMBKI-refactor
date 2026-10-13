@@ -283,7 +283,7 @@ procedure Room12;
 begin
   if Session.Room <> RoomCageWeakling then Exit;
   WriteLn(TxtShared_06);
-  case World.CageWeakling of
+  case World.Monsters[CageWeakling] of
     RoomCageWeakling: WriteLn(TxtRoom12_01);
     0: WriteLn(TxtShared_07);
   end;
@@ -295,11 +295,11 @@ begin
                     TxtExitZachod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if MoveWhenOrExit([Go(CmdZachod, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageWeakling = RoomCageWeakling) then begin
+    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageWeakling] = RoomCageWeakling) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
-        World.CageWeakling := 0;
+        World.Monsters[CageWeakling] := 0;
         Combat.Loot := Random(10);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
@@ -315,7 +315,7 @@ procedure Room13;
 begin
   if Session.Room <> RoomCageStrong then Exit;
   WriteLn(TxtShared_06);
-  case World.CageStrong of
+  case World.Monsters[CageStrong] of
     RoomCageStrong: WriteLn(TxtRoom13_01);
     0: WriteLn(TxtShared_07);
   end;
@@ -327,13 +327,13 @@ begin
                     TxtExitWschod, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if MoveWhenOrExit([Go(CmdWschod, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageStrong = RoomCageStrong) then begin
+    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageStrong] = RoomCageStrong) then begin
       Combat.EnemyEnergy := 20;
       Combat.EnemyDexterity := 3;
       Combat.EnemyStrength := 10;
       Fight;
       if Combat.Fled = 0 then begin
-        World.CageStrong := 0;
+        World.Monsters[CageStrong] := 0;
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
@@ -349,7 +349,7 @@ procedure Room14;
 begin
 
   WriteLn(TxtShared_06);
-  case World.CageAgile of
+  case World.Monsters[CageAgile] of
     RoomCageAgile: WriteLn(TxtRoom14_01);
     0: WriteLn(TxtRoom14_02);
   end;
@@ -361,11 +361,11 @@ begin
                     TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if MoveWhenOrQuit([Go(CmdPolodnie, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageAgile = RoomCageAgile) then begin
+    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageAgile] = RoomCageAgile) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 30; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
-        World.CageAgile := 0;
+        World.Monsters[CageAgile] := 0;
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
@@ -382,7 +382,7 @@ procedure Room15;
 begin
 
   WriteLn(TxtShared_06);
-  case World.CageTough of
+  case World.Monsters[CageTough] of
     RoomCageTough: WriteLn(TxtRoom15_01);
     0: WriteLn(TxtShared_07);
   end;
@@ -394,11 +394,11 @@ begin
                     TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy]);
     if Command = CmdMode then EnterTrance;
     if MoveWhenOrQuit([Go(CmdPolnoc, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.CageTough = RoomCageTough) then begin
+    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageTough] = RoomCageTough) then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
       Fight;
       if Combat.Fled = 0 then begin
-        World.CageTough := 0;
+        World.Monsters[CageTough] := 0;
         Combat.Loot := Random(15);
         WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
         Player.Money := Player.Money + Combat.Loot;
@@ -417,16 +417,16 @@ label
 begin
 
   WriteLn(TxtShared_06);
-  case World.CageHuge of
+  case World.Monsters[CageHuge] of
     RoomCageHuge: WriteLn(TxtRoom16_01);
     0: WriteLn(TxtShared_07);
   end;
   repeat
-    if World.CageHuge = RoomCageHuge then begin
+    if World.Monsters[CageHuge] = RoomCageHuge then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;
       Fight;
       if Combat.Fled <> 0 then goto L1027_Flee;
-      World.CageHuge := 0;
+      World.Monsters[CageHuge] := 0;
       Combat.Loot := Random(30);
       WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
       Player.Money := Player.Money + Combat.Loot;
@@ -463,9 +463,9 @@ begin
                     TxtExitDol, TxtPlaceTeleport]);
     if Command = CmdPatrz + CmdPlakat then begin
       WriteLines(TxtRoom17Lines1);
-      if (World.CageWeakling = 0) and (World.CageAgile = 0) and
-      (World.CageStrong = 0) and (World.CageTough = 0) and
-      (World.CageHuge = 0) and (Bag.Diploma = 0) then
+      if (World.Monsters[CageWeakling] = 0) and (World.Monsters[CageAgile] = 0) and
+      (World.Monsters[CageStrong] = 0) and (World.Monsters[CageTough] = 0) and
+      (World.Monsters[CageHuge] = 0) and (Bag.Diploma = 0) then
         Bag.Diploma := RoomCageReward;
     end;
     if MoveWhenOrQuit([Go(CmdGora, RoomCageCorridor), Go(CmdDol, RoomTeleport)]) then Exit;
@@ -713,11 +713,11 @@ begin
 
   WriteLn(TxtYouAreIn, TxtRoom76_01);
   WriteLines(TxtRoom76Lines1);
-  if World.Maciek = 76 then
+  if World.Monsters[Maciek] = 76 then
     WriteLn(TxtRoom76_05);
-  if World.Pedal = 76 then
+  if World.Monsters[Pedal] = 76 then
     WriteLn(TxtRoom76_06);
-  if World.Couple = 76 then
+  if World.Monsters[Couple] = 76 then
     WriteLn(TxtRoom76_07);
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -732,17 +732,17 @@ begin
     end;
     if Command = CmdZabij + CmdPedal then begin
       FightEasy;
-      World.Pedal := 0;
+      World.Monsters[Pedal] := 0;
       PillGain;
     end;
     if Command = CmdZabij + CmdPara then begin
       FightVeryHard;
-      World.Couple := 0;
+      World.Monsters[Couple] := 0;
       FightVeryHard;
     end;
     if Command = CmdZabij + CmdMaciek then begin
       FightEasy;
-      World.Maciek := 0;
+      World.Monsters[Maciek] := 0;
     end;
     if Command = CmdMam + Cmd18Lat then begin
       WriteLn(TxtRoom76_13);
@@ -1327,9 +1327,9 @@ begin
 
     WriteLn(TxtYouAreIn, TxtConcertRooms_18);
     WriteLn(TxtConcertRooms_19);
-    if World.Minibarman = 67 then
+    if World.Monsters[Minibarman] = 67 then
       WriteLn(TxtConcertRooms_20);
-    if World.Fatso = 67 then
+    if World.Monsters[Fatso] = 67 then
       WriteLn(TxtConcertRooms_21);
     DescribeCrowd;
     repeat
@@ -1342,12 +1342,12 @@ begin
                       TxtExitWschod, TxtPlaceWejscieNaEstrade,
                       TxtExitPolodnie, TxtPlaceTlum]);
       ConcertFights;
-      if (Command = CmdZabij + CmdMiniBarman) and (World.Minibarman = 67) then begin
+      if (Command = CmdZabij + CmdMiniBarman) and (World.Monsters[Minibarman] = 67) then begin
         WriteLn(TxtConcertRooms_23);
         WriteLn(TxtConcertRooms_24);
         FightVeryHard;
         if Player.Energy > 0 then begin
-          World.Minibarman := 0;
+          World.Monsters[Minibarman] := 0;
           Combat.Roll := Random(100);
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_25, TxtShared_08, TxtPiwoTail);
@@ -1356,10 +1356,10 @@ begin
           end;
         end;
       end;
-      if (Command = CmdZabij + CmdGrubas) and (World.Fatso = 67) then begin
+      if (Command = CmdZabij + CmdGrubas) and (World.Monsters[Fatso] = 67) then begin
         FightVeryHard;
         if Player.Energy > 0 then begin
-          World.Fatso := 0;
+          World.Monsters[Fatso] := 0;
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_26, TxtShared_08, TxtPiwoTail);
             Bag.Beer := Bag.Beer - 10;
@@ -1396,7 +1396,7 @@ begin
 
     WriteLn(TxtConcertRooms_33);
     WriteLn(TxtConcertRooms_34);
-    if World.DJ = 69 then
+    if World.Monsters[DJ] = 69 then
       WriteLn(TxtConcertRooms_35);
     repeat
       Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -1407,10 +1407,10 @@ begin
                       TxtExitZachod, TxtPlaceWejscieNaScene,
                       TxtExitPolodnie, TxtPlaceScena]);
       if Command = CmdZabij + CmdDJ then begin
-        if World.DJ = 69 then begin
+        if World.Monsters[DJ] = 69 then begin
           FightVeryHard;
           if Combat.EnemyEnergy < 0 then begin
-            World.DJ := 0;
+            World.Monsters[DJ] := 0;
             Combat.Roll := Random(100);
             if Combat.Roll < 25 then begin
               WriteLn(TxtShared_08, TxtConcertRooms_38);

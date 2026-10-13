@@ -65,21 +65,9 @@ type
     Loot, Roll: Integer;
   end;
 
+  TMonster = (CageStrong, CageWeakling, CageAgile, CageTough, CageHuge, Woodworm, Fly, Bacterium, Snail, Beetle, Cockroach, Ant, Spider, Boar, Rat, Fox, Partridge, Hare, Mongrel, Eagle, Deer, Elephant, Lion, Giraffe, Camel, Ostrich, Boa, Wolf, Bison, Panther, Gladiator, Warrior, Tamer, Dachshund, Shepherd, Spaniel, Poodle, Pooch, Cabman, Vendor, Sweeper, Drunkard, SickMan, Kid, Lunatic, Listener, Fan, Man, Policeman, Bouncer, OldMan, Gorilla, Reporter, Guitarist, Drummer, Keyboardist, Liroy, Minibarman, Fatso, DJ, Pedal, Couple, Maciek, Sorrel, Daisy, Clover, SowThistle, Dandelion, Rose, Blackberry, Thistle, Gooseberry, Raspberry, Grass, Duncan);
   TWorld = record
-    CageStrong, CageWeakling, CageAgile, CageTough, CageHuge: Integer;
-    Woodworm, Fly, Bacterium, Snail, Beetle, Cockroach, Ant, Spider: Integer;
-    Boar, Rat, Fox, Partridge, Hare, Mongrel, Eagle, Deer: Integer;
-    Elephant, Lion, Giraffe, Camel, Ostrich, Boa, Wolf, Bison: Integer;
-    Panther, Gladiator, Warrior, Tamer: Integer;
-    Dachshund, Shepherd, Spaniel, Poodle, Pooch: Integer;
-    Cabman, Vendor, Sweeper, Drunkard, SickMan: Integer;
-    Kid, Lunatic, Listener, Fan, Man: Shortint;
-    Policeman, Bouncer, OldMan, Gorilla, Reporter: Shortint;
-    Guitarist, Drummer, Keyboardist, Liroy: Integer;
-    Minibarman, Fatso, DJ, Pedal, Couple, Maciek: Integer;
-    Sorrel, Daisy, Clover, SowThistle, Dandelion, Rose: Integer;
-    Blackberry, Thistle, Gooseberry, Raspberry, Grass: Integer;
-    Duncan: Shortint;
+    Monsters: array[TMonster] of Integer;
     Door, OldElf, Quest, QuestKills: Integer;
     DuncanQuest: Shortint;
   end;
@@ -490,17 +478,8 @@ end;
 
 type
   PInteger = ^Integer;
-  PShortint = ^Shortint;
 
 procedure SpawnGroup(const targets: array of PInteger; spread, base: Integer);
-var
-  i: Integer;
-begin
-  for i := Low(targets) to High(targets) do
-    targets[i]^ := Random(spread) + base;
-end;
-
-procedure SpawnGroupShort(const targets: array of PShortint; spread, base: Integer);
 var
   i: Integer;
 begin
@@ -511,59 +490,59 @@ end;
 procedure SpawnMonsters;
 begin
   repeat
-    SpawnGroup([@World.Bacterium, @World.Snail, @World.Beetle, @World.Cockroach, @World.Ant,
-                @World.Spider, @World.Boar, @World.Fox, @World.Rat, @World.Partridge], 38, RoomCityCentre);
-  until (World.Bacterium > RoomArenaEntrance) and (World.Snail > RoomArenaEntrance) and (World.Beetle > RoomArenaEntrance) and (World.Cockroach > RoomArenaEntrance)
-    and (World.Ant > RoomArenaEntrance) and (World.Spider > RoomArenaEntrance) and (World.Boar > RoomArenaEntrance) and (World.Fox > RoomArenaEntrance)
-    and (World.Rat > RoomArenaEntrance) and (World.Partridge > RoomArenaEntrance);
+    SpawnGroup([@World.Monsters[Bacterium], @World.Monsters[Snail], @World.Monsters[Beetle], @World.Monsters[Cockroach], @World.Monsters[Ant],
+                @World.Monsters[Spider], @World.Monsters[Boar], @World.Monsters[Fox], @World.Monsters[Rat], @World.Monsters[Partridge]], 38, RoomCityCentre);
+  until (World.Monsters[Bacterium] > RoomArenaEntrance) and (World.Monsters[Snail] > RoomArenaEntrance) and (World.Monsters[Beetle] > RoomArenaEntrance) and (World.Monsters[Cockroach] > RoomArenaEntrance)
+    and (World.Monsters[Ant] > RoomArenaEntrance) and (World.Monsters[Spider] > RoomArenaEntrance) and (World.Monsters[Boar] > RoomArenaEntrance) and (World.Monsters[Fox] > RoomArenaEntrance)
+    and (World.Monsters[Rat] > RoomArenaEntrance) and (World.Monsters[Partridge] > RoomArenaEntrance);
   repeat
-    SpawnGroup([@World.Deer, @World.Eagle, @World.Hare, @World.Mongrel, @World.Woodworm, @World.Fly], 38, RoomCityCentre);
-  until (World.Deer > RoomArenaEntrance) and (World.Eagle > RoomArenaEntrance) and (World.Hare > RoomArenaEntrance) and (World.Mongrel > RoomArenaEntrance)
-    and (World.Woodworm > RoomArenaEntrance) and (World.Fly > RoomArenaEntrance);
+    SpawnGroup([@World.Monsters[Deer], @World.Monsters[Eagle], @World.Monsters[Hare], @World.Monsters[Mongrel], @World.Monsters[Woodworm], @World.Monsters[Fly]], 38, RoomCityCentre);
+  until (World.Monsters[Deer] > RoomArenaEntrance) and (World.Monsters[Eagle] > RoomArenaEntrance) and (World.Monsters[Hare] > RoomArenaEntrance) and (World.Monsters[Mongrel] > RoomArenaEntrance)
+    and (World.Monsters[Woodworm] > RoomArenaEntrance) and (World.Monsters[Fly] > RoomArenaEntrance);
   repeat
-    SpawnGroup([@World.Elephant, @World.Lion, @World.Giraffe, @World.Camel, @World.Ostrich,
-                @World.Boa, @World.Wolf, @World.Bison, @World.Panther], 38, RoomCityCentre);
-  until (World.Elephant > RoomArenaEntrance) and (World.Lion > RoomArenaEntrance) and (World.Giraffe > RoomArenaEntrance) and (World.Camel > RoomArenaEntrance)
-    and (World.Ostrich > RoomArenaEntrance) and (World.Boa > RoomArenaEntrance) and (World.Wolf > RoomArenaEntrance) and (World.Bison > RoomArenaEntrance)
-    and (World.Panther > RoomArenaEntrance);
+    SpawnGroup([@World.Monsters[Elephant], @World.Monsters[Lion], @World.Monsters[Giraffe], @World.Monsters[Camel], @World.Monsters[Ostrich],
+                @World.Monsters[Boa], @World.Monsters[Wolf], @World.Monsters[Bison], @World.Monsters[Panther]], 38, RoomCityCentre);
+  until (World.Monsters[Elephant] > RoomArenaEntrance) and (World.Monsters[Lion] > RoomArenaEntrance) and (World.Monsters[Giraffe] > RoomArenaEntrance) and (World.Monsters[Camel] > RoomArenaEntrance)
+    and (World.Monsters[Ostrich] > RoomArenaEntrance) and (World.Monsters[Boa] > RoomArenaEntrance) and (World.Monsters[Wolf] > RoomArenaEntrance) and (World.Monsters[Bison] > RoomArenaEntrance)
+    and (World.Monsters[Panther] > RoomArenaEntrance);
   repeat
-    SpawnGroup([@World.Gladiator, @World.Warrior, @World.Tamer], 38, RoomCityCentre);
-  until (World.Gladiator > RoomArenaEntrance) and (World.Warrior > RoomArenaEntrance) and (World.Tamer > RoomArenaEntrance);
+    SpawnGroup([@World.Monsters[Gladiator], @World.Monsters[Warrior], @World.Monsters[Tamer]], 38, RoomCityCentre);
+  until (World.Monsters[Gladiator] > RoomArenaEntrance) and (World.Monsters[Warrior] > RoomArenaEntrance) and (World.Monsters[Tamer] > RoomArenaEntrance);
   repeat
-    SpawnGroup([@World.Dachshund, @World.Shepherd, @World.Pooch, @World.Spaniel, @World.Poodle], 7, RoomCityCentre);
-  until (World.Dachshund > 19) and (World.Shepherd > 19) and (World.Pooch > 19)
-    and (World.Spaniel > 19) and (World.Poodle > 19);
+    SpawnGroup([@World.Monsters[Dachshund], @World.Monsters[Shepherd], @World.Monsters[Pooch], @World.Monsters[Spaniel], @World.Monsters[Poodle]], 7, RoomCityCentre);
+  until (World.Monsters[Dachshund] > 19) and (World.Monsters[Shepherd] > 19) and (World.Monsters[Pooch] > 19)
+    and (World.Monsters[Spaniel] > 19) and (World.Monsters[Poodle] > 19);
   repeat
-    SpawnGroup([@World.Cabman, @World.Vendor, @World.Sweeper, @World.Drunkard, @World.SickMan], 7, RoomCityCentre);
-  until (World.Cabman > 19) and (World.Vendor > 19)
-    and (World.Sweeper > 19) and (World.Drunkard > 19) and (World.SickMan > 19);
+    SpawnGroup([@World.Monsters[Cabman], @World.Monsters[Vendor], @World.Monsters[Sweeper], @World.Monsters[Drunkard], @World.Monsters[SickMan]], 7, RoomCityCentre);
+  until (World.Monsters[Cabman] > 19) and (World.Monsters[Vendor] > 19)
+    and (World.Monsters[Sweeper] > 19) and (World.Monsters[Drunkard] > 19) and (World.Monsters[SickMan] > 19);
   repeat
-    SpawnGroupShort([@World.Kid], 7, RoomValley);
-    SpawnGroupShort([@World.Lunatic, @World.Listener, @World.Fan, @World.Man], 8, RoomValley);
-  until (World.Kid > RoomValley) and (World.Lunatic > RoomValley) and (World.Listener > RoomValley) and (World.Fan > RoomValley)
-    and (World.Man > RoomValley);
+    SpawnGroup([@World.Monsters[Kid]], 7, RoomValley);
+    SpawnGroup([@World.Monsters[Lunatic], @World.Monsters[Listener], @World.Monsters[Fan], @World.Monsters[Man]], 8, RoomValley);
+  until (World.Monsters[Kid] > RoomValley) and (World.Monsters[Lunatic] > RoomValley) and (World.Monsters[Listener] > RoomValley) and (World.Monsters[Fan] > RoomValley)
+    and (World.Monsters[Man] > RoomValley);
   repeat
-    SpawnGroupShort([@World.Policeman, @World.Bouncer, @World.Gorilla], 9, RoomValley);
-    SpawnGroupShort([@World.OldMan], 8, RoomValley);
-    SpawnGroupShort([@World.Reporter], 7, RoomValley);
-  until (World.Policeman > RoomValley) and (World.Bouncer > RoomValley) and (World.Gorilla > RoomValley) and (World.OldMan > RoomValley)
-    and (World.Reporter > RoomValley);
-    SpawnGroup([@World.Guitarist, @World.Drummer, @World.Keyboardist, @World.Liroy], 3, RoomStage1);
-  World.Minibarman := RoomPub;
-  World.Fatso := RoomPub;
-  World.DJ := RoomBackstage;
-  World.Pedal := RoomBar;
-  World.Couple := RoomBar;
-  World.Maciek := RoomBar;
+    SpawnGroup([@World.Monsters[Policeman], @World.Monsters[Bouncer], @World.Monsters[Gorilla]], 9, RoomValley);
+    SpawnGroup([@World.Monsters[OldMan]], 8, RoomValley);
+    SpawnGroup([@World.Monsters[Reporter]], 7, RoomValley);
+  until (World.Monsters[Policeman] > RoomValley) and (World.Monsters[Bouncer] > RoomValley) and (World.Monsters[Gorilla] > RoomValley) and (World.Monsters[OldMan] > RoomValley)
+    and (World.Monsters[Reporter] > RoomValley);
+    SpawnGroup([@World.Monsters[Guitarist], @World.Monsters[Drummer], @World.Monsters[Keyboardist], @World.Monsters[Liroy]], 3, RoomStage1);
+  World.Monsters[Minibarman] := RoomPub;
+  World.Monsters[Fatso] := RoomPub;
+  World.Monsters[DJ] := RoomBackstage;
+  World.Monsters[Pedal] := RoomBar;
+  World.Monsters[Couple] := RoomBar;
+  World.Monsters[Maciek] := RoomBar;
   World.Door := 1;
   World.OldElf := 1;
   repeat
-    SpawnGroup([@World.Sorrel, @World.Clover, @World.Daisy, @World.SowThistle, @World.Dandelion,
-                @World.Rose, @World.Thistle, @World.Raspberry, @World.Gooseberry, @World.Blackberry,
-                @World.Grass], 8, RoomIvy1);
-    SpawnGroupShort([@World.Duncan], 8, RoomIvy1);
-  until (World.Sorrel < RoomCavePath) and (World.Daisy < RoomCavePath) and (World.Clover < RoomCavePath) and (World.SowThistle < RoomCavePath)
-    and (World.Dandelion < RoomCavePath) and (World.Rose < RoomCavePath) and (World.Thistle < RoomCavePath) and (World.Raspberry < RoomCavePath);
+    SpawnGroup([@World.Monsters[Sorrel], @World.Monsters[Clover], @World.Monsters[Daisy], @World.Monsters[SowThistle], @World.Monsters[Dandelion],
+                @World.Monsters[Rose], @World.Monsters[Thistle], @World.Monsters[Raspberry], @World.Monsters[Gooseberry], @World.Monsters[Blackberry],
+                @World.Monsters[Grass]], 8, RoomIvy1);
+    SpawnGroup([@World.Monsters[Duncan]], 8, RoomIvy1);
+  until (World.Monsters[Sorrel] < RoomCavePath) and (World.Monsters[Daisy] < RoomCavePath) and (World.Monsters[Clover] < RoomCavePath) and (World.Monsters[SowThistle] < RoomCavePath)
+    and (World.Monsters[Dandelion] < RoomCavePath) and (World.Monsters[Rose] < RoomCavePath) and (World.Monsters[Thistle] < RoomCavePath) and (World.Monsters[Raspberry] < RoomCavePath);
 end;
 
 procedure TrainAttribute(var Attribute, MaxAttribute: Integer; MinPractice, PracticeCost: Integer; cmdForm, nounForm: string);
@@ -593,83 +572,83 @@ type
     text: string;
   end;
   TCrowdSpot = record
-    where: PShortint;
+    where: PInteger;
     text: string;
   end;
 
 const
   PlantSpots: array[1..11] of TSpot = (
-    (where: @World.Sorrel; text: TxtDescribePlants_01),
-    (where: @World.Daisy; text: TxtDescribePlants_02),
-    (where: @World.Clover; text: TxtDescribePlants_03),
-    (where: @World.SowThistle; text: TxtDescribePlants_04),
-    (where: @World.Dandelion; text: TxtDescribePlants_05),
-    (where: @World.Rose; text: TxtDescribePlants_06),
-    (where: @World.Thistle; text: TxtDescribePlants_07),
-    (where: @World.Blackberry; text: TxtDescribePlants_08),
-    (where: @World.Gooseberry; text: TxtDescribePlants_09),
-    (where: @World.Raspberry; text: TxtDescribePlants_10),
-    (where: @World.Grass; text: TxtDescribePlants_11)
+    (where: @World.Monsters[Sorrel]; text: TxtDescribePlants_01),
+    (where: @World.Monsters[Daisy]; text: TxtDescribePlants_02),
+    (where: @World.Monsters[Clover]; text: TxtDescribePlants_03),
+    (where: @World.Monsters[SowThistle]; text: TxtDescribePlants_04),
+    (where: @World.Monsters[Dandelion]; text: TxtDescribePlants_05),
+    (where: @World.Monsters[Rose]; text: TxtDescribePlants_06),
+    (where: @World.Monsters[Thistle]; text: TxtDescribePlants_07),
+    (where: @World.Monsters[Blackberry]; text: TxtDescribePlants_08),
+    (where: @World.Monsters[Gooseberry]; text: TxtDescribePlants_09),
+    (where: @World.Monsters[Raspberry]; text: TxtDescribePlants_10),
+    (where: @World.Monsters[Grass]; text: TxtDescribePlants_11)
   );
   BeastSpots: array[1..28] of TSpot = (
-    (where: @World.Woodworm; text: TxtDescribeBeasts_01),
-    (where: @World.Fly; text: TxtDescribeBeasts_02),
-    (where: @World.Bacterium; text: TxtDescribeBeasts_03),
-    (where: @World.Snail; text: TxtDescribeBeasts_04),
-    (where: @World.Beetle; text: TxtDescribeBeasts_05),
-    (where: @World.Cockroach; text: TxtDescribeBeasts_06),
-    (where: @World.Ant; text: TxtDescribeBeasts_07),
-    (where: @World.Spider; text: TxtDescribeBeasts_08),
-    (where: @World.Boar; text: TxtDescribeBeasts_09),
-    (where: @World.Rat; text: TxtDescribeBeasts_10),
-    (where: @World.Fox; text: TxtDescribeBeasts_11),
-    (where: @World.Partridge; text: TxtDescribeBeasts_12),
-    (where: @World.Hare; text: TxtDescribeBeasts_13),
-    (where: @World.Mongrel; text: TxtDescribeBeasts_14),
-    (where: @World.Eagle; text: TxtDescribeBeasts_15),
-    (where: @World.Deer; text: TxtDescribeBeasts_16),
-    (where: @World.Elephant; text: TxtDescribeBeasts_17),
-    (where: @World.Lion; text: TxtDescribeBeasts_18),
-    (where: @World.Giraffe; text: TxtDescribeBeasts_19),
-    (where: @World.Camel; text: TxtDescribeBeasts_20),
-    (where: @World.Ostrich; text: TxtDescribeBeasts_21),
-    (where: @World.Boa; text: TxtDescribeBeasts_22),
-    (where: @World.Wolf; text: TxtDescribeBeasts_23),
-    (where: @World.Bison; text: TxtDescribeBeasts_24),
-    (where: @World.Panther; text: TxtDescribeBeasts_25),
-    (where: @World.Gladiator; text: TxtDescribeBeasts_26),
-    (where: @World.Warrior; text: TxtDescribeBeasts_27),
-    (where: @World.Tamer; text: TxtDescribeBeasts_28)
+    (where: @World.Monsters[Woodworm]; text: TxtDescribeBeasts_01),
+    (where: @World.Monsters[Fly]; text: TxtDescribeBeasts_02),
+    (where: @World.Monsters[Bacterium]; text: TxtDescribeBeasts_03),
+    (where: @World.Monsters[Snail]; text: TxtDescribeBeasts_04),
+    (where: @World.Monsters[Beetle]; text: TxtDescribeBeasts_05),
+    (where: @World.Monsters[Cockroach]; text: TxtDescribeBeasts_06),
+    (where: @World.Monsters[Ant]; text: TxtDescribeBeasts_07),
+    (where: @World.Monsters[Spider]; text: TxtDescribeBeasts_08),
+    (where: @World.Monsters[Boar]; text: TxtDescribeBeasts_09),
+    (where: @World.Monsters[Rat]; text: TxtDescribeBeasts_10),
+    (where: @World.Monsters[Fox]; text: TxtDescribeBeasts_11),
+    (where: @World.Monsters[Partridge]; text: TxtDescribeBeasts_12),
+    (where: @World.Monsters[Hare]; text: TxtDescribeBeasts_13),
+    (where: @World.Monsters[Mongrel]; text: TxtDescribeBeasts_14),
+    (where: @World.Monsters[Eagle]; text: TxtDescribeBeasts_15),
+    (where: @World.Monsters[Deer]; text: TxtDescribeBeasts_16),
+    (where: @World.Monsters[Elephant]; text: TxtDescribeBeasts_17),
+    (where: @World.Monsters[Lion]; text: TxtDescribeBeasts_18),
+    (where: @World.Monsters[Giraffe]; text: TxtDescribeBeasts_19),
+    (where: @World.Monsters[Camel]; text: TxtDescribeBeasts_20),
+    (where: @World.Monsters[Ostrich]; text: TxtDescribeBeasts_21),
+    (where: @World.Monsters[Boa]; text: TxtDescribeBeasts_22),
+    (where: @World.Monsters[Wolf]; text: TxtDescribeBeasts_23),
+    (where: @World.Monsters[Bison]; text: TxtDescribeBeasts_24),
+    (where: @World.Monsters[Panther]; text: TxtDescribeBeasts_25),
+    (where: @World.Monsters[Gladiator]; text: TxtDescribeBeasts_26),
+    (where: @World.Monsters[Warrior]; text: TxtDescribeBeasts_27),
+    (where: @World.Monsters[Tamer]; text: TxtDescribeBeasts_28)
   );
   StreetSpots: array[1..10] of TSpot = (
-    (where: @World.Dachshund; text: TxtDescribeStreet_01),
-    (where: @World.Shepherd; text: TxtDescribeStreet_02),
-    (where: @World.Pooch; text: TxtDescribeStreet_03),
-    (where: @World.Spaniel; text: TxtDescribeStreet_04),
-    (where: @World.Poodle; text: TxtDescribeStreet_05),
-    (where: @World.Cabman; text: TxtDescribeStreet_06),
-    (where: @World.Vendor; text: TxtDescribeStreet_07),
-    (where: @World.Sweeper; text: TxtDescribeStreet_08),
-    (where: @World.Drunkard; text: TxtDescribeStreet_09),
-    (where: @World.SickMan; text: TxtDescribeStreet_10)
+    (where: @World.Monsters[Dachshund]; text: TxtDescribeStreet_01),
+    (where: @World.Monsters[Shepherd]; text: TxtDescribeStreet_02),
+    (where: @World.Monsters[Pooch]; text: TxtDescribeStreet_03),
+    (where: @World.Monsters[Spaniel]; text: TxtDescribeStreet_04),
+    (where: @World.Monsters[Poodle]; text: TxtDescribeStreet_05),
+    (where: @World.Monsters[Cabman]; text: TxtDescribeStreet_06),
+    (where: @World.Monsters[Vendor]; text: TxtDescribeStreet_07),
+    (where: @World.Monsters[Sweeper]; text: TxtDescribeStreet_08),
+    (where: @World.Monsters[Drunkard]; text: TxtDescribeStreet_09),
+    (where: @World.Monsters[SickMan]; text: TxtDescribeStreet_10)
   );
   StageSpots: array[1..4] of TSpot = (
-    (where: @World.Guitarist; text: TxtDescribeStage_01),
-    (where: @World.Drummer; text: TxtDescribeStage_02),
-    (where: @World.Keyboardist; text: TxtDescribeStage_03),
-    (where: @World.Liroy; text: TxtDescribeStage_04)
+    (where: @World.Monsters[Guitarist]; text: TxtDescribeStage_01),
+    (where: @World.Monsters[Drummer]; text: TxtDescribeStage_02),
+    (where: @World.Monsters[Keyboardist]; text: TxtDescribeStage_03),
+    (where: @World.Monsters[Liroy]; text: TxtDescribeStage_04)
   );
   CrowdSpots: array[1..10] of TCrowdSpot = (
-    (where: @World.Kid; text: TxtDescribeCrowd_01),
-    (where: @World.Lunatic; text: TxtDescribeCrowd_02),
-    (where: @World.Listener; text: TxtDescribeCrowd_03),
-    (where: @World.Fan; text: TxtDescribeCrowd_04),
-    (where: @World.Man; text: TxtDescribeCrowd_05),
-    (where: @World.Policeman; text: TxtDescribeCrowd_06),
-    (where: @World.Bouncer; text: TxtDescribeCrowd_07),
-    (where: @World.Gorilla; text: TxtDescribeCrowd_08),
-    (where: @World.OldMan; text: TxtDescribeCrowd_09),
-    (where: @World.Reporter; text: TxtDescribeCrowd_10)
+    (where: @World.Monsters[Kid]; text: TxtDescribeCrowd_01),
+    (where: @World.Monsters[Lunatic]; text: TxtDescribeCrowd_02),
+    (where: @World.Monsters[Listener]; text: TxtDescribeCrowd_03),
+    (where: @World.Monsters[Fan]; text: TxtDescribeCrowd_04),
+    (where: @World.Monsters[Man]; text: TxtDescribeCrowd_05),
+    (where: @World.Monsters[Policeman]; text: TxtDescribeCrowd_06),
+    (where: @World.Monsters[Bouncer]; text: TxtDescribeCrowd_07),
+    (where: @World.Monsters[Gorilla]; text: TxtDescribeCrowd_08),
+    (where: @World.Monsters[OldMan]; text: TxtDescribeCrowd_09),
+    (where: @World.Monsters[Reporter]; text: TxtDescribeCrowd_10)
   );
 
 procedure DescribePlants;
@@ -679,7 +658,7 @@ begin
   for i := Low(PlantSpots) to High(PlantSpots) do
     if PlantSpots[i].where^ = Session.Room then
       WriteLn(PlantSpots[i].text);
-  if Session.Room = World.Duncan then
+  if Session.Room = World.Monsters[Duncan] then
     WriteLn(TxtDescribePlants_12);
 end;
 
@@ -1418,29 +1397,29 @@ const
     tier's fight; unlessFled leaves a beast that fled standing. The
     blocks with extra side effects stay hand-written in ArenaMaze. }
   BeastKills: array[1..23] of TBeastKill = (
-    (cmd: CmdZabij + CmdSlimak; beast: @World.Snail; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdKornik; beast: @World.Woodworm; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdMucha; beast: @World.Fly; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdZuk; beast: @World.Beetle; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdKaraluch; beast: @World.Cockroach; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdMrowka; beast: @World.Ant; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdPajak; beast: @World.Spider; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdDzik; beast: @World.Boar; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSzczur; beast: @World.Rat; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdLis; beast: @World.Fox; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdKuropatwa; beast: @World.Partridge; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdZajac; beast: @World.Hare; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdOrzel; beast: @World.Eagle; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSarna; beast: @World.Deer; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSlon; beast: @World.Elephant; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdLew; beast: @World.Lion; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdZyrafa; beast: @World.Giraffe; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdWilk; beast: @World.Wolf; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdWielblad; beast: @World.Camel; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdStrus; beast: @World.Ostrich; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdBoa; beast: @World.Boa; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdBizon; beast: @World.Bison; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdPantera; beast: @World.Panther; fight: FightMedium; unlessFled: False)
+    (cmd: CmdZabij + CmdSlimak; beast: @World.Monsters[Snail]; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdKornik; beast: @World.Monsters[Woodworm]; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdMucha; beast: @World.Monsters[Fly]; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdZuk; beast: @World.Monsters[Beetle]; fight: FightWeak; unlessFled: True),
+    (cmd: CmdZabij + CmdKaraluch; beast: @World.Monsters[Cockroach]; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdMrowka; beast: @World.Monsters[Ant]; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdPajak; beast: @World.Monsters[Spider]; fight: FightWeak; unlessFled: False),
+    (cmd: CmdZabij + CmdDzik; beast: @World.Monsters[Boar]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSzczur; beast: @World.Monsters[Rat]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdLis; beast: @World.Monsters[Fox]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdKuropatwa; beast: @World.Monsters[Partridge]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdZajac; beast: @World.Monsters[Hare]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdOrzel; beast: @World.Monsters[Eagle]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSarna; beast: @World.Monsters[Deer]; fight: FightWeakish; unlessFled: False),
+    (cmd: CmdZabij + CmdSlon; beast: @World.Monsters[Elephant]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdLew; beast: @World.Monsters[Lion]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdZyrafa; beast: @World.Monsters[Giraffe]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdWilk; beast: @World.Monsters[Wolf]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdWielblad; beast: @World.Monsters[Camel]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdStrus; beast: @World.Monsters[Ostrich]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdBoa; beast: @World.Monsters[Boa]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdBizon; beast: @World.Monsters[Bison]; fight: FightMedium; unlessFled: False),
+    (cmd: CmdZabij + CmdPantera; beast: @World.Monsters[Panther]; fight: FightMedium; unlessFled: False)
   );
 
 procedure ArenaMaze;
@@ -1461,9 +1440,9 @@ begin
       ReadLn(Command);
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
-      if (Command = CmdZabij + CmdBakteria) and (Session.Room = World.Bacterium) then
+      if (Command = CmdZabij + CmdBakteria) and (Session.Room = World.Monsters[Bacterium]) then
       begin FightWeak;
-        World.Bacterium := 0;
+        World.Monsters[Bacterium] := 0;
         WriteLn(TxtArenaMaze_02);
       end;
       for bi := Low(BeastKills) to High(BeastKills) do
@@ -1472,25 +1451,25 @@ begin
             KillBeastUnlessFled(cmd, beast^, fight)
           else
             KillBeast(cmd, beast^, fight);
-      if (Command = CmdZabij + CmdWilczur) and (Session.Room = World.Mongrel) then
+      if (Command = CmdZabij + CmdWilczur) and (Session.Room = World.Monsters[Mongrel]) then
       begin WriteLn(TxtArenaMaze_03);
         FightWeakish;
-        World.Mongrel := 0;
+        World.Monsters[Mongrel] := 0;
       end;
 
-      if (Command = CmdZabij + CmdGladiator) and (Session.Room = World.Gladiator) then
+      if (Command = CmdZabij + CmdGladiator) and (Session.Room = World.Monsters[Gladiator]) then
       begin FightHard;
-        World.Gladiator := 0;
+        World.Monsters[Gladiator] := 0;
         PillGain;
       end;
-      if (Command = CmdZabij + CmdWojownik) and (Session.Room = World.Warrior) then
+      if (Command = CmdZabij + CmdWojownik) and (Session.Room = World.Monsters[Warrior]) then
       begin FightHard;
-        World.Warrior := 0;
+        World.Monsters[Warrior] := 0;
         PillGain;
       end;
-      if (Command = CmdZabij + CmdTrener) and (Session.Room = World.Tamer) then
+      if (Command = CmdZabij + CmdTrener) and (Session.Room = World.Monsters[Tamer]) then
       begin FightHard;
-        World.Tamer := 0;
+        World.Monsters[Tamer] := 0;
         SuitGain;
       end;
       if Command = CmdExit then begin
@@ -1674,29 +1653,29 @@ end;
 
 procedure StageFights;
 begin
-  if (Command = CmdZabij + CmdPerkusista) and (World.Drummer = Session.Room) then begin
+  if (Command = CmdZabij + CmdPerkusista) and (World.Monsters[Drummer] = Session.Room) then begin
     FightVeryEasy;
-    World.Drummer := 0;
+    World.Monsters[Drummer] := 0;
     CassetteGain;
   end;
-  if (Command = CmdZabij + CmdGitarzysta) and (World.Guitarist = Session.Room) then begin
+  if (Command = CmdZabij + CmdGitarzysta) and (World.Monsters[Guitarist] = Session.Room) then begin
     FightVeryEasy;
-    World.Guitarist := 0;
+    World.Monsters[Guitarist] := 0;
     CassetteGain;
   end;
-  if (Command = CmdZabij + CmdLiroy) and (World.Liroy = Session.Room) then begin
+  if (Command = CmdZabij + CmdLiroy) and (World.Monsters[Liroy] = Session.Room) then begin
     FightNotEasy;
     if (Session.Room <> DeadRoom) and (Player.Energy > 0) and (Combat.Fled = 0) then begin
       WriteLn(TxtStageFights_01);
       Player.Money := Player.Money + 30;
       CassetteGain;
       if World.Quest > 1 then World.QuestKills := World.QuestKills - 150;
-      World.Liroy := 0;
+      World.Monsters[Liroy] := 0;
     end;
   end;
-  if (Command = CmdZabij + CmdOrganista) and (World.Keyboardist = Session.Room) then begin
+  if (Command = CmdZabij + CmdOrganista) and (World.Monsters[Keyboardist] = Session.Room) then begin
     FightVeryEasy;
-    World.Keyboardist := 0;
+    World.Monsters[Keyboardist] := 0;
     CassetteGain;
   end;
 end;
@@ -1738,30 +1717,30 @@ const
   { The herbs: a very easy fight clears them even when the
     player falls. }
   PlantKills: array[1..4] of TPlantKill = (
-    (cmd: CmdZabij + CmdSzczaw; plant: @World.Sorrel),
-    (cmd: CmdZabij + CmdKoniczynka; plant: @World.Clover),
-    (cmd: CmdZabij + CmdMlecz; plant: @World.SowThistle),
-    (cmd: CmdZabij + CmdDmuchawiec; plant: @World.Dandelion)
+    (cmd: CmdZabij + CmdSzczaw; plant: @World.Monsters[Sorrel]),
+    (cmd: CmdZabij + CmdKoniczynka; plant: @World.Monsters[Clover]),
+    (cmd: CmdZabij + CmdMlecz; plant: @World.Monsters[SowThistle]),
+    (cmd: CmdZabij + CmdDmuchawiec; plant: @World.Monsters[Dandelion])
   );
 
   { The easy plants: only a player still standing clears them. }
   EasyPlantKills: array[1..5] of TPlantKill = (
-    (cmd: CmdZabij + CmdRoza; plant: @World.Rose),
-    (cmd: CmdZabij + CmdOset; plant: @World.Thistle),
-    (cmd: CmdZabij + CmdMalina; plant: @World.Raspberry),
-    (cmd: CmdZabij + CmdAgrest; plant: @World.Gooseberry),
-    (cmd: CmdZabij + CmdJezyna; plant: @World.Blackberry)
+    (cmd: CmdZabij + CmdRoza; plant: @World.Monsters[Rose]),
+    (cmd: CmdZabij + CmdOset; plant: @World.Monsters[Thistle]),
+    (cmd: CmdZabij + CmdMalina; plant: @World.Monsters[Raspberry]),
+    (cmd: CmdZabij + CmdAgrest; plant: @World.Monsters[Gooseberry]),
+    (cmd: CmdZabij + CmdJezyna; plant: @World.Monsters[Blackberry])
   );
 
 procedure PlantFights;
 var
   i: Integer;
 begin
-  if (Command = CmdZabij + CmdDuncan) and (World.Duncan = Session.Room) then begin
+  if (Command = CmdZabij + CmdDuncan) and (World.Monsters[Duncan] = Session.Room) then begin
     FightEasy;
-    if Combat.EnemyEnergy < 1 then World.Duncan := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Duncan] := 0;
   end;
-  if (Command = CmdSecret + CmdLista) and (World.Duncan = Session.Room) then begin
+  if (Command = CmdSecret + CmdLista) and (World.Monsters[Duncan] = Session.Room) then begin
     WriteLines(TxtPlantFightsLines1);
   end;
   if Command = CmdKup + CmdDokument then begin if Player.Money > 399 then begin
@@ -1770,13 +1749,13 @@ begin
       Player.Money := Player.Money - 400;
       Bag.Count := Bag.Count + 1; end;
   end;
-  if (Command = CmdKup + CmdPlecak) and (World.Duncan = Session.Room) then begin if Player.Money > 4799 then begin
+  if (Command = CmdKup + CmdPlecak) and (World.Monsters[Duncan] = Session.Room) then begin if Player.Money > 4799 then begin
       WriteLn(TxtPlantFights_06);
       Player.Money := Player.Money - 4800;
       Bag.Backpack := Bag.Backpack - 10;
       Bag.Count := Bag.Count + 1; end;
   end;
-  if (Command = CmdRozmawiaj + CmdDuncan) and (World.Duncan = Session.Room) then begin
+  if (Command = CmdRozmawiaj + CmdDuncan) and (World.Monsters[Duncan] = Session.Room) then begin
     if World.DuncanQuest = 0 then begin
       WriteLines(TxtPlantFightsLines2);
       World.DuncanQuest := 75;
@@ -1798,13 +1777,13 @@ begin
     with PlantKills[i] do
       KillPlant(cmd, plant^);
 
-  KillPlantIfAlive(CmdZabij + CmdStokrotka, World.Daisy);
+  KillPlantIfAlive(CmdZabij + CmdStokrotka, World.Monsters[Daisy]);
 
   for i := Low(EasyPlantKills) to High(EasyPlantKills) do
     with EasyPlantKills[i] do
       KillPlantEasyIfAlive(cmd, plant^);
 
-  if (Command = CmdZabij + CmdTrawa) and (World.Grass = Session.Room) then begin
+  if (Command = CmdZabij + CmdTrawa) and (World.Monsters[Grass] = Session.Room) then begin
     WriteLn(TxtPlantFights_17);
     FightHard;
     if Player.Energy > 0 then FightHard;
@@ -2076,12 +2055,12 @@ begin
   ReadLn(Command);
   Player.Energy := 50;
   Player.Practice := 10;
-  World.CageWeakling := RoomCageWeakling;
+  World.Monsters[CageWeakling] := RoomCageWeakling;
 
-  World.CageStrong := RoomCageStrong;
-  World.CageAgile := RoomCageAgile;
-  World.CageTough := RoomCageTough;
-  World.CageHuge := RoomCageHuge;
+  World.Monsters[CageStrong] := RoomCageStrong;
+  World.Monsters[CageAgile] := RoomCageAgile;
+  World.Monsters[CageTough] := RoomCageTough;
+  World.Monsters[CageHuge] := RoomCageHuge;
 
   Player.Level := 1;
   Player.MaxMana := Player.MaxMana + 100;
@@ -2115,9 +2094,9 @@ end;
 procedure KillSweeper;
 
 begin
-  if (Command = CmdZabij + CmdZamiatacz) and (World.Sweeper = Session.Room) then begin
+  if (Command = CmdZabij + CmdZamiatacz) and (World.Monsters[Sweeper] = Session.Room) then begin
     FightVeryEasy;
-    World.Sweeper := 0;
+    World.Monsters[Sweeper] := 0;
     Combat.Roll := Random(100);
     if (Combat.Roll < 35) and (Bag.Tracksuit = 0) then begin
       WriteLn(TxtKillSweeper_01);
@@ -2129,14 +2108,14 @@ end;
 procedure KillSickMan;
 
 begin
-  if (Command = CmdZabij + CmdZebrak) and (World.SickMan = Session.Room) then begin
+  if (Command = CmdZabij + CmdZebrak) and (World.Monsters[SickMan] = Session.Room) then begin
     FightVeryEasy;
     if Player.Energy > 0 then begin
       Combat.Roll := Random(10);
       WriteLn(TxtKillSickMan_01,
               Combat.Roll, TxtShared_23);
       Player.Money := Player.Money + Combat.Roll;
-      World.SickMan := 0;
+      World.Monsters[SickMan] := 0;
     end;
   end;
 end;
@@ -2151,17 +2130,17 @@ type
 const
   { The street dogs: extraMsg adds the owner's complaint on a kill. }
   StreetDogs: array[1..5] of TStreetKill = (
-    (cmd: CmdZabij + CmdOwczarek; target: @World.Shepherd; extra: False),
-    (cmd: CmdZabij + CmdPiesek; target: @World.Pooch; extra: False),
-    (cmd: CmdZabij + CmdJamnik; target: @World.Dachshund; extra: False),
-    (cmd: CmdZabij + CmdSpaniel; target: @World.Spaniel; extra: True),
-    (cmd: CmdZabij + CmdPudel; target: @World.Poodle; extra: False)
+    (cmd: CmdZabij + CmdOwczarek; target: @World.Monsters[Shepherd]; extra: False),
+    (cmd: CmdZabij + CmdPiesek; target: @World.Monsters[Pooch]; extra: False),
+    (cmd: CmdZabij + CmdJamnik; target: @World.Monsters[Dachshund]; extra: False),
+    (cmd: CmdZabij + CmdSpaniel; target: @World.Monsters[Spaniel]; extra: True),
+    (cmd: CmdZabij + CmdPudel; target: @World.Monsters[Poodle]; extra: False)
   );
   { The street townsfolk: suitLoot grants the spiked suit pieces. }
   StreetFolk: array[1..3] of TStreetKill = (
-    (cmd: CmdZabij + CmdTaksowkarz; target: @World.Cabman; extra: True),
-    (cmd: CmdZabij + CmdSprzedawca; target: @World.Vendor; extra: True),
-    (cmd: CmdZabij + CmdPijak; target: @World.Drunkard; extra: False)
+    (cmd: CmdZabij + CmdTaksowkarz; target: @World.Monsters[Cabman]; extra: True),
+    (cmd: CmdZabij + CmdSprzedawca; target: @World.Monsters[Vendor]; extra: True),
+    (cmd: CmdZabij + CmdPijak; target: @World.Monsters[Drunkard]; extra: False)
   );
 
 procedure StreetFights;
@@ -2363,11 +2342,11 @@ begin
   SaveSlot(Gear.Wearing);
   SaveSlot(Session.Overall);
   SaveSlot(Session.SavedFlag);
-  SaveSlot(World.CageWeakling);
-  SaveSlot(World.CageStrong);
-  SaveSlot(World.CageAgile);
-  SaveSlot(World.CageTough);
-  SaveSlot(World.CageHuge);
+  SaveSlot(World.Monsters[CageWeakling]);
+  SaveSlot(World.Monsters[CageStrong]);
+  SaveSlot(World.Monsters[CageAgile]);
+  SaveSlot(World.Monsters[CageTough]);
+  SaveSlot(World.Monsters[CageHuge]);
   SaveSlot(Gear.ShieldKind);
   SaveSlot(Gear.ArmorRating);
   SaveSlot(Skills.Cooking);
@@ -2394,12 +2373,12 @@ begin
   SaveSlot(Bag.Tracksuit);
   SaveSlot(Bag.Cassette);
   SaveSlot(Bag.TeleportPill);
-  SaveSlot(World.Woodworm);
-  SaveSlot(World.Fly);
-  SaveSlot(World.Bacterium);
+  SaveSlot(World.Monsters[Woodworm]);
+  SaveSlot(World.Monsters[Fly]);
+  SaveSlot(World.Monsters[Bacterium]);
   SaveSlot(World.Quest);
   SaveSlot(World.QuestKills);
-  SaveSlot(World.Snail);
+  SaveSlot(World.Monsters[Snail]);
   SaveSlot(Bag.LuckyLeaf);
   SaveSlot(Skills.Returning);
   SaveSlot(Bag.Bigos);
@@ -2409,7 +2388,7 @@ begin
   SaveSlot(World.OldElf);
   SaveSlot(World.DuncanQuest);
   SaveSlot(Bag.Backpack);
-  SaveSlot(World.Duncan);
+  SaveSlot(World.Monsters[Duncan]);
   SaveSlotText(Gear.WornGarment);
   Close(Session.SaveFile);
 end;
@@ -2817,14 +2796,14 @@ end;
 procedure ConcertFights;
 
 begin
-  if (Command = CmdZabij + CmdDziecko) and (World.Kid = Session.Room) then begin
+  if (Command = CmdZabij + CmdDziecko) and (World.Monsters[Kid] = Session.Room) then begin
     FightWeakish;
-    if Combat.EnemyEnergy < 1 then World.Kid := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Kid] := 0;
   end;
-  if (Command = CmdZabij + CmdDziadek) and (World.OldMan = Session.Room) then begin
+  if (Command = CmdZabij + CmdDziadek) and (World.Monsters[OldMan] = Session.Room) then begin
     FightWeakish;
     if Combat.EnemyEnergy < 1 then begin
-      World.OldMan := 0;
+      World.Monsters[OldMan] := 0;
       Combat.Roll := Random(100);
       if (Combat.Roll < 5) and (Bag.Pipe = 0) then begin
         WriteLn(TxtShared_08, TxtConcertFights_01);
@@ -2834,39 +2813,39 @@ begin
       end;
     end;
   end;
-  if (Command = CmdZabij + CmdWariat) and (World.Lunatic = Session.Room) then begin
+  if (Command = CmdZabij + CmdWariat) and (World.Monsters[Lunatic] = Session.Room) then begin
     FightMedium;
-    if Combat.EnemyEnergy < 1 then World.Lunatic := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Lunatic] := 0;
   end;
-  if (Command = CmdZabij + CmdSluchacz) and (World.Listener = Session.Room) then begin
+  if (Command = CmdZabij + CmdSluchacz) and (World.Monsters[Listener] = Session.Room) then begin
     FightMedium;
-    if Combat.EnemyEnergy < 1 then World.Listener := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Listener] := 0;
   end;
-  if (Command = CmdZabij + CmdCzlowiek) and (World.Man = Session.Room) then begin
+  if (Command = CmdZabij + CmdCzlowiek) and (World.Monsters[Man] = Session.Room) then begin
     FightMedium;
-    if Combat.EnemyEnergy < 1 then World.Man := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Man] := 0;
   end;
-  if (Command = CmdZabij + CmdFan) and (World.Fan = Session.Room) then begin
+  if (Command = CmdZabij + CmdFan) and (World.Monsters[Fan] = Session.Room) then begin
     FightMedium;
-    if Combat.EnemyEnergy < 1 then World.Fan := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Fan] := 0;
   end;
-  if (Command = CmdZabij + CmdReporter) and (World.Reporter = Session.Room) then begin
+  if (Command = CmdZabij + CmdReporter) and (World.Monsters[Reporter] = Session.Room) then begin
     FightMedium;
-    if Combat.EnemyEnergy < 1 then World.Reporter := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Reporter] := 0;
   end;
-  if (Command = CmdZabij + CmdPolicjant) and (World.Policeman = Session.Room) then begin
+  if (Command = CmdZabij + CmdPolicjant) and (World.Monsters[Policeman] = Session.Room) then begin
     FightHard;
-    if Combat.EnemyEnergy < 1 then World.Policeman := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Policeman] := 0;
   end;
-  if (Command = CmdZabij + CmdGoryl) and (World.Gorilla = Session.Room) then begin
+  if (Command = CmdZabij + CmdGoryl) and (World.Monsters[Gorilla] = Session.Room) then begin
     FightHard;
-    if Combat.EnemyEnergy < 1 then World.Gorilla := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Gorilla] := 0;
     SuitGain;
   end;
   if (Command = CmdZabij + CmdOchroniarz) and
-     (World.Bouncer = Session.Room) then begin
+     (World.Monsters[Bouncer] = Session.Room) then begin
     FightHard;
-    if Combat.EnemyEnergy < 1 then World.Bouncer := 0;
+    if Combat.EnemyEnergy < 1 then World.Monsters[Bouncer] := 0;
     SuitGain;
   end;
 end;
@@ -2953,11 +2932,11 @@ begin
   LoadSlot(Gear.Wearing);
   LoadSlot(Session.Overall);
   LoadSlot(Session.SavedFlag);
-  LoadSlot(World.CageWeakling);
-  LoadSlot(World.CageStrong);
-  LoadSlot(World.CageAgile);
-  LoadSlot(World.CageTough);
-  LoadSlot(World.CageHuge);
+  LoadSlot(World.Monsters[CageWeakling]);
+  LoadSlot(World.Monsters[CageStrong]);
+  LoadSlot(World.Monsters[CageAgile]);
+  LoadSlot(World.Monsters[CageTough]);
+  LoadSlot(World.Monsters[CageHuge]);
   LoadSlot(Gear.ShieldKind);
   LoadSlot(Gear.ArmorRating);
   LoadSlotShort(Skills.Cooking);
@@ -2984,12 +2963,12 @@ begin
   LoadSlot(Bag.Tracksuit);
   LoadSlot(Bag.Cassette);
   LoadSlotShort(Bag.TeleportPill);
-  LoadSlot(World.Woodworm);
-  LoadSlot(World.Fly);
-  LoadSlot(World.Bacterium);
+  LoadSlot(World.Monsters[Woodworm]);
+  LoadSlot(World.Monsters[Fly]);
+  LoadSlot(World.Monsters[Bacterium]);
   LoadSlot(World.Quest);
   LoadSlot(World.QuestKills);
-  LoadSlot(World.Snail);
+  LoadSlot(World.Monsters[Snail]);
   LoadSlotShort(Bag.LuckyLeaf);
   LoadSlot(Skills.Returning);
   LoadSlotShort(Bag.Bigos);
@@ -2999,7 +2978,7 @@ begin
   LoadSlot(World.OldElf);
   LoadSlotShort(World.DuncanQuest);
   LoadSlotShort(Bag.Backpack);
-  LoadSlotShort(World.Duncan);
+  LoadSlot(World.Monsters[Duncan]);
   ReadLn(Session.SaveFile);
   LoadSlotText(Gear.WornGarment);
   Close(Session.SaveFile);

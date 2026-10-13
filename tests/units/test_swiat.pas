@@ -42,7 +42,7 @@ begin
   Combat.Fled := 0; Skills.Fleeing := 0; Skills.FleeEnergy := 0; Player.Mana := 0; Skills.Parry := 0;
   Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Cooking := 0;
   Skills.Kick := 0; Skills.KickMinMana := 0; Skills.KickMaxEnergy := 0; Gear.Armor := 0; Gear.WornCount := 0;
-  Gear.LuckRoll := 0; Player.MaxEnergy := 50; World.CageStrong := 0;
+  Gear.LuckRoll := 0; Player.MaxEnergy := 50; World.Monsters[CageStrong] := 0;
   Bag.Count := 0; World.Quest := 0; World.QuestKills := 0; Player.Money := 0;
   Bag.Permit := 0; Bag.Diploma := 0; Bag.Pipe := 0; Player.Practice := 1;
 end;
@@ -111,7 +111,7 @@ begin
     Combat.Fled := 0; Skills.Fleeing := 0; Skills.FleeEnergy := 0; Player.Mana := 0; Skills.Parry := 0;
     Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Cooking := 0;
     Skills.Kick := 0; Skills.KickMinMana := 0; Skills.KickMaxEnergy := 0; Gear.LuckRoll := 0;
-    World.CageStrong := 13;
+    World.Monsters[CageStrong] := 13;
     PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
     if Bag.OldSword <> 0 then sawSword := true;
     if Bag.SmallShield <> 0 then sawShield := true;
@@ -129,10 +129,10 @@ begin
   {With a flee skill the player runs instead of winning, so
    the monster stays and the procedure clears the flee flag.}
   RoomSetup;
-  World.CageStrong := 13;
+  World.Monsters[CageStrong] := 13;
   Player.Energy := 50; Skills.FleeEnergy := 100; Player.Mana := 20; Skills.Fleeing := 100;
   PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
-  CheckEqual(13, World.CageStrong,
+  CheckEqual(13, World.Monsters[CageStrong],
     'fleeing the room-13 monster leaves it alive');
   CheckEqual(0, Combat.Fled, 'the flee flag is cleared after the fight');
 end;
@@ -142,7 +142,7 @@ begin
   {With the monster gone the room notes the circling remains;
    MODE sets MIECHO to 1000, which ends the loop.}
   RoomSetup;
-  World.CageStrong := 0;
+  World.Monsters[CageStrong] := 0;
   PokojAt('EXIT|MODE', 13);
   CheckEqual(1000, Session.Room, 'MODE ends the room-13 loop');
 end;

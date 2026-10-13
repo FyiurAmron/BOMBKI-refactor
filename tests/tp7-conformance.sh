@@ -45,14 +45,14 @@ TPCDIR="$(basename "$(dirname "$TPC")")"
 echo "TPC: $TPC"
 echo "TP7 root: $TP7ROOT"
 
-if ! cp "$REC/Game.PAS" "$REC/Rooms.PAS" "$REC/BOMBKI.PAS" \
-      "$REC"/texts*.inc "$REC/rooms.inc" "$BUILD"/; then
+if ! cp "$REC/Game.pas" "$REC/Rooms.pas" "$REC/BOMBKI.pas" \
+      "$REC"/Texts*.inc "$REC/Rooms.inc" "$BUILD"/; then
   echo "::error::game sources not found under $REC" >&2
   exit 2
 fi
 
 # TPC expects DOS (CRLF) line endings; the game sources are LF-only.
-sed -i 's/$/\r/' "$BUILD"/*.PAS
+sed -i 's/$/\r/' "$BUILD"/*.pas
 
 
 cat > "$BUILD/tp7-run.conf" <<EOF

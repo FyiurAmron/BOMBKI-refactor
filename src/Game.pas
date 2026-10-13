@@ -3,8 +3,8 @@ unit Game;
 interface
 uses crt;
 
-{$I rooms.inc}
-{$I texts.inc}
+{$I Rooms.inc}
+{$I Texts.inc}
 
 type
   TCommandHandler = procedure;

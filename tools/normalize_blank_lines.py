@@ -20,8 +20,8 @@ the declaration it documents:
 Compiler directives ({$...}) are not comments, so a blank line
 between a directive group and the next definition stays in place.
 
-Usage: normalize_blank_lines.py [file.PAS ...]
-Default: src/Game.PAS src/Rooms.PAS src/BOMBKI.PAS
+Usage: normalize_blank_lines.py [file.pas ...]
+Default: src/Game.pas src/Rooms.pas src/BOMBKI.pas
 
 The script verifies its own result and refuses to write anything
 if a run of blank lines or a definition without its blank line
@@ -34,7 +34,7 @@ import sys
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
-DEFAULT_FILES = ("src/Game.PAS", "src/Rooms.PAS", "src/BOMBKI.PAS")
+DEFAULT_FILES = ("src/Game.pas", "src/Rooms.pas", "src/BOMBKI.pas")
 
 HEADER = re.compile(r"^(?:procedure|function) \w")
 FORWARD = re.compile(r"^(?:procedure|function) \w+; forward;$")

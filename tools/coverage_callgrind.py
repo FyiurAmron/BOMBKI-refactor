@@ -85,7 +85,7 @@ def build_game(fpc: str, game_dir: Path) -> Path:
     link_args += [f"-k--wrap={symbol}" for symbol in RAND_SYMBOLS]
     link_args.append(f"-k{rand_stub}")
     for name in (*UNIT_NAMES, PROGRAM_NAME):
-        source = SOURCES / f"{name}.PAS"
+        source = SOURCES / f"{name}.pas"
         command = [
             fpc, "-B", "-Mtp", "-Tlinux", "-Px86_64", *DEBUG_FLAGS,
             f"-Fu{SOURCES}", f"-Fu{game_dir}",
@@ -176,7 +176,7 @@ def build_unit_tests(fpc: str, build_dir: Path) -> list[Path]:
     stub = build_delay_stub(build_dir)
     link_args = [f"-k--wrap={DELAY_SYMBOL}", f"-k{stub}"]
     unit_sources = [UNIT_TEST_DIR / "pastest.pas"]
-    unit_sources.extend(SOURCES / f"{name}.PAS" for name in UNIT_NAMES)
+    unit_sources.extend(SOURCES / f"{name}.pas" for name in UNIT_NAMES)
     for source in unit_sources:
         command = [
             fpc, "-B", "-Mtp", "-Tlinux", "-Px86_64", *DEBUG_FLAGS,
@@ -434,7 +434,7 @@ def main() -> int:
         line_maps = [LineMap(binary)]
         line_maps.extend(result["line_map"] for result in unit_results)
         target_sources = {
-            (SOURCES / f"{name}.PAS").resolve()
+            (SOURCES / f"{name}.pas").resolve()
             for name in (*UNIT_NAMES, PROGRAM_NAME)
         }
         totals: dict[Path, set[int]] = defaultdict(set)

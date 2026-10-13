@@ -25,8 +25,8 @@ TEMP_ROOT = PROJECT / "build" / "tmp"
 ARTIFACTS = ("Game.TPU", "Rooms.TPU", "BOMBKI.EXE", "BOMBKI.MAP")
 SOURCE_TIMES = {
     # the folded core keeps the newest of the three folded units' dates
-    "Game.PAS": (1999, 6, 12, 12, 56, 34),
-    "Rooms.PAS": (1999, 6, 12, 12, 56, 34),
+    "Game.pas": (1999, 6, 12, 12, 56, 34),
+    "Rooms.pas": (1999, 6, 12, 12, 56, 34),
 }
 
 
@@ -127,7 +127,7 @@ def main() -> int:
 
         with tempfile.TemporaryDirectory(prefix="bombki-tp7-", dir=TEMP_ROOT) as temporary:
             build_dir = Path(temporary).resolve()
-            source_names = ["Game.PAS", "Rooms.PAS", "BOMBKI.PAS"]
+            source_names = ["Game.pas", "Rooms.pas", "BOMBKI.pas"]
             source_names += sorted(p.name for p in SOURCES.glob("*.inc"))
             for source_name in source_names:
                 source = SOURCES / source_name

@@ -102,7 +102,7 @@ def build_tests(fpc: str, target: str) -> list[Path]:
     link_args = [f"-k--wrap={DELAY_SYMBOL}", f"-k{stub}"]
     compile_source(fpc, UNIT_TESTS / f"{FRAMEWORK}.pas", BUILD_DIR, target)
     for name in UNIT_NAMES:
-        compile_source(fpc, SOURCES / f"{name}.PAS", BUILD_DIR, target)
+        compile_source(fpc, SOURCES / f"{name}.pas", BUILD_DIR, target)
     programs = []
     for source in sorted(UNIT_TESTS.glob("test_*.pas")):
         compile_source(fpc, source, BUILD_DIR, target, link_args)

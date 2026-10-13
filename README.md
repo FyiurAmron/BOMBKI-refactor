@@ -80,7 +80,7 @@ python3 tests/run_unit_tests.py
 ```
 
 The unit tests under `tests/units` are plain Pascal programs
-that use the game unit `src/Game.PAS` directly, so they can
+that use the game unit `src/Game.pas` directly, so they can
 assert on unit internals (global state, deterministic
 procedures) that the PTY scenarios only observe through the
 game's terminal output. The framework `tests/units/pastest.pas`

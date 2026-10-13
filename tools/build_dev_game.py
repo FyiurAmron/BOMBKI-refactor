@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the deterministic-PRNG development game binary.
 
-The game seeds Random from the clock (BOMBKI.PAS calls Randomize at
+The game seeds Random from the clock (BOMBKI.pas calls Randomize at
 start-up), so every run draws a different sequence and any scenario
 whose outcome depends on a roll is intermittent. This build links
 tests/units/randstub.c over the four System PRNG entry points, so
@@ -53,9 +53,9 @@ def build(out_dir: Path, fpc: str) -> Path:
     command += [f"-k{out_dir / 'randstub.o'}", f"-k{out_dir / 'delaystub.o'}"]
     # The unit is compiled explicitly: FPC locates unit sources only by
     # lowercase filenames on case-sensitive filesystems, so a search-path
-    # lookup of the mixed-case Game.PAS would fail.
-    for source in (SOURCES / f"{UNIT_NAME}.PAS", SOURCES / "Rooms.PAS",
-                  SOURCES / "BOMBKI.PAS"):
+    # lookup of the mixed-case Game.pas would fail.
+    for source in (SOURCES / f"{UNIT_NAME}.pas", SOURCES / "Rooms.pas",
+                  SOURCES / "BOMBKI.pas"):
         print("+", subprocess.list2cmdline(command + [str(source)]),
               file=sys.stderr)
         subprocess.run(command + [str(source)], cwd=out_dir, check=True)

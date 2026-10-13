@@ -29,7 +29,7 @@ def extract():
     def add(r, d, t):
         graph.setdefault(r, {})[d] = t
 
-    g = (SOURCES / "Rooms.PAS").read_text().split("\n")
+    g = (SOURCES / "Rooms.pas").read_text().split("\n")
 
     # merge wrapped MoveWhen calls onto their opening line so the
     # per-line edge scan sees the whole constructor
@@ -57,9 +57,9 @@ def extract():
     catalog = {}
     arrays = {}
     rooms = {}
-    cat_text = (SOURCES / "texts.inc").read_text()
+    cat_text = (SOURCES / "Texts.inc").read_text()
     for mm in re.finditer(r"^\s*(\w+) = (-?\d+);$",
-                          (SOURCES / "rooms.inc").read_text(), re.M):
+                          (SOURCES / "Rooms.inc").read_text(), re.M):
         rooms[mm.group(1)] = int(mm.group(2))
 
     def room_num(token):
@@ -114,7 +114,7 @@ def extract():
         return g[a:b]
 
     # The rooms live in their own unit, so both scans run over
-    # Rooms.PAS. The former SWIAT unit is the block of plain
+    # Rooms.pas. The former SWIAT unit is the block of plain
     # uppercase-style rooms from Room5 to the end of the unit;
     # scanning it with the until-based state machine keeps the
     # original two-file semantics (the lowercase RoomN rooms'

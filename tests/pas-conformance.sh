@@ -5,7 +5,7 @@
 #
 # Compiles the game unit with Free Pascal in Turbo-Pascal mode (-Mtp)
 # and links the BOMBKI wrapper program against it, then checks the
-# produced binary exists. The game core lives in Game.PAS; BOMBKI.PAS
+# produced binary exists. The game core lives in Game.pas; BOMBKI.pas
 # is the top-level wrapper that performs the single Start call.
 #
 # Fails the run if any target fails to compile or the binary is missing.
@@ -69,9 +69,9 @@ compile_and_check_binary() {
 }
 
 echo "required targets (must compile):"
-compile_unit "$RECON/Game.PAS"
-compile_unit "$RECON/Rooms.PAS"
-compile_and_check_binary "$RECON/BOMBKI.PAS"
+compile_unit "$RECON/Game.pas"
+compile_unit "$RECON/Rooms.pas"
+compile_and_check_binary "$RECON/BOMBKI.pas"
 
 # Export built binaries for CI artifact upload when CONF_ARTIFACTS is set.
 # Non-fatal: the sweep verdict is about compilation, not artifact plumbing.

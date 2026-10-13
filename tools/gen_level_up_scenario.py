@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the level-up scenario for Game.PAS's CheckLevelUp.
+"""Generate the level-up scenario for Game.pas's CheckLevelUp.
 
 CheckLevelUp runs once per main-loop pass, at the top of the
 repeat block, before the room handlers. A room handler loops on
@@ -40,16 +40,16 @@ TWELFTH = "HURRRA TO JUZ DWUNASTY POZIOM"
 def thresholds() -> dict[int, int]:
     """Experience needed to advance from each level, read from source.
 
-    These come from the level threshold constants in Game.PAS,
+    These come from the level threshold constants in Game.pas,
     not from the Experience subtraction in the body: the two differ
     (level one gates at 700 but subtracts 725).
     """
-    src = (PROJECT / "src" / "Game.PAS").read_text()
+    src = (PROJECT / "src" / "Game.pas").read_text()
 
     def const(name: str) -> int:
         found = re.search(rf"^\s*{name} = (\d+);", src, re.M)
         if found is None:
-            raise RuntimeError(f"constant {name} not found in Game.PAS")
+            raise RuntimeError(f"constant {name} not found in Game.pas")
         return int(found.group(1))
 
     gate_one = const("Lvl1_Threshold")

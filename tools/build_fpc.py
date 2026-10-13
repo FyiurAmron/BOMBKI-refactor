@@ -110,7 +110,7 @@ def main() -> int:
                     target_options.append(f"-XP{prefix}")
                 print(f"Building {target} x86_64...")
                 for name in (*UNIT_NAMES, PROGRAM_NAME):
-                    source = SOURCES / f"{name}.PAS"
+                    source = SOURCES / f"{name}.pas"
                     command = [
                         fpc, "-B", "-Mtp", *target_options,
                         f"-Fu{SOURCES}", f"-Fu{build_dir}",

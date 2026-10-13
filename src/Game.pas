@@ -2846,39 +2846,42 @@ begin
   end;
 end;
 
+type
+  TCheckpoint = record
+    exp, stage, next, loStr, hiStr: Integer;
+  end;
+
+const
+  { The experience checkpoints, in firing order: reaching exp with
+    the expected stage and a Strength inside loStr..hiStr advances
+    the stage and respawns the monsters. }
+  CheckpointRules: array[1..6] of TCheckpoint = (
+    (exp: 400; stage: 0; next: 1; loStr: -MaxInt - 1; hiStr: 19),
+    (exp: 180; stage: 0; next: 1; loStr: -MaxInt - 1; hiStr: 7),
+    (exp: 360; stage: 1; next: 2; loStr: -MaxInt - 1; hiStr: 7),
+    (exp: 540; stage: 2; next: 3; loStr: -MaxInt - 1; hiStr: 7),
+    (exp: 300; stage: 0; next: 1; loStr: 8; hiStr: 12),
+    (exp: 500; stage: 1; next: 2; loStr: 8; hiStr: 12)
+  );
+
+procedure ReachCheckpoint(exp, stage, next, loStr, hiStr: Integer);
+begin
+  if (Player.Experience >= exp) and (Session.CheckpointStage = stage)
+    and (Player.Strength >= loStr) and (Player.Strength <= hiStr) then begin
+    WriteLn(TxtCheckpoints_01);
+    Session.CheckpointStage := next;
+    SpawnMonsters;
+  end;
+end;
+
 procedure Checkpoints;
 
+var
+  ci: Integer;
 begin
-  if (Player.Experience >= 400) and (Session.CheckpointStage = 0) and (Player.Strength < 20) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 1;
-    SpawnMonsters;
-  end;
-  if (Player.Experience >= 180) and (Session.CheckpointStage = 0) and (Player.Strength < 8) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 1;
-    SpawnMonsters;
-  end;
-  if (Player.Experience >= 360) and (Session.CheckpointStage = 1) and (Player.Strength < 8) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 2;
-    SpawnMonsters;
-  end;
-  if (Player.Experience >= 540) and (Session.CheckpointStage = 2) and (Player.Strength < 8) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 3;
-    SpawnMonsters;
-  end;
-  if (Player.Experience >= 300) and (Session.CheckpointStage = 0) and (Player.Strength > 7) and (Player.Strength < 13) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 1;
-    SpawnMonsters;
-  end;
-  if (Player.Experience >= 500) and (Session.CheckpointStage = 1) and (Player.Strength > 7) and (Player.Strength < 13) then begin
-    WriteLn(TxtCheckpoints_01);
-    Session.CheckpointStage := 2;
-    SpawnMonsters;
-  end;
+  for ci := Low(CheckpointRules) to High(CheckpointRules) do
+    with CheckpointRules[ci] do
+      ReachCheckpoint(exp, stage, next, loStr, hiStr);
 end;
 
 procedure LoadCharacter;

@@ -990,10 +990,10 @@ begin
       if (Bag.Items[Sausage] < -30) and (Player.Money > 199) then begin
         WriteLines(TxtRoom86Lines2);
         Session.Room := RoomCityCentre;
-        Bag.Items[Beer] := Bag.Items[Beer] - 10;
+        Bag.Items[Beer] := Bag.Items[Beer] - ItemUnit;
         Bag.Items[Sausage] := Bag.Items[Sausage] + 40;
         Player.Money := Player.Money - 200;
-        Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] - 10;
+        Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] - ItemUnit;
         Player.Experience := Player.Experience + 50;
         Bag.Count := Bag.Count - 2;
       end;
@@ -1114,7 +1114,7 @@ begin
              Player.Experience := Player.Experience + 100;
              World.Quest := 0;
              World.QuestKills := 0;
-             Bag.Permit := Bag.Permit - 10;
+             Bag.Permit := Bag.Permit - ItemUnit;
              Bag.Count := Bag.Count + 1;
            end;
         2: if (World.QuestKills < 1) and (Bag.Items[Diploma] <= -10) then begin
@@ -1125,7 +1125,7 @@ begin
              World.QuestKills := 0;
              Bag.Items[Diploma] := 0;
              Player.MaxEnergy := Player.MaxEnergy - 5;
-             Bag.Permit := Bag.Permit - 10;
+             Bag.Permit := Bag.Permit - ItemUnit;
            end;
         3: if (World.QuestKills < 1) and (Bag.Items[Pipe] <= -10) and (Player.Practice > 0) then begin
              WriteLn(TxtRoom100_12);
@@ -1135,9 +1135,9 @@ begin
              Player.Wisdom := Player.Wisdom - 1;
              World.Quest := 0;
              World.QuestKills := 0;
-             Bag.Items[Pipe] := Bag.Items[Pipe] + 10;
+             Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
              Player.Practice := Player.Practice - 1;
-             Bag.Permit := Bag.Permit - 10;
+             Bag.Permit := Bag.Permit - ItemUnit;
            end;
       end;
 
@@ -1152,7 +1152,7 @@ if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
       Combat.EnemyDexterity := 26;
       Combat.EnemyEnergy := 188;
       DoFight;
-      if Combat.EnemyEnergy < 1 then Bag.Permit := Bag.Permit - 10;
+      if Combat.EnemyEnergy < 1 then Bag.Permit := Bag.Permit - ItemUnit;
     end;
   until Session.Room <> RoomQuestMaster;
 
@@ -1341,7 +1341,7 @@ begin
           Combat.Roll := Random(100);
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_25, TxtShared_08, TxtPiwoTail);
-            Bag.Items[Beer] := Bag.Items[Beer] - 10;
+            Bag.Items[Beer] := Bag.Items[Beer] - ItemUnit;
             Bag.Count := Bag.Count + 1;
           end;
         end;
@@ -1352,7 +1352,7 @@ begin
           World.Monsters[Fatso] := 0;
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_26, TxtShared_08, TxtPiwoTail);
-            Bag.Items[Beer] := Bag.Items[Beer] - 10;
+            Bag.Items[Beer] := Bag.Items[Beer] - ItemUnit;
             Bag.Count := Bag.Count + 1;
           end;
         end;
@@ -1404,13 +1404,13 @@ begin
             Combat.Roll := Random(100);
             if Combat.Roll < 25 then begin
               WriteLn(TxtShared_08, TxtConcertRooms_38);
-              Bag.Items[DryRation] := Bag.Items[DryRation] - 10;
+              Bag.Items[DryRation] := Bag.Items[DryRation] - ItemUnit;
               Bag.Count := Bag.Count + 1;
             end;
             if Combat.Roll < 3 then begin
               WriteLn(TxtShared_08, TxtConcertRooms_39);
               WriteLn(TxtBang, TxtUniqeItem, TxtConcertRooms_40);
-              Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
+              Bag.Items[Cassette] := Bag.Items[Cassette] - ItemUnit;
               Player.MaxEnergy := Player.MaxEnergy + 5;
               Gear.Values[Armor] := Gear.Values[Armor] - 8;
               Bag.Count := Bag.Count + 1;

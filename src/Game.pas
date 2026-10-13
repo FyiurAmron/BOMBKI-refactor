@@ -91,6 +91,8 @@ type
 
 const
 
+  ItemUnit = 10;
+
   SideRooms: array[1..4] of TSideRoom = (
     (room: RoomSchoolSide1; dest: RoomLost; direction: CmdWschod; exitDesc: CmdMudSzkola2),
     (room: RoomSchoolSide3; dest: RoomLost; direction: CmdPolnoc; exitDesc: CmdMudSzkola2),
@@ -160,6 +162,13 @@ var
 procedure Start;
 
 implementation
+
+const
+  SaveLevelBias = $17;
+  SaveEnergyBias = $28;
+  SaveStrengthBias = 24;
+  SaveDexterityBias = 12;
+  SaveStatScale = 4;
 
 procedure WriteExits(const items: array of string);
 var
@@ -641,17 +650,17 @@ begin
     if AntDoughnut then begin
       if Command = CmdZabij + CmdMrowka then begin
         Combat.Roll := Random(10);
-        if (Combat.Roll < 7) and (Bag.Items[Doughnut] <> -10) then begin
+        if (Combat.Roll < 7) and (Bag.Items[Doughnut] <> -ItemUnit) then begin
           WriteLn(TxtShared_08, TxtCompositeFight_02);
-          Bag.Items[Doughnut] := -10;
+          Bag.Items[Doughnut] := -ItemUnit;
           Bag.Count := Bag.Count + 1;
         end;
       end;
     end else if (HeartChance > 0) and (Bag.Items[Heart] = 0) then begin
       Combat.Roll := Random(20);
-      if (Combat.Roll < HeartChance) and (Bag.Items[Heart] <> -10) then begin
+      if (Combat.Roll < HeartChance) and (Bag.Items[Heart] <> -ItemUnit) then begin
         WriteLn(TxtShared_08, TxtCompositeFight_03);
-        Bag.Items[Heart] := -10;
+        Bag.Items[Heart] := -ItemUnit;
         Bag.Count := Bag.Count + 1;
       end;
     end;
@@ -847,7 +856,7 @@ begin
   if Combat.Roll <= 25 then begin
     WriteLn(TxtSuitGain_01);
     WriteLn(TxtUniqeItem, TxtSuitGain_02);
-    Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - 10;
+    Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - ItemUnit;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -857,7 +866,7 @@ begin
   Combat.Roll := Random(1000);
   if Combat.Roll <= 42 then begin
     WriteLn(TxtPillGain_01);
-    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - 10;
+    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - ItemUnit;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -868,7 +877,7 @@ begin
   if (Combat.Roll < 2) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtCassetteGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtCassetteGain_02);
-    Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
+    Bag.Items[Cassette] := Bag.Items[Cassette] - ItemUnit;
     Player.MaxEnergy := Player.MaxEnergy + 5;
     Gear.Values[Armor] := Gear.Values[Armor] - 8;
     Bag.Count := Bag.Count + 1;
@@ -882,7 +891,7 @@ begin
   if (Combat.Roll < 6) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtLeafGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtLeafGain_02);
-    Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - 10;
+    Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - ItemUnit;
     Bag.Count := Bag.Count + 1;
     Player.MaxMana := Player.MaxMana + 40;
   end;
@@ -893,7 +902,7 @@ begin
   Combat.Roll := Random(100);
   if (Combat.Roll < 10) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtScrollGain_01);
-    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - 10;
+    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - ItemUnit;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -1117,7 +1126,7 @@ begin
       Combat.Roll := Random(100);
       if Skills.Values[Cooking] > Combat.Roll then begin
         WriteLn(TxtFightMadeBigos);
-        Bag.Items[Bigos] := Bag.Items[Bigos] - 10;
+        Bag.Items[Bigos] := Bag.Items[Bigos] - ItemUnit;
         Bag.Count := Bag.Count + 1;
         if (Combat.Roll < 1) and (Skills.Values[Cooking] < 100) then begin
           WriteLn(TxtFightCookingLearn);
@@ -1165,7 +1174,7 @@ procedure TakeItem(cmd: string; item: TBagItem; verb, line: string; effect: TTak
 begin
   if (Command = cmd) and (Bag.Items[item] = Session.OuterRoom) then begin
     WriteLn(verb, line);
-    Bag.Items[item] := -10;
+    Bag.Items[item] := -ItemUnit;
     Bag.Count := Bag.Count + 1;
     case effect of
       teDiploma: Player.MaxEnergy := Player.MaxEnergy + 5;
@@ -1176,7 +1185,7 @@ end;
 
 procedure DropItem(cmd: string; item: TBagItem; verb, line: string; effect: TTakeEffect);
 begin
-  if (Command = cmd) and (Bag.Items[item] = -10) then begin
+  if (Command = cmd) and (Bag.Items[item] = -ItemUnit) then begin
     WriteLn(verb, line);
     Bag.Items[item] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
@@ -1224,9 +1233,9 @@ const
 procedure EatFood(cmd: string; item: TBagItem; verb, line: string;
   gain: Integer; stat, cap: PInteger);
 begin
-  if (Command = cmd) and (Bag.Items[item] <= -10) then begin
+  if (Command = cmd) and (Bag.Items[item] <= -ItemUnit) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Items[item] := Bag.Items[item] + 10;
+    Bag.Items[item] := Bag.Items[item] + ItemUnit;
     WriteLn(verb, line);
     stat^ := stat^ + gain;
     if stat^ > cap^ then stat^ := cap^;
@@ -1238,43 +1247,43 @@ procedure UseItems;
 var
   fi: Integer;
 begin
-  if (Command = CmdUzyj + CmdFajka) and (Bag.Items[Pipe] = -10) then WriteLn(TxtUseItems_01);
-  if (Command = CmdUzyj + CmdSerce) and (Bag.Items[Heart] = -10) then begin
+  if (Command = CmdUzyj + CmdFajka) and (Bag.Items[Pipe] = -ItemUnit) then WriteLn(TxtUseItems_01);
+  if (Command = CmdUzyj + CmdSerce) and (Bag.Items[Heart] = -ItemUnit) then begin
     Bag.Items[Heart] := 0;
     WriteLn(TxtEatVerb, TxtUseItems_02);
     Player.Energy := Player.Energy + 5;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
     Bag.Count := Bag.Count - 1;
   end;
-  if (Command = CmdUzyj + CmdDyplom) and (Bag.Items[Diploma] = -10) then begin
+  if (Command = CmdUzyj + CmdDyplom) and (Bag.Items[Diploma] = -ItemUnit) then begin
     WriteLines(TxtUseItemsLines1);
   end;
   for fi := Low(FoodItems) to High(FoodItems) do
     with FoodItems[fi] do
       EatFood(cmd, item, verb, line, gain, stat, cap);
-  if (Command = CmdZniszcz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
+  if (Command = CmdZniszcz + CmdPrzepustka) and (Bag.Permit <= -ItemUnit) then begin
     WriteLn(TxtUseItems_16);
-    Bag.Permit := Bag.Permit + 10;
+    Bag.Permit := Bag.Permit + ItemUnit;
     Bag.Count := Bag.Count + 1;
   end;
-  if (Command = CmdPatrz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
+  if (Command = CmdPatrz + CmdPrzepustka) and (Bag.Permit <= -ItemUnit) then begin
     WriteLines(TxtUseItemsLines2);
   end;
   if Command = CmdUzyj + CmdKaseta then WriteLn(TxtUseItems_24);
-  if (Command = CmdUzyj + CmdKomplet) and (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment = TxtEmpty) then begin
+  if (Command = CmdUzyj + CmdKomplet) and (Bag.Items[Tracksuit] <= -ItemUnit) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_28);
     Gear.Values[Armor] := Gear.Values[Armor] + 7;
     Gear.Values[Wearing] := 1;
     Gear.WornGarment := TxtWornSyf;
   end;
-  if (Command = CmdOdlorz + CmdKomplet) and (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment = TxtWornSyf) then begin
+  if (Command = CmdOdlorz + CmdKomplet) and (Bag.Items[Tracksuit] <= -ItemUnit) and (Gear.WornGarment = TxtWornSyf) then begin
     WriteLn(TxtUseItems_29);
     Gear.Values[Wearing] := 0;
     Gear.Values[Armor] := Gear.Values[Armor] - 7;
     Gear.WornGarment := TxtEmpty;
   end;
-  if (Command = CmdUzyj + CmdListek) and (Bag.Items[LuckyLeaf] <= -10) then WriteLn(TxtUseItems_30);
-  if (Command = CmdUzyj + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -10) and (Gear.WornGarment = TxtEmpty) then begin
+  if (Command = CmdUzyj + CmdListek) and (Bag.Items[LuckyLeaf] <= -ItemUnit) then WriteLn(TxtUseItems_30);
+  if (Command = CmdUzyj + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -ItemUnit) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_31);
     Gear.Values[Wearing] := 1;
     Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
@@ -1282,9 +1291,9 @@ begin
     Gear.Values[LuckRoll] := Gear.Values[LuckRoll] + 15;
     Gear.WornGarment := TxtWornGarnitur;
   end;
-  if (Command = CmdUzyj + CmdPigulka) and (Bag.Items[TeleportPill] <= -10) then begin
+  if (Command = CmdUzyj + CmdPigulka) and (Bag.Items[TeleportPill] <= -ItemUnit) then begin
     WriteLn(TxtUseItems_32);
-    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + 10;
+    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + ItemUnit;
     SpawnMonsters;
     if Player.Wisdom < 10 then begin
       WriteLn(TxtUseItems_33);
@@ -1302,7 +1311,7 @@ begin
     end;
     if Player.Wisdom > 15 then WriteLn(TxtUseItems_37);
   end;
-  if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -10) and (Gear.WornGarment = TxtWornGarnitur) then begin
+  if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -ItemUnit) and (Gear.WornGarment = TxtWornGarnitur) then begin
     WriteLn(TxtUseItems_38);
     Gear.Values[Wearing] := 0;
     Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
@@ -1680,14 +1689,14 @@ begin
   end;
   if Command = CmdKup + CmdDokument then begin if Player.Money > 399 then begin
       WriteLn(TxtPlantFights_05);
-      Bag.Permit := Bag.Permit - 10;
+      Bag.Permit := Bag.Permit - ItemUnit;
       Player.Money := Player.Money - 400;
       Bag.Count := Bag.Count + 1; end;
   end;
   if (Command = CmdKup + CmdPlecak) and (World.Monsters[Duncan] = Session.Room) then begin if Player.Money > 4799 then begin
       WriteLn(TxtPlantFights_06);
       Player.Money := Player.Money - 4800;
-      Bag.Items[Backpack] := Bag.Items[Backpack] - 10;
+      Bag.Items[Backpack] := Bag.Items[Backpack] - ItemUnit;
       Bag.Count := Bag.Count + 1; end;
   end;
   if (Command = CmdRozmawiaj + CmdDuncan) and (World.Monsters[Duncan] = Session.Room) then begin
@@ -1839,7 +1848,7 @@ end;
 procedure ShowItem(val: Integer; const desc: string; width: Integer);
 
 begin
-  if val <= -10 then
+  if val <= -ItemUnit then
     if width = 0 then WriteLn(desc)
     else WriteLn(desc, val:width);
 end;
@@ -1847,14 +1856,14 @@ end;
 procedure ShowItemPlain(val: Integer; const desc: string);
 
 begin
-  if val <= -10 then
+  if val <= -ItemUnit then
     WriteLn(desc, val);
 end;
 
 procedure ShowItemDiv10(val: Integer; const desc: string);
 
 begin
-  if val <= -10 then
+  if val <= -ItemUnit then
     WriteLn(desc, val div 10);
 end;
 
@@ -2033,7 +2042,7 @@ begin
     Combat.Roll := Random(100);
     if (Combat.Roll < 35) and (Bag.Items[Tracksuit] = 0) then begin
       WriteLn(TxtKillSweeper_01);
-      Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - 10;
+      Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - ItemUnit;
     end;
   end;
 end;
@@ -2238,18 +2247,18 @@ begin
   ClrScr;
   Assign(Session.SaveFile, TxtSaveFileName);
   Rewrite(Session.SaveFile);
-  SaveSlot(Player.Mana * 4);
-  SaveSlot(Player.Level + $17);
+  SaveSlot(Player.Mana * SaveStatScale);
+  SaveSlot(Player.Level + SaveLevelBias);
   SaveSlot(Bag.Items[OldSword]);
   SaveSlot(Bag.Items[Pipe]);
   SaveSlot(Bag.Items[Diploma]);
   SaveSlot(Bag.Items[SmallShield]);
   SaveSlot(Bag.Items[SpikedSuit]);
   SaveSlot(Player.Experience);
-  SaveSlot((Player.Energy + $28) * 4);
+  SaveSlot((Player.Energy + SaveEnergyBias) * SaveStatScale);
   SaveSlot(Session.OuterRoom);
-  SaveSlot(Player.Dexterity + 12);
-  SaveSlot(Player.Strength - 24);
+  SaveSlot(Player.Dexterity + SaveDexterityBias);
+  SaveSlot(Player.Strength - SaveStrengthBias);
   SaveSlot(Player.Wisdom);
   SaveSlot(Player.Practice);
   SaveSlot(Session.CheckpointStage);
@@ -2343,7 +2352,7 @@ procedure BuyItem(cmd: string; var Item: Integer; price: Integer;
 begin
   if (Command = cmd) and available and (Player.Money >= price) then begin
     Bag.Count := Bag.Count + 1;
-    Item := Item - 10;
+    Item := Item - ItemUnit;
     Player.Money := Player.Money - price;
     WriteLn(TxtShopVerb, itemName, TxtSpaceZa, price, TxtSpaceMonet);
   end;
@@ -2406,14 +2415,14 @@ end;
 procedure BuyOldSword;
 begin
   Bag.Count := Bag.Count + 1;
-  Bag.Items[OldSword] := -10;
+  Bag.Items[OldSword] := -ItemUnit;
   Player.Money := Player.Money - 70;
   WriteLn(TxtShopVerb, TxtBuyOldSword_01, TxtSpaceZa, 70, TxtSpaceMonet);
 end;
 
 function CanSellOldSword: Boolean;
 begin
-  CanSellOldSword := Bag.Items[OldSword] = -10;
+  CanSellOldSword := Bag.Items[OldSword] = -ItemUnit;
 end;
 
 procedure SellOldSword;
@@ -2433,7 +2442,7 @@ end;
 procedure BuySmallShield;
 begin
   Bag.Count := Bag.Count + 1;
-  Bag.Items[SmallShield] := -10;
+  Bag.Items[SmallShield] := -ItemUnit;
   Player.Money := Player.Money - 15;
   WriteLn(TxtShopVerb, TxtBuySmallShield_01, TxtSpaceZa, 15, TxtSpaceMonet);
 end;
@@ -2464,7 +2473,7 @@ procedure BuyPipe;
 begin
   WriteLn(TxtShopVerb, TxtBuyPipe_01, TxtSpaceZa, 480, TxtSpaceMonet);
   Player.Money := Player.Money - 480;
-  Bag.Items[Pipe] := Bag.Items[Pipe] - 10;
+  Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
   Bag.Count := Bag.Count + 1;
   Player.Wisdom := Player.Wisdom + 1;
 end;
@@ -2478,33 +2487,33 @@ procedure BuyTracksuit;
 begin
   WriteLn(TxtShopVerb, TxtBuyTracksuit_01, TxtSpaceZa, 35, TxtSpaceMonet);
   Player.Money := Player.Money - 35;
-  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - 10;
+  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - ItemUnit;
   Bag.Count := Bag.Count + 1;
 end;
 
 function CanSellTracksuit: Boolean;
 begin
-  CanSellTracksuit := (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment <> TxtWornSyf);
+  CanSellTracksuit := (Bag.Items[Tracksuit] <= -ItemUnit) and (Gear.WornGarment <> TxtWornSyf);
 end;
 
 procedure SellTracksuit;
 begin
   WriteLn(TxtSellVerb, TxtSellTracksuit_01);
   Player.Money := Player.Money + 15;
-  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] + 10;
+  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] + ItemUnit;
   Bag.Count := Bag.Count - 1;
 end;
 
 function CanSellPipe: Boolean;
 begin
-  CanSellPipe := Bag.Items[Pipe] = -10;
+  CanSellPipe := Bag.Items[Pipe] = -ItemUnit;
 end;
 
 procedure SellPipe;
 begin
   WriteLn(TxtSellVerb, TxtSellPipe_01);
   Player.Money := Player.Money + 120;
-  Bag.Items[Pipe] := Bag.Items[Pipe] + 10;
+  Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
   Bag.Count := Bag.Count - 1;
   Player.Wisdom := Player.Wisdom - 1;
 end;
@@ -2518,7 +2527,7 @@ procedure BuyCassette;
 begin
   WriteLn(TxtShopVerb, TxtBuyCassette_01, TxtSpaceZa, 1999, TxtSpaceMonet);
   Player.Money := Player.Money - 1999;
-  Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
+  Bag.Items[Cassette] := Bag.Items[Cassette] - ItemUnit;
   Gear.Values[Armor] := Gear.Values[Armor] - 8;
   Player.MaxEnergy := Player.MaxEnergy + 5;
   Player.Dexterity := Player.Dexterity + 1;
@@ -2534,7 +2543,7 @@ procedure BuySpikedSuit;
 begin
   WriteLn(TxtBuySpikedSuit_01);
   Player.Money := Player.Money - 1000;
-  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - 10;
+  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - ItemUnit;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2547,7 +2556,7 @@ procedure SellSpikedSuit;
 begin
   WriteLn(TxtSellVerb, TxtSellSpikedSuit_01);
   Player.Money := Player.Money + 500;
-  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] + 10;
+  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] + ItemUnit;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2560,7 +2569,7 @@ procedure SellCassette;
 begin
   WriteLn(TxtSellVerb, TxtSellCassette_01);
   Player.Money := Player.Money + 1000;
-  Bag.Items[Cassette] := Bag.Items[Cassette] + 10;
+  Bag.Items[Cassette] := Bag.Items[Cassette] + ItemUnit;
   Gear.Values[Armor] := Gear.Values[Armor] + 8;
   Player.MaxEnergy := Player.MaxEnergy - 5;
   Player.Dexterity := Player.Dexterity - 1;
@@ -2588,7 +2597,7 @@ procedure BuyManaBottle;
 begin
   WriteLn(TxtBuyManaBottle_01);
   Player.Money := Player.Money - 20;
-  Bag.Items[ManaBottle] := Bag.Items[ManaBottle] - 10;
+  Bag.Items[ManaBottle] := Bag.Items[ManaBottle] - ItemUnit;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2601,7 +2610,7 @@ procedure BuyLuckyLeaf;
 begin
   WriteLn(TxtBuyLuckyLeaf_01);
   Player.Money := Player.Money - 830;
-  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - 10;
+  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - ItemUnit;
   Bag.Count := Bag.Count + 1;
   Player.MaxMana := Player.MaxMana + 40;
 end;
@@ -2615,7 +2624,7 @@ procedure SellLuckyLeaf;
 begin
   WriteLn(TxtSellVerb, TxtSellLuckyLeaf_01);
   Player.Money := Player.Money + 400;
-  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] + 10;
+  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] + ItemUnit;
   Bag.Count := Bag.Count - 1;
   Player.MaxMana := Player.MaxMana - 40;
 end;
@@ -2629,7 +2638,7 @@ procedure BuyTeleportPill;
 begin
   WriteLn(TxtShopVerb, TxtBuyTeleportPill_01, TxtSpaceZa, 235, TxtSpaceMonet);
   Player.Money := Player.Money - 235;
-  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - 10;
+  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - ItemUnit;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2642,7 +2651,7 @@ procedure SellTeleportPill;
 begin
   WriteLn(TxtSellTeleportPill_01);
   Player.Money := Player.Money + 170;
-  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + 10;
+  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + ItemUnit;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2655,7 +2664,7 @@ procedure BuyCompareScroll;
 begin
   WriteLn(TxtBuyCompareScroll_01);
   Player.Money := Player.Money - 40;
-  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - 10;
+  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - ItemUnit;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2668,7 +2677,7 @@ procedure SellCompareScroll;
 begin
   WriteLn(TxtSellCompareScroll_01);
   Player.Money := Player.Money + 18;
-  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + 10;
+  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + ItemUnit;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2736,7 +2745,7 @@ begin
       if (Combat.Roll < 5) and (Bag.Items[Pipe] = 0) then begin
         WriteLn(TxtShared_08, TxtConcertFights_01);
         WriteLn(TxtConcertFights_02);
-        Bag.Items[Pipe] := Bag.Items[Pipe] - 10;
+        Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
         Player.Wisdom := Player.Wisdom + 1;
       end;
     end;
@@ -2821,9 +2830,9 @@ begin
   Assign(Session.SaveFile, TxtSaveFileName);
   Reset(Session.SaveFile);
   LoadSlot(Player.Mana);
-  Player.Mana := Player.Mana div 4;
+  Player.Mana := Player.Mana div SaveStatScale;
   LoadSlotShort(Player.Level);
-  Player.Level := Player.Level - $17;
+  Player.Level := Player.Level - SaveLevelBias;
   LoadSlot(Bag.Items[OldSword]);
   LoadSlot(Bag.Items[Pipe]);
   LoadSlot(Bag.Items[Diploma]);
@@ -2831,13 +2840,13 @@ begin
   LoadSlot(Bag.Items[SpikedSuit]);
   LoadSlot(Player.Experience);
   LoadSlot(Player.Energy);
-  Player.Energy := Player.Energy div 4;
-  Player.Energy := Player.Energy - $28;
+  Player.Energy := Player.Energy div SaveStatScale;
+  Player.Energy := Player.Energy - SaveEnergyBias;
   LoadSlot(Session.OuterRoom);
   LoadSlot(Player.Dexterity);
-  Player.Dexterity := Player.Dexterity - 12;
+  Player.Dexterity := Player.Dexterity - SaveDexterityBias;
   LoadSlot(Player.Strength);
-  Player.Strength := Player.Strength + 24;
+  Player.Strength := Player.Strength + SaveStrengthBias;
   LoadSlot(Player.Wisdom);
   LoadSlot(Player.Practice);
   LoadSlot(Session.CheckpointStage);
@@ -3013,8 +3022,8 @@ begin
   Gear.Values[WeaponKind] := 0;
   Gear.Values[ShieldKind] := 0;
   Gear.WornGarment := TxtEmpty;
-  Bag.Items[OldSword] := -10;
-  Bag.Items[SmallShield] := -10;
+  Bag.Items[OldSword] := -ItemUnit;
+  Bag.Items[SmallShield] := -ItemUnit;
   Player.Strength := Player.Strength - 1;
 end;
 
@@ -3039,8 +3048,8 @@ end;
 
 procedure CmdDrinkBeer;
 begin
-  if Bag.Items[Beer] <= -10 then begin
-    Bag.Items[Beer] := Bag.Items[Beer] + 10;
+  if Bag.Items[Beer] <= -ItemUnit then begin
+    Bag.Items[Beer] := Bag.Items[Beer] + ItemUnit;
     WriteLn(TxtCmdDrinkBeer_01);
     Bag.Count := Bag.Count - 1;
     Player.Energy := Player.Energy + 10;
@@ -3050,7 +3059,7 @@ end;
 
 procedure CmdWieldOldSword;
 begin
-  if (Bag.Items[OldSword] = -10) and (Gear.Values[WeaponKind] = 0) then begin
+  if (Bag.Items[OldSword] = -ItemUnit) and (Gear.Values[WeaponKind] = 0) then begin
     Bag.Items[OldSword] := -100;
     Gear.Values[WeaponKind] := 1;
     WriteLn(TxtCmdWieldOldSword_01);
@@ -3062,7 +3071,7 @@ end;
 procedure CmdUnwieldOldSword;
 begin
   if (Bag.Items[OldSword] = -100) and (Gear.Values[WeaponKind] = 1) then begin
-    Bag.Items[OldSword] := -10;
+    Bag.Items[OldSword] := -ItemUnit;
     Gear.Values[WeaponKind] := 0;
     WriteLn(TxtCmdUnwieldOldSword_01);
     Player.Strength := Player.Strength - 1;
@@ -3072,7 +3081,7 @@ end;
 
 procedure CmdWieldSmallShield;
 begin
-  if (Gear.Values[ShieldKind] = 0) and (Bag.Items[SmallShield] = -10) then begin
+  if (Gear.Values[ShieldKind] = 0) and (Bag.Items[SmallShield] = -ItemUnit) then begin
     Gear.Values[ShieldKind] := 1;
     Gear.Values[Armor] := Gear.Values[Armor] + 15;
     Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
@@ -3087,7 +3096,7 @@ begin
     Gear.Values[ShieldKind] := 0;
     Gear.Values[Armor] := Gear.Values[Armor] - 15;
     Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
-    Bag.Items[SmallShield] := -10;
+    Bag.Items[SmallShield] := -ItemUnit;
     WriteLn(TxtCmdUnwieldSmallShield_01);
   end;
 end;
@@ -3169,7 +3178,7 @@ begin
     Combat.Roll := Random(100);
     if Command = CmdUzyj + CmdScrollPowrot then begin
       Combat.Roll := Random(1);
-      Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] + 10;
+      Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] + ItemUnit;
       Bag.Count := Bag.Count - 1;
     end;
     if Combat.Roll <= Skills.Values[Returning] then begin
@@ -3194,7 +3203,7 @@ begin
   if Bag.Items[CompareScroll] < 0 then begin
     CompareFoe;
     Player.Mana := Player.Mana - 10;
-    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + 10;
+    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + ItemUnit;
     Bag.Count := Bag.Count - 1;
   end;
 end;
@@ -3212,7 +3221,7 @@ end;
 
 procedure CmdSpeede;
 begin
-  Bag.Permit := Bag.Permit - 10;
+  Bag.Permit := Bag.Permit - ItemUnit;
 end;
 
 type

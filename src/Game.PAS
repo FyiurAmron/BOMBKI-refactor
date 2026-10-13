@@ -557,7 +557,38 @@ begin
   until Session.Room <> RoomClearing;
 
 end;
+
+procedure BuyQuest(cmd, line: string; quest, kills, price: Integer);
+
+begin
+  if (Command = cmd) and (Player.Money >= price) then begin
+    WriteLn(line);
+    World.Quest := quest;
+    World.QuestKills := kills;
+    Player.Money := Player.Money - price;
+  end;
+end;
+
+type
+  TQuestOffer = record
+    cmd: string;
+    line: string;
+    quest: Integer;
+    kills: Integer;
+    price: Integer;
+  end;
+
+const
+  { The quest master's three quests, in listing order. }
+  QuestOffers: array[1..3] of TQuestOffer = (
+    (cmd: CmdKup + CmdLatwyQuest; line: TxtRoom100_09; quest: 1; kills: 75; price: 200),
+    (cmd: CmdKup + CmdPrzecietnyQuest; line: TxtRoom100_10; quest: 2; kills: 200; price: 100),
+    (cmd: CmdKup + CmdTrudnyQuest; line: TxtRoom100_11; quest: 3; kills: 200; price: 50)
+  );
+
 procedure Room100;
+var
+  i: Integer;
 begin
   if Session.Room <> RoomQuestMaster then Exit;
   WriteLines([TxtRoom100_01, TxtRoom100_02]);
@@ -576,24 +607,9 @@ begin
     if Command = CmdLista then begin
       WriteLines(TxtRoom100Lines1);
     end;
-    if (Command = CmdKup + CmdLatwyQuest) and (Player.Money > 199) then begin
-      WriteLn(TxtRoom100_09);
-      World.Quest := 1;
-      World.QuestKills := 75;
-      Player.Money := Player.Money - 200;
-    end;
-    if (Command = CmdKup + CmdPrzecietnyQuest) and (Player.Money > 99) then begin
-      WriteLn(TxtRoom100_10);
-      World.Quest := 2;
-      World.QuestKills := 200;
-      Player.Money := Player.Money - 100;
-    end;
-    if (Command = CmdKup + CmdTrudnyQuest) and (Player.Money > 49) then begin
-      WriteLn(TxtRoom100_11);
-      World.Quest := 3;
-      World.QuestKills := 200;
-      Player.Money := Player.Money - 50;
-    end;
+    for i := Low(QuestOffers) to High(QuestOffers) do
+      with QuestOffers[i] do
+        BuyQuest(cmd, line, quest, kills, price);
     if (Command = CmdSprzedaj + CmdQuest) and (World.Quest > 0) then begin
       case World.Quest of
         1: if World.QuestKills < 1 then begin

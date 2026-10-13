@@ -1278,11 +1278,30 @@ begin
   end;
 end;
 
+type
+  TFightExpFunc = function(diff: Integer): Integer;
+  TFightExpStat = record
+    playerStat: ^Integer;
+    enemyStat: ^Integer;
+    expFor: TFightExpFunc;
+  end;
+
+const
+  { The experience a fight opens with: every combat stat pays
+    its own ladder of the player-enemy difference. }
+  FightExpStats: array[1..3] of TFightExpStat = (
+    (playerStat: @Player.MaxEnergy; enemyStat: @Combat.EnemyEnergy; expFor: FightExpForEnergy),
+    (playerStat: @Player.Strength; enemyStat: @Combat.EnemyStrength; expFor: FightExpForStrength),
+    (playerStat: @Player.Dexterity; enemyStat: @Combat.EnemyDexterity; expFor: FightExpForDexterity)
+  );
+
 procedure Fight;
+var
+  i: Integer;
 begin
-  Combat.FightExperience := Combat.FightExperience + FightExpForEnergy(Player.MaxEnergy - Combat.EnemyEnergy);
-  Combat.FightExperience := Combat.FightExperience + FightExpForStrength(Player.Strength - Combat.EnemyStrength);
-  Combat.FightExperience := Combat.FightExperience + FightExpForDexterity(Player.Dexterity - Combat.EnemyDexterity);
+  for i := Low(FightExpStats) to High(FightExpStats) do
+    with FightExpStats[i] do
+      Combat.FightExperience := Combat.FightExperience + expFor(playerStat^ - enemyStat^);
 
   repeat
     Combat.EnemyDodged := 0;

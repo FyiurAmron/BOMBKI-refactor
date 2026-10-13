@@ -1107,6 +1107,81 @@ procedure FightVeryHard;
 begin
   CompositeFight(72, 3, 13, 2, 16, 2, 15, 50, 5, False, False);
 end;
+
+type
+  TCompareFoeRule = record
+    stat: ^Integer;
+    lo: Integer;
+    hi: Integer;
+    line: string;
+  end;
+
+procedure CompareFoeRules(const rules: array of TCompareFoeRule);
+
+var
+  i: Integer;
+begin
+  for i := Low(rules) to High(rules) do
+    with rules[i] do
+      if (stat^ >= lo) and (stat^ <= hi) then
+        WriteLn(line);
+end;
+
+const
+  { The comparison ladders, one table per foe group. A row
+    prints its line when its stat lands in the inclusive band,
+    so the drunks and ivy tables keep the original stacked
+    pair of lines atop their ladders and the musicians table
+    keeps its 21..22 silence. }
+  BeastCompareRules: array[1..3] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 15; line: TxtCompareFoe_02),
+    (stat: @Player.Strength; lo: 16; hi: 18; line: TxtEnemy + TxtCompareFoe_03),
+    (stat: @Player.Strength; lo: 19; hi: MaxInt; line: TxtCompareFoe_04)
+  );
+  BigBeastCompareRules: array[1..4] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 15; line: TxtCompareFoe_05),
+    (stat: @Player.Strength; lo: 16; hi: 20; line: TxtCompareFoe_06),
+    (stat: @Player.Strength; lo: 21; hi: 22; line: TxtCompareFoe_07),
+    (stat: @Player.Strength; lo: 23; hi: MaxInt; line: TxtCompareFoe_08)
+  );
+  FighterCompareRules: array[1..5] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 14; line: TxtCompareFoe_09),
+    (stat: @Session.Overall; lo: 15; hi: 17; line: TxtCompareFoe_10),
+    (stat: @Session.Overall; lo: 18; hi: 22; line: TxtCompareFoe_11),
+    (stat: @Session.Overall; lo: 23; hi: 25; line: TxtCompareFoe_12),
+    (stat: @Session.Overall; lo: 26; hi: MaxInt; line: TxtCompareFoe_13)
+  );
+  DrunkCompareRules: array[1..5] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 23; line: TxtCompareFoe_14),
+    (stat: @Session.Overall; lo: 24; hi: 25; line: TxtCompareFoe_15),
+    (stat: @Session.Overall; lo: 26; hi: 28; line: TxtCompareFoe_16),
+    (stat: @Session.Overall; lo: 29; hi: MaxInt; line: TxtCompareFoe_17),
+    (stat: @Session.Overall; lo: 35; hi: MaxInt; line: TxtCompareFoe_18)
+  );
+  MusicianCompareRules: array[1..3] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 20; line: TxtCompareFoe_19),
+    (stat: @Session.Overall; lo: 23; hi: 27; line: TxtCompareFoe_20),
+    (stat: @Session.Overall; lo: 28; hi: MaxInt; line: TxtCompareFoe_21)
+  );
+  IvyCompareRules: array[1..5] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 19; line: TxtCompareFoe_22),
+    (stat: @Session.Overall; lo: 20; hi: 25; line: TxtCompareFoe_23),
+    (stat: @Session.Overall; lo: 26; hi: 29; line: TxtCompareFoe_24),
+    (stat: @Session.Overall; lo: 30; hi: MaxInt; line: TxtCompareFoe_25),
+    (stat: @Session.Overall; lo: 36; hi: MaxInt; line: TxtCompareFoe_26)
+  );
+  LiroyCompareRules: array[1..5] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 27; line: TxtCompareFoe_27),
+    (stat: @Session.Overall; lo: 28; hi: 32; line: TxtCompareFoe_28),
+    (stat: @Session.Overall; lo: 33; hi: 43; line: TxtCompareFoe_29),
+    (stat: @Session.Overall; lo: 44; hi: 47; line: TxtCompareFoe_30),
+    (stat: @Session.Overall; lo: 48; hi: MaxInt; line: TxtCompareFoe_31)
+  );
+  PokrzywaCompareRules: array[1..2] of TCompareFoeRule = (
+    (stat: @Session.Overall; lo: -MaxInt - 1; hi: 39; line: TxtCompareFoe_32),
+    (stat: @Session.Overall; lo: 40; hi: MaxInt; line: TxtCompareFoe_33)
+  );
+
 procedure CompareFoe;
 begin
   if Player.Mana > 9 then begin
@@ -1117,61 +1192,28 @@ begin
     if (Command = CmdDzik) or (Command = CmdSzczur) or (Command = CmdLis) or
        (Command = CmdKuropatwa) or (Command = CmdZajac) or (Command = CmdWilczur) or
        (Command = CmdOrzel) or (Command = CmdSarna) or (Command = CmdDziecko) or (Command = CmdDziadek) then
-        begin if Session.Overall < 16 then WriteLn(TxtCompareFoe_02);
-        if (Player.Strength > 15) and (Player.Strength < 19) then WriteLn(TxtEnemy, TxtCompareFoe_03);
-        if Player.Strength > 18 then WriteLn(TxtCompareFoe_04);
-        end;
+      CompareFoeRules(BeastCompareRules);
     if (Command = CmdSlon) or (Command = CmdLew) or (Command = CmdZyrafa) or (Command = CmdWielblad) or
        (Command = CmdStrus) or (Command = CmdBoa) or (Command = CmdWilk) or (Command = CmdBizon) or
        (Command = CmdPantera) or (Command = CmdWariat) or (Command = CmdSluchacz) or (Command = CmdFan) or
        (Command = CmdCzlowiek) or (Command = CmdReporter) then
-      begin if Session.Overall < 16 then WriteLn(TxtCompareFoe_05);
-      if (Player.Strength > 15) and (Player.Strength < 21) then WriteLn(TxtCompareFoe_06);
-      if (Player.Strength > 20) and (Player.Strength < 23) then WriteLn(TxtCompareFoe_07);
-      if Player.Strength > 22 then WriteLn(TxtCompareFoe_08);
-    end;
+      CompareFoeRules(BigBeastCompareRules);
     if (Command = CmdGladiator) or (Command = CmdWojownik) or (Command = CmdTrener) or
-       (Command = CmdPolicjant) or (Command = CmdGoryl) or (Command = CmdOchroniarz) then begin
-      if Session.Overall < 15 then WriteLn(TxtCompareFoe_09);
-      if (Session.Overall > 14) and (Session.Overall < 18) then WriteLn(TxtCompareFoe_10);
-      if (Session.Overall > 17) and (Session.Overall < 23) then WriteLn(TxtCompareFoe_11);
-      if (Session.Overall > 22) and (Session.Overall < 26) then WriteLn(TxtCompareFoe_12);
-      if Session.Overall > 25 then WriteLn(TxtCompareFoe_13);
-    end;
-    if (Command = CmdMiniBarman) or (Command = CmdGrubas) or (Command = CmdDJ) then begin
-      if Session.Overall < 24 then WriteLn(TxtCompareFoe_14);
-      if (Session.Overall > 23) and (Session.Overall < 26) then WriteLn(TxtCompareFoe_15);
-      if (Session.Overall > 25) and (Session.Overall < 29) then WriteLn(TxtCompareFoe_16);
-      if Session.Overall > 28 then WriteLn(TxtCompareFoe_17);
-      if Session.Overall > 34 then WriteLn(TxtCompareFoe_18);
-    end;
+       (Command = CmdPolicjant) or (Command = CmdGoryl) or (Command = CmdOchroniarz) then
+      CompareFoeRules(FighterCompareRules);
+    if (Command = CmdMiniBarman) or (Command = CmdGrubas) or (Command = CmdDJ) then
+      CompareFoeRules(DrunkCompareRules);
     if (Command = CmdTaksowkarz) or (Command = CmdSprzedawca) or (Command = CmdGitarzysta) or (Command = CmdPerkusista) or
        (Command = CmdOrganista) or (Command = CmdZebrak) or (Command = CmdPijak) or (Command = CmdZamiatacz) or (Command = CmdSzczaw) or
-       (Command = CmdStokrotka) or (Command = CmdKoniczynka) or (Command = CmdMlecz) or (Command = CmdDmuchawiec) then begin
-      if Session.Overall < 21 then WriteLn(TxtCompareFoe_19);
-      if (Session.Overall > 22) and (Session.Overall < 28) then WriteLn(TxtCompareFoe_20);
-      if Session.Overall > 27 then WriteLn(TxtCompareFoe_21);
-    end;
+       (Command = CmdStokrotka) or (Command = CmdKoniczynka) or (Command = CmdMlecz) or (Command = CmdDmuchawiec) then
+      CompareFoeRules(MusicianCompareRules);
     if (Command=CmdPedal) or (Command=CmdPara) or (Command=CmdMaciek) or (Command=CmdRoza) or
-       (Command=CmdMalina) or (Command=CmdTrawa) or (Command = CmdAgrest) or (Command = CmdJezyna) then begin
-      if Session.Overall < 20 then WriteLn(TxtCompareFoe_22);
-      if (Session.Overall > 19) and (Session.Overall < 26) then WriteLn(TxtCompareFoe_23);
-      if (Session.Overall > 25) and (Session.Overall < 30) then WriteLn(TxtCompareFoe_24);
-      if Session.Overall > 29 then WriteLn(TxtCompareFoe_25);
-      if Session.Overall > 35 then WriteLn(TxtCompareFoe_26);
-    end;
-    if Command = CmdLiroy then begin
-      if Session.Overall < 28 then WriteLn(TxtCompareFoe_27);
-      if (Session.Overall > 27) and (Session.Overall < 33) then WriteLn(TxtCompareFoe_28);
-      if (Session.Overall > 32) and (Session.Overall < 44) then WriteLn(TxtCompareFoe_29);
-    if (Session.Overall > 43) and (Session.Overall < 48) then WriteLn(TxtCompareFoe_30);
-      if Session.Overall > 47 then WriteLn(TxtCompareFoe_31);
-    end;
-    if Command = CmdPokrzywa then begin
-      if Session.Overall < 40 then WriteLn(TxtCompareFoe_32);
-      if Session.Overall > 39 then WriteLn(TxtCompareFoe_33);
-
-    end;
+       (Command=CmdMalina) or (Command=CmdTrawa) or (Command = CmdAgrest) or (Command = CmdJezyna) then
+      CompareFoeRules(IvyCompareRules);
+    if Command = CmdLiroy then
+      CompareFoeRules(LiroyCompareRules);
+    if Command = CmdPokrzywa then
+      CompareFoeRules(PokrzywaCompareRules);
     if (Command = CmdSpaniel) or (Command = CmdOwczarek) or (Command = CmdPiesek) or (Command=CmdJamnik) or (Command=CmdPudel) then
       WriteLn(TxtCompareFoe_34);
     if (Combat.Roll < 3) and (Skills.Comparing < 100) then begin

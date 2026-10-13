@@ -14,6 +14,9 @@ type
     dest: Integer;
   end;
 
+  TFoe = (WeakEnemy, WeakishEnemy, MediumEnemy, HardEnemy, VeryEasyEnemy,
+    EasyEnemy, NotEasyEnemy, VeryHardEnemy);
+
   TPlayer = record
     Strength, Dexterity, Wisdom: Integer;
     MaxStrength, MaxDexterity, MaxWisdom: Integer;
@@ -118,18 +121,11 @@ var
   procedure UseItems;
   procedure DisplayPrefs;
   procedure ShieldBlock;
-  procedure Fight;
+  procedure DoFight;
   procedure ArenaMaze;
   procedure DescribeBeasts;
   procedure EnterTrance;
-  procedure FightWeak;
-  procedure FightWeakish;
-  procedure FightMedium;
-  procedure FightHard;
-  procedure FightVeryHard;
-  procedure FightVeryEasy;
-  procedure FightEasy;
-  procedure FightNotEasy;
+  procedure Fight(foe: TFoe);
   procedure SuitGain;
   procedure PillGain;
   procedure CassetteGain;
@@ -439,7 +435,7 @@ begin
   Combat.EnemyEnergy := 10;
   Combat.EnemyDexterity := 10;
   Combat.EnemyStrength := 5;
-  Fight;
+  DoFight;
   Combat.Loot := Random(15);
   WriteLn(TxtShared_08, Combat.Loot, TxtFightDog_01);
   Player.Money := Player.Money + Combat.Loot;
@@ -639,7 +635,7 @@ begin
   if EnemyEnergyRand > 0 then Combat.EnemyEnergy := Random(EnemyEnergyRand) + EnemyEnergyBase else Combat.EnemyEnergy := EnemyEnergyBase;
   if EnemyDexterityRand > 0 then Combat.EnemyDexterity := Random(EnemyDexterityRand) + EnemyDexterityBase else Combat.EnemyDexterity := EnemyDexterityBase;
   if EnemyStrengthRand > 0 then Combat.EnemyStrength := Random(EnemyStrengthRand) + EnemyStrengthBase else Combat.EnemyStrength := EnemyStrengthBase;
-  Fight;
+  DoFight;
   if (Combat.Fled = 0) and (not RequireEnergy or (Player.Energy > 0)) then begin
     Combat.Loot := Random(LootRand) + LootBase;
     WriteLn(TxtShared_08, Combat.Loot, TxtCompositeFight_01);
@@ -664,66 +660,65 @@ begin
   end;
 end;
 
-procedure FightWeak;
-begin
-  CompositeFight(1, 0, 1, 0, 2, 0, 0, 3, 0, False, True);
-end;
-
-procedure FightWeakish;
-begin
-  CompositeFight(34, 3, 8, 4, 10, 0, 10, 21, 5, False, False);
-end;
-
-procedure FightMedium;
-begin
-  CompositeFight(50, 5, 10, 5, 13, 2, 30, 30, 7, False, False);
-end;
-
-procedure FightHard;
-begin
-  CompositeFight(60, 6, 12, 3, 15, 3, 20, 40, 7, False, False);
-end;
-
-procedure FightVeryEasy;
-begin
-  CompositeFight(90, 10, 14, 2, 17, 2, 10, 55, 4, True, False);
-end;
-
-procedure FightEasy;
-begin
-  CompositeFight(100, 20, 16, 0, 18, 2, 30, 30, 4, True, False);
-end;
-
 type
-  TFight = procedure;
+  TFoeStats = record
+    energyBase, energyRand, dexterityBase, dexterityRand: Integer;
+    strengthBase, strengthRand, lootBase, lootRand, heartChance: Integer;
+    requireEnergy, antDoughnut: Boolean;
+  end;
 
-procedure KillBeast(cmd: string; var beast: Integer; fight: TFight);
+const
+  Foes: array[TFoe] of TFoeStats = (
+    (energyBase: 1; energyRand: 0; dexterityBase: 1; dexterityRand: 0;
+     strengthBase: 2; strengthRand: 0; lootBase: 0; lootRand: 3;
+     heartChance: 0; requireEnergy: False; antDoughnut: True),
+    (energyBase: 34; energyRand: 3; dexterityBase: 8; dexterityRand: 4;
+     strengthBase: 10; strengthRand: 0; lootBase: 10; lootRand: 21;
+     heartChance: 5; requireEnergy: False; antDoughnut: False),
+    (energyBase: 50; energyRand: 5; dexterityBase: 10; dexterityRand: 5;
+     strengthBase: 13; strengthRand: 2; lootBase: 30; lootRand: 30;
+     heartChance: 7; requireEnergy: False; antDoughnut: False),
+    (energyBase: 60; energyRand: 6; dexterityBase: 12; dexterityRand: 3;
+     strengthBase: 15; strengthRand: 3; lootBase: 20; lootRand: 40;
+     heartChance: 7; requireEnergy: False; antDoughnut: False),
+    (energyBase: 90; energyRand: 10; dexterityBase: 14; dexterityRand: 2;
+     strengthBase: 17; strengthRand: 2; lootBase: 10; lootRand: 55;
+     heartChance: 4; requireEnergy: True; antDoughnut: False),
+    (energyBase: 100; energyRand: 20; dexterityBase: 16; dexterityRand: 0;
+     strengthBase: 18; strengthRand: 2; lootBase: 30; lootRand: 30;
+     heartChance: 4; requireEnergy: True; antDoughnut: False),
+    (energyBase: 130; energyRand: 20; dexterityBase: 20; dexterityRand: 0;
+     strengthBase: 19; strengthRand: 2; lootBase: 20; lootRand: 45;
+     heartChance: 4; requireEnergy: True; antDoughnut: False),
+    (energyBase: 72; energyRand: 3; dexterityBase: 13; dexterityRand: 2;
+     strengthBase: 16; strengthRand: 2; lootBase: 15; lootRand: 50;
+     heartChance: 5; requireEnergy: False; antDoughnut: False)
+  );
+
+procedure Fight(foe: TFoe);
+begin
+  with Foes[foe] do
+    CompositeFight(energyBase, energyRand, dexterityBase, dexterityRand,
+      strengthBase, strengthRand, lootBase, lootRand, heartChance,
+      requireEnergy, antDoughnut);
+end;
+
+procedure KillBeast(cmd: string; var beast: Integer; foe: TFoe);
 begin
   if (Command = cmd) and (Session.Room = beast) then begin
-    fight;
+    Fight(foe);
     beast := 0;
   end;
 end;
 
-procedure KillBeastUnlessFled(cmd: string; var beast: Integer; fight: TFight);
+procedure KillBeastUnlessFled(cmd: string; var beast: Integer; foe: TFoe);
 begin
   if (Command = cmd) and (Session.Room = beast) then begin
-    fight;
+    Fight(foe);
     if Combat.Fled = 0 then
       beast := 0;
   end;
 end;
-
-procedure FightNotEasy;
-begin
-  CompositeFight(130, 20, 20, 0, 19, 2, 20, 45, 4, True, False);
-end;
-
-procedure FightVeryHard;
-begin
-  CompositeFight(72, 3, 13, 2, 16, 2, 15, 50, 5, False, False);
-end;
-
 type
   TCompareFoeRule = record
     stat: ^Integer;
@@ -963,7 +958,7 @@ const
     (playerStat: @Player.Dexterity; enemyStat: @Combat.EnemyDexterity; expFor: FightExpForDexterity)
   );
 
-procedure Fight;
+procedure DoFight;
 var
   i: Integer;
 begin
@@ -1348,35 +1343,35 @@ type
   TBeastKill = record
     cmd: string;
     beast: ^Integer;
-    fight: TFight;
+    foe: TFoe;
     unlessFled: Boolean;
   end;
 
 const
   BeastKills: array[1..23] of TBeastKill = (
-    (cmd: CmdZabij + CmdSlimak; beast: @World.Monsters[Snail]; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdKornik; beast: @World.Monsters[Woodworm]; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdMucha; beast: @World.Monsters[Fly]; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdZuk; beast: @World.Monsters[Beetle]; fight: FightWeak; unlessFled: True),
-    (cmd: CmdZabij + CmdKaraluch; beast: @World.Monsters[Cockroach]; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdMrowka; beast: @World.Monsters[Ant]; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdPajak; beast: @World.Monsters[Spider]; fight: FightWeak; unlessFled: False),
-    (cmd: CmdZabij + CmdDzik; beast: @World.Monsters[Boar]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSzczur; beast: @World.Monsters[Rat]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdLis; beast: @World.Monsters[Fox]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdKuropatwa; beast: @World.Monsters[Partridge]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdZajac; beast: @World.Monsters[Hare]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdOrzel; beast: @World.Monsters[Eagle]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSarna; beast: @World.Monsters[Deer]; fight: FightWeakish; unlessFled: False),
-    (cmd: CmdZabij + CmdSlon; beast: @World.Monsters[Elephant]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdLew; beast: @World.Monsters[Lion]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdZyrafa; beast: @World.Monsters[Giraffe]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdWilk; beast: @World.Monsters[Wolf]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdWielblad; beast: @World.Monsters[Camel]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdStrus; beast: @World.Monsters[Ostrich]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdBoa; beast: @World.Monsters[Boa]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdBizon; beast: @World.Monsters[Bison]; fight: FightMedium; unlessFled: False),
-    (cmd: CmdZabij + CmdPantera; beast: @World.Monsters[Panther]; fight: FightMedium; unlessFled: False)
+    (cmd: CmdZabij + CmdSlimak; beast: @World.Monsters[Snail]; foe: WeakEnemy; unlessFled: True),
+    (cmd: CmdZabij + CmdKornik; beast: @World.Monsters[Woodworm]; foe: WeakEnemy; unlessFled: True),
+    (cmd: CmdZabij + CmdMucha; beast: @World.Monsters[Fly]; foe: WeakEnemy; unlessFled: True),
+    (cmd: CmdZabij + CmdZuk; beast: @World.Monsters[Beetle]; foe: WeakEnemy; unlessFled: True),
+    (cmd: CmdZabij + CmdKaraluch; beast: @World.Monsters[Cockroach]; foe: WeakEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdMrowka; beast: @World.Monsters[Ant]; foe: WeakEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdPajak; beast: @World.Monsters[Spider]; foe: WeakEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdDzik; beast: @World.Monsters[Boar]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdSzczur; beast: @World.Monsters[Rat]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdLis; beast: @World.Monsters[Fox]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdKuropatwa; beast: @World.Monsters[Partridge]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdZajac; beast: @World.Monsters[Hare]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdOrzel; beast: @World.Monsters[Eagle]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdSarna; beast: @World.Monsters[Deer]; foe: WeakishEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdSlon; beast: @World.Monsters[Elephant]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdLew; beast: @World.Monsters[Lion]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdZyrafa; beast: @World.Monsters[Giraffe]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdWilk; beast: @World.Monsters[Wolf]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdWielblad; beast: @World.Monsters[Camel]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdStrus; beast: @World.Monsters[Ostrich]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdBoa; beast: @World.Monsters[Boa]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdBizon; beast: @World.Monsters[Bison]; foe: MediumEnemy; unlessFled: False),
+    (cmd: CmdZabij + CmdPantera; beast: @World.Monsters[Panther]; foe: MediumEnemy; unlessFled: False)
   );
 
 procedure ArenaMaze;
@@ -1398,34 +1393,34 @@ begin
       ExpandAbbrev;
       if Command = CmdMode then EnterTrance;
       if (Command = CmdZabij + CmdBakteria) and (Session.Room = World.Monsters[Bacterium]) then
-      begin FightWeak;
+      begin Fight(WeakEnemy);
         World.Monsters[Bacterium] := 0;
         WriteLn(TxtArenaMaze_02);
       end;
       for bi := Low(BeastKills) to High(BeastKills) do
         with BeastKills[bi] do
           if unlessFled then
-            KillBeastUnlessFled(cmd, beast^, fight)
+            KillBeastUnlessFled(cmd, beast^, foe)
           else
-            KillBeast(cmd, beast^, fight);
+            KillBeast(cmd, beast^, foe);
       if (Command = CmdZabij + CmdWilczur) and (Session.Room = World.Monsters[Mongrel]) then
       begin WriteLn(TxtArenaMaze_03);
-        FightWeakish;
+        Fight(WeakishEnemy);
         World.Monsters[Mongrel] := 0;
       end;
 
       if (Command = CmdZabij + CmdGladiator) and (Session.Room = World.Monsters[Gladiator]) then
-      begin FightHard;
+      begin Fight(HardEnemy);
         World.Monsters[Gladiator] := 0;
         PillGain;
       end;
       if (Command = CmdZabij + CmdWojownik) and (Session.Room = World.Monsters[Warrior]) then
-      begin FightHard;
+      begin Fight(HardEnemy);
         World.Monsters[Warrior] := 0;
         PillGain;
       end;
       if (Command = CmdZabij + CmdTrener) and (Session.Room = World.Monsters[Tamer]) then
-      begin FightHard;
+      begin Fight(HardEnemy);
         World.Monsters[Tamer] := 0;
         SuitGain;
       end;
@@ -1611,17 +1606,17 @@ end;
 procedure StageFights;
 begin
   if (Command = CmdZabij + CmdPerkusista) and (World.Monsters[Drummer] = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     World.Monsters[Drummer] := 0;
     CassetteGain;
   end;
   if (Command = CmdZabij + CmdGitarzysta) and (World.Monsters[Guitarist] = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     World.Monsters[Guitarist] := 0;
     CassetteGain;
   end;
   if (Command = CmdZabij + CmdLiroy) and (World.Monsters[Liroy] = Session.Room) then begin
-    FightNotEasy;
+    Fight(NotEasyEnemy);
     if (Session.Room <> DeadRoom) and (Player.Energy > 0) and (Combat.Fled = 0) then begin
       WriteLn(TxtStageFights_01);
       Player.Money := Player.Money + 30;
@@ -1631,7 +1626,7 @@ begin
     end;
   end;
   if (Command = CmdZabij + CmdOrganista) and (World.Monsters[Keyboardist] = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     World.Monsters[Keyboardist] := 0;
     CassetteGain;
   end;
@@ -1641,7 +1636,7 @@ procedure KillPlant(cmd: string; var Plant: Integer);
 
 begin
   if (Command = cmd) and (Plant = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     Plant := 0;
   end;
 end;
@@ -1650,7 +1645,7 @@ procedure KillPlantIfAlive(cmd: string; var Plant: Integer);
 
 begin
   if (Command = cmd) and (Plant = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     if Player.Energy > 0 then Plant := 0;
   end;
 end;
@@ -1659,7 +1654,7 @@ procedure KillPlantEasyIfAlive(cmd: string; var Plant: Integer);
 
 begin
   if (Command = cmd) and (Plant = Session.Room) then begin
-    FightEasy;
+    Fight(EasyEnemy);
     if Player.Energy > 0 then Plant := 0;
   end;
 end;
@@ -1691,7 +1686,7 @@ var
   i: Integer;
 begin
   if (Command = CmdZabij + CmdDuncan) and (World.Monsters[Duncan] = Session.Room) then begin
-    FightEasy;
+    Fight(EasyEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Duncan] := 0;
   end;
   if (Command = CmdSecret + CmdLista) and (World.Monsters[Duncan] = Session.Room) then begin
@@ -1739,10 +1734,10 @@ begin
 
   if (Command = CmdZabij + CmdTrawa) and (World.Monsters[Grass] = Session.Room) then begin
     WriteLn(TxtPlantFights_17);
-    FightHard;
-    if Player.Energy > 0 then FightHard;
-    if Player.Energy > 0 then FightHard;
-    if Player.Energy > 0 then FightHard;
+    Fight(HardEnemy);
+    if Player.Energy > 0 then Fight(HardEnemy);
+    if Player.Energy > 0 then Fight(HardEnemy);
+    if Player.Energy > 0 then Fight(HardEnemy);
     if (Player.Energy > 0) and (Combat.Fled = 0) then
       WriteLn(TxtPlantFights_18);
   end;
@@ -2037,7 +2032,7 @@ procedure KillTownsfolk(cmd: string; var npc: Integer; suitLoot: Boolean);
 
 begin
   if (Command = cmd) and (npc = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     npc := 0;
     if suitLoot then SuitGain;
   end;
@@ -2047,7 +2042,7 @@ procedure KillSweeper;
 
 begin
   if (Command = CmdZabij + CmdZamiatacz) and (World.Monsters[Sweeper] = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     World.Monsters[Sweeper] := 0;
     Combat.Roll := Random(100);
     if (Combat.Roll < 35) and (Bag.Tracksuit = 0) then begin
@@ -2061,7 +2056,7 @@ procedure KillSickMan;
 
 begin
   if (Command = CmdZabij + CmdZebrak) and (World.Monsters[SickMan] = Session.Room) then begin
-    FightVeryEasy;
+    Fight(VeryEasyEnemy);
     if Player.Energy > 0 then begin
       Combat.Roll := Random(10);
       WriteLn(TxtKillSickMan_01,
@@ -2744,11 +2739,11 @@ procedure ConcertFights;
 
 begin
   if (Command = CmdZabij + CmdDziecko) and (World.Monsters[Kid] = Session.Room) then begin
-    FightWeakish;
+    Fight(WeakishEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Kid] := 0;
   end;
   if (Command = CmdZabij + CmdDziadek) and (World.Monsters[OldMan] = Session.Room) then begin
-    FightWeakish;
+    Fight(WeakishEnemy);
     if Combat.EnemyEnergy < 1 then begin
       World.Monsters[OldMan] := 0;
       Combat.Roll := Random(100);
@@ -2761,37 +2756,37 @@ begin
     end;
   end;
   if (Command = CmdZabij + CmdWariat) and (World.Monsters[Lunatic] = Session.Room) then begin
-    FightMedium;
+    Fight(MediumEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Lunatic] := 0;
   end;
   if (Command = CmdZabij + CmdSluchacz) and (World.Monsters[Listener] = Session.Room) then begin
-    FightMedium;
+    Fight(MediumEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Listener] := 0;
   end;
   if (Command = CmdZabij + CmdCzlowiek) and (World.Monsters[Man] = Session.Room) then begin
-    FightMedium;
+    Fight(MediumEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Man] := 0;
   end;
   if (Command = CmdZabij + CmdFan) and (World.Monsters[Fan] = Session.Room) then begin
-    FightMedium;
+    Fight(MediumEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Fan] := 0;
   end;
   if (Command = CmdZabij + CmdReporter) and (World.Monsters[Reporter] = Session.Room) then begin
-    FightMedium;
+    Fight(MediumEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Reporter] := 0;
   end;
   if (Command = CmdZabij + CmdPolicjant) and (World.Monsters[Policeman] = Session.Room) then begin
-    FightHard;
+    Fight(HardEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Policeman] := 0;
   end;
   if (Command = CmdZabij + CmdGoryl) and (World.Monsters[Gorilla] = Session.Room) then begin
-    FightHard;
+    Fight(HardEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Gorilla] := 0;
     SuitGain;
   end;
   if (Command = CmdZabij + CmdOchroniarz) and
      (World.Monsters[Bouncer] = Session.Room) then begin
-    FightHard;
+    Fight(HardEnemy);
     if Combat.EnemyEnergy < 1 then World.Monsters[Bouncer] := 0;
     SuitGain;
   end;

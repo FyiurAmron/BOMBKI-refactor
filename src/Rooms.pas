@@ -287,7 +287,7 @@ begin
     if MoveWhenOrExit([Go(CmdZachod, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageWeakling] = RoomCageWeakling) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
-      Fight;
+      DoFight;
       if Combat.Fled = 0 then begin
         World.Monsters[CageWeakling] := 0;
         Combat.Loot := Random(10);
@@ -321,7 +321,7 @@ begin
       Combat.EnemyEnergy := 20;
       Combat.EnemyDexterity := 3;
       Combat.EnemyStrength := 10;
-      Fight;
+      DoFight;
       if Combat.Fled = 0 then begin
         World.Monsters[CageStrong] := 0;
         Combat.Loot := Random(15);
@@ -353,7 +353,7 @@ begin
     if MoveWhenOrQuit([Go(CmdPolodnie, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageAgile] = RoomCageAgile) then begin
       Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 30; Combat.EnemyStrength := 3;
-      Fight;
+      DoFight;
       if Combat.Fled = 0 then begin
         World.Monsters[CageAgile] := 0;
         Combat.Loot := Random(15);
@@ -386,7 +386,7 @@ begin
     if MoveWhenOrQuit([Go(CmdPolnoc, RoomCageCorridor)]) then Exit;
     if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageTough] = RoomCageTough) then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
-      Fight;
+      DoFight;
       if Combat.Fled = 0 then begin
         World.Monsters[CageTough] := 0;
         Combat.Loot := Random(15);
@@ -414,7 +414,7 @@ begin
   repeat
     if World.Monsters[CageHuge] = RoomCageHuge then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;
-      Fight;
+      DoFight;
       if Combat.Fled <> 0 then goto L1027_Flee;
       World.Monsters[CageHuge] := 0;
       Combat.Loot := Random(30);
@@ -721,17 +721,17 @@ begin
       WriteLines(TxtRoom76Lines2);
     end;
     if Command = CmdZabij + CmdPedal then begin
-      FightEasy;
+      Fight(EasyEnemy);
       World.Monsters[Pedal] := 0;
       PillGain;
     end;
     if Command = CmdZabij + CmdPara then begin
-      FightVeryHard;
+      Fight(VeryHardEnemy);
       World.Monsters[Couple] := 0;
-      FightVeryHard;
+      Fight(VeryHardEnemy);
     end;
     if Command = CmdZabij + CmdMaciek then begin
-      FightEasy;
+      Fight(EasyEnemy);
       World.Monsters[Maciek] := 0;
     end;
     if Command = CmdMam + Cmd18Lat then begin
@@ -944,7 +944,7 @@ begin
     ExpandAbbrev;
     if Command = CmdZabij + CmdDrzwi then begin
       if World.Door <> 0 then begin
-        FightNotEasy;
+        Fight(NotEasyEnemy);
         if Player.Energy > 0 then World.Door := 0;
       end;
     end;
@@ -1006,7 +1006,7 @@ begin
     end;
     if Command = CmdZabij + CmdStaruch then begin
       if World.OldElf <> 0 then begin
-        FightWeak;
+        Fight(WeakEnemy);
         World.OldElf := 0;
         WriteLn(TxtRoom86_14);
         WriteLn(TxtRoom86_15);
@@ -1059,7 +1059,7 @@ begin
   repeat
     Combat.EnemyEnergy := 200; Combat.EnemyDexterity := 15; Combat.EnemyStrength := 18;
     Combat.FireballCharges := 5; Combat.PoisonCharges := 1;
-    Fight;
+    DoFight;
     if Combat.EnemyEnergy < 0 then begin
       LeafGain;
       PillGain;
@@ -1151,7 +1151,7 @@ if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
       Combat.EnemyStrength := 10;
       Combat.EnemyDexterity := 26;
       Combat.EnemyEnergy := 188;
-      Fight;
+      DoFight;
       if Combat.EnemyEnergy < 1 then Bag.Permit := Bag.Permit - 10;
     end;
   until Session.Room <> RoomQuestMaster;
@@ -1335,7 +1335,7 @@ begin
       if (Command = CmdZabij + CmdMiniBarman) and (World.Monsters[Minibarman] = 67) then begin
         WriteLn(TxtConcertRooms_23);
         WriteLn(TxtConcertRooms_24);
-        FightVeryHard;
+        Fight(VeryHardEnemy);
         if Player.Energy > 0 then begin
           World.Monsters[Minibarman] := 0;
           Combat.Roll := Random(100);
@@ -1347,7 +1347,7 @@ begin
         end;
       end;
       if (Command = CmdZabij + CmdGrubas) and (World.Monsters[Fatso] = 67) then begin
-        FightVeryHard;
+        Fight(VeryHardEnemy);
         if Player.Energy > 0 then begin
           World.Monsters[Fatso] := 0;
           if Combat.Roll < 15 then begin
@@ -1398,7 +1398,7 @@ begin
                       TxtExitPolodnie, TxtPlaceScena]);
       if Command = CmdZabij + CmdDJ then begin
         if World.Monsters[DJ] = 69 then begin
-          FightVeryHard;
+          Fight(VeryHardEnemy);
           if Combat.EnemyEnergy < 0 then begin
             World.Monsters[DJ] := 0;
             Combat.Roll := Random(100);

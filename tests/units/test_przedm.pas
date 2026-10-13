@@ -252,7 +252,7 @@ procedure RunWalka(aMaxE, aWrogE, aSil, aWrogSil,
 begin
   WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
     aZre, aWrogZre, aPar, aKop);
-  Fight;
+  DoFight;
   CheckEqual(ExpectedKunszt, Player.Experience, What);
 end;
 
@@ -262,7 +262,7 @@ procedure RunWalkaRange(aMaxE, aWrogE, aSil, aWrogSil,
 begin
   WalkaSetup(aMaxE, aWrogE, aSil, aWrogSil,
     aZre, aWrogZre, aPar, aKop);
-  Fight;
+  DoFight;
   CheckRange(What, Player.Experience, KunsztLo, KunsztHi);
 end;
 
@@ -412,7 +412,7 @@ procedure TestWalkaPoisoned;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Combat.PoisonRounds := 10;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy while poisoned');
   CheckTrue(Player.Energy > 0, 'WALKA survives the poison damage');
 end;
@@ -421,7 +421,7 @@ procedure TestWalkaFireball;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Combat.FireballCharges := 1;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy under fireball');
   CheckTrue((Combat.FireballCharges = 0) or (Combat.FireballCharges = 1),
     'WALKA spends the fireball or keeps it');
@@ -431,7 +431,7 @@ procedure TestWalkaPoison;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Combat.PoisonCharges := 1;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy under poison');
   CheckTrue((Combat.PoisonCharges = 0) or (Combat.PoisonCharges = 1),
     'WALKA spends the poison or keeps it');
@@ -440,7 +440,7 @@ end;
 procedure TestWalkaParry;
 begin
   WalkaSetup(0, 0, 1, 20, 10, 10, 139, 0);
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy through parry');
   CheckTrue(Player.Energy > 0, 'WALKA survives the parried attack');
 end;
@@ -449,7 +449,7 @@ procedure TestWalkaParryLight;
 begin
   WalkaSetup(0, 10, 3, 3, 10, 10, 139, 0);
   Player.Energy := 10000;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy through light parry');
   CheckTrue(Player.Energy > 0, 'WALKA survives the light parry');
 end;
@@ -461,7 +461,7 @@ begin
   Combat.FireballCharges := 1;
   Combat.PoisonCharges := 1;
   Combat.PoisonRounds := 10;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy in the long fight');
   CheckTrue(Player.Energy > 0, 'WALKA survives the long fight');
 end;
@@ -470,7 +470,7 @@ procedure TestWalkaSuperKopHit;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
   Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy with the super kop');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the super kop');
 end;
@@ -479,7 +479,7 @@ procedure TestWalkaSuperKopHitAgain;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 100);
   Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy with the kop again');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the kop again');
 end;
@@ -488,7 +488,7 @@ procedure TestWalkaSuperKopChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 11);
   Player.Mana := 100; Skills.Values[KickMaxEnergy] := 100; Player.Energy := 50;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy when the kop misses');
   CheckTrue(Player.Mana < 100, 'WALKA spends mana on the kop attempt');
 end;
@@ -497,7 +497,7 @@ procedure TestWalkaFlee;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Skills.Values[Fleeing] := 100; Skills.Values[FleeEnergy] := 100; Player.Energy := 50; Player.Mana := 100;
-  Fight;
+  DoFight;
   CheckTrue(Combat.Fled = 1, 'WALKA flees the battle');
 end;
 
@@ -505,7 +505,7 @@ procedure TestWalkaFleeChybia;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Skills.Values[Fleeing] := 1; Skills.Values[FleeEnergy] := 100; Player.Energy := 50; Player.Mana := 100;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1,
     'WALKA finishes the enemy when the flee fails');
 end;
@@ -514,7 +514,7 @@ procedure TestWalkaPotrawki;
 begin
   WalkaSetup(0, 0, 1, 1, 10, 10, 0, 0);
   Skills.Values[Cooking] := 99; Bag.Bigos := 50; Bag.Count := 0;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the enemy for the potrawki');
   CheckTrue((Bag.Count = 0) or (Bag.Count = 1),
     'WALKA cooks the bigos or not');
@@ -524,7 +524,7 @@ procedure TestWalkaDeath;
 begin
   WalkaSetup(0, 0, 1, 61, 10, 10, 0, 0);
   Player.Energy := 1;
-  Fight;
+  DoFight;
   CheckTrue((Player.Energy < 1) or (Combat.EnemyEnergy < 1),
     'WALKA ends the fight by death or victory');
 end;
@@ -533,7 +533,7 @@ procedure TestWalkaFukroll;
 begin
   WalkaSetup(0, 10, 2, 1, 10, 10, 0, 0);
   Gear.Values[LuckRoll] := 1;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1,
     'WALKA defeats the enemy through the fukroll');
 end;
@@ -549,34 +549,34 @@ procedure TestEncounters;
 begin
   EncounterSetup;
   Command := 'ZABIJ MROWKA';
-  FightWeak;
+  Fight(WeakEnemy);
   CheckTrue(Combat.EnemyEnergy < 1, 'SLABO defeats the mrowka');
   EncounterSetup;
   FightDog;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKAPIES defeats the pies');
   EncounterSetup;
-  FightWeakish;
+  Fight(WeakishEnemy);
   CheckTrue(Combat.EnemyEnergy < 1, 'MNIEJSLABO defeats the enemy');
   EncounterSetup;
-  FightMedium;
+  Fight(MediumEnemy);
   CheckTrue(Combat.EnemyEnergy < 1, 'SREDNIO defeats the enemy');
   EncounterSetup;
-  FightHard;
+  Fight(HardEnemy);
   CheckTrue(Combat.EnemyEnergy < 1, 'TRUDNO defeats the enemy');
   EncounterSetup;
-  FightVeryEasy;
+  Fight(VeryEasyEnemy);
   CheckTrue((Combat.EnemyEnergy < 1) and (Player.Energy > 0),
     'VEASY defeats the enemy and survives');
   EncounterSetup;
-  FightEasy;
+  Fight(EasyEnemy);
   CheckTrue((Combat.EnemyEnergy < 1) and (Player.Energy > 0),
     'EASY defeats the enemy and survives');
   EncounterSetup;
-  FightNotEasy;
+  Fight(NotEasyEnemy);
   CheckTrue((Combat.EnemyEnergy < 1) and (Player.Energy > 0),
     'NEASY defeats the enemy and survives');
   EncounterSetup;
-  FightVeryHard;
+  Fight(VeryHardEnemy);
   CheckTrue(Combat.EnemyEnergy < 1, 'BTRUDNO defeats the enemy');
 end;
 
@@ -584,7 +584,7 @@ procedure TestWalkaDodge;
 begin
   WalkaSetup(0, 30, 3, 1, 0, 2, 0, 0);
   Player.Energy := 100;
-  Fight;
+  DoFight;
   CheckTrue(Combat.EnemyEnergy < 1, 'WALKA defeats the dodging enemy');
   CheckTrue(Player.Energy > 0, 'WALKA survives the dodged combat');
 end;
@@ -1333,7 +1333,7 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if Bag.Heart = 0 then FightVeryEasy;
+    if Bag.Heart = 0 then Fight(VeryEasyEnemy);
   CheckEqual(-10, Bag.Heart, 'VEASY eventually drops the heart');
 end;
 
@@ -1342,7 +1342,7 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if Bag.Heart = 0 then FightEasy;
+    if Bag.Heart = 0 then Fight(EasyEnemy);
   CheckEqual(-10, Bag.Heart, 'EASY eventually drops the heart');
 end;
 
@@ -1351,7 +1351,7 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 160 do
-    if Bag.Heart = 0 then FightNotEasy;
+    if Bag.Heart = 0 then Fight(NotEasyEnemy);
   CheckEqual(-10, Bag.Heart, 'NEASY eventually drops the heart');
 end;
 
@@ -1360,7 +1360,7 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 110 do
-    if Bag.Heart = 0 then FightHard;
+    if Bag.Heart = 0 then Fight(HardEnemy);
   CheckEqual(-10, Bag.Heart, 'TRUDNO eventually drops the heart');
 end;
 
@@ -1369,7 +1369,7 @@ var i: Integer;
 begin
   LootSetup;
   for i := 1 to 150 do
-    if Bag.Heart = 0 then FightVeryHard;
+    if Bag.Heart = 0 then Fight(VeryHardEnemy);
   CheckEqual(-10, Bag.Heart, 'BTRUDNO eventually drops the heart');
 end;
 
@@ -1386,7 +1386,7 @@ begin
   for i := 1 to 800 do begin
     WalkaSetup(0, 0, 127, 1, 127, 1, 0, 0);
     Player.Energy := 100; Skills.Values[Cooking] := 1; Bag.Bigos := 0;
-    Fight;
+    DoFight;
     if Skills.Values[Cooking] > 1 then
       learned := true;
   end;
@@ -1403,7 +1403,7 @@ begin
   for i := 1 to 60 do begin
     WalkaSetup(0, 3000, 127, 5, 127, 1, 99, 0);
     Player.Energy := 30000;
-    Fight;
+    DoFight;
     if Skills.Values[Parry] > 99 then
       Break;
   end;

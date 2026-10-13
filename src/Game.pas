@@ -1200,7 +1200,43 @@ begin
       DropItem(cmd, item, verb, line, effect);
 end;
 
+type
+  TFoodItem = record
+    cmd: string;
+    item: TBagItem;
+    verb, line: string;
+    gain: Integer;
+    stat, cap: PInteger;
+  end;
+
+const
+  FoodItems: array[1..8] of TFoodItem = (
+    (cmd: CmdUzyj + CmdPaczek; item: Doughnut; verb: TxtEatVerb; line: TxtUseItems_12; gain: 8; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdCiastko; item: Cookie; verb: TxtEatVerb; line: TxtUseItems_13; gain: 12; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdSuchaRacja; item: DryRation; verb: TxtEatVerb; line: TxtUseItems_14; gain: 16; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdBulka; item: BreadRoll; verb: TxtEatVerb; line: TxtUseItems_15; gain: 20; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdChleb; item: Bread; verb: TxtEatVerb; line: TxtUseItems_23; gain: 26; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdWeka; item: Sausage; verb: TxtEatVerb; line: TxtUseItems_25; gain: 34; stat: @Player.Energy; cap: @Player.MaxEnergy),
+    (cmd: CmdUzyj + CmdMalaButelkaMany; item: ManaBottle; verb: ''; line: TxtUseItems_26; gain: 30; stat: @Player.Mana; cap: @Player.MaxMana),
+    (cmd: CmdUzyj + CmdBigos; item: Bigos; verb: TxtEatVerb; line: TxtUseItems_27; gain: 20; stat: @Player.Energy; cap: @Player.MaxEnergy)
+  );
+
+procedure EatFood(cmd: string; item: TBagItem; verb, line: string;
+  gain: Integer; stat, cap: PInteger);
+begin
+  if (Command = cmd) and (Bag.Items[item] <= -10) then begin
+    Bag.Count := Bag.Count - 1;
+    Bag.Items[item] := Bag.Items[item] + 10;
+    WriteLn(verb, line);
+    stat^ := stat^ + gain;
+    if stat^ > cap^ then stat^ := cap^;
+  end;
+end;
+
 procedure UseItems;
+
+var
+  fi: Integer;
 begin
   if (Command = CmdUzyj + CmdFajka) and (Bag.Items[Pipe] = -10) then WriteLn(TxtUseItems_01);
   if (Command = CmdUzyj + CmdSerce) and (Bag.Items[Heart] = -10) then begin
@@ -1213,34 +1249,9 @@ begin
   if (Command = CmdUzyj + CmdDyplom) and (Bag.Items[Diploma] = -10) then begin
     WriteLines(TxtUseItemsLines1);
   end;
-  if (Command = CmdUzyj + CmdPaczek) and (Bag.Items[Doughnut] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[Doughnut] := Bag.Items[Doughnut] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_12);
-    Player.Energy := Player.Energy + 8;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
-  if (Command = CmdUzyj + CmdCiastko) and (Bag.Items[Cookie] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[Cookie] := Bag.Items[Cookie] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_13);
-    Player.Energy := Player.Energy + 12;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
-  if (Command = CmdUzyj + CmdSuchaRacja) and (Bag.Items[DryRation] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[DryRation] := Bag.Items[DryRation] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_14);
-    Player.Energy := Player.Energy + 16;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
-  if (Command = CmdUzyj + CmdBulka) and (Bag.Items[BreadRoll] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[BreadRoll] := Bag.Items[BreadRoll] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_15);
-    Player.Energy := Player.Energy + 20;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
+  for fi := Low(FoodItems) to High(FoodItems) do
+    with FoodItems[fi] do
+      EatFood(cmd, item, verb, line, gain, stat, cap);
   if (Command = CmdZniszcz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
     WriteLn(TxtUseItems_16);
     Bag.Permit := Bag.Permit + 10;
@@ -1249,36 +1260,7 @@ begin
   if (Command = CmdPatrz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
     WriteLines(TxtUseItemsLines2);
   end;
-  if (Command = CmdUzyj + CmdChleb) and (Bag.Items[Bread] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[Bread] := Bag.Items[Bread] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_23);
-    Player.Energy := Player.Energy + 26;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
   if Command = CmdUzyj + CmdKaseta then WriteLn(TxtUseItems_24);
-  if (Command = CmdUzyj + CmdWeka) and (Bag.Items[Sausage] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[Sausage] := Bag.Items[Sausage] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_25);
-    Player.Energy := Player.Energy + 34;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-  end;
-  if (Command = CmdUzyj + CmdMalaButelkaMany) and (Bag.Items[ManaBottle] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[ManaBottle] := Bag.Items[ManaBottle] + 10;
-    WriteLn(TxtUseItems_26);
-    Player.Mana := Player.Mana + 30;
-    if Player.Mana > Player.MaxMana then Player.Mana := Player.MaxMana;
-  end;
-  if (Command = CmdUzyj + CmdBigos) and (Bag.Items[Bigos] <= -10) then begin
-    Bag.Count := Bag.Count - 1;
-    Bag.Items[Bigos] := Bag.Items[Bigos] + 10;
-    WriteLn(TxtEatVerb, TxtUseItems_27);
-    Player.Energy := Player.Energy + 20;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
-
-  end;
   if (Command = CmdUzyj + CmdKomplet) and (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_28);
     Gear.Values[Armor] := Gear.Values[Armor] + 7;

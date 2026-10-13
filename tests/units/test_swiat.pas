@@ -44,7 +44,7 @@ begin
   Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[Armor] := 0; Gear.Values[WornCount] := 0;
   Gear.Values[LuckRoll] := 0; Player.MaxEnergy := 50; World.Monsters[CageStrong] := 0;
   Bag.Count := 0; World.Quest := 0; World.QuestKills := 0; Player.Money := 0;
-  Bag.Permit := 0; Bag.Diploma := 0; Bag.Pipe := 0; Player.Practice := 1;
+  Bag.Permit := 0; Bag.Items[Diploma] := 0; Bag.Items[Pipe] := 0; Player.Practice := 1;
 end;
 
 {Visit one guarded room: set MIECHO, pipe the commands, run.}
@@ -104,7 +104,7 @@ begin
    draw, so keep clearing the monster and fighting until all
    three have dropped at least once.}
   RoomSetup;
-  Bag.OldSword := 0; Bag.SmallShield := 0; Bag.Heart := 0;
+  Bag.Items[OldSword] := 0; Bag.Items[SmallShield] := 0; Bag.Items[Heart] := 0;
   sawSword := false; sawShield := false; sawHeart := false;
   for i := 1 to 80 do begin
     Player.Energy := 30000; Player.Experience := 100; Player.Strength := 127; Player.Dexterity := 127;
@@ -113,9 +113,9 @@ begin
     Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[LuckRoll] := 0;
     World.Monsters[CageStrong] := 13;
     PokojAt('ZABIJ POTWOR|WYJSCIE', 13);
-    if Bag.OldSword <> 0 then sawSword := true;
-    if Bag.SmallShield <> 0 then sawShield := true;
-    if Bag.Heart <> 0 then sawHeart := true;
+    if Bag.Items[OldSword] <> 0 then sawSword := true;
+    if Bag.Items[SmallShield] <> 0 then sawShield := true;
+    if Bag.Items[Heart] <> 0 then sawHeart := true;
     if sawSword and sawShield and sawHeart then
       Break;
   end;
@@ -266,11 +266,11 @@ end;
 procedure TestPokoj100SellMedium;
 begin
   RoomSetup;
-  World.Quest := 2; World.QuestKills := 0; Bag.Diploma := -10; Player.MaxEnergy := 50;
+  World.Quest := 2; World.QuestKills := 0; Bag.Items[Diploma] := -10; Player.MaxEnergy := 50;
   Bag.Permit := 0; Player.Experience := 100;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
   CheckEqual(0, World.Quest, 'the sold quest is cleared');
-  CheckEqual(0, Bag.Diploma, 'the diploma is handed over');
+  CheckEqual(0, Bag.Items[Diploma], 'the diploma is handed over');
   CheckEqual(45, Player.MaxEnergy, 'handing in the diploma costs max energy');
   CheckEqual(-10, Bag.Permit, 'selling lowers the pass');
   CheckEqual(350, Player.Experience, 'the medium quest pays 250 skill');
@@ -279,11 +279,11 @@ end;
 procedure TestPokoj100SellHard;
 begin
   RoomSetup;
-  World.Quest := 3; World.QuestKills := 0; Bag.Pipe := -10; Player.Practice := 1;
+  World.Quest := 3; World.QuestKills := 0; Bag.Items[Pipe] := -10; Player.Practice := 1;
   Bag.Permit := 0; Player.Experience := 100; Bag.Count := 0; Player.Wisdom := 5;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
   CheckEqual(0, World.Quest, 'the sold quest is cleared');
-  CheckEqual(0, Bag.Pipe, 'the pipe is handed over');
+  CheckEqual(0, Bag.Items[Pipe], 'the pipe is handed over');
   CheckEqual(0, Player.Practice, 'one practice point is spent');
   CheckEqual(-10, Bag.Permit, 'selling lowers the pass');
   CheckEqual(525, Player.Experience, 'the hard quest pays 425 skill');

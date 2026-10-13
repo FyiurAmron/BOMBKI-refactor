@@ -455,8 +455,8 @@ begin
       WriteLines(TxtRoom17Lines1);
       if (World.Monsters[CageWeakling] = 0) and (World.Monsters[CageAgile] = 0) and
       (World.Monsters[CageStrong] = 0) and (World.Monsters[CageTough] = 0) and
-      (World.Monsters[CageHuge] = 0) and (Bag.Diploma = 0) then
-        Bag.Diploma := RoomCageReward;
+      (World.Monsters[CageHuge] = 0) and (Bag.Items[Diploma] = 0) then
+        Bag.Items[Diploma] := RoomCageReward;
     end;
     if MoveWhenOrQuit([Go(CmdGora, RoomCageCorridor), Go(CmdDol, RoomTeleport)]) then Exit;
   until Session.Room <> RoomCageReward;
@@ -982,24 +982,24 @@ begin
     if Command = CmdPatrz + CmdGarnki then
       WriteLn(TxtRoom86_04);
     if Command = CmdRozmawiaj + CmdStaruch then begin
-      if (Bag.Sausage > -30) and (Player.Money < 200) and (Bag.ReturnScroll = 0) then begin
+      if (Bag.Items[Sausage] > -30) and (Player.Money < 200) and (Bag.Items[ReturnScroll] = 0) then begin
         WriteLines(TxtRoom86Lines1);
       end;
     end;
     if Command = CmdRozmawiaj + CmdStaruch then begin
-      if (Bag.Sausage < -30) and (Player.Money > 199) then begin
+      if (Bag.Items[Sausage] < -30) and (Player.Money > 199) then begin
         WriteLines(TxtRoom86Lines2);
         Session.Room := RoomCityCentre;
-        Bag.Beer := Bag.Beer - 10;
-        Bag.Sausage := Bag.Sausage + 40;
+        Bag.Items[Beer] := Bag.Items[Beer] - 10;
+        Bag.Items[Sausage] := Bag.Items[Sausage] + 40;
         Player.Money := Player.Money - 200;
-        Bag.ReturnScroll := Bag.ReturnScroll - 10;
+        Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] - 10;
         Player.Experience := Player.Experience + 50;
         Bag.Count := Bag.Count - 2;
       end;
     end;
     if Command = CmdRozmawiaj + CmdStaruch then begin
-      if Bag.ReturnScroll < 0 then begin
+      if Bag.Items[ReturnScroll] < 0 then begin
         WriteLn(TxtRoom86_13);
         Session.Room := RoomCageHuge;
       end;
@@ -1117,17 +1117,17 @@ begin
              Bag.Permit := Bag.Permit - 10;
              Bag.Count := Bag.Count + 1;
            end;
-        2: if (World.QuestKills < 1) and (Bag.Diploma <= -10) then begin
+        2: if (World.QuestKills < 1) and (Bag.Items[Diploma] <= -10) then begin
              WriteLn(TxtRoom100_12);
              WriteLn(TxtQuestReward, 250, TxtSpaceKunsztDashes);
              Player.Experience := Player.Experience + 250;
              World.Quest := 0;
              World.QuestKills := 0;
-             Bag.Diploma := 0;
+             Bag.Items[Diploma] := 0;
              Player.MaxEnergy := Player.MaxEnergy - 5;
              Bag.Permit := Bag.Permit - 10;
            end;
-        3: if (World.QuestKills < 1) and (Bag.Pipe <= -10) and (Player.Practice > 0) then begin
+        3: if (World.QuestKills < 1) and (Bag.Items[Pipe] <= -10) and (Player.Practice > 0) then begin
              WriteLn(TxtRoom100_12);
              WriteLn(TxtQuestReward, 425, TxtSpaceKunsztDashes);
              Player.Experience := Player.Experience + 425;
@@ -1135,7 +1135,7 @@ begin
              Player.Wisdom := Player.Wisdom - 1;
              World.Quest := 0;
              World.QuestKills := 0;
-             Bag.Pipe := Bag.Pipe + 10;
+             Bag.Items[Pipe] := Bag.Items[Pipe] + 10;
              Player.Practice := Player.Practice - 1;
              Bag.Permit := Bag.Permit - 10;
            end;
@@ -1341,7 +1341,7 @@ begin
           Combat.Roll := Random(100);
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_25, TxtShared_08, TxtPiwoTail);
-            Bag.Beer := Bag.Beer - 10;
+            Bag.Items[Beer] := Bag.Items[Beer] - 10;
             Bag.Count := Bag.Count + 1;
           end;
         end;
@@ -1352,7 +1352,7 @@ begin
           World.Monsters[Fatso] := 0;
           if Combat.Roll < 15 then begin
             WriteLn(TxtConcertRooms_26, TxtShared_08, TxtPiwoTail);
-            Bag.Beer := Bag.Beer - 10;
+            Bag.Items[Beer] := Bag.Items[Beer] - 10;
             Bag.Count := Bag.Count + 1;
           end;
         end;
@@ -1404,13 +1404,13 @@ begin
             Combat.Roll := Random(100);
             if Combat.Roll < 25 then begin
               WriteLn(TxtShared_08, TxtConcertRooms_38);
-              Bag.DryRation := Bag.DryRation - 10;
+              Bag.Items[DryRation] := Bag.Items[DryRation] - 10;
               Bag.Count := Bag.Count + 1;
             end;
             if Combat.Roll < 3 then begin
               WriteLn(TxtShared_08, TxtConcertRooms_39);
               WriteLn(TxtBang, TxtUniqeItem, TxtConcertRooms_40);
-              Bag.Cassette := Bag.Cassette - 10;
+              Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
               Player.MaxEnergy := Player.MaxEnergy + 5;
               Gear.Values[Armor] := Gear.Values[Armor] - 8;
               Bag.Count := Bag.Count + 1;

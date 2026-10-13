@@ -41,17 +41,15 @@ type
     WornGarment: string;
   end;
 
+  TBagItem = (Backpack, OldSword, SmallShield, Heart, Diploma, Pipe,
+    Doughnut, Cookie, DryRation, Bread, BreadRoll, Sausage, Bigos,
+    ManaBottle, Tracksuit, SpikedSuit, Cassette, CompareScroll,
+    TeleportPill, LuckyLeaf, ReturnScroll, Beer);
   TBag = record
     Count: Integer;
     Limit: Integer;
     Permit: Longint;
-    Backpack: Shortint;
-    OldSword, SmallShield, Heart, Diploma, Pipe: Integer;
-    Doughnut, Cookie, DryRation, Bread, BreadRoll, Sausage: Integer;
-    Bigos: Shortint;
-    ManaBottle, Tracksuit, SpikedSuit, Cassette, CompareScroll: Integer;
-    TeleportPill, LuckyLeaf: Shortint;
-    ReturnScroll, Beer: Integer;
+    Items: array[TBagItem] of Integer;
   end;
 
   TCombat = record
@@ -230,9 +228,9 @@ end;
 
 procedure TryCageLoot(threshold: Integer);
 begin
-  TryLoot(Bag.OldSword, threshold, TxtShared_10);
-  TryLoot(Bag.SmallShield, threshold, TxtShared_11);
-  TryLoot(Bag.Heart, 6, TxtShared_12);
+  TryLoot(Bag.Items[OldSword], threshold, TxtShared_10);
+  TryLoot(Bag.Items[SmallShield], threshold, TxtShared_11);
+  TryLoot(Bag.Items[Heart], 6, TxtShared_12);
 end;
 
 procedure TranceItemLine(itemRoom: Integer; line: string);
@@ -249,11 +247,11 @@ type
 
 const
   TranceItems: array[1..5] of TTranceItem = (
-    (item: @Bag.OldSword; line: TxtStart_07),
-    (item: @Bag.SmallShield; line: TxtTranceItemLabel + TxtStart_08),
-    (item: @Bag.Heart; line: TxtTranceItemLabel + TxtStart_09),
-    (item: @Bag.Diploma; line: TxtTranceItemLabel + TxtStart_10),
-    (item: @Bag.Pipe; line: TxtStart_11)
+    (item: @Bag.Items[OldSword]; line: TxtStart_07),
+    (item: @Bag.Items[SmallShield]; line: TxtTranceItemLabel + TxtStart_08),
+    (item: @Bag.Items[Heart]; line: TxtTranceItemLabel + TxtStart_09),
+    (item: @Bag.Items[Diploma]; line: TxtTranceItemLabel + TxtStart_10),
+    (item: @Bag.Items[Pipe]; line: TxtStart_11)
   );
 
 procedure ShowIntro;
@@ -439,7 +437,7 @@ begin
   Combat.Loot := Random(15);
   WriteLn(TxtShared_08, Combat.Loot, TxtFightDog_01);
   Player.Money := Player.Money + Combat.Loot;
-  TryLoot(Bag.Heart, 5, TxtFightDog_02);
+  TryLoot(Bag.Items[Heart], 5, TxtFightDog_02);
 end;
 
 type
@@ -643,17 +641,17 @@ begin
     if AntDoughnut then begin
       if Command = CmdZabij + CmdMrowka then begin
         Combat.Roll := Random(10);
-        if (Combat.Roll < 7) and (Bag.Doughnut <> -10) then begin
+        if (Combat.Roll < 7) and (Bag.Items[Doughnut] <> -10) then begin
           WriteLn(TxtShared_08, TxtCompositeFight_02);
-          Bag.Doughnut := -10;
+          Bag.Items[Doughnut] := -10;
           Bag.Count := Bag.Count + 1;
         end;
       end;
-    end else if (HeartChance > 0) and (Bag.Heart = 0) then begin
+    end else if (HeartChance > 0) and (Bag.Items[Heart] = 0) then begin
       Combat.Roll := Random(20);
-      if (Combat.Roll < HeartChance) and (Bag.Heart <> -10) then begin
+      if (Combat.Roll < HeartChance) and (Bag.Items[Heart] <> -10) then begin
         WriteLn(TxtShared_08, TxtCompositeFight_03);
-        Bag.Heart := -10;
+        Bag.Items[Heart] := -10;
         Bag.Count := Bag.Count + 1;
       end;
     end;
@@ -849,7 +847,7 @@ begin
   if Combat.Roll <= 25 then begin
     WriteLn(TxtSuitGain_01);
     WriteLn(TxtUniqeItem, TxtSuitGain_02);
-    Bag.SpikedSuit := Bag.SpikedSuit - 10;
+    Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - 10;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -859,7 +857,7 @@ begin
   Combat.Roll := Random(1000);
   if Combat.Roll <= 42 then begin
     WriteLn(TxtPillGain_01);
-    Bag.TeleportPill := Bag.TeleportPill - 10;
+    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - 10;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -870,7 +868,7 @@ begin
   if (Combat.Roll < 2) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtCassetteGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtCassetteGain_02);
-    Bag.Cassette := Bag.Cassette - 10;
+    Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
     Player.MaxEnergy := Player.MaxEnergy + 5;
     Gear.Values[Armor] := Gear.Values[Armor] - 8;
     Bag.Count := Bag.Count + 1;
@@ -884,7 +882,7 @@ begin
   if (Combat.Roll < 6) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtLeafGain_01);
     WriteLn(TxtBang, TxtUniqeItem, TxtLeafGain_02);
-    Bag.LuckyLeaf := Bag.LuckyLeaf - 10;
+    Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - 10;
     Bag.Count := Bag.Count + 1;
     Player.MaxMana := Player.MaxMana + 40;
   end;
@@ -895,7 +893,7 @@ begin
   Combat.Roll := Random(100);
   if (Combat.Roll < 10) and (Session.Room <> DeadRoom) then begin
     WriteLn(TxtShared_08, TxtScrollGain_01);
-    Bag.CompareScroll := Bag.CompareScroll - 10;
+    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - 10;
     Bag.Count := Bag.Count + 1;
   end;
 end;
@@ -1119,7 +1117,7 @@ begin
       Combat.Roll := Random(100);
       if Skills.Values[Cooking] > Combat.Roll then begin
         WriteLn(TxtFightMadeBigos);
-        Bag.Bigos := Bag.Bigos - 10;
+        Bag.Items[Bigos] := Bag.Items[Bigos] - 10;
         Bag.Count := Bag.Count + 1;
         if (Combat.Roll < 1) and (Skills.Values[Cooking] < 100) then begin
           WriteLn(TxtFightCookingLearn);
@@ -1140,57 +1138,57 @@ end;
 
 procedure TakeDrop;
 begin
-  if (Command = CmdBierz + CmdStary) and (Bag.OldSword = Session.OuterRoom) then begin
+  if (Command = CmdBierz + CmdStary) and (Bag.Items[OldSword] = Session.OuterRoom) then begin
     WriteLn(TxtPickUpVerb, TxtTakeDrop_01);
-    Bag.OldSword := -10;
+    Bag.Items[OldSword] := -10;
     Bag.Count := Bag.Count + 1;
   end;
-  if (Command = CmdBierz + CmdMala) and (Bag.SmallShield = Session.OuterRoom) then begin
+  if (Command = CmdBierz + CmdMala) and (Bag.Items[SmallShield] = Session.OuterRoom) then begin
     WriteLn(TxtPickUpVerb, TxtTakeDrop_02);
-    Bag.SmallShield := -10;
+    Bag.Items[SmallShield] := -10;
     Bag.Count := Bag.Count + 1;
   end;
-  if (Command = CmdBierz + CmdSerce) and (Bag.Heart = Session.OuterRoom) then begin
+  if (Command = CmdBierz + CmdSerce) and (Bag.Items[Heart] = Session.OuterRoom) then begin
     WriteLn(TxtPickUpVerb, TxtTakeDrop_03);
-    Bag.Heart := -10;
+    Bag.Items[Heart] := -10;
     Bag.Count := Bag.Count + 1;
   end;
-  if (Command = CmdBierz + CmdDyplom) and (Bag.Diploma = Session.OuterRoom) then begin
+  if (Command = CmdBierz + CmdDyplom) and (Bag.Items[Diploma] = Session.OuterRoom) then begin
     WriteLn(TxtPickUpVerb, TxtTakeDrop_04);
-    Bag.Diploma := -10;
+    Bag.Items[Diploma] := -10;
     Player.MaxEnergy := Player.MaxEnergy + 5;
     Bag.Count := Bag.Count + 1;
   end;
-  if (Command = CmdBierz + CmdFajka) and (Bag.Pipe = Session.OuterRoom) then begin
+  if (Command = CmdBierz + CmdFajka) and (Bag.Items[Pipe] = Session.OuterRoom) then begin
     WriteLn(TxtPickUpVerb, TxtTakeDrop_05);
-    Bag.Pipe := -10;
+    Bag.Items[Pipe] := -10;
     Bag.Count := Bag.Count + 1;
     if Player.Wisdom < Player.MaxWisdom then Player.Wisdom := Player.Wisdom + 1;
   end;
-  if (Command = CmdOdrzuc + CmdStary) and (Bag.OldSword = -10) then begin
+  if (Command = CmdOdrzuc + CmdStary) and (Bag.Items[OldSword] = -10) then begin
     WriteLn(TxtDropVerb, TxtTakeDrop_06);
-    Bag.OldSword := Session.OuterRoom;
+    Bag.Items[OldSword] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
   end;
-  if (Command = CmdOdrzuc + CmdFajka) and (Bag.Pipe = -10) then begin
+  if (Command = CmdOdrzuc + CmdFajka) and (Bag.Items[Pipe] = -10) then begin
     WriteLn(TxtTakeDrop_07);
-    Bag.Pipe := Session.OuterRoom;
+    Bag.Items[Pipe] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
     Player.Wisdom := Player.Wisdom - 1;
   end;
-  if (Command = CmdOdrzuc + CmdMala) and (Bag.SmallShield = -10) then begin
+  if (Command = CmdOdrzuc + CmdMala) and (Bag.Items[SmallShield] = -10) then begin
     WriteLn(TxtDropVerb, TxtTakeDrop_08);
-    Bag.SmallShield := Session.OuterRoom;
+    Bag.Items[SmallShield] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
   end;
-  if (Command = CmdOdrzuc + CmdSerce) and (Bag.Heart = -10) then begin
+  if (Command = CmdOdrzuc + CmdSerce) and (Bag.Items[Heart] = -10) then begin
     WriteLn(TxtDropVerb, TxtTakeDrop_09);
-    Bag.Heart := Session.OuterRoom;
+    Bag.Items[Heart] := Session.OuterRoom;
     Bag.Count := Bag.Count - 1;
   end;
-  if (Command = CmdOdrzuc + CmdDyplom) and (Bag.Diploma = -10) then begin
+  if (Command = CmdOdrzuc + CmdDyplom) and (Bag.Items[Diploma] = -10) then begin
     WriteLn(TxtDropVerb, TxtTakeDrop_10);
-    Bag.Diploma := Session.OuterRoom;
+    Bag.Items[Diploma] := Session.OuterRoom;
     Player.MaxEnergy := Player.MaxEnergy - 5;
     Bag.Count := Bag.Count - 1;
   end;
@@ -1198,41 +1196,41 @@ end;
 
 procedure UseItems;
 begin
-  if (Command = CmdUzyj + CmdFajka) and (Bag.Pipe = -10) then WriteLn(TxtUseItems_01);
-  if (Command = CmdUzyj + CmdSerce) and (Bag.Heart = -10) then begin
-    Bag.Heart := 0;
+  if (Command = CmdUzyj + CmdFajka) and (Bag.Items[Pipe] = -10) then WriteLn(TxtUseItems_01);
+  if (Command = CmdUzyj + CmdSerce) and (Bag.Items[Heart] = -10) then begin
+    Bag.Items[Heart] := 0;
     WriteLn(TxtEatVerb, TxtUseItems_02);
     Player.Energy := Player.Energy + 5;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
     Bag.Count := Bag.Count - 1;
   end;
-  if (Command = CmdUzyj + CmdDyplom) and (Bag.Diploma = -10) then begin
+  if (Command = CmdUzyj + CmdDyplom) and (Bag.Items[Diploma] = -10) then begin
     WriteLines(TxtUseItemsLines1);
   end;
-  if (Command = CmdUzyj + CmdPaczek) and (Bag.Doughnut <= -10) then begin
+  if (Command = CmdUzyj + CmdPaczek) and (Bag.Items[Doughnut] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Doughnut := Bag.Doughnut + 10;
+    Bag.Items[Doughnut] := Bag.Items[Doughnut] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_12);
     Player.Energy := Player.Energy + 8;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
   end;
-  if (Command = CmdUzyj + CmdCiastko) and (Bag.Cookie <= -10) then begin
+  if (Command = CmdUzyj + CmdCiastko) and (Bag.Items[Cookie] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Cookie := Bag.Cookie + 10;
+    Bag.Items[Cookie] := Bag.Items[Cookie] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_13);
     Player.Energy := Player.Energy + 12;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
   end;
-  if (Command = CmdUzyj + CmdSuchaRacja) and (Bag.DryRation <= -10) then begin
+  if (Command = CmdUzyj + CmdSuchaRacja) and (Bag.Items[DryRation] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.DryRation := Bag.DryRation + 10;
+    Bag.Items[DryRation] := Bag.Items[DryRation] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_14);
     Player.Energy := Player.Energy + 16;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
   end;
-  if (Command = CmdUzyj + CmdBulka) and (Bag.BreadRoll <= -10) then begin
+  if (Command = CmdUzyj + CmdBulka) and (Bag.Items[BreadRoll] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.BreadRoll := Bag.BreadRoll + 10;
+    Bag.Items[BreadRoll] := Bag.Items[BreadRoll] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_15);
     Player.Energy := Player.Energy + 20;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
@@ -1245,50 +1243,50 @@ begin
   if (Command = CmdPatrz + CmdPrzepustka) and (Bag.Permit <= -10) then begin
     WriteLines(TxtUseItemsLines2);
   end;
-  if (Command = CmdUzyj + CmdChleb) and (Bag.Bread <= -10) then begin
+  if (Command = CmdUzyj + CmdChleb) and (Bag.Items[Bread] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Bread := Bag.Bread + 10;
+    Bag.Items[Bread] := Bag.Items[Bread] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_23);
     Player.Energy := Player.Energy + 26;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
   end;
   if Command = CmdUzyj + CmdKaseta then WriteLn(TxtUseItems_24);
-  if (Command = CmdUzyj + CmdWeka) and (Bag.Sausage <= -10) then begin
+  if (Command = CmdUzyj + CmdWeka) and (Bag.Items[Sausage] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Sausage := Bag.Sausage + 10;
+    Bag.Items[Sausage] := Bag.Items[Sausage] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_25);
     Player.Energy := Player.Energy + 34;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
   end;
-  if (Command = CmdUzyj + CmdMalaButelkaMany) and (Bag.ManaBottle <= -10) then begin
+  if (Command = CmdUzyj + CmdMalaButelkaMany) and (Bag.Items[ManaBottle] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.ManaBottle := Bag.ManaBottle + 10;
+    Bag.Items[ManaBottle] := Bag.Items[ManaBottle] + 10;
     WriteLn(TxtUseItems_26);
     Player.Mana := Player.Mana + 30;
     if Player.Mana > Player.MaxMana then Player.Mana := Player.MaxMana;
   end;
-  if (Command = CmdUzyj + CmdBigos) and (Bag.Bigos <= -10) then begin
+  if (Command = CmdUzyj + CmdBigos) and (Bag.Items[Bigos] <= -10) then begin
     Bag.Count := Bag.Count - 1;
-    Bag.Bigos := Bag.Bigos + 10;
+    Bag.Items[Bigos] := Bag.Items[Bigos] + 10;
     WriteLn(TxtEatVerb, TxtUseItems_27);
     Player.Energy := Player.Energy + 20;
     if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
 
   end;
-  if (Command = CmdUzyj + CmdKomplet) and (Bag.Tracksuit <= -10) and (Gear.WornGarment = TxtEmpty) then begin
+  if (Command = CmdUzyj + CmdKomplet) and (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_28);
     Gear.Values[Armor] := Gear.Values[Armor] + 7;
     Gear.Values[Wearing] := 1;
     Gear.WornGarment := TxtWornSyf;
   end;
-  if (Command = CmdOdlorz + CmdKomplet) and (Bag.Tracksuit <= -10) and (Gear.WornGarment = TxtWornSyf) then begin
+  if (Command = CmdOdlorz + CmdKomplet) and (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment = TxtWornSyf) then begin
     WriteLn(TxtUseItems_29);
     Gear.Values[Wearing] := 0;
     Gear.Values[Armor] := Gear.Values[Armor] - 7;
     Gear.WornGarment := TxtEmpty;
   end;
-  if (Command = CmdUzyj + CmdListek) and (Bag.LuckyLeaf <= -10) then WriteLn(TxtUseItems_30);
-  if (Command = CmdUzyj + TxtWornGarnitur) and (Bag.SpikedSuit <= -10) and (Gear.WornGarment = TxtEmpty) then begin
+  if (Command = CmdUzyj + CmdListek) and (Bag.Items[LuckyLeaf] <= -10) then WriteLn(TxtUseItems_30);
+  if (Command = CmdUzyj + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -10) and (Gear.WornGarment = TxtEmpty) then begin
     WriteLn(TxtUseItems_31);
     Gear.Values[Wearing] := 1;
     Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
@@ -1296,9 +1294,9 @@ begin
     Gear.Values[LuckRoll] := Gear.Values[LuckRoll] + 15;
     Gear.WornGarment := TxtWornGarnitur;
   end;
-  if (Command = CmdUzyj + CmdPigulka) and (Bag.TeleportPill <= -10) then begin
+  if (Command = CmdUzyj + CmdPigulka) and (Bag.Items[TeleportPill] <= -10) then begin
     WriteLn(TxtUseItems_32);
-    Bag.TeleportPill := Bag.TeleportPill + 10;
+    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + 10;
     SpawnMonsters;
     if Player.Wisdom < 10 then begin
       WriteLn(TxtUseItems_33);
@@ -1316,7 +1314,7 @@ begin
     end;
     if Player.Wisdom > 15 then WriteLn(TxtUseItems_37);
   end;
-  if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.SpikedSuit <= -10) and (Gear.WornGarment = TxtWornGarnitur) then begin
+  if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -10) and (Gear.WornGarment = TxtWornGarnitur) then begin
     WriteLn(TxtUseItems_38);
     Gear.Values[Wearing] := 0;
     Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
@@ -1701,7 +1699,7 @@ begin
   if (Command = CmdKup + CmdPlecak) and (World.Monsters[Duncan] = Session.Room) then begin if Player.Money > 4799 then begin
       WriteLn(TxtPlantFights_06);
       Player.Money := Player.Money - 4800;
-      Bag.Backpack := Bag.Backpack - 10;
+      Bag.Items[Backpack] := Bag.Items[Backpack] - 10;
       Bag.Count := Bag.Count + 1; end;
   end;
   if (Command = CmdRozmawiaj + CmdDuncan) and (World.Monsters[Duncan] = Session.Room) then begin
@@ -1883,28 +1881,28 @@ type
 
 const
   SheetItems: array[1..22] of TSheetItem = (
-    (item: @Bag.OldSword; desc: CmdStaryZardzewialyMiecz; width: 0; kind: ikShown),
-    (item: @Bag.SmallShield; desc: CmdOkraglaMalaTarcza; width: 0; kind: ikShown),
-    (item: @Bag.Heart; desc: CmdZakrwawioneSerce; width: 0; kind: ikShown),
-    (item: @Bag.Diploma; desc: CmdDyplomMudSzkoly; width: 0; kind: ikShown),
-    (item: @Bag.Doughnut; desc: CmdSmacznyPolanyLikieremPaczek; width: 10; kind: ikShown),
-    (item: @Bag.Cookie; desc: CmdSmaczneCiastko; width: 10; kind: ikShown),
-    (item: @Bag.DryRation; desc: CmdTwardaSuchaRacje; width: 10; kind: ikShown),
-    (item: @Bag.BreadRoll; desc: CmdOkraglaPachnacaBulka; width: 10; kind: ikShown),
-    (item: @Bag.Bread; desc: CmdDuzyCieplyChleb; width: 10; kind: ikShown),
-    (item: @Bag.Sausage; desc: CmdDlugaISmacznaWeke; width: 10; kind: ikShown),
-    (item: @Bag.Bigos; desc: CmdPysznyBigosZKapustaZWroga; width: 10; kind: ikShown),
-    (item: @Bag.Beer; desc: CmdOzewiajacePiwskoZKonkretnymKlimatem; width: 0; kind: ikDiv10),
-    (item: @Bag.Pipe; desc: CmdCiezkaFajkaOdDziadaMroza; width: 0; kind: ikPlain),
-    (item: @Bag.Tracksuit; desc: CmdKompletUbranFirmySyf; width: 0; kind: ikPlain),
-    (item: @Bag.SpikedSuit; desc: CmdGarniturZKolcami; width: 0; kind: ikPlain),
-    (item: @Bag.ManaBottle; desc: CmdMalaButelkeMany; width: 0; kind: ikPlain),
-    (item: @Bag.LuckyLeaf; desc: CmdDelikatnyChocSzorstkiListek; width: 0; kind: ikPlain),
-    (item: @Bag.Cassette; desc: CmdKasetaLiroyaLJakLiroy; width: 0; kind: ikPlain),
-    (item: @Bag.TeleportPill; desc: CmdPigulkaTransportujacaMG; width: 0; kind: ikPlain),
+    (item: @Bag.Items[OldSword]; desc: CmdStaryZardzewialyMiecz; width: 0; kind: ikShown),
+    (item: @Bag.Items[SmallShield]; desc: CmdOkraglaMalaTarcza; width: 0; kind: ikShown),
+    (item: @Bag.Items[Heart]; desc: CmdZakrwawioneSerce; width: 0; kind: ikShown),
+    (item: @Bag.Items[Diploma]; desc: CmdDyplomMudSzkoly; width: 0; kind: ikShown),
+    (item: @Bag.Items[Doughnut]; desc: CmdSmacznyPolanyLikieremPaczek; width: 10; kind: ikShown),
+    (item: @Bag.Items[Cookie]; desc: CmdSmaczneCiastko; width: 10; kind: ikShown),
+    (item: @Bag.Items[DryRation]; desc: CmdTwardaSuchaRacje; width: 10; kind: ikShown),
+    (item: @Bag.Items[BreadRoll]; desc: CmdOkraglaPachnacaBulka; width: 10; kind: ikShown),
+    (item: @Bag.Items[Bread]; desc: CmdDuzyCieplyChleb; width: 10; kind: ikShown),
+    (item: @Bag.Items[Sausage]; desc: CmdDlugaISmacznaWeke; width: 10; kind: ikShown),
+    (item: @Bag.Items[Bigos]; desc: CmdPysznyBigosZKapustaZWroga; width: 10; kind: ikShown),
+    (item: @Bag.Items[Beer]; desc: CmdOzewiajacePiwskoZKonkretnymKlimatem; width: 0; kind: ikDiv10),
+    (item: @Bag.Items[Pipe]; desc: CmdCiezkaFajkaOdDziadaMroza; width: 0; kind: ikPlain),
+    (item: @Bag.Items[Tracksuit]; desc: CmdKompletUbranFirmySyf; width: 0; kind: ikPlain),
+    (item: @Bag.Items[SpikedSuit]; desc: CmdGarniturZKolcami; width: 0; kind: ikPlain),
+    (item: @Bag.Items[ManaBottle]; desc: CmdMalaButelkeMany; width: 0; kind: ikPlain),
+    (item: @Bag.Items[LuckyLeaf]; desc: CmdDelikatnyChocSzorstkiListek; width: 0; kind: ikPlain),
+    (item: @Bag.Items[Cassette]; desc: CmdKasetaLiroyaLJakLiroy; width: 0; kind: ikPlain),
+    (item: @Bag.Items[TeleportPill]; desc: CmdPigulkaTransportujacaMG; width: 0; kind: ikPlain),
     (item: @Bag.Permit; desc: CmdPrzepustkaWlasnoreczniePodpisanaPrzezQuestMastera; width: 0; kind: ikPlain),
-    (item: @Bag.CompareScroll; desc: CmdScrollZCzaremPorownywanie; width: 0; kind: ikPlain),
-    (item: @Bag.ReturnScroll; desc: CmdScrollZCzaremPowrot; width: 0; kind: ikPlain)
+    (item: @Bag.Items[CompareScroll]; desc: CmdScrollZCzaremPorownywanie; width: 0; kind: ikPlain),
+    (item: @Bag.Items[ReturnScroll]; desc: CmdScrollZCzaremPowrot; width: 0; kind: ikPlain)
   );
 
 procedure ShowCharacter;
@@ -1918,7 +1916,7 @@ begin
       Bag.Limit := DexterityItemLimits[i].limit;
       Break;
     end;
-  if Bag.Backpack < 0 then Bag.Limit := Bag.Limit + 4;
+  if Bag.Items[Backpack] < 0 then Bag.Limit := Bag.Limit + 4;
   WriteLn(TxtShowCharacter_01);
   for si := Low(SheetItems) to High(SheetItems) do
     with SheetItems[si] do
@@ -1933,9 +1931,9 @@ begin
   if Gear.WornGarment = TxtEmpty then WriteLn(TxtShowCharacter_07);
   if Gear.WornGarment = TxtWornSyf then WriteLn(TxtWearingLabel, TxtShowCharacter_08);
   if Gear.WornGarment = TxtWornGarnitur then WriteLn(TxtWearingLabel, TxtShowCharacter_09);
-  if (Gear.Values[ShieldKind] = 1) and (Bag.SmallShield = -100) then
+  if (Gear.Values[ShieldKind] = 1) and (Bag.Items[SmallShield] = -100) then
     WriteLn(TxtShowCharacter_10);
-  if (Gear.Values[WeaponKind] = 1) and (Bag.OldSword = -100) then
+  if (Gear.Values[WeaponKind] = 1) and (Bag.Items[OldSword] = -100) then
     WriteLn(TxtShowCharacter_11);
   WriteLn(TxtShowCharacter_12, Player.Money, TxtShowCharacter_13, Player.Practice, TxtShared_19);
 
@@ -2045,9 +2043,9 @@ begin
     Fight(VeryEasyEnemy);
     World.Monsters[Sweeper] := 0;
     Combat.Roll := Random(100);
-    if (Combat.Roll < 35) and (Bag.Tracksuit = 0) then begin
+    if (Combat.Roll < 35) and (Bag.Items[Tracksuit] = 0) then begin
       WriteLn(TxtKillSweeper_01);
-      Bag.Tracksuit := Bag.Tracksuit - 10;
+      Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - 10;
     end;
   end;
 end;
@@ -2254,11 +2252,11 @@ begin
   Rewrite(Session.SaveFile);
   SaveSlot(Player.Mana * 4);
   SaveSlot(Player.Level + $17);
-  SaveSlot(Bag.OldSword);
-  SaveSlot(Bag.Pipe);
-  SaveSlot(Bag.Diploma);
-  SaveSlot(Bag.SmallShield);
-  SaveSlot(Bag.SpikedSuit);
+  SaveSlot(Bag.Items[OldSword]);
+  SaveSlot(Bag.Items[Pipe]);
+  SaveSlot(Bag.Items[Diploma]);
+  SaveSlot(Bag.Items[SmallShield]);
+  SaveSlot(Bag.Items[SpikedSuit]);
   SaveSlot(Player.Experience);
   SaveSlot((Player.Energy + $28) * 4);
   SaveSlot(Session.OuterRoom);
@@ -2295,15 +2293,15 @@ begin
   SaveSlot(Skills.Values[Cooking]);
   SaveSlot(Skills.Values[CookingDisplayBug]);
   SaveSlot(0);
-  SaveSlot(Bag.Heart);
-  SaveSlot(Bag.ManaBottle);
-  SaveSlot(Bag.Cookie);
-  SaveSlot(Bag.DryRation);
-  SaveSlot(Bag.Bread);
-  SaveSlot(Bag.BreadRoll);
-  SaveSlot(Bag.Sausage);
-  SaveSlot(Bag.Bread);
-  SaveSlot(Bag.BreadRoll);
+  SaveSlot(Bag.Items[Heart]);
+  SaveSlot(Bag.Items[ManaBottle]);
+  SaveSlot(Bag.Items[Cookie]);
+  SaveSlot(Bag.Items[DryRation]);
+  SaveSlot(Bag.Items[Bread]);
+  SaveSlot(Bag.Items[BreadRoll]);
+  SaveSlot(Bag.Items[Sausage]);
+  SaveSlot(Bag.Items[Bread]);
+  SaveSlot(Bag.Items[BreadRoll]);
   SaveSlot(Gear.Values[WornCount]);
   SaveSlot(Skills.Values[Parry]);
   SaveSlot(Skills.Values[Kick]);
@@ -2313,24 +2311,24 @@ begin
   SaveSlot(Skills.Values[FleeEnergy]);
   SaveSlot(Combat.Fled);
   SaveSlot(Session.InArena);
-  SaveSlot(Bag.Tracksuit);
-  SaveSlot(Bag.Cassette);
-  SaveSlot(Bag.TeleportPill);
+  SaveSlot(Bag.Items[Tracksuit]);
+  SaveSlot(Bag.Items[Cassette]);
+  SaveSlot(Bag.Items[TeleportPill]);
   SaveSlot(World.Monsters[Woodworm]);
   SaveSlot(World.Monsters[Fly]);
   SaveSlot(World.Monsters[Bacterium]);
   SaveSlot(World.Quest);
   SaveSlot(World.QuestKills);
   SaveSlot(World.Monsters[Snail]);
-  SaveSlot(Bag.LuckyLeaf);
+  SaveSlot(Bag.Items[LuckyLeaf]);
   SaveSlot(Skills.Values[Returning]);
-  SaveSlot(Bag.Bigos);
-  SaveSlot(Bag.Beer);
-  SaveSlot(Bag.CompareScroll);
-  SaveSlot(Bag.ReturnScroll);
+  SaveSlot(Bag.Items[Bigos]);
+  SaveSlot(Bag.Items[Beer]);
+  SaveSlot(Bag.Items[CompareScroll]);
+  SaveSlot(Bag.Items[ReturnScroll]);
   SaveSlot(World.OldElf);
   SaveSlot(World.DuncanQuest);
-  SaveSlot(Bag.Backpack);
+  SaveSlot(Bag.Items[Backpack]);
   SaveSlot(World.Monsters[Duncan]);
   SaveSlotText(Gear.WornGarment);
   Close(Session.SaveFile);
@@ -2373,12 +2371,12 @@ type
 
 const
   BakeryItems: array[1..6] of TBakeryItem = (
-    (cmd: CmdKup + CmdPaczek; item: @Bag.Doughnut; price: 8; desc: TxtItemPaczek),
-    (cmd: CmdKup + CmdCiastko; item: @Bag.Cookie; price: 12; desc: TxtItemCiastko),
-    (cmd: CmdKup + CmdSuchaRacja; item: @Bag.DryRation; price: 15; desc: TxtItemSuchaRacje),
-    (cmd: CmdKup + CmdBulka; item: @Bag.BreadRoll; price: 19; desc: TxtItemBulke),
-    (cmd: CmdKup + CmdChleb; item: @Bag.Bread; price: 24; desc: TxtItemChleb),
-    (cmd: CmdKup + CmdWeka; item: @Bag.Sausage; price: 29; desc: TxtItemWeke)
+    (cmd: CmdKup + CmdPaczek; item: @Bag.Items[Doughnut]; price: 8; desc: TxtItemPaczek),
+    (cmd: CmdKup + CmdCiastko; item: @Bag.Items[Cookie]; price: 12; desc: TxtItemCiastko),
+    (cmd: CmdKup + CmdSuchaRacja; item: @Bag.Items[DryRation]; price: 15; desc: TxtItemSuchaRacje),
+    (cmd: CmdKup + CmdBulka; item: @Bag.Items[BreadRoll]; price: 19; desc: TxtItemBulke),
+    (cmd: CmdKup + CmdChleb; item: @Bag.Items[Bread]; price: 24; desc: TxtItemChleb),
+    (cmd: CmdKup + CmdWeka; item: @Bag.Items[Sausage]; price: 29; desc: TxtItemWeke)
   );
 
 procedure BakeryShop;
@@ -2414,20 +2412,20 @@ end;
 
 function CanBuyOldSword: Boolean;
 begin
-  CanBuyOldSword := (Bag.OldSword = 0) and (Player.Money >= 70);
+  CanBuyOldSword := (Bag.Items[OldSword] = 0) and (Player.Money >= 70);
 end;
 
 procedure BuyOldSword;
 begin
   Bag.Count := Bag.Count + 1;
-  Bag.OldSword := -10;
+  Bag.Items[OldSword] := -10;
   Player.Money := Player.Money - 70;
   WriteLn(TxtShopVerb, TxtBuyOldSword_01, TxtSpaceZa, 70, TxtSpaceMonet);
 end;
 
 function CanSellOldSword: Boolean;
 begin
-  CanSellOldSword := Bag.OldSword = -10;
+  CanSellOldSword := Bag.Items[OldSword] = -10;
 end;
 
 procedure SellOldSword;
@@ -2435,19 +2433,19 @@ begin
   WriteLn(TxtSellOldSword_01);
   WriteLn(TxtSellOldSword_02);
   Player.Money := Player.Money + 30;
-  Bag.OldSword := 0;
+  Bag.Items[OldSword] := 0;
   Bag.Count := Bag.Count - 1;
 end;
 
 function CanBuySmallShield: Boolean;
 begin
-  CanBuySmallShield := (Bag.SmallShield = 0) and (Player.Money >= 15);
+  CanBuySmallShield := (Bag.Items[SmallShield] = 0) and (Player.Money >= 15);
 end;
 
 procedure BuySmallShield;
 begin
   Bag.Count := Bag.Count + 1;
-  Bag.SmallShield := -10;
+  Bag.Items[SmallShield] := -10;
   Player.Money := Player.Money - 15;
   WriteLn(TxtShopVerb, TxtBuySmallShield_01, TxtSpaceZa, 15, TxtSpaceMonet);
 end;
@@ -2457,7 +2455,7 @@ procedure SellSmallShield;
 begin
   WriteLn(TxtSellSmallShield_01);
   Player.Money := Player.Money + 8;
-  Bag.SmallShield := 0;
+  Bag.Items[SmallShield] := 0;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2471,54 +2469,54 @@ const
 
 function CanBuyPipe: Boolean;
 begin
-  CanBuyPipe := (Bag.Pipe = 0) and (Player.Money >= 480);
+  CanBuyPipe := (Bag.Items[Pipe] = 0) and (Player.Money >= 480);
 end;
 
 procedure BuyPipe;
 begin
   WriteLn(TxtShopVerb, TxtBuyPipe_01, TxtSpaceZa, 480, TxtSpaceMonet);
   Player.Money := Player.Money - 480;
-  Bag.Pipe := Bag.Pipe - 10;
+  Bag.Items[Pipe] := Bag.Items[Pipe] - 10;
   Bag.Count := Bag.Count + 1;
   Player.Wisdom := Player.Wisdom + 1;
 end;
 
 function CanBuyTracksuit: Boolean;
 begin
-  CanBuyTracksuit := (Bag.Tracksuit = 0) and (Player.Money >= 35);
+  CanBuyTracksuit := (Bag.Items[Tracksuit] = 0) and (Player.Money >= 35);
 end;
 
 procedure BuyTracksuit;
 begin
   WriteLn(TxtShopVerb, TxtBuyTracksuit_01, TxtSpaceZa, 35, TxtSpaceMonet);
   Player.Money := Player.Money - 35;
-  Bag.Tracksuit := Bag.Tracksuit - 10;
+  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - 10;
   Bag.Count := Bag.Count + 1;
 end;
 
 function CanSellTracksuit: Boolean;
 begin
-  CanSellTracksuit := (Bag.Tracksuit <= -10) and (Gear.WornGarment <> TxtWornSyf);
+  CanSellTracksuit := (Bag.Items[Tracksuit] <= -10) and (Gear.WornGarment <> TxtWornSyf);
 end;
 
 procedure SellTracksuit;
 begin
   WriteLn(TxtSellVerb, TxtSellTracksuit_01);
   Player.Money := Player.Money + 15;
-  Bag.Tracksuit := Bag.Tracksuit + 10;
+  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] + 10;
   Bag.Count := Bag.Count - 1;
 end;
 
 function CanSellPipe: Boolean;
 begin
-  CanSellPipe := Bag.Pipe = -10;
+  CanSellPipe := Bag.Items[Pipe] = -10;
 end;
 
 procedure SellPipe;
 begin
   WriteLn(TxtSellVerb, TxtSellPipe_01);
   Player.Money := Player.Money + 120;
-  Bag.Pipe := Bag.Pipe + 10;
+  Bag.Items[Pipe] := Bag.Items[Pipe] + 10;
   Bag.Count := Bag.Count - 1;
   Player.Wisdom := Player.Wisdom - 1;
 end;
@@ -2532,7 +2530,7 @@ procedure BuyCassette;
 begin
   WriteLn(TxtShopVerb, TxtBuyCassette_01, TxtSpaceZa, 1999, TxtSpaceMonet);
   Player.Money := Player.Money - 1999;
-  Bag.Cassette := Bag.Cassette - 10;
+  Bag.Items[Cassette] := Bag.Items[Cassette] - 10;
   Gear.Values[Armor] := Gear.Values[Armor] - 8;
   Player.MaxEnergy := Player.MaxEnergy + 5;
   Player.Dexterity := Player.Dexterity + 1;
@@ -2548,7 +2546,7 @@ procedure BuySpikedSuit;
 begin
   WriteLn(TxtBuySpikedSuit_01);
   Player.Money := Player.Money - 1000;
-  Bag.SpikedSuit := Bag.SpikedSuit - 10;
+  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - 10;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2561,20 +2559,20 @@ procedure SellSpikedSuit;
 begin
   WriteLn(TxtSellVerb, TxtSellSpikedSuit_01);
   Player.Money := Player.Money + 500;
-  Bag.SpikedSuit := Bag.SpikedSuit + 10;
+  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] + 10;
   Bag.Count := Bag.Count - 1;
 end;
 
 function CanSellCassette: Boolean;
 begin
-  CanSellCassette := Bag.Cassette < 0;
+  CanSellCassette := Bag.Items[Cassette] < 0;
 end;
 
 procedure SellCassette;
 begin
   WriteLn(TxtSellVerb, TxtSellCassette_01);
   Player.Money := Player.Money + 1000;
-  Bag.Cassette := Bag.Cassette + 10;
+  Bag.Items[Cassette] := Bag.Items[Cassette] + 10;
   Gear.Values[Armor] := Gear.Values[Armor] + 8;
   Player.MaxEnergy := Player.MaxEnergy - 5;
   Player.Dexterity := Player.Dexterity - 1;
@@ -2602,7 +2600,7 @@ procedure BuyManaBottle;
 begin
   WriteLn(TxtBuyManaBottle_01);
   Player.Money := Player.Money - 20;
-  Bag.ManaBottle := Bag.ManaBottle - 10;
+  Bag.Items[ManaBottle] := Bag.Items[ManaBottle] - 10;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2615,7 +2613,7 @@ procedure BuyLuckyLeaf;
 begin
   WriteLn(TxtBuyLuckyLeaf_01);
   Player.Money := Player.Money - 830;
-  Bag.LuckyLeaf := Bag.LuckyLeaf - 10;
+  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - 10;
   Bag.Count := Bag.Count + 1;
   Player.MaxMana := Player.MaxMana + 40;
 end;
@@ -2629,7 +2627,7 @@ procedure SellLuckyLeaf;
 begin
   WriteLn(TxtSellVerb, TxtSellLuckyLeaf_01);
   Player.Money := Player.Money + 400;
-  Bag.LuckyLeaf := Bag.LuckyLeaf + 10;
+  Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] + 10;
   Bag.Count := Bag.Count - 1;
   Player.MaxMana := Player.MaxMana - 40;
 end;
@@ -2643,20 +2641,20 @@ procedure BuyTeleportPill;
 begin
   WriteLn(TxtShopVerb, TxtBuyTeleportPill_01, TxtSpaceZa, 235, TxtSpaceMonet);
   Player.Money := Player.Money - 235;
-  Bag.TeleportPill := Bag.TeleportPill - 10;
+  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - 10;
   Bag.Count := Bag.Count + 1;
 end;
 
 function CanSellTeleportPill: Boolean;
 begin
-  CanSellTeleportPill := Bag.TeleportPill <= 10;
+  CanSellTeleportPill := Bag.Items[TeleportPill] <= 10;
 end;
 
 procedure SellTeleportPill;
 begin
   WriteLn(TxtSellTeleportPill_01);
   Player.Money := Player.Money + 170;
-  Bag.TeleportPill := Bag.TeleportPill + 10;
+  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + 10;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2669,20 +2667,20 @@ procedure BuyCompareScroll;
 begin
   WriteLn(TxtBuyCompareScroll_01);
   Player.Money := Player.Money - 40;
-  Bag.CompareScroll := Bag.CompareScroll - 10;
+  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - 10;
   Bag.Count := Bag.Count + 1;
 end;
 
 function CanSellCompareScroll: Boolean;
 begin
-  CanSellCompareScroll := Bag.CompareScroll < 0;
+  CanSellCompareScroll := Bag.Items[CompareScroll] < 0;
 end;
 
 procedure SellCompareScroll;
 begin
   WriteLn(TxtSellCompareScroll_01);
   Player.Money := Player.Money + 18;
-  Bag.CompareScroll := Bag.CompareScroll + 10;
+  Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + 10;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2702,9 +2700,9 @@ procedure ArmouryShop;
 begin
   if Command = CmdLista then begin
     WriteLn(TxtShared_24);
-    if Bag.OldSword = 0 then
+    if Bag.Items[OldSword] = 0 then
       WriteLn(TxtArmouryShop_01);
-    if Bag.SmallShield = 0 then
+    if Bag.Items[SmallShield] = 0 then
       WriteLn(TxtArmouryShop_02);
     WriteLn(TxtArmouryShop_03);
   end;
@@ -2717,8 +2715,8 @@ procedure GeneralStoreShop;
 begin
   if Command = CmdLista then begin
     WriteLn(TxtGeneralStoreShop_01);
-    if Bag.Pipe = 0 then WriteLn(TxtGeneralStoreShop_02);
-    if Bag.Tracksuit = 0 then
+    if Bag.Items[Pipe] = 0 then WriteLn(TxtGeneralStoreShop_02);
+    if Bag.Items[Tracksuit] = 0 then
       WriteLines(TxtGeneralStoreShopLines1);
   end;
   if Command = CmdPatrz + CmdPoster then
@@ -2747,10 +2745,10 @@ begin
     if Combat.EnemyEnergy < 1 then begin
       World.Monsters[OldMan] := 0;
       Combat.Roll := Random(100);
-      if (Combat.Roll < 5) and (Bag.Pipe = 0) then begin
+      if (Combat.Roll < 5) and (Bag.Items[Pipe] = 0) then begin
         WriteLn(TxtShared_08, TxtConcertFights_01);
         WriteLn(TxtConcertFights_02);
-        Bag.Pipe := Bag.Pipe - 10;
+        Bag.Items[Pipe] := Bag.Items[Pipe] - 10;
         Player.Wisdom := Player.Wisdom + 1;
       end;
     end;
@@ -2838,11 +2836,11 @@ begin
   Player.Mana := Player.Mana div 4;
   LoadSlotShort(Player.Level);
   Player.Level := Player.Level - $17;
-  LoadSlot(Bag.OldSword);
-  LoadSlot(Bag.Pipe);
-  LoadSlot(Bag.Diploma);
-  LoadSlot(Bag.SmallShield);
-  LoadSlot(Bag.SpikedSuit);
+  LoadSlot(Bag.Items[OldSword]);
+  LoadSlot(Bag.Items[Pipe]);
+  LoadSlot(Bag.Items[Diploma]);
+  LoadSlot(Bag.Items[SmallShield]);
+  LoadSlot(Bag.Items[SpikedSuit]);
   LoadSlot(Player.Experience);
   LoadSlot(Player.Energy);
   Player.Energy := Player.Energy div 4;
@@ -2884,15 +2882,15 @@ begin
   LoadSlot(Skills.Values[Cooking]);
   LoadSlot(Skills.Values[CookingDisplayBug]);
   LoadSlot(dummy);
-  LoadSlot(Bag.Heart);
-  LoadSlot(Bag.ManaBottle);
-  LoadSlot(Bag.Cookie);
-  LoadSlot(Bag.DryRation);
-  LoadSlot(Bag.Bread);
-  LoadSlot(Bag.BreadRoll);
-  LoadSlot(Bag.Sausage);
-  LoadSlot(Bag.Bread);
-  LoadSlot(Bag.BreadRoll);
+  LoadSlot(Bag.Items[Heart]);
+  LoadSlot(Bag.Items[ManaBottle]);
+  LoadSlot(Bag.Items[Cookie]);
+  LoadSlot(Bag.Items[DryRation]);
+  LoadSlot(Bag.Items[Bread]);
+  LoadSlot(Bag.Items[BreadRoll]);
+  LoadSlot(Bag.Items[Sausage]);
+  LoadSlot(Bag.Items[Bread]);
+  LoadSlot(Bag.Items[BreadRoll]);
   LoadSlot(Gear.Values[WornCount]);
   LoadSlot(Skills.Values[Parry]);
   LoadSlot(Skills.Values[Kick]);
@@ -2902,24 +2900,24 @@ begin
   LoadSlot(Skills.Values[FleeEnergy]);
   LoadSlot(Combat.Fled);
   LoadSlot(Session.InArena);
-  LoadSlot(Bag.Tracksuit);
-  LoadSlot(Bag.Cassette);
-  LoadSlotShort(Bag.TeleportPill);
+  LoadSlot(Bag.Items[Tracksuit]);
+  LoadSlot(Bag.Items[Cassette]);
+  LoadSlot(Bag.Items[TeleportPill]);
   LoadSlot(World.Monsters[Woodworm]);
   LoadSlot(World.Monsters[Fly]);
   LoadSlot(World.Monsters[Bacterium]);
   LoadSlot(World.Quest);
   LoadSlot(World.QuestKills);
   LoadSlot(World.Monsters[Snail]);
-  LoadSlotShort(Bag.LuckyLeaf);
+  LoadSlot(Bag.Items[LuckyLeaf]);
   LoadSlot(Skills.Values[Returning]);
-  LoadSlotShort(Bag.Bigos);
-  LoadSlot(Bag.Beer);
-  LoadSlot(Bag.CompareScroll);
-  LoadSlot(Bag.ReturnScroll);
+  LoadSlot(Bag.Items[Bigos]);
+  LoadSlot(Bag.Items[Beer]);
+  LoadSlot(Bag.Items[CompareScroll]);
+  LoadSlot(Bag.Items[ReturnScroll]);
   LoadSlot(World.OldElf);
   LoadSlotShort(World.DuncanQuest);
-  LoadSlotShort(Bag.Backpack);
+  LoadSlot(Bag.Items[Backpack]);
   LoadSlot(World.Monsters[Duncan]);
   ReadLn(Session.SaveFile);
   LoadSlotText(Gear.WornGarment);
@@ -3027,8 +3025,8 @@ begin
   Gear.Values[WeaponKind] := 0;
   Gear.Values[ShieldKind] := 0;
   Gear.WornGarment := TxtEmpty;
-  Bag.OldSword := -10;
-  Bag.SmallShield := -10;
+  Bag.Items[OldSword] := -10;
+  Bag.Items[SmallShield] := -10;
   Player.Strength := Player.Strength - 1;
 end;
 
@@ -3053,8 +3051,8 @@ end;
 
 procedure CmdDrinkBeer;
 begin
-  if Bag.Beer <= -10 then begin
-    Bag.Beer := Bag.Beer + 10;
+  if Bag.Items[Beer] <= -10 then begin
+    Bag.Items[Beer] := Bag.Items[Beer] + 10;
     WriteLn(TxtCmdDrinkBeer_01);
     Bag.Count := Bag.Count - 1;
     Player.Energy := Player.Energy + 10;
@@ -3064,8 +3062,8 @@ end;
 
 procedure CmdWieldOldSword;
 begin
-  if (Bag.OldSword = -10) and (Gear.Values[WeaponKind] = 0) then begin
-    Bag.OldSword := -100;
+  if (Bag.Items[OldSword] = -10) and (Gear.Values[WeaponKind] = 0) then begin
+    Bag.Items[OldSword] := -100;
     Gear.Values[WeaponKind] := 1;
     WriteLn(TxtCmdWieldOldSword_01);
     Player.Strength := Player.Strength + 1;
@@ -3075,8 +3073,8 @@ end;
 
 procedure CmdUnwieldOldSword;
 begin
-  if (Bag.OldSword = -100) and (Gear.Values[WeaponKind] = 1) then begin
-    Bag.OldSword := -10;
+  if (Bag.Items[OldSword] = -100) and (Gear.Values[WeaponKind] = 1) then begin
+    Bag.Items[OldSword] := -10;
     Gear.Values[WeaponKind] := 0;
     WriteLn(TxtCmdUnwieldOldSword_01);
     Player.Strength := Player.Strength - 1;
@@ -3086,22 +3084,22 @@ end;
 
 procedure CmdWieldSmallShield;
 begin
-  if (Gear.Values[ShieldKind] = 0) and (Bag.SmallShield = -10) then begin
+  if (Gear.Values[ShieldKind] = 0) and (Bag.Items[SmallShield] = -10) then begin
     Gear.Values[ShieldKind] := 1;
     Gear.Values[Armor] := Gear.Values[Armor] + 15;
     Gear.Values[WornCount] := Gear.Values[WornCount] + 1;
-    Bag.SmallShield := -100;
+    Bag.Items[SmallShield] := -100;
     WriteLn(TxtCmdWieldSmallShield_01);
   end;
 end;
 
 procedure CmdUnwieldSmallShield;
 begin
-  if (Gear.Values[ShieldKind] = 1) and (Bag.SmallShield = -100) then begin
+  if (Gear.Values[ShieldKind] = 1) and (Bag.Items[SmallShield] = -100) then begin
     Gear.Values[ShieldKind] := 0;
     Gear.Values[Armor] := Gear.Values[Armor] - 15;
     Gear.Values[WornCount] := Gear.Values[WornCount] - 1;
-    Bag.SmallShield := -10;
+    Bag.Items[SmallShield] := -10;
     WriteLn(TxtCmdUnwieldSmallShield_01);
   end;
 end;
@@ -3179,11 +3177,11 @@ end;
 procedure CmdOpenPortal;
 begin
   if ((Command = CmdPowrot) and (Skills.Values[Returning] > 0)) or
-   ((Command = CmdUzyj + CmdScrollPowrot) and (Bag.ReturnScroll < 0)) then begin
+   ((Command = CmdUzyj + CmdScrollPowrot) and (Bag.Items[ReturnScroll] < 0)) then begin
     Combat.Roll := Random(100);
     if Command = CmdUzyj + CmdScrollPowrot then begin
       Combat.Roll := Random(1);
-      Bag.ReturnScroll := Bag.ReturnScroll + 10;
+      Bag.Items[ReturnScroll] := Bag.Items[ReturnScroll] + 10;
       Bag.Count := Bag.Count - 1;
     end;
     if Combat.Roll <= Skills.Values[Returning] then begin
@@ -3205,10 +3203,10 @@ end;
 
 procedure CmdUseCompareScroll;
 begin
-  if Bag.CompareScroll < 0 then begin
+  if Bag.Items[CompareScroll] < 0 then begin
     CompareFoe;
     Player.Mana := Player.Mana - 10;
-    Bag.CompareScroll := Bag.CompareScroll + 10;
+    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] + 10;
     Bag.Count := Bag.Count - 1;
   end;
 end;

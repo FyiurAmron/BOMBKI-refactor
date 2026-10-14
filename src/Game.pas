@@ -299,40 +299,60 @@ begin
   end;
 end;
 
+type
+  TBand = record
+    lo, hi, base, perUnit: Integer;
+  end;
+
+const
+  PosExpBands: array[1..12] of TBand = (
+    (lo: 1; hi: 2; base: 10; perUnit: 0),
+    (lo: 3; hi: 3; base: 19; perUnit: 0),
+    (lo: 4; hi: 6; base: 9; perUnit: 0),
+    (lo: 7; hi: 9; base: 8; perUnit: 0),
+    (lo: 10; hi: 12; base: 7; perUnit: 0),
+    (lo: 13; hi: 15; base: 6; perUnit: 0),
+    (lo: 16; hi: 18; base: 5; perUnit: 0),
+    (lo: 19; hi: 21; base: 4; perUnit: 0),
+    (lo: 22; hi: 24; base: 3; perUnit: 0),
+    (lo: 25; hi: 27; base: 2; perUnit: 0),
+    (lo: 28; hi: 30; base: 1; perUnit: 0),
+    (lo: 31; hi: MaxInt; base: 0; perUnit: 0)
+  );
+  NegExpBands: array[1..10] of TBand = (
+    (lo: 2; hi: 2; base: 12; perUnit: 0),
+    (lo: 4; hi: 4; base: 13; perUnit: 0),
+    (lo: 6; hi: 6; base: 14; perUnit: 0),
+    (lo: 8; hi: 8; base: 15; perUnit: 0),
+    (lo: 10; hi: 10; base: 16; perUnit: 0),
+    (lo: 12; hi: 12; base: 17; perUnit: 0),
+    (lo: 14; hi: 14; base: 18; perUnit: 0),
+    (lo: 16; hi: 16; base: 19; perUnit: 0),
+    (lo: 18; hi: 18; base: 20; perUnit: 0),
+    (lo: 21; hi: MaxInt; base: 21; perUnit: 0)
+  );
+
+function BandAmount(const bands: array of TBand; v: Integer): Integer;
+var
+  bi: Integer;
+begin
+  for bi := Low(bands) to High(bands) do
+    with bands[bi] do
+      if (v >= lo) and (v <= hi) then begin
+        BandAmount := base + perUnit * v;
+        Exit;
+      end;
+  BandAmount := 0;
+end;
+
 function FightExpForEnergy(diff: Integer): Integer;
 
 begin
-  if diff > 0 then begin
-    case diff of
-      1, 2: FightExpForEnergy := 10;
-      3: FightExpForEnergy := 19;
-      4..6: FightExpForEnergy := 9;
-      7..9: FightExpForEnergy := 8;
-      10..12: FightExpForEnergy := 7;
-      13..15: FightExpForEnergy := 6;
-      16..18: FightExpForEnergy := 5;
-      19..21: FightExpForEnergy := 4;
-      22..24: FightExpForEnergy := 3;
-      25..27: FightExpForEnergy := 2;
-      28..30: FightExpForEnergy := 1;
-      else FightExpForEnergy := 0;
-    end;
-  end else if diff < 0 then begin
-    diff := -diff;
-    case diff of
-      2: FightExpForEnergy := 12;
-      4: FightExpForEnergy := 13;
-      6: FightExpForEnergy := 14;
-      8: FightExpForEnergy := 15;
-      10: FightExpForEnergy := 16;
-      12: FightExpForEnergy := 17;
-      14: FightExpForEnergy := 18;
-      16: FightExpForEnergy := 19;
-      18: FightExpForEnergy := 20;
-      21..MaxInt: FightExpForEnergy := 21;
-      else FightExpForEnergy := 0;
-    end;
-  end else
+  if diff > 0 then
+    FightExpForEnergy := BandAmount(PosExpBands, diff)
+  else if diff < 0 then
+    FightExpForEnergy := BandAmount(NegExpBands, -diff)
+  else
     FightExpForEnergy := 11;
 end;
 
@@ -1820,11 +1840,6 @@ begin
   else LevelName := TxtEmpty;
 end;
 
-type
-  TBand = record
-    lo, hi, base, perUnit: Integer;
-  end;
-
 const
   LvlThresholds: array[1..5] of TBand = (
     (lo: 1; hi: 1; base: Lvl1_Threshold; perUnit: 0),
@@ -1833,19 +1848,6 @@ const
     (lo: 4; hi: 8; base: Lvl4_Base; perUnit: 1),
     (lo: 9; hi: MaxInt; base: Lvl9_Base; perUnit: 2)
   );
-
-function BandAmount(const bands: array of TBand; v: Integer): Integer;
-var
-  bi: Integer;
-begin
-  for bi := Low(bands) to High(bands) do
-    with bands[bi] do
-      if (v >= lo) and (v <= hi) then begin
-        BandAmount := base + perUnit * v;
-        Exit;
-      end;
-  BandAmount := 0;
-end;
 
 function LevelThreshold(lvl: Integer): Integer;
 

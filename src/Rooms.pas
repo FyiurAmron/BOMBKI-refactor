@@ -161,7 +161,6 @@ end;
 procedure Room2;
 
 begin
-  if Session.Room <> RoomTraining then Exit;
   WriteLines([TxtYouAreIn + TxtRoom2_01, TxtRoom2_02, TxtShared_04]);
   repeat
     ReadCommand;
@@ -180,7 +179,6 @@ end;
 procedure Room3;
 
 begin
-  if Session.Room <> RoomMeditation then Exit;
   WriteLines(TxtRoom3Lines1);
   repeat
     ReadCommand;
@@ -236,7 +234,6 @@ end;
 
 procedure Room11;
 begin
-  if Session.Room <> RoomCageCorridor then Exit;
   WriteLn(TxtYouAreIn, TxtRoom11_01);
   WriteLines(TxtRoom11Lines1);
   repeat
@@ -283,7 +280,6 @@ end;
 procedure Room12;
 
 begin
-  if Session.Room <> RoomCageWeakling then Exit;
   WriteLn(TxtShared_06);
   case World.Monsters[CageWeakling] of
     RoomCageWeakling: WriteLn(TxtRoom12_01);
@@ -302,7 +298,6 @@ end;
 
 procedure Room13;
 begin
-  if Session.Room <> RoomCageStrong then Exit;
   WriteLn(TxtShared_06);
   case World.Monsters[CageStrong] of
     RoomCageStrong: WriteLn(TxtRoom13_01);
@@ -834,7 +829,6 @@ end;
 
 procedure Room83;
 begin
-  if Session.Room <> RoomClearing then Exit;
   WriteLines(TxtRoom83Lines1);
   DescribePlants;
   repeat
@@ -1042,7 +1036,6 @@ procedure Room100;
 var
   i: Integer;
 begin
-  if Session.Room <> RoomQuestMaster then Exit;
   WriteLines([TxtRoom100_01, TxtRoom100_02]);
   DescribeStreet;
   repeat

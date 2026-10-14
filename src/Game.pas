@@ -2951,6 +2951,11 @@ begin
   WriteLn(TxtLoadCharacter_01, Gear.WornGarment);
 end;
 
+type
+  TEnergyBonus = record
+    dexLo, strLo, bonus: Integer;
+  end;
+
 const
   LevelCosts: array[1..5] of TBand = (
     (lo: 1; hi: 1; base: 725; perUnit: 0),
@@ -2965,11 +2970,17 @@ const
     (lo: 16; hi: 22; base: 5; perUnit: 0),
     (lo: -MaxInt - 1; hi: MaxInt; base: 6; perUnit: 0)
   );
+  MaxEnergyGains: array[1..4] of TEnergyBonus = (
+    (dexLo: 12; strLo: -MaxInt - 1; bonus: 1),
+    (dexLo: 16; strLo: -MaxInt - 1; bonus: 1),
+    (dexLo: 21; strLo: -MaxInt - 1; bonus: 1),
+    (dexLo: 26; strLo: 20; bonus: 1)
+  );
 
 procedure CheckLevelUp;
 
 var
-  threshold: Integer;
+  threshold, ei: Integer;
 begin
   if Player.Level < 1 then Exit;
   threshold := LevelThreshold(Player.Level);
@@ -2980,11 +2991,11 @@ begin
   Player.Experience := Player.Experience - BandAmount(LevelCosts, Player.Level);
   Player.Practice := Player.Practice + BandAmount(PracticeGains, Player.Stats[Wisdom]);
   WriteLn(TxtCheckLevelUp_02, Player.Practice, TxtCheckLevelUp_03);
-  if Player.Stats[Dexterity] > 12 then Player.MaxEnergy := Player.MaxEnergy + 11
-  else Player.MaxEnergy := Player.MaxEnergy + 10;
-  if Player.Stats[Dexterity] > 16 then Player.MaxEnergy := Player.MaxEnergy + 1;
-  if Player.Stats[Dexterity] > 21 then Player.MaxEnergy := Player.MaxEnergy + 1;
-  if (Player.Stats[Dexterity] > 26) and (Player.Stats[Strength] > 20) then Player.MaxEnergy := Player.MaxEnergy + 1;
+  Player.MaxEnergy := Player.MaxEnergy + 10;
+  for ei := Low(MaxEnergyGains) to High(MaxEnergyGains) do
+    with MaxEnergyGains[ei] do
+      if (Player.Stats[Dexterity] > dexLo) and (Player.Stats[Strength] > strLo) then
+        Player.MaxEnergy := Player.MaxEnergy + bonus;
   WriteLn(TxtCheckLevelUp_02, Player.MaxEnergy, TxtCheckLevelUp_04);
   Player.MaxMana := Player.MaxMana + Player.Stats[Wisdom] + 2;
    WriteLn(TxtCheckLevelUp_05, Player.Stats[Wisdom] + 2, TxtCheckLevelUp_06);

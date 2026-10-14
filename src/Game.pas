@@ -1766,9 +1766,8 @@ begin
   if (Command = CmdZabij + CmdTrawa) and (World.Monsters[Grass] = Session.Room) then begin
     WriteLn(TxtPlantFights_17);
     Fight(HardEnemy);
-    if Player.Energy > 0 then Fight(HardEnemy);
-    if Player.Energy > 0 then Fight(HardEnemy);
-    if Player.Energy > 0 then Fight(HardEnemy);
+    for i := 2 to 4 do
+      if Player.Energy > 0 then Fight(HardEnemy);
     if (Player.Energy > 0) and (Combat.Fled = 0) then
       WriteLn(TxtPlantFights_18);
   end;

@@ -2977,6 +2977,39 @@ begin
   WriteLn(TxtLoadCharacter_01, Gear.WornGarment);
 end;
 
+type
+  TBand = record
+    lo, hi, base, perUnit: Integer;
+  end;
+
+const
+  LevelCosts: array[1..5] of TBand = (
+    (lo: 1; hi: 1; base: 725; perUnit: 0),
+    (lo: 2; hi: 2; base: 730; perUnit: 0),
+    (lo: 3; hi: 3; base: 735; perUnit: 0),
+    (lo: 4; hi: 8; base: Lvl4_Base; perUnit: 1),
+    (lo: 9; hi: MaxInt; base: Lvl9_Base; perUnit: 2)
+  );
+  PracticeGains: array[1..4] of TBand = (
+    (lo: -128; hi: 10; base: 3; perUnit: 0),
+    (lo: 11; hi: 15; base: 4; perUnit: 0),
+    (lo: 16; hi: 22; base: 5; perUnit: 0),
+    (lo: -MaxInt - 1; hi: MaxInt; base: 6; perUnit: 0)
+  );
+
+function BandAmount(const bands: array of TBand; v: Integer): Integer;
+var
+  bi: Integer;
+begin
+  for bi := Low(bands) to High(bands) do
+    with bands[bi] do
+      if (v >= lo) and (v <= hi) then begin
+        BandAmount := base + perUnit * v;
+        Exit;
+      end;
+  BandAmount := 0;
+end;
+
 procedure CheckLevelUp;
 
 var
@@ -2988,19 +3021,8 @@ begin
 
   WriteLines(TxtCheckLevelUpLines1);
 
-  case Player.Level of
-    1: Player.Experience := Player.Experience - 725;
-    2: Player.Experience := Player.Experience - 730;
-    3: Player.Experience := Player.Experience - 735;
-    4..8: Player.Experience := (Player.Experience - Lvl4_Base) - Player.Level;
-    else Player.Experience := (Player.Experience - (Player.Level * 2)) - Lvl9_Base;
-  end;
-  case Player.Stats[Wisdom] of
-    -128..10: Player.Practice := Player.Practice + 3;
-    11..15: Player.Practice := Player.Practice + 4;
-    16..22: Player.Practice := Player.Practice + 5;
-    else Player.Practice := Player.Practice + 6;
-  end;
+  Player.Experience := Player.Experience - BandAmount(LevelCosts, Player.Level);
+  Player.Practice := Player.Practice + BandAmount(PracticeGains, Player.Stats[Wisdom]);
   WriteLn(TxtCheckLevelUp_02, Player.Practice, TxtCheckLevelUp_03);
   if Player.Stats[Dexterity] > 12 then Player.MaxEnergy := Player.MaxEnergy + 11
   else Player.MaxEnergy := Player.MaxEnergy + 10;

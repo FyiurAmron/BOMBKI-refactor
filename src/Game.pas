@@ -1772,8 +1772,7 @@ const
 type
   TRace = record
     name: string;
-    baseStrength, baseDexterity, baseWisdom: Integer;
-    baseMaxStrength, baseMaxDexterity, baseMaxWisdom: Integer;
+    baseStats: array[TStat] of Integer;
     MaxManaBonus, MoneyBonus, MaxEnergyBonus, EnergyBonus: Integer;
   end;
 
@@ -1797,23 +1796,17 @@ type
 
 const
   Races: array[1..6] of TRace = (
-    (name:CmdCzlowiek; baseStrength:10; baseDexterity:10; baseWisdom:10;
-     baseMaxStrength:15; baseMaxDexterity:15; baseMaxWisdom:15;
+    (name:CmdCzlowiek; baseStats: (10, 10, 10, 15, 15, 15);
      MaxManaBonus:0; MoneyBonus:0; MaxEnergyBonus:0; EnergyBonus:0),
-    (name:CmdOlbrzym; baseStrength:13; baseDexterity:13; baseWisdom:5;
-     baseMaxStrength:20; baseMaxDexterity:20; baseMaxWisdom:7;
+    (name:CmdOlbrzym; baseStats: (13, 13, 5, 20, 20, 7);
      MaxManaBonus:-30; MoneyBonus:0; MaxEnergyBonus:0; EnergyBonus:0),
-    (name:CmdNimfa; baseStrength:10; baseDexterity:13; baseWisdom:7;
-     baseMaxStrength:15; baseMaxDexterity:20; baseMaxWisdom:11;
+    (name:CmdNimfa; baseStats: (10, 13, 7, 15, 20, 11);
      MaxManaBonus:0; MoneyBonus:0; MaxEnergyBonus:0; EnergyBonus:0),
-    (name:CmdPolElf; baseStrength:6; baseDexterity:16; baseWisdom:8;
-     baseMaxStrength:10; baseMaxDexterity:24; baseMaxWisdom:12;
+    (name:CmdPolElf; baseStats: (6, 16, 8, 10, 24, 12);
      MaxManaBonus:-20; MoneyBonus:30; MaxEnergyBonus:-5; EnergyBonus:-5),
-    (name:CmdUfok; baseStrength:9; baseDexterity:9; baseWisdom:13;
-     baseMaxStrength:13; baseMaxDexterity:14; baseMaxWisdom:20;
+    (name:CmdUfok; baseStats: (9, 9, 13, 13, 14, 20);
      MaxManaBonus:50; MoneyBonus:0; MaxEnergyBonus:0; EnergyBonus:0),
-    (name:CmdCzaromil; baseStrength:6; baseDexterity:7; baseWisdom:16;
-     baseMaxStrength:9; baseMaxDexterity:11; baseMaxWisdom:25;
+    (name:CmdCzaromil; baseStats: (6, 7, 16, 9, 11, 25);
      MaxManaBonus:150; MoneyBonus:0; MaxEnergyBonus:0; EnergyBonus:0)
   );
 
@@ -1969,6 +1962,7 @@ procedure ChooseRace;
 
 var
   chosen: Integer;
+  si: TStat;
 begin
   ShowIntro;
   repeat
@@ -1976,12 +1970,8 @@ begin
     ReadLn(Command);
     chosen := FindRace(Command);
     if chosen > 0 then begin
-      Player.Stats[Strength] := Races[chosen].baseStrength;
-      Player.Stats[Dexterity] := Races[chosen].baseDexterity;
-      Player.Stats[Wisdom] := Races[chosen].baseWisdom;
-      Player.Stats[MaxStrength] := Races[chosen].baseMaxStrength;
-      Player.Stats[MaxDexterity] := Races[chosen].baseMaxDexterity;
-      Player.Stats[MaxWisdom] := Races[chosen].baseMaxWisdom;
+      for si := Low(TStat) to High(TStat) do
+        Player.Stats[si] := Races[chosen].baseStats[si];
       Player.MaxMana := Player.MaxMana + Races[chosen].MaxManaBonus;
       Player.Money := Player.Money + Races[chosen].MoneyBonus;
       Player.MaxEnergy := Player.MaxEnergy + Races[chosen].MaxEnergyBonus;

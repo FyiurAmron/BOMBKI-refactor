@@ -3323,8 +3323,6 @@ const
   );
 
 procedure Start;
-label
-  L1012_TrancePrompt, L1025_Exit;
 var
   gi, ti: Integer;
 begin
@@ -3350,7 +3348,7 @@ begin
 
     Session.ExitRequested := False;
     DispatchRooms;
-    if Session.ExitRequested then goto L1025_Exit;
+    if Session.ExitRequested then Exit;
 
     ArenaMaze;
     if Session.Room = DeadRoom then Death;
@@ -3359,23 +3357,22 @@ begin
       for ti := Low(TranceItems) to High(TranceItems) do
         with TranceItems[ti] do
           TranceItemLine(item^, line);
-      L1012_TrancePrompt: Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-      ReadLn(Command);
+      repeat
+        Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
+        ReadLn(Command);
 
-      Session.ExitRequested := False;
-      for gi := Low(GroundCommands) to High(GroundCommands) do
-        if (GroundCommands[gi].cmd = TxtEmpty) or (Command = GroundCommands[gi].cmd) then begin
-          GroundCommands[gi].run;
-          if Session.ExitRequested then goto L1025_Exit;
-        end;
-      if Session.Room = TranceRoom then goto L1012_TrancePrompt;
+        Session.ExitRequested := False;
+        for gi := Low(GroundCommands) to High(GroundCommands) do
+          if (GroundCommands[gi].cmd = TxtEmpty) or (Command = GroundCommands[gi].cmd) then begin
+            GroundCommands[gi].run;
+            if Session.ExitRequested then Exit;
+          end;
+      until Session.Room <> TranceRoom;
     end;
 
     Combat.Fled := 0;
 
   until Session.Room = RoomQuit;
-
-  L1025_Exit: ;
 
 end;
 

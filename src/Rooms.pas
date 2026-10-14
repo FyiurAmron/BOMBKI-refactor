@@ -402,8 +402,6 @@ end;
 
 procedure Room16;
 
-label
-  L1027_Flee, L1028_AfterFlee;
 begin
 
   WriteLn(TxtShared_06);
@@ -415,17 +413,16 @@ begin
     if World.Monsters[CageHuge] = RoomCageHuge then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;
       DoFight;
-      if Combat.Fled <> 0 then goto L1027_Flee;
-      World.Monsters[CageHuge] := 0;
-      Combat.Loot := Random(30);
-      WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
-      Player.Money := Player.Money + Combat.Loot;
-      TryCageLoot(10);
-      goto L1028_AfterFlee;
-      L1027_Flee:
-      Combat.Fled := 0;
-      Session.Room := RoomCageCorridor;
-      L1028_AfterFlee:
+      if Combat.Fled <> 0 then begin
+        Combat.Fled := 0;
+        Session.Room := RoomCageCorridor;
+      end else begin
+        World.Monsters[CageHuge] := 0;
+        Combat.Loot := Random(30);
+        WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
+        Player.Money := Player.Money + Combat.Loot;
+        TryCageLoot(10);
+      end;
     end;
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
     ReadLn(Command);

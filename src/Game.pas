@@ -138,6 +138,8 @@ var
   procedure SpawnMonsters;
   procedure DescribePlants;
   procedure ExpandAbbrev;
+  procedure ReadCommand;
+  procedure CheckMode;
   procedure PlantFights;
   procedure FightDog;
   procedure DescribeStreet;
@@ -1392,7 +1394,7 @@ begin
       write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
       ReadLn(Command);
       ExpandAbbrev;
-      if Command = CmdMode then EnterTrance;
+      CheckMode;
       if (Command = CmdZabij + CmdBakteria) and (Session.Room = World.Monsters[Bacterium]) then
       begin Fight(WeakEnemy);
         World.Monsters[Bacterium] := 0;
@@ -1742,6 +1744,17 @@ begin
     if (Player.Energy > 0) and (Combat.Fled = 0) then
       WriteLn(TxtPlantFights_18);
   end;
+end;
+
+procedure ReadCommand;
+begin
+  Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
+  ReadLn(Command);
+end;
+
+procedure CheckMode;
+begin
+  if Command = CmdMode then EnterTrance;
 end;
 
 procedure ExpandAbbrev;
@@ -3359,8 +3372,7 @@ begin
         with TranceItems[ti] do
           TranceItemLine(item^, line);
       repeat
-        Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
-        ReadLn(Command);
+        ReadCommand;
 
         Session.ExitRequested := False;
         for gi := Low(GroundCommands) to High(GroundCommands) do

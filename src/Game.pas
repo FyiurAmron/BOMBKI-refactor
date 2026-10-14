@@ -2760,61 +2760,57 @@ begin
   RunShopRules(MagicShopRules);
 end;
 
-procedure ConcertFights;
-
-begin
-  if (Command = CmdZabij + CmdDziecko) and (World.Monsters[Kid] = Session.Room) then begin
-    Fight(WeakishEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Kid] := 0;
+type
+  TConcertBonus = (cbNone, cbPipe, cbSuit);
+  TConcertKill = record
+    cmd: string;
+    monster: TMonster;
+    foe: TFoe;
+    bonus: TConcertBonus;
   end;
-  if (Command = CmdZabij + CmdDziadek) and (World.Monsters[OldMan] = Session.Room) then begin
-    Fight(WeakishEnemy);
+
+const
+  ConcertKills: array[1..10] of TConcertKill = (
+    (cmd: CmdZabij + CmdDziecko; monster: Kid; foe: WeakishEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdDziadek; monster: OldMan; foe: WeakishEnemy; bonus: cbPipe),
+    (cmd: CmdZabij + CmdWariat; monster: Lunatic; foe: MediumEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdSluchacz; monster: Listener; foe: MediumEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdCzlowiek; monster: Man; foe: MediumEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdFan; monster: Fan; foe: MediumEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdReporter; monster: Reporter; foe: MediumEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdPolicjant; monster: Policeman; foe: HardEnemy; bonus: cbNone),
+    (cmd: CmdZabij + CmdGoryl; monster: Gorilla; foe: HardEnemy; bonus: cbSuit),
+    (cmd: CmdZabij + CmdOchroniarz; monster: Bouncer; foe: HardEnemy; bonus: cbSuit)
+  );
+
+procedure ConcertKill(cmd: string; monster: TMonster; foe: TFoe; bonus: TConcertBonus);
+begin
+  if (Command = cmd) and (Session.Room = World.Monsters[monster]) then begin
+    Fight(foe);
     if Combat.EnemyEnergy < 1 then begin
-      World.Monsters[OldMan] := 0;
-      Combat.Roll := Random(100);
-      if (Combat.Roll < 5) and (Bag.Items[Pipe] = 0) then begin
-        WriteLn(TxtShared_08, TxtConcertFights_01);
-        WriteLn(TxtConcertFights_02);
-        Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
-        Player.Stats[Wisdom] := Player.Stats[Wisdom] + 1;
+      World.Monsters[monster] := 0;
+      if bonus = cbPipe then begin
+        Combat.Roll := Random(100);
+        if (Combat.Roll < 5) and (Bag.Items[Pipe] = 0) then begin
+          WriteLn(TxtShared_08, TxtConcertFights_01);
+          WriteLn(TxtConcertFights_02);
+          Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
+          Player.Stats[Wisdom] := Player.Stats[Wisdom] + 1;
+        end;
       end;
     end;
+    if bonus = cbSuit then SuitGain;
   end;
-  if (Command = CmdZabij + CmdWariat) and (World.Monsters[Lunatic] = Session.Room) then begin
-    Fight(MediumEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Lunatic] := 0;
-  end;
-  if (Command = CmdZabij + CmdSluchacz) and (World.Monsters[Listener] = Session.Room) then begin
-    Fight(MediumEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Listener] := 0;
-  end;
-  if (Command = CmdZabij + CmdCzlowiek) and (World.Monsters[Man] = Session.Room) then begin
-    Fight(MediumEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Man] := 0;
-  end;
-  if (Command = CmdZabij + CmdFan) and (World.Monsters[Fan] = Session.Room) then begin
-    Fight(MediumEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Fan] := 0;
-  end;
-  if (Command = CmdZabij + CmdReporter) and (World.Monsters[Reporter] = Session.Room) then begin
-    Fight(MediumEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Reporter] := 0;
-  end;
-  if (Command = CmdZabij + CmdPolicjant) and (World.Monsters[Policeman] = Session.Room) then begin
-    Fight(HardEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Policeman] := 0;
-  end;
-  if (Command = CmdZabij + CmdGoryl) and (World.Monsters[Gorilla] = Session.Room) then begin
-    Fight(HardEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Gorilla] := 0;
-    SuitGain;
-  end;
-  if (Command = CmdZabij + CmdOchroniarz) and
-     (World.Monsters[Bouncer] = Session.Room) then begin
-    Fight(HardEnemy);
-    if Combat.EnemyEnergy < 1 then World.Monsters[Bouncer] := 0;
-    SuitGain;
-  end;
+end;
+
+procedure ConcertFights;
+
+var
+  ci: Integer;
+begin
+  for ci := Low(ConcertKills) to High(ConcertKills) do
+    with ConcertKills[ci] do
+      ConcertKill(cmd, monster, foe, bonus);
 end;
 
 type

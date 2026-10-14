@@ -1879,17 +1879,37 @@ begin
   else LevelName := TxtEmpty;
 end;
 
+type
+  TBand = record
+    lo, hi, base, perUnit: Integer;
+  end;
+
+const
+  LvlThresholds: array[1..5] of TBand = (
+    (lo: 1; hi: 1; base: Lvl1_Threshold; perUnit: 0),
+    (lo: 2; hi: 2; base: Lvl2_Threshold; perUnit: 0),
+    (lo: 3; hi: 3; base: Lvl3_Threshold; perUnit: 0),
+    (lo: 4; hi: 8; base: Lvl4_Base; perUnit: 1),
+    (lo: 9; hi: MaxInt; base: Lvl9_Base; perUnit: 2)
+  );
+
+function BandAmount(const bands: array of TBand; v: Integer): Integer;
+var
+  bi: Integer;
+begin
+  for bi := Low(bands) to High(bands) do
+    with bands[bi] do
+      if (v >= lo) and (v <= hi) then begin
+        BandAmount := base + perUnit * v;
+        Exit;
+      end;
+  BandAmount := 0;
+end;
+
 function LevelThreshold(lvl: Integer): Integer;
 
 begin
-  case lvl of
-    1: LevelThreshold := Lvl1_Threshold;
-    2: LevelThreshold := Lvl2_Threshold;
-    3: LevelThreshold := Lvl3_Threshold;
-    4..8: LevelThreshold := Lvl4_Base + lvl;
-    9..13: LevelThreshold := Lvl9_Base + 2 * lvl;
-    else LevelThreshold := Lvl9_Base + 2 * lvl;
-  end;
+  LevelThreshold := BandAmount(LvlThresholds, lvl);
 end;
 
 procedure ShowItem(val: Integer; const desc: string; width: Integer);
@@ -2989,11 +3009,6 @@ begin
   WriteLn(TxtLoadCharacter_01, Gear.WornGarment);
 end;
 
-type
-  TBand = record
-    lo, hi, base, perUnit: Integer;
-  end;
-
 const
   LevelCosts: array[1..5] of TBand = (
     (lo: 1; hi: 1; base: 725; perUnit: 0),
@@ -3008,19 +3023,6 @@ const
     (lo: 16; hi: 22; base: 5; perUnit: 0),
     (lo: -MaxInt - 1; hi: MaxInt; base: 6; perUnit: 0)
   );
-
-function BandAmount(const bands: array of TBand; v: Integer): Integer;
-var
-  bi: Integer;
-begin
-  for bi := Low(bands) to High(bands) do
-    with bands[bi] do
-      if (v >= lo) and (v <= hi) then begin
-        BandAmount := base + perUnit * v;
-        Exit;
-      end;
-  BandAmount := 0;
-end;
 
 procedure CheckLevelUp;
 

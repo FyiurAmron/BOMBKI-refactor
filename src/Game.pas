@@ -2011,25 +2011,22 @@ begin
   WriteLines(TxtChooseRaceLines1);
 end;
 
-procedure KillDog(cmd: string; var Dog: Integer; extraMsg: Boolean);
+type
+  TStreetKind = (skDog, skFolk);
 
+procedure KillStreetFoe(cmd: string; var target: Integer; extra: Boolean; kind: TStreetKind);
 begin
-  if (Command = cmd) and (Dog = Session.Room) then begin
-    FightDog;
-    Dog := 0;
-    if extraMsg then begin
-      WriteLines(TxtKillDogLines1);
+  if (Command = cmd) and (target = Session.Room) then begin
+    case kind of
+      skDog: FightDog;
+      skFolk: Fight(VeryEasyEnemy);
     end;
-  end;
-end;
-
-procedure KillTownsfolk(cmd: string; var npc: Integer; suitLoot: Boolean);
-
-begin
-  if (Command = cmd) and (npc = Session.Room) then begin
-    Fight(VeryEasyEnemy);
-    npc := 0;
-    if suitLoot then SuitGain;
+    target := 0;
+    if extra then
+      case kind of
+        skDog: WriteLines(TxtKillDogLines1);
+        skFolk: SuitGain;
+      end;
   end;
 end;
 
@@ -2067,20 +2064,19 @@ type
     cmd: string;
     target: ^Integer;
     extra: Boolean;
+    kind: TStreetKind;
   end;
 
 const
-  StreetDogs: array[1..5] of TStreetKill = (
-    (cmd: CmdZabij + CmdOwczarek; target: @World.Monsters[Shepherd]; extra: False),
-    (cmd: CmdZabij + CmdPiesek; target: @World.Monsters[Pooch]; extra: False),
-    (cmd: CmdZabij + CmdJamnik; target: @World.Monsters[Dachshund]; extra: False),
-    (cmd: CmdZabij + CmdSpaniel; target: @World.Monsters[Spaniel]; extra: True),
-    (cmd: CmdZabij + CmdPudel; target: @World.Monsters[Poodle]; extra: False)
-  );
-  StreetFolk: array[1..3] of TStreetKill = (
-    (cmd: CmdZabij + CmdTaksowkarz; target: @World.Monsters[Cabman]; extra: True),
-    (cmd: CmdZabij + CmdSprzedawca; target: @World.Monsters[Vendor]; extra: True),
-    (cmd: CmdZabij + CmdPijak; target: @World.Monsters[Drunkard]; extra: False)
+  StreetKills: array[1..8] of TStreetKill = (
+    (cmd: CmdZabij + CmdOwczarek; target: @World.Monsters[Shepherd]; extra: False; kind: skDog),
+    (cmd: CmdZabij + CmdPiesek; target: @World.Monsters[Pooch]; extra: False; kind: skDog),
+    (cmd: CmdZabij + CmdJamnik; target: @World.Monsters[Dachshund]; extra: False; kind: skDog),
+    (cmd: CmdZabij + CmdSpaniel; target: @World.Monsters[Spaniel]; extra: True; kind: skDog),
+    (cmd: CmdZabij + CmdPudel; target: @World.Monsters[Poodle]; extra: False; kind: skDog),
+    (cmd: CmdZabij + CmdTaksowkarz; target: @World.Monsters[Cabman]; extra: True; kind: skFolk),
+    (cmd: CmdZabij + CmdSprzedawca; target: @World.Monsters[Vendor]; extra: True; kind: skFolk),
+    (cmd: CmdZabij + CmdPijak; target: @World.Monsters[Drunkard]; extra: False; kind: skFolk)
   );
 
 procedure StreetFights;
@@ -2088,13 +2084,9 @@ var
   ki: Integer;
 begin
 
-  for ki := Low(StreetDogs) to High(StreetDogs) do
-    with StreetDogs[ki] do
-      KillDog(cmd, target^, extra);
-
-  for ki := Low(StreetFolk) to High(StreetFolk) do
-    with StreetFolk[ki] do
-      KillTownsfolk(cmd, target^, extra);
+  for ki := Low(StreetKills) to High(StreetKills) do
+    with StreetKills[ki] do
+      KillStreetFoe(cmd, target^, extra, kind);
   KillSweeper;
   KillSickMan;
 end;

@@ -264,6 +264,22 @@ begin
 
 end;
 
+procedure CageMonsterFight(var monster: Integer; room, energy, dexterity, strength, lootRand, lootThreshold: Integer);
+begin
+  if (Command = CmdZabij + CmdPotwor) and (monster = room) then begin
+    Combat.EnemyEnergy := energy; Combat.EnemyDexterity := dexterity; Combat.EnemyStrength := strength;
+    DoFight;
+    if Combat.Fled = 0 then begin
+      monster := 0;
+      Combat.Loot := Random(lootRand);
+      WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
+      Player.Money := Player.Money + Combat.Loot;
+      TryCageLoot(lootThreshold);
+    end else
+      Combat.Fled := 0;
+  end;
+end;
+
 procedure Room12;
 
 begin
@@ -280,19 +296,7 @@ begin
                     TxtExitZachod, TxtPlaceKlatkiPelneGajdy]);
     CheckMode;
     if MoveWhenOrExit([Go(CmdZachod, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageWeakling] = RoomCageWeakling) then begin
-      Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
-      DoFight;
-      if Combat.Fled = 0 then begin
-        World.Monsters[CageWeakling] := 0;
-        Combat.Loot := Random(10);
-        WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
-        Player.Money := Player.Money + Combat.Loot;
-        TryCageLoot(4);
-      end
-      else
-        Combat.Fled := 0;
-    end;
+    CageMonsterFight(World.Monsters[CageWeakling], RoomCageWeakling, 20, 3, 3, 10, 4);
   until Session.Room <> RoomCageWeakling;
 end;
 
@@ -311,19 +315,7 @@ begin
                     TxtExitWschod, TxtPlaceKlatkiPelneGajdy]);
     CheckMode;
     if MoveWhenOrExit([Go(CmdWschod, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageStrong] = RoomCageStrong) then begin
-      Combat.EnemyEnergy := 20;
-      Combat.EnemyDexterity := 3;
-      Combat.EnemyStrength := 10;
-      DoFight;
-      if Combat.Fled = 0 then begin
-        World.Monsters[CageStrong] := 0;
-        Combat.Loot := Random(15);
-        WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
-        Player.Money := Player.Money + Combat.Loot;
-        TryCageLoot(7);
-      end else Combat.Fled := 0;
-    end;
+    CageMonsterFight(World.Monsters[CageStrong], RoomCageStrong, 20, 3, 10, 15, 7);
   until Session.Room <> RoomCageStrong;
 
 end;
@@ -344,18 +336,7 @@ begin
                     TxtExitPolodnie, TxtPlaceKlatkiPelneGajdy]);
     CheckMode;
     if MoveWhenOrQuit([Go(CmdPolodnie, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageAgile] = RoomCageAgile) then begin
-      Combat.EnemyEnergy := 20; Combat.EnemyDexterity := 30; Combat.EnemyStrength := 3;
-      DoFight;
-      if Combat.Fled = 0 then begin
-        World.Monsters[CageAgile] := 0;
-        Combat.Loot := Random(15);
-        WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
-        Player.Money := Player.Money + Combat.Loot;
-        TryCageLoot(7);
-      end else
-        Combat.Fled := 0;
-    end;
+    CageMonsterFight(World.Monsters[CageAgile], RoomCageAgile, 20, 30, 3, 15, 7);
   until Session.Room <> RoomCageAgile;
 
 end;
@@ -376,18 +357,7 @@ begin
                     TxtExitPolnoc, TxtPlaceKlatkiPelneGajdy]);
     CheckMode;
     if MoveWhenOrQuit([Go(CmdPolnoc, RoomCageCorridor)]) then Exit;
-    if (Command = CmdZabij + CmdPotwor) and (World.Monsters[CageTough] = RoomCageTough) then begin
-      Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 3; Combat.EnemyStrength := 3;
-      DoFight;
-      if Combat.Fled = 0 then begin
-        World.Monsters[CageTough] := 0;
-        Combat.Loot := Random(15);
-        WriteLn(TxtShared_08, Combat.Loot, TxtShared_09);
-        Player.Money := Player.Money + Combat.Loot;
-        TryCageLoot(7);
-      end else
-        Combat.Fled := 0;
-    end;
+    CageMonsterFight(World.Monsters[CageTough], RoomCageTough, 40, 3, 3, 15, 7);
   until Session.Room <> RoomCageTough;
 
 end;

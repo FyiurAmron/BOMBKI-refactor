@@ -475,6 +475,38 @@ end;
 type
   PInteger = ^Integer;
 
+type
+  TSpawnedAt = record
+    monster: TMonster;
+    room: Integer;
+  end;
+
+const
+  CageInits: array[1..5] of TSpawnedAt = (
+    (monster: CageWeakling; room: RoomCageWeakling),
+    (monster: CageStrong; room: RoomCageStrong),
+    (monster: CageAgile; room: RoomCageAgile),
+    (monster: CageTough; room: RoomCageTough),
+    (monster: CageHuge; room: RoomCageHuge)
+  );
+  PubSpawns: array[1..6] of TSpawnedAt = (
+    (monster: Minibarman; room: RoomPub),
+    (monster: Fatso; room: RoomPub),
+    (monster: DJ; room: RoomBackstage),
+    (monster: Pedal; room: RoomBar),
+    (monster: Couple; room: RoomBar),
+    (monster: Maciek; room: RoomBar)
+  );
+
+procedure SpawnAt(const placements: array of TSpawnedAt);
+var
+  si: Integer;
+begin
+  for si := Low(placements) to High(placements) do
+    with placements[si] do
+      World.Monsters[monster] := room;
+end;
+
 procedure SpawnGroup(const targets: array of PInteger; spread, base: Integer);
 var
   i: Integer;
@@ -527,12 +559,7 @@ begin
     SpawnGroup([@World.Monsters[Reporter]], 7, RoomValley);
   until PastLimit([@World.Monsters[Policeman], @World.Monsters[Bouncer], @World.Monsters[Gorilla], @World.Monsters[OldMan], @World.Monsters[Reporter]], RoomValley);
     SpawnGroup([@World.Monsters[Guitarist], @World.Monsters[Drummer], @World.Monsters[Keyboardist], @World.Monsters[Liroy]], 3, RoomStage1);
-  World.Monsters[Minibarman] := RoomPub;
-  World.Monsters[Fatso] := RoomPub;
-  World.Monsters[DJ] := RoomBackstage;
-  World.Monsters[Pedal] := RoomBar;
-  World.Monsters[Couple] := RoomBar;
-  World.Monsters[Maciek] := RoomBar;
+  SpawnAt(PubSpawns);
   World.Door := 1;
   World.OldElf := 1;
   repeat
@@ -1982,12 +2009,7 @@ begin
   ReadLn(Command);
   Player.Energy := 50;
   Player.Practice := 10;
-  World.Monsters[CageWeakling] := RoomCageWeakling;
-
-  World.Monsters[CageStrong] := RoomCageStrong;
-  World.Monsters[CageAgile] := RoomCageAgile;
-  World.Monsters[CageTough] := RoomCageTough;
-  World.Monsters[CageHuge] := RoomCageHuge;
+  SpawnAt(CageInits);
 
   Player.Level := 1;
   Player.MaxMana := Player.MaxMana + 100;

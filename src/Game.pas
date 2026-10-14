@@ -2127,6 +2127,12 @@ begin
     ((reqDexterity = -1) or (Player.Stats[Dexterity] > reqDexterity));
 end;
 
+procedure WriteTrainingGain(skillName: string; value: Integer);
+begin
+  WriteLn(TxtTrainingVerb, skillName, TxtTrainingThreshold, value,
+          TxtTraining_29, Player.Practice, TxtShared_19);
+end;
+
 procedure Training;
 var
   i: Integer;
@@ -2146,8 +2152,7 @@ begin
     if (Player.Stats[Wisdom] > 10) and (Player.Stats[Strength] > 11) and (Player.Practice > 0) then begin
       Skills.Values[Kick] := Skills.Values[Kick] + Player.Stats[Wisdom];
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingDigging, TxtTrainingThreshold, Skills.Values[Kick],
-              TxtTraining_29, Player.Practice, TxtShared_19);
+      WriteTrainingGain(TxtTrainingDigging, Skills.Values[Kick]);
     end;
 
   if Command = CmdCwicz + CmdUciekac then begin
@@ -2156,8 +2161,7 @@ begin
         if (Player.Practice > 0) and (Skills.Values[Fleeing] < 85) then begin
           Skills.Values[Fleeing] := Skills.Values[Fleeing] + Player.Stats[Wisdom] + Player.Stats[Dexterity] - 5;
           Player.Practice := Player.Practice - 1;
-          WriteLn(TxtTrainingVerb, TxtTrainingFleeing, TxtTrainingThreshold, Skills.Values[Fleeing],
-                  TxtTraining_29, Player.Practice, TxtShared_19);
+          WriteTrainingGain(TxtTrainingFleeing, Skills.Values[Fleeing]);
         end else
           WriteLn(TxtTraining_31);
   end;
@@ -2166,32 +2170,28 @@ begin
     if (Player.Stats[Wisdom] > 17) and (Skills.Values[Returning] < 90) and (Player.Practice > 0) then begin
       Skills.Values[Returning] := Skills.Values[Returning] + 2 * Player.Stats[Wisdom] - 3;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingReturning, TxtTrainingThreshold, Skills.Values[Returning],
-              TxtTraining_29, Player.Practice, TxtShared_19);
+      WriteTrainingGain(TxtTrainingReturning, Skills.Values[Returning]);
     end;
 
   if Command = CmdCwicz + TxtTrainingParrying then
     if (Player.Stats[Wisdom] > 15) and (Player.Stats[Dexterity] > 11) and (Skills.Values[Parry] < 90) and (Player.Practice > 0) then begin
       Skills.Values[Parry] := Skills.Values[Parry] + Player.Stats[Wisdom] + Player.Stats[Dexterity] - 14;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingParrying, TxtTrainingThreshold, Skills.Values[Parry],
-              TxtTraining_29, Player.Practice, TxtShared_19);
+      WriteTrainingGain(TxtTrainingParrying, Skills.Values[Parry]);
     end;
 
   if Command = CmdCwicz + CmdPorownanie then
     if (Player.Stats[Wisdom] > 11) and (Skills.Values[Comparing] < 90) and (Player.Practice > 0) then begin
       Skills.Values[Comparing] := Skills.Values[Comparing] + 3 * Player.Stats[Wisdom] - 9;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingComparing, TxtTrainingThreshold, Skills.Values[Comparing],
-              TxtTraining_29, Player.Practice, TxtShared_19);
+      WriteTrainingGain(TxtTrainingComparing, Skills.Values[Comparing]);
     end;
 
   if Command = CmdCwicz + TxtTrainingCooking then
     if (Player.Stats[Wisdom] > 18) and (Skills.Values[Cooking] < 90) and (Player.Practice > 0) then begin
       Skills.Values[Cooking] := Skills.Values[Cooking] + Player.Stats[Wisdom] + 1;
       Player.Practice := Player.Practice - 1;
-      WriteLn(TxtTrainingVerb, TxtTrainingCooking, TxtTrainingThreshold, Skills.Values[Cooking],
-              TxtTraining_29, Player.Practice, TxtShared_19);
+      WriteTrainingGain(TxtTrainingCooking, Skills.Values[Cooking]);
     end;
 end;
 

@@ -924,8 +924,6 @@ begin
       if (Bag.Items[Sausage] > -30) and (Player.Money < 200) and (Bag.Items[ReturnScroll] = 0) then begin
         WriteLines(TxtRoom86Lines1);
       end;
-    end;
-    if Command = CmdRozmawiaj + CmdStaruch then begin
       if (Bag.Items[Sausage] < -30) and (Player.Money > 199) then begin
         WriteLines(TxtRoom86Lines2);
         Session.Room := RoomCityCentre;
@@ -936,8 +934,6 @@ begin
         Player.Experience := Player.Experience + 50;
         Bag.Count := Bag.Count - 2;
       end;
-    end;
-    if Command = CmdRozmawiaj + CmdStaruch then begin
       if Bag.Items[ReturnScroll] < 0 then begin
         WriteLn(TxtRoom86_13);
         Session.Room := RoomCageHuge;

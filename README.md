@@ -3,9 +3,9 @@
 # BOMBKI refactor
 
 This is a test-backed refactor of the reconstructed original 1999' BOMBKI text
-RPG game. The goal is to produce a behaviorally-identical game (including bugs)
-while improving code quality enough for it to be viable for regular coding work
-(bugfixing, language ports etc.)
+RPG game. The goal - arguably attained - was to produce a behaviorally-identical
+game (including bugs) while improving code quality enough for it to be viable
+for regular coding work (bugfixing, language ports etc.)
 
 It is based on extensive work done as part of collaboration on
 https://github.com/rzuf79/bombki , with an explicit approval from the game's

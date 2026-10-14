@@ -2417,12 +2417,17 @@ begin
   CanBuyOldSword := (Bag.Items[OldSword] = 0) and (Player.Money >= 70);
 end;
 
+procedure SellItem(var Item: Integer; price: Integer; itemName: string);
+begin
+  WriteLn(TxtSellVerb, itemName);
+  Player.Money := Player.Money + price;
+  Item := Item + ItemUnit;
+  Bag.Count := Bag.Count - 1;
+end;
+
 procedure BuyOldSword;
 begin
-  Bag.Count := Bag.Count + 1;
-  Bag.Items[OldSword] := -ItemUnit;
-  Player.Money := Player.Money - 70;
-  WriteLn(TxtShopVerb, TxtBuyOldSword_01, TxtSpaceZa, 70, TxtSpaceMonet);
+  BuyItem(CmdKup + CmdStary, Bag.Items[OldSword], 70, TxtBuyOldSword_01, True);
 end;
 
 function CanSellOldSword: Boolean;
@@ -2446,10 +2451,7 @@ end;
 
 procedure BuySmallShield;
 begin
-  Bag.Count := Bag.Count + 1;
-  Bag.Items[SmallShield] := -ItemUnit;
-  Player.Money := Player.Money - 15;
-  WriteLn(TxtShopVerb, TxtBuySmallShield_01, TxtSpaceZa, 15, TxtSpaceMonet);
+  BuyItem(CmdKup + CmdMala, Bag.Items[SmallShield], 15, TxtBuySmallShield_01, True);
 end;
 
 procedure SellSmallShield;
@@ -2490,10 +2492,7 @@ end;
 
 procedure BuyTracksuit;
 begin
-  WriteLn(TxtShopVerb, TxtBuyTracksuit_01, TxtSpaceZa, 35, TxtSpaceMonet);
-  Player.Money := Player.Money - 35;
-  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] - ItemUnit;
-  Bag.Count := Bag.Count + 1;
+  BuyItem(CmdKup + CmdKomplet, Bag.Items[Tracksuit], 35, TxtBuyTracksuit_01, True);
 end;
 
 function CanSellTracksuit: Boolean;
@@ -2503,10 +2502,7 @@ end;
 
 procedure SellTracksuit;
 begin
-  WriteLn(TxtSellVerb, TxtSellTracksuit_01);
-  Player.Money := Player.Money + 15;
-  Bag.Items[Tracksuit] := Bag.Items[Tracksuit] + ItemUnit;
-  Bag.Count := Bag.Count - 1;
+  SellItem(Bag.Items[Tracksuit], 15, TxtSellTracksuit_01);
 end;
 
 function CanSellPipe: Boolean;
@@ -2559,10 +2555,7 @@ end;
 
 procedure SellSpikedSuit;
 begin
-  WriteLn(TxtSellVerb, TxtSellSpikedSuit_01);
-  Player.Money := Player.Money + 500;
-  Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] + ItemUnit;
-  Bag.Count := Bag.Count - 1;
+  SellItem(Bag.Items[SpikedSuit], 500, TxtSellSpikedSuit_01);
 end;
 
 function CanSellCassette: Boolean;
@@ -2641,10 +2634,7 @@ end;
 
 procedure BuyTeleportPill;
 begin
-  WriteLn(TxtShopVerb, TxtBuyTeleportPill_01, TxtSpaceZa, 235, TxtSpaceMonet);
-  Player.Money := Player.Money - 235;
-  Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - ItemUnit;
-  Bag.Count := Bag.Count + 1;
+  BuyItem(CmdKup + CmdPigulkaTransportujaca, Bag.Items[TeleportPill], 235, TxtBuyTeleportPill_01, True);
 end;
 
 function CanSellTeleportPill: Boolean;

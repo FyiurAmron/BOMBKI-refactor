@@ -1,3 +1,5 @@
+*Dedicated to my children, today's and future; let The Sun always shine in your eyes.*
+
 # BOMBKI refactor
 
 This is a test-backed refactor of the reconstructed original 1999' BOMBKI text

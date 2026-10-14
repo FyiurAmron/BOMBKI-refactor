@@ -1854,28 +1854,6 @@ begin
   LevelThreshold := BandAmount(LvlThresholds, lvl);
 end;
 
-procedure ShowItem(val: Integer; const desc: string; width: Integer);
-
-begin
-  if val <= -ItemUnit then
-    if width = 0 then WriteLn(desc)
-    else WriteLn(desc, val:width);
-end;
-
-procedure ShowItemPlain(val: Integer; const desc: string);
-
-begin
-  if val <= -ItemUnit then
-    WriteLn(desc, val);
-end;
-
-procedure ShowItemDiv10(val: Integer; const desc: string);
-
-begin
-  if val <= -ItemUnit then
-    WriteLn(desc, val div 10);
-end;
-
 type
   TSheetKind = (ikShown, ikDiv10, ikPlain);
   TSheetItem = record
@@ -1911,6 +1889,17 @@ const
     (item: @Bag.Items[ReturnScroll]; desc: CmdScrollZCzaremPowrot; width: 0; kind: ikPlain)
   );
 
+procedure ShowSheetItem(kind: TSheetKind; val: Integer; const desc: string; width: Integer);
+begin
+  if val <= -ItemUnit then
+    case kind of
+      ikShown: if width = 0 then WriteLn(desc)
+               else WriteLn(desc, val:width);
+      ikDiv10: WriteLn(desc, val div 10);
+      ikPlain: WriteLn(desc, val);
+    end;
+end;
+
 procedure ShowCharacter;
 
 var
@@ -1926,11 +1915,7 @@ begin
   WriteLn(TxtShowCharacter_01);
   for si := Low(SheetItems) to High(SheetItems) do
     with SheetItems[si] do
-      case kind of
-        ikShown: ShowItem(item^, desc, width);
-        ikDiv10: ShowItemDiv10(item^, desc);
-        ikPlain: ShowItemPlain(item^, desc);
-      end;
+      ShowSheetItem(kind, item^, desc, width);
   WriteLn(TxtShowCharacter_02, Bag.Count, TxtShowCharacter_03, Bag.Limit, TxtShowCharacter_04);
   if Gear.Values[WeaponKind] = 0 then WriteLn(TxtShowCharacter_05);
   if Gear.Values[ShieldKind] = 0 then WriteLn(TxtShowCharacter_06);

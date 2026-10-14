@@ -1329,15 +1329,14 @@ begin
       Player.MaxEnergy := Player.MaxEnergy - 1;
       Player.Energy := 1;
       Player.Experience := Player.Experience - 50;
-    end;
-    if (Player.Stats[Wisdom] > 9) and (Player.Stats[Wisdom] < 16) then begin
+    end else if Player.Stats[Wisdom] < 16 then begin
       WriteLn(TxtUseItems_35);
       WriteLn(TxtUseItems_36);
       Player.Energy := Player.Energy - 40;
       if Player.Energy < 1 then Player.Energy := 1;
       Player.Experience := Player.Experience - 30;
-    end;
-    if Player.Stats[Wisdom] > 15 then WriteLn(TxtUseItems_37);
+    end else
+      WriteLn(TxtUseItems_37);
   end;
   if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -ItemUnit) and (Gear.WornGarment = TxtWornGarnitur) then begin
     WriteLn(TxtUseItems_38);

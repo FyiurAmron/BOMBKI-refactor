@@ -83,6 +83,9 @@ def extract():
         return None
 
     def write_text(line):
+        # a cage header always prints TxtShared_06 first
+        if re.match(r"\s*DescribeCage\(\w+, \w+, \w+, \w+\);", line):
+            line = "WriteLn(TxtShared_06);"
         # an inline-array WriteLines contributes its first line
         mm = re.search(r"WriteLines\(\[([^]]*)\]\)", line)
         if mm:

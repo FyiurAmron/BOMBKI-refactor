@@ -277,14 +277,17 @@ begin
   end;
 end;
 
+procedure DescribeCage(monster: TMonster; room: Integer; aliveLine, deadLine: string);
+begin
+  WriteLn(TxtShared_06);
+  if World.Monsters[monster] = room then WriteLn(aliveLine)
+  else if World.Monsters[monster] = 0 then WriteLn(deadLine);
+end;
+
 procedure Room12;
 
 begin
-  WriteLn(TxtShared_06);
-  case World.Monsters[CageWeakling] of
-    RoomCageWeakling: WriteLn(TxtRoom12_01);
-    0: WriteLn(TxtShared_07);
-  end;
+  DescribeCage(CageWeakling, RoomCageWeakling, TxtRoom12_01, TxtShared_07);
   repeat
     ReadCommand;
     if Command = CmdExit then
@@ -298,11 +301,7 @@ end;
 
 procedure Room13;
 begin
-  WriteLn(TxtShared_06);
-  case World.Monsters[CageStrong] of
-    RoomCageStrong: WriteLn(TxtRoom13_01);
-    0: WriteLn(TxtShared_07);
-  end;
+  DescribeCage(CageStrong, RoomCageStrong, TxtRoom13_01, TxtShared_07);
   repeat
     ReadCommand;
     if Command = CmdExit then
@@ -319,11 +318,7 @@ procedure Room14;
 
 begin
 
-  WriteLn(TxtShared_06);
-  case World.Monsters[CageAgile] of
-    RoomCageAgile: WriteLn(TxtRoom14_01);
-    0: WriteLn(TxtRoom14_02);
-  end;
+  DescribeCage(CageAgile, RoomCageAgile, TxtRoom14_01, TxtRoom14_02);
   repeat
     ReadCommand;
     if Command = CmdExit then
@@ -340,11 +335,7 @@ procedure Room15;
 
 begin
 
-  WriteLn(TxtShared_06);
-  case World.Monsters[CageTough] of
-    RoomCageTough: WriteLn(TxtRoom15_01);
-    0: WriteLn(TxtShared_07);
-  end;
+  DescribeCage(CageTough, RoomCageTough, TxtRoom15_01, TxtShared_07);
   repeat
     ReadCommand;
     if Command = CmdExit then
@@ -361,11 +352,7 @@ procedure Room16;
 
 begin
 
-  WriteLn(TxtShared_06);
-  case World.Monsters[CageHuge] of
-    RoomCageHuge: WriteLn(TxtRoom16_01);
-    0: WriteLn(TxtShared_07);
-  end;
+  DescribeCage(CageHuge, RoomCageHuge, TxtRoom16_01, TxtShared_07);
   repeat
     if World.Monsters[CageHuge] = RoomCageHuge then begin
       Combat.EnemyEnergy := 40; Combat.EnemyDexterity := 11; Combat.EnemyStrength := 10;

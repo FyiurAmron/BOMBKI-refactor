@@ -463,46 +463,49 @@ begin
     targets[i]^ := Random(spread) + base;
 end;
 
+function PastLimit(const targets: array of PInteger; limit: Integer): Boolean;
+var
+  li: Integer;
+begin
+  for li := Low(targets) to High(targets) do
+    if targets[li]^ <= limit then begin
+      PastLimit := False;
+      Exit;
+    end;
+  PastLimit := True;
+end;
+
 procedure SpawnMonsters;
 begin
   repeat
     SpawnGroup([@World.Monsters[Bacterium], @World.Monsters[Snail], @World.Monsters[Beetle], @World.Monsters[Cockroach], @World.Monsters[Ant],
                 @World.Monsters[Spider], @World.Monsters[Boar], @World.Monsters[Fox], @World.Monsters[Rat], @World.Monsters[Partridge]], 38, RoomCityCentre);
-  until (World.Monsters[Bacterium] > RoomArenaEntrance) and (World.Monsters[Snail] > RoomArenaEntrance) and (World.Monsters[Beetle] > RoomArenaEntrance) and (World.Monsters[Cockroach] > RoomArenaEntrance)
-    and (World.Monsters[Ant] > RoomArenaEntrance) and (World.Monsters[Spider] > RoomArenaEntrance) and (World.Monsters[Boar] > RoomArenaEntrance) and (World.Monsters[Fox] > RoomArenaEntrance)
-    and (World.Monsters[Rat] > RoomArenaEntrance) and (World.Monsters[Partridge] > RoomArenaEntrance);
+  until PastLimit([@World.Monsters[Bacterium], @World.Monsters[Snail], @World.Monsters[Beetle], @World.Monsters[Cockroach], @World.Monsters[Ant], @World.Monsters[Spider], @World.Monsters[Boar], @World.Monsters[Fox], @World.Monsters[Rat], @World.Monsters[Partridge]], RoomArenaEntrance);
   repeat
     SpawnGroup([@World.Monsters[Deer], @World.Monsters[Eagle], @World.Monsters[Hare], @World.Monsters[Mongrel], @World.Monsters[Woodworm], @World.Monsters[Fly]], 38, RoomCityCentre);
-  until (World.Monsters[Deer] > RoomArenaEntrance) and (World.Monsters[Eagle] > RoomArenaEntrance) and (World.Monsters[Hare] > RoomArenaEntrance) and (World.Monsters[Mongrel] > RoomArenaEntrance)
-    and (World.Monsters[Woodworm] > RoomArenaEntrance) and (World.Monsters[Fly] > RoomArenaEntrance);
+  until PastLimit([@World.Monsters[Deer], @World.Monsters[Eagle], @World.Monsters[Hare], @World.Monsters[Mongrel], @World.Monsters[Woodworm], @World.Monsters[Fly]], RoomArenaEntrance);
   repeat
     SpawnGroup([@World.Monsters[Elephant], @World.Monsters[Lion], @World.Monsters[Giraffe], @World.Monsters[Camel], @World.Monsters[Ostrich],
                 @World.Monsters[Boa], @World.Monsters[Wolf], @World.Monsters[Bison], @World.Monsters[Panther]], 38, RoomCityCentre);
-  until (World.Monsters[Elephant] > RoomArenaEntrance) and (World.Monsters[Lion] > RoomArenaEntrance) and (World.Monsters[Giraffe] > RoomArenaEntrance) and (World.Monsters[Camel] > RoomArenaEntrance)
-    and (World.Monsters[Ostrich] > RoomArenaEntrance) and (World.Monsters[Boa] > RoomArenaEntrance) and (World.Monsters[Wolf] > RoomArenaEntrance) and (World.Monsters[Bison] > RoomArenaEntrance)
-    and (World.Monsters[Panther] > RoomArenaEntrance);
+  until PastLimit([@World.Monsters[Elephant], @World.Monsters[Lion], @World.Monsters[Giraffe], @World.Monsters[Camel], @World.Monsters[Ostrich], @World.Monsters[Boa], @World.Monsters[Wolf], @World.Monsters[Bison], @World.Monsters[Panther]], RoomArenaEntrance);
   repeat
     SpawnGroup([@World.Monsters[Gladiator], @World.Monsters[Warrior], @World.Monsters[Tamer]], 38, RoomCityCentre);
-  until (World.Monsters[Gladiator] > RoomArenaEntrance) and (World.Monsters[Warrior] > RoomArenaEntrance) and (World.Monsters[Tamer] > RoomArenaEntrance);
+  until PastLimit([@World.Monsters[Gladiator], @World.Monsters[Warrior], @World.Monsters[Tamer]], RoomArenaEntrance);
   repeat
     SpawnGroup([@World.Monsters[Dachshund], @World.Monsters[Shepherd], @World.Monsters[Pooch], @World.Monsters[Spaniel], @World.Monsters[Poodle]], 7, RoomCityCentre);
-  until (World.Monsters[Dachshund] > 19) and (World.Monsters[Shepherd] > 19) and (World.Monsters[Pooch] > 19)
-    and (World.Monsters[Spaniel] > 19) and (World.Monsters[Poodle] > 19);
+  until PastLimit([@World.Monsters[Dachshund], @World.Monsters[Shepherd], @World.Monsters[Pooch], @World.Monsters[Spaniel], @World.Monsters[Poodle]], 19);
   repeat
     SpawnGroup([@World.Monsters[Cabman], @World.Monsters[Vendor], @World.Monsters[Sweeper], @World.Monsters[Drunkard], @World.Monsters[SickMan]], 7, RoomCityCentre);
-  until (World.Monsters[Cabman] > 19) and (World.Monsters[Vendor] > 19)
-    and (World.Monsters[Sweeper] > 19) and (World.Monsters[Drunkard] > 19) and (World.Monsters[SickMan] > 19);
+  until PastLimit([@World.Monsters[Cabman], @World.Monsters[Vendor], @World.Monsters[Sweeper], @World.Monsters[Drunkard], @World.Monsters[SickMan]], 19);
   repeat
     SpawnGroup([@World.Monsters[Kid]], 7, RoomValley);
     SpawnGroup([@World.Monsters[Lunatic], @World.Monsters[Listener], @World.Monsters[Fan], @World.Monsters[Man]], 8, RoomValley);
-  until (World.Monsters[Kid] > RoomValley) and (World.Monsters[Lunatic] > RoomValley) and (World.Monsters[Listener] > RoomValley) and (World.Monsters[Fan] > RoomValley)
-    and (World.Monsters[Man] > RoomValley);
+  until PastLimit([@World.Monsters[Kid], @World.Monsters[Lunatic], @World.Monsters[Listener], @World.Monsters[Fan], @World.Monsters[Man]], RoomValley);
   repeat
     SpawnGroup([@World.Monsters[Policeman], @World.Monsters[Bouncer], @World.Monsters[Gorilla]], 9, RoomValley);
     SpawnGroup([@World.Monsters[OldMan]], 8, RoomValley);
     SpawnGroup([@World.Monsters[Reporter]], 7, RoomValley);
-  until (World.Monsters[Policeman] > RoomValley) and (World.Monsters[Bouncer] > RoomValley) and (World.Monsters[Gorilla] > RoomValley) and (World.Monsters[OldMan] > RoomValley)
-    and (World.Monsters[Reporter] > RoomValley);
+  until PastLimit([@World.Monsters[Policeman], @World.Monsters[Bouncer], @World.Monsters[Gorilla], @World.Monsters[OldMan], @World.Monsters[Reporter]], RoomValley);
     SpawnGroup([@World.Monsters[Guitarist], @World.Monsters[Drummer], @World.Monsters[Keyboardist], @World.Monsters[Liroy]], 3, RoomStage1);
   World.Monsters[Minibarman] := RoomPub;
   World.Monsters[Fatso] := RoomPub;

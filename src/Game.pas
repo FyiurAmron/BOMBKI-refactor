@@ -531,15 +531,31 @@ begin
   end;
 end;
 
+type
+  TTrainable = record
+    cmd: string;
+    stat, maxStat: TStat;
+    minPractice, cost: Integer;
+    cmdForm, nounForm: string;
+  end;
+
+const
+  Trainables: array[1..3] of TTrainable = (
+    (cmd: CmdTrenuj2 + CmdSila; stat: Strength; maxStat: MaxStrength; minPractice: 2; cost: 3; cmdForm: CmdSile; nounForm: CmdSily),
+    (cmd: CmdTrenuj2 + CmdZrecznosc; stat: Dexterity; maxStat: MaxDexterity; minPractice: 1; cost: 2; cmdForm: CmdZrecznosc; nounForm: CmdZrecznosci),
+    (cmd: CmdTrenuj2 + CmdMadrosc; stat: Wisdom; maxStat: MaxWisdom; minPractice: 2; cost: 3; cmdForm: CmdMadrosc; nounForm: CmdMadrosci)
+  );
+
 procedure HandleTrain;
+
+var
+  ti: Integer;
 begin
   if Command = CmdTrenuj then WriteLn(TxtHandleTrain_01);
-  if Command = CmdTrenuj2 + CmdSila then
-    TrainAttribute(Player.Stats[Strength], Player.Stats[MaxStrength], 2, 3, CmdSile, CmdSily);
-  if Command = CmdTrenuj2 + CmdZrecznosc then
-    TrainAttribute(Player.Stats[Dexterity], Player.Stats[MaxDexterity], 1, 2, CmdZrecznosc, CmdZrecznosci);
-  if Command = CmdTrenuj2 + CmdMadrosc then
-    TrainAttribute(Player.Stats[Wisdom], Player.Stats[MaxWisdom], 2, 3, CmdMadrosc, CmdMadrosci);
+  for ti := Low(Trainables) to High(Trainables) do
+    with Trainables[ti] do
+      if Command = cmd then
+        TrainAttribute(Player.Stats[stat], Player.Stats[maxStat], minPractice, cost, cmdForm, nounForm);
 end;
 
 type

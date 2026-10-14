@@ -1474,11 +1474,7 @@ procedure ArenaMaze;
 var
   bi, ai: Integer;
 begin
-  if (Session.Room = RoomArena33) or (Session.Room = RoomArena34) or (Session.Room = RoomArena35) or (Session.Room = RoomArena36) or (Session.Room = RoomArena37) or
-     (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or (Session.Room = RoomArena40) or (Session.Room = RoomArena41) or (Session.Room = RoomArena42) or
-     (Session.Room = RoomArena43) or (Session.Room = RoomArena44) or (Session.Room = RoomArena45) or (Session.Room = RoomArena46) or (Session.Room = RoomArena47) or
-     (Session.Room = RoomArena48) or (Session.Room = RoomArena49) or (Session.Room = RoomArena50) or (Session.Room = RoomArena51) or (Session.Room = RoomArena52) or
-     (Session.Room = RoomArena53) or (Session.Room = RoomArena54) or (Session.Room = RoomArena55) or (Session.Room = RoomArena56) or (Session.Room = RoomArena57) then
+  if (Session.Room >= RoomArena33) and (Session.Room <= RoomArena57) then
   begin
     Session.InArena := 1;
     WriteLn(TxtArenaMaze_01);

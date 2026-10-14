@@ -17,9 +17,10 @@ type
   TFoe = (WeakEnemy, WeakishEnemy, MediumEnemy, HardEnemy, VeryEasyEnemy,
     EasyEnemy, NotEasyEnemy, VeryHardEnemy);
 
+  TStat = (Strength, Dexterity, Wisdom, MaxStrength, MaxDexterity,
+    MaxWisdom);
   TPlayer = record
-    Strength, Dexterity, Wisdom: Integer;
-    MaxStrength, MaxDexterity, MaxWisdom: Integer;
+    Stats: array[TStat] of Integer;
     Energy, MaxEnergy: Integer;
     Mana, MaxMana: Integer;
     Practice: Integer;
@@ -532,11 +533,11 @@ procedure HandleTrain;
 begin
   if Command = CmdTrenuj then WriteLn(TxtHandleTrain_01);
   if Command = CmdTrenuj2 + CmdSila then
-    TrainAttribute(Player.Strength, Player.MaxStrength, 2, 3, CmdSile, CmdSily);
+    TrainAttribute(Player.Stats[Strength], Player.Stats[MaxStrength], 2, 3, CmdSile, CmdSily);
   if Command = CmdTrenuj2 + CmdZrecznosc then
-    TrainAttribute(Player.Dexterity, Player.MaxDexterity, 1, 2, CmdZrecznosc, CmdZrecznosci);
+    TrainAttribute(Player.Stats[Dexterity], Player.Stats[MaxDexterity], 1, 2, CmdZrecznosc, CmdZrecznosci);
   if Command = CmdTrenuj2 + CmdMadrosc then
-    TrainAttribute(Player.Wisdom, Player.MaxWisdom, 2, 3, CmdMadrosc, CmdMadrosci);
+    TrainAttribute(Player.Stats[Wisdom], Player.Stats[MaxWisdom], 2, 3, CmdMadrosc, CmdMadrosci);
 end;
 
 type
@@ -748,14 +749,14 @@ end;
 const
   BeastCompareRules: array[1..3] of TCompareFoeRule = (
     (stat: @Session.Overall; lo: -MaxInt - 1; hi: 15; line: TxtCompareFoe_02),
-    (stat: @Player.Strength; lo: 16; hi: 18; line: TxtEnemy + TxtCompareFoe_03),
-    (stat: @Player.Strength; lo: 19; hi: MaxInt; line: TxtCompareFoe_04)
+    (stat: @Player.Stats[Strength]; lo: 16; hi: 18; line: TxtEnemy + TxtCompareFoe_03),
+    (stat: @Player.Stats[Strength]; lo: 19; hi: MaxInt; line: TxtCompareFoe_04)
   );
   BigBeastCompareRules: array[1..4] of TCompareFoeRule = (
     (stat: @Session.Overall; lo: -MaxInt - 1; hi: 15; line: TxtCompareFoe_05),
-    (stat: @Player.Strength; lo: 16; hi: 20; line: TxtCompareFoe_06),
-    (stat: @Player.Strength; lo: 21; hi: 22; line: TxtCompareFoe_07),
-    (stat: @Player.Strength; lo: 23; hi: MaxInt; line: TxtCompareFoe_08)
+    (stat: @Player.Stats[Strength]; lo: 16; hi: 20; line: TxtCompareFoe_06),
+    (stat: @Player.Stats[Strength]; lo: 21; hi: 22; line: TxtCompareFoe_07),
+    (stat: @Player.Stats[Strength]; lo: 23; hi: MaxInt; line: TxtCompareFoe_08)
   );
   FighterCompareRules: array[1..5] of TCompareFoeRule = (
     (stat: @Session.Overall; lo: -MaxInt - 1; hi: 14; line: TxtCompareFoe_09),
@@ -801,7 +802,7 @@ begin
     Combat.Roll := Random(100);
     WriteLn(TxtCompareFoe_01);
     ReadLn(Command);
-    Session.Overall := Player.Level + Player.Strength + DexterityBonus(Player.Dexterity) + ParryBonus(Skills.Values[Parry]) + KickBonus(Skills.Values[Kick]);
+    Session.Overall := Player.Level + Player.Stats[Strength] + DexterityBonus(Player.Stats[Dexterity]) + ParryBonus(Skills.Values[Parry]) + KickBonus(Skills.Values[Kick]);
     if (Command = CmdDzik) or (Command = CmdSzczur) or (Command = CmdLis) or
        (Command = CmdKuropatwa) or (Command = CmdZajac) or (Command = CmdWilczur) or
        (Command = CmdOrzel) or (Command = CmdSarna) or (Command = CmdDziecko) or (Command = CmdDziadek) then
@@ -881,7 +882,7 @@ begin
     Player.MaxEnergy := Player.MaxEnergy + 5;
     Gear.Values[Armor] := Gear.Values[Armor] - 8;
     Bag.Count := Bag.Count + 1;
-    Player.Dexterity := Player.Dexterity + 1;
+    Player.Stats[Dexterity] := Player.Stats[Dexterity] + 1;
   end;
 end;
 
@@ -961,8 +962,8 @@ type
 const
   FightExpStats: array[1..3] of TFightExpStat = (
     (playerStat: @Player.MaxEnergy; enemyStat: @Combat.EnemyEnergy; expFor: FightExpForEnergy),
-    (playerStat: @Player.Strength; enemyStat: @Combat.EnemyStrength; expFor: FightExpForStrength),
-    (playerStat: @Player.Dexterity; enemyStat: @Combat.EnemyDexterity; expFor: FightExpForDexterity)
+    (playerStat: @Player.Stats[Strength]; enemyStat: @Combat.EnemyStrength; expFor: FightExpForStrength),
+    (playerStat: @Player.Stats[Dexterity]; enemyStat: @Combat.EnemyDexterity; expFor: FightExpForDexterity)
   );
 
 procedure DoFight;
@@ -977,8 +978,8 @@ begin
     Combat.EnemyDodged := 0;
     Combat.PlayerDodged := 0;
     WriteLn(TxtFightEngagedEnemy, Combat.EnemyEnergy, TxtFightEngagedYou, Player.Energy, TxtFightEngagedEnd);
-    if Player.Dexterity > Combat.EnemyDexterity then begin
-      Combat.DodgeChance := Player.Dexterity - Combat.EnemyDexterity;
+    if Player.Stats[Dexterity] > Combat.EnemyDexterity then begin
+      Combat.DodgeChance := Player.Stats[Dexterity] - Combat.EnemyDexterity;
       Combat.Roll := Random(DodgeBound(Combat.DodgeChance));
       if Combat.Roll < 10 then begin
         WriteLn(TxtFightYouDodgeMocking);
@@ -990,8 +991,8 @@ begin
         Combat.EnemyDodged := 1;
       end;
     end;
-    if Combat.EnemyDexterity > Player.Dexterity then begin
-      Combat.DodgeChance := Combat.EnemyDexterity - Player.Dexterity;
+    if Combat.EnemyDexterity > Player.Stats[Dexterity] then begin
+      Combat.DodgeChance := Combat.EnemyDexterity - Player.Stats[Dexterity];
       Combat.Roll := Random(DodgeBound(Combat.DodgeChance));
       if Combat.Roll < 10 then begin
         WriteLn(TxtEnemy, TxtFightEnemyDodgesWithGrace);
@@ -1067,10 +1068,10 @@ begin
       end;
     end;
     if Combat.EnemyDodged = 0 then begin
-      Combat.Damage := Random(Player.Strength);
+      Combat.Damage := Random(Player.Stats[Strength]);
       if Combat.Damage * 10 < Gear.Values[LuckRoll] then begin
         repeat
-          Combat.Damage := Random(Player.Strength);
+          Combat.Damage := Random(Player.Stats[Strength]);
           WriteLn(TxtFightLuckRoll);
         until (Combat.Damage * 10) > Gear.Values[LuckRoll];
       end;
@@ -1178,7 +1179,7 @@ begin
     Bag.Count := Bag.Count + 1;
     case effect of
       teDiploma: Player.MaxEnergy := Player.MaxEnergy + 5;
-      tePipe: if Player.Wisdom < Player.MaxWisdom then Player.Wisdom := Player.Wisdom + 1;
+      tePipe: if Player.Stats[Wisdom] < Player.Stats[MaxWisdom] then Player.Stats[Wisdom] := Player.Stats[Wisdom] + 1;
     end;
   end;
 end;
@@ -1191,7 +1192,7 @@ begin
     Bag.Count := Bag.Count - 1;
     case effect of
       teDiploma: Player.MaxEnergy := Player.MaxEnergy - 5;
-      tePipe: Player.Wisdom := Player.Wisdom - 1;
+      tePipe: Player.Stats[Wisdom] := Player.Stats[Wisdom] - 1;
     end;
   end;
 end;
@@ -1300,21 +1301,21 @@ begin
     WriteLn(TxtUseItems_32);
     Bag.Items[TeleportPill] := Bag.Items[TeleportPill] + ItemUnit;
     SpawnMonsters;
-    if Player.Wisdom < 10 then begin
+    if Player.Stats[Wisdom] < 10 then begin
       WriteLn(TxtUseItems_33);
       WriteLn(TxtUseItems_34);
       Player.MaxEnergy := Player.MaxEnergy - 1;
       Player.Energy := 1;
       Player.Experience := Player.Experience - 50;
     end;
-    if (Player.Wisdom > 9) and (Player.Wisdom < 16) then begin
+    if (Player.Stats[Wisdom] > 9) and (Player.Stats[Wisdom] < 16) then begin
       WriteLn(TxtUseItems_35);
       WriteLn(TxtUseItems_36);
       Player.Energy := Player.Energy - 40;
       if Player.Energy < 1 then Player.Energy := 1;
       Player.Experience := Player.Experience - 30;
     end;
-    if Player.Wisdom > 15 then WriteLn(TxtUseItems_37);
+    if Player.Stats[Wisdom] > 15 then WriteLn(TxtUseItems_37);
   end;
   if (Command = CmdOdlorz + TxtWornGarnitur) and (Bag.Items[SpikedSuit] <= -ItemUnit) and (Gear.WornGarment = TxtWornGarnitur) then begin
     WriteLn(TxtUseItems_38);
@@ -1914,7 +1915,7 @@ var
 begin
 
   for i := High(DexterityItemLimits) downto Low(DexterityItemLimits) do
-    if Player.Dexterity >= DexterityItemLimits[i].gate then begin
+    if Player.Stats[Dexterity] >= DexterityItemLimits[i].gate then begin
       Bag.Limit := DexterityItemLimits[i].limit;
       Break;
     end;
@@ -1949,9 +1950,9 @@ begin
   if Player.Level > 13 then
     WriteLn(TxtShowCharacter_18, TxtLevelVeryHigh, TxtShowCharacter_19, TxtLevelTylko, gap, TxtShared_22);
 
-  WriteLn(TxtShowCharacter_21, Player.Strength, TxtShowCharacter_03, Player.MaxStrength,
-         TxtShowCharacter_22, Player.Dexterity, TxtShowCharacter_03, Player.MaxDexterity,
-         TxtShowCharacter_23, Player.Wisdom, TxtShowCharacter_03, Player.MaxWisdom);
+  WriteLn(TxtShowCharacter_21, Player.Stats[Strength], TxtShowCharacter_03, Player.Stats[MaxStrength],
+         TxtShowCharacter_22, Player.Stats[Dexterity], TxtShowCharacter_03, Player.Stats[MaxDexterity],
+         TxtShowCharacter_23, Player.Stats[Wisdom], TxtShowCharacter_03, Player.Stats[MaxWisdom]);
   Gear.Values[ArmorRating] := 10 * Gear.Values[WornCount] + Gear.Values[Armor];
   WriteLn(TxtShowCharacter_24, Gear.Values[ArmorRating],
          TxtShowCharacter_25, Gear.Values[LuckRoll]);
@@ -1986,12 +1987,12 @@ begin
     ReadLn(Command);
     chosen := FindRace(Command);
     if chosen > 0 then begin
-      Player.Strength := Races[chosen].baseStrength;
-      Player.Dexterity := Races[chosen].baseDexterity;
-      Player.Wisdom := Races[chosen].baseWisdom;
-      Player.MaxStrength := Races[chosen].baseMaxStrength;
-      Player.MaxDexterity := Races[chosen].baseMaxDexterity;
-      Player.MaxWisdom := Races[chosen].baseMaxWisdom;
+      Player.Stats[Strength] := Races[chosen].baseStrength;
+      Player.Stats[Dexterity] := Races[chosen].baseDexterity;
+      Player.Stats[Wisdom] := Races[chosen].baseWisdom;
+      Player.Stats[MaxStrength] := Races[chosen].baseMaxStrength;
+      Player.Stats[MaxDexterity] := Races[chosen].baseMaxDexterity;
+      Player.Stats[MaxWisdom] := Races[chosen].baseMaxWisdom;
       Player.MaxMana := Player.MaxMana + Races[chosen].MaxManaBonus;
       Player.Money := Player.Money + Races[chosen].MoneyBonus;
       Player.MaxEnergy := Player.MaxEnergy + Races[chosen].MaxEnergyBonus;
@@ -2130,12 +2131,12 @@ const
     (wisdom: 23; strength: -1; dexterity: 12; text1: TxtTraining_26)
   );
 
-function GatesMet(wisdom, strength, dexterity: Integer): Boolean;
+function GatesMet(reqWisdom, reqStrength, reqDexterity: Integer): Boolean;
 begin
   GatesMet :=
-    ((wisdom = -1) or (Player.Wisdom > wisdom)) and
-    ((strength = -1) or (Player.Strength > strength)) and
-    ((dexterity = -1) or (Player.Dexterity > dexterity));
+    ((reqWisdom = -1) or (Player.Stats[Wisdom] > reqWisdom)) and
+    ((reqStrength = -1) or (Player.Stats[Strength] > reqStrength)) and
+    ((reqDexterity = -1) or (Player.Stats[Dexterity] > reqDexterity));
 end;
 
 procedure Training;
@@ -2145,7 +2146,7 @@ begin
   if Command = CmdPatrz + CmdPlakat then begin
     WriteLn(TxtShared_13);
     WriteLn(TxtTraining_01);
-    if Player.Wisdom < 11 then WriteLn(TxtTraining_02);
+    if Player.Stats[Wisdom] < 11 then WriteLn(TxtTraining_02);
     for i := Low(TrainingLines) to High(TrainingLines) do
       if GatesMet(TrainingLines[i].wisdom, TrainingLines[i].strength,
                   TrainingLines[i].dexterity) then
@@ -2154,18 +2155,18 @@ begin
   end;
 
   if Command = CmdCwicz + CmdKopac then
-    if (Player.Wisdom > 10) and (Player.Strength > 11) and (Player.Practice > 0) then begin
-      Skills.Values[Kick] := Skills.Values[Kick] + Player.Wisdom;
+    if (Player.Stats[Wisdom] > 10) and (Player.Stats[Strength] > 11) and (Player.Practice > 0) then begin
+      Skills.Values[Kick] := Skills.Values[Kick] + Player.Stats[Wisdom];
       Player.Practice := Player.Practice - 1;
       WriteLn(TxtTrainingVerb, TxtTrainingDigging, TxtTrainingThreshold, Skills.Values[Kick],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + CmdUciekac then begin
-    if Player.Wisdom > 10 then
-      if Player.Dexterity > 10 then
+    if Player.Stats[Wisdom] > 10 then
+      if Player.Stats[Dexterity] > 10 then
         if (Player.Practice > 0) and (Skills.Values[Fleeing] < 85) then begin
-          Skills.Values[Fleeing] := Skills.Values[Fleeing] + Player.Wisdom + Player.Dexterity - 5;
+          Skills.Values[Fleeing] := Skills.Values[Fleeing] + Player.Stats[Wisdom] + Player.Stats[Dexterity] - 5;
           Player.Practice := Player.Practice - 1;
           WriteLn(TxtTrainingVerb, TxtTrainingFleeing, TxtTrainingThreshold, Skills.Values[Fleeing],
                   TxtTraining_29, Player.Practice, TxtShared_19);
@@ -2174,32 +2175,32 @@ begin
   end;
 
   if Command = CmdCwicz + CmdPowrot then
-    if (Player.Wisdom > 17) and (Skills.Values[Returning] < 90) and (Player.Practice > 0) then begin
-      Skills.Values[Returning] := Skills.Values[Returning] + 2 * Player.Wisdom - 3;
+    if (Player.Stats[Wisdom] > 17) and (Skills.Values[Returning] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Returning] := Skills.Values[Returning] + 2 * Player.Stats[Wisdom] - 3;
       Player.Practice := Player.Practice - 1;
       WriteLn(TxtTrainingVerb, TxtTrainingReturning, TxtTrainingThreshold, Skills.Values[Returning],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + TxtTrainingParrying then
-    if (Player.Wisdom > 15) and (Player.Dexterity > 11) and (Skills.Values[Parry] < 90) and (Player.Practice > 0) then begin
-      Skills.Values[Parry] := Skills.Values[Parry] + Player.Wisdom + Player.Dexterity - 14;
+    if (Player.Stats[Wisdom] > 15) and (Player.Stats[Dexterity] > 11) and (Skills.Values[Parry] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Parry] := Skills.Values[Parry] + Player.Stats[Wisdom] + Player.Stats[Dexterity] - 14;
       Player.Practice := Player.Practice - 1;
       WriteLn(TxtTrainingVerb, TxtTrainingParrying, TxtTrainingThreshold, Skills.Values[Parry],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + CmdPorownanie then
-    if (Player.Wisdom > 11) and (Skills.Values[Comparing] < 90) and (Player.Practice > 0) then begin
-      Skills.Values[Comparing] := Skills.Values[Comparing] + 3 * Player.Wisdom - 9;
+    if (Player.Stats[Wisdom] > 11) and (Skills.Values[Comparing] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Comparing] := Skills.Values[Comparing] + 3 * Player.Stats[Wisdom] - 9;
       Player.Practice := Player.Practice - 1;
       WriteLn(TxtTrainingVerb, TxtTrainingComparing, TxtTrainingThreshold, Skills.Values[Comparing],
               TxtTraining_29, Player.Practice, TxtShared_19);
     end;
 
   if Command = CmdCwicz + TxtTrainingCooking then
-    if (Player.Wisdom > 18) and (Skills.Values[Cooking] < 90) and (Player.Practice > 0) then begin
-      Skills.Values[Cooking] := Skills.Values[Cooking] + Player.Wisdom + 1;
+    if (Player.Stats[Wisdom] > 18) and (Skills.Values[Cooking] < 90) and (Player.Practice > 0) then begin
+      Skills.Values[Cooking] := Skills.Values[Cooking] + Player.Stats[Wisdom] + 1;
       Player.Practice := Player.Practice - 1;
       WriteLn(TxtTrainingVerb, TxtTrainingCooking, TxtTrainingThreshold, Skills.Values[Cooking],
               TxtTraining_29, Player.Practice, TxtShared_19);
@@ -2254,22 +2255,22 @@ begin
   SaveSlot(Player.Experience);
   SaveSlot((Player.Energy + SaveEnergyBias) * SaveStatScale);
   SaveSlot(Session.OuterRoom);
-  SaveSlot(Player.Dexterity + SaveDexterityBias);
-  SaveSlot(Player.Strength - SaveStrengthBias);
-  SaveSlot(Player.Wisdom);
+  SaveSlot(Player.Stats[Dexterity] + SaveDexterityBias);
+  SaveSlot(Player.Stats[Strength] - SaveStrengthBias);
+  SaveSlot(Player.Stats[Wisdom]);
   SaveSlot(Player.Practice);
   SaveSlot(Session.CheckpointStage);
   SaveSlot(0);
   SaveSlot(0);
-  SaveSlot(Player.Money * Player.Wisdom);
+  SaveSlot(Player.Money * Player.Stats[Wisdom]);
   SaveSlot(Combat.Loot);
   SaveSlot(Player.MaxEnergy);
   SaveSlot(Bag.Limit);
   SaveSlot(Skills.Values[Comparing]);
   SaveSlot(Player.MaxMana);
-  SaveSlot(Player.MaxStrength);
-  SaveSlot(Player.MaxDexterity);
-  SaveSlot(Player.MaxWisdom);
+  SaveSlot(Player.Stats[MaxStrength]);
+  SaveSlot(Player.Stats[MaxDexterity]);
+  SaveSlot(Player.Stats[MaxWisdom]);
   SaveSlot(Bag.Count);
   SaveSlot(Gear.Values[Armor]);
   SaveSlot(Gear.Values[LuckRoll]);
@@ -2472,7 +2473,7 @@ begin
   Player.Money := Player.Money - 480;
   Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
   Bag.Count := Bag.Count + 1;
-  Player.Wisdom := Player.Wisdom + 1;
+  Player.Stats[Wisdom] := Player.Stats[Wisdom] + 1;
 end;
 
 function CanBuyTracksuit: Boolean;
@@ -2512,7 +2513,7 @@ begin
   Player.Money := Player.Money + 120;
   Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
   Bag.Count := Bag.Count - 1;
-  Player.Wisdom := Player.Wisdom - 1;
+  Player.Stats[Wisdom] := Player.Stats[Wisdom] - 1;
 end;
 
 function CanBuyCassette: Boolean;
@@ -2527,7 +2528,7 @@ begin
   Bag.Items[Cassette] := Bag.Items[Cassette] - ItemUnit;
   Gear.Values[Armor] := Gear.Values[Armor] - 8;
   Player.MaxEnergy := Player.MaxEnergy + 5;
-  Player.Dexterity := Player.Dexterity + 1;
+  Player.Stats[Dexterity] := Player.Stats[Dexterity] + 1;
   Bag.Count := Bag.Count + 1;
 end;
 
@@ -2569,7 +2570,7 @@ begin
   Bag.Items[Cassette] := Bag.Items[Cassette] + ItemUnit;
   Gear.Values[Armor] := Gear.Values[Armor] + 8;
   Player.MaxEnergy := Player.MaxEnergy - 5;
-  Player.Dexterity := Player.Dexterity - 1;
+  Player.Stats[Dexterity] := Player.Stats[Dexterity] - 1;
   Bag.Count := Bag.Count - 1;
 end;
 
@@ -2771,7 +2772,7 @@ begin
         WriteLn(TxtShared_08, TxtConcertFights_01);
         WriteLn(TxtConcertFights_02);
         Bag.Items[Pipe] := Bag.Items[Pipe] - ItemUnit;
-        Player.Wisdom := Player.Wisdom + 1;
+        Player.Stats[Wisdom] := Player.Stats[Wisdom] + 1;
       end;
     end;
   end;
@@ -2830,7 +2831,7 @@ const
 procedure ReachCheckpoint(exp, stage, next, loStr, hiStr: Integer);
 begin
   if (Player.Experience >= exp) and (Session.CheckpointStage = stage)
-    and (Player.Strength >= loStr) and (Player.Strength <= hiStr) then begin
+    and (Player.Stats[Strength] >= loStr) and (Player.Stats[Strength] <= hiStr) then begin
     WriteLn(TxtCheckpoints_01);
     Session.CheckpointStage := next;
     SpawnMonsters;
@@ -2868,25 +2869,25 @@ begin
   Player.Energy := Player.Energy div SaveStatScale;
   Player.Energy := Player.Energy - SaveEnergyBias;
   LoadSlot(Session.OuterRoom);
-  LoadSlot(Player.Dexterity);
-  Player.Dexterity := Player.Dexterity - SaveDexterityBias;
-  LoadSlot(Player.Strength);
-  Player.Strength := Player.Strength + SaveStrengthBias;
-  LoadSlot(Player.Wisdom);
+  LoadSlot(Player.Stats[Dexterity]);
+  Player.Stats[Dexterity] := Player.Stats[Dexterity] - SaveDexterityBias;
+  LoadSlot(Player.Stats[Strength]);
+  Player.Stats[Strength] := Player.Stats[Strength] + SaveStrengthBias;
+  LoadSlot(Player.Stats[Wisdom]);
   LoadSlot(Player.Practice);
   LoadSlot(Session.CheckpointStage);
   LoadSlot(dummy);
   LoadSlot(dummy);
   LoadSlotLong(Player.Money);
-  Player.Money := Player.Money div Player.Wisdom;
+  Player.Money := Player.Money div Player.Stats[Wisdom];
   LoadSlot(Combat.Loot);
   LoadSlot(Player.MaxEnergy);
   LoadSlot(Bag.Limit);
   LoadSlot(Skills.Values[Comparing]);
   LoadSlot(Player.MaxMana);
-  LoadSlot(Player.MaxStrength);
-  LoadSlot(Player.MaxDexterity);
-  LoadSlot(Player.MaxWisdom);
+  LoadSlot(Player.Stats[MaxStrength]);
+  LoadSlot(Player.Stats[MaxDexterity]);
+  LoadSlot(Player.Stats[MaxWisdom]);
   LoadSlot(Bag.Count);
   LoadSlot(Gear.Values[Armor]);
   LoadSlot(Gear.Values[LuckRoll]);
@@ -2965,51 +2966,51 @@ begin
     4..8: Player.Experience := (Player.Experience - Lvl4_Base) - Player.Level;
     else Player.Experience := (Player.Experience - (Player.Level * 2)) - Lvl9_Base;
   end;
-  case Player.Wisdom of
+  case Player.Stats[Wisdom] of
     -128..10: Player.Practice := Player.Practice + 3;
     11..15: Player.Practice := Player.Practice + 4;
     16..22: Player.Practice := Player.Practice + 5;
     else Player.Practice := Player.Practice + 6;
   end;
   WriteLn(TxtCheckLevelUp_02, Player.Practice, TxtCheckLevelUp_03);
-  if Player.Dexterity > 12 then Player.MaxEnergy := Player.MaxEnergy + 11
+  if Player.Stats[Dexterity] > 12 then Player.MaxEnergy := Player.MaxEnergy + 11
   else Player.MaxEnergy := Player.MaxEnergy + 10;
-  if Player.Dexterity > 16 then Player.MaxEnergy := Player.MaxEnergy + 1;
-  if Player.Dexterity > 21 then Player.MaxEnergy := Player.MaxEnergy + 1;
-  if (Player.Dexterity > 26) and (Player.Strength > 20) then Player.MaxEnergy := Player.MaxEnergy + 1;
+  if Player.Stats[Dexterity] > 16 then Player.MaxEnergy := Player.MaxEnergy + 1;
+  if Player.Stats[Dexterity] > 21 then Player.MaxEnergy := Player.MaxEnergy + 1;
+  if (Player.Stats[Dexterity] > 26) and (Player.Stats[Strength] > 20) then Player.MaxEnergy := Player.MaxEnergy + 1;
   WriteLn(TxtCheckLevelUp_02, Player.MaxEnergy, TxtCheckLevelUp_04);
-  Player.MaxMana := Player.MaxMana + Player.Wisdom + 2;
-   WriteLn(TxtCheckLevelUp_05, Player.Wisdom + 2, TxtCheckLevelUp_06);
+  Player.MaxMana := Player.MaxMana + Player.Stats[Wisdom] + 2;
+   WriteLn(TxtCheckLevelUp_05, Player.Stats[Wisdom] + 2, TxtCheckLevelUp_06);
   Player.Level := Player.Level + 1;
   Session.CheckpointStage := 0;
   if Player.Level = 12 then begin
     WriteLn(TxtCheckLevelUp_07);
-    if Player.Strength >= Player.MaxStrength then Player.MaxStrength := Player.MaxStrength + 3;
-    if Player.Dexterity >= Player.MaxDexterity then Player.MaxDexterity := Player.MaxDexterity + 3;
-    if Player.Wisdom >= Player.MaxWisdom then Player.MaxWisdom := Player.MaxWisdom + 3;
-    if Player.Strength < Player.MaxStrength then Player.MaxStrength := Player.MaxStrength + 2;
-    if Player.Dexterity < Player.MaxDexterity then Player.MaxDexterity := Player.MaxDexterity + 2;
-    if Player.Wisdom < Player.MaxWisdom then Player.MaxWisdom := Player.MaxWisdom + 2;
-    if (Player.MaxWisdom > Player.MaxStrength) and (Player.MaxWisdom > Player.MaxDexterity) then
-      Player.MaxWisdom := Player.MaxWisdom + 3;
-    if (Player.MaxStrength > Player.MaxWisdom) and (Player.MaxStrength > Player.MaxDexterity) then
-      Player.MaxStrength := Player.MaxStrength + 3;
-    if (Player.MaxDexterity > Player.MaxStrength) and (Player.MaxDexterity > Player.MaxWisdom) then
-      Player.MaxDexterity := Player.MaxDexterity + 3;
-    if (Player.MaxDexterity = Player.MaxStrength) and (Player.MaxStrength = Player.MaxWisdom) then begin
-      Player.MaxDexterity := Player.MaxDexterity + 1;
-      Player.MaxWisdom := Player.MaxWisdom + 1;
-      Player.MaxStrength := Player.MaxStrength + 1;
+    if Player.Stats[Strength] >= Player.Stats[MaxStrength] then Player.Stats[MaxStrength] := Player.Stats[MaxStrength] + 3;
+    if Player.Stats[Dexterity] >= Player.Stats[MaxDexterity] then Player.Stats[MaxDexterity] := Player.Stats[MaxDexterity] + 3;
+    if Player.Stats[Wisdom] >= Player.Stats[MaxWisdom] then Player.Stats[MaxWisdom] := Player.Stats[MaxWisdom] + 3;
+    if Player.Stats[Strength] < Player.Stats[MaxStrength] then Player.Stats[MaxStrength] := Player.Stats[MaxStrength] + 2;
+    if Player.Stats[Dexterity] < Player.Stats[MaxDexterity] then Player.Stats[MaxDexterity] := Player.Stats[MaxDexterity] + 2;
+    if Player.Stats[Wisdom] < Player.Stats[MaxWisdom] then Player.Stats[MaxWisdom] := Player.Stats[MaxWisdom] + 2;
+    if (Player.Stats[MaxWisdom] > Player.Stats[MaxStrength]) and (Player.Stats[MaxWisdom] > Player.Stats[MaxDexterity]) then
+      Player.Stats[MaxWisdom] := Player.Stats[MaxWisdom] + 3;
+    if (Player.Stats[MaxStrength] > Player.Stats[MaxWisdom]) and (Player.Stats[MaxStrength] > Player.Stats[MaxDexterity]) then
+      Player.Stats[MaxStrength] := Player.Stats[MaxStrength] + 3;
+    if (Player.Stats[MaxDexterity] > Player.Stats[MaxStrength]) and (Player.Stats[MaxDexterity] > Player.Stats[MaxWisdom]) then
+      Player.Stats[MaxDexterity] := Player.Stats[MaxDexterity] + 3;
+    if (Player.Stats[MaxDexterity] = Player.Stats[MaxStrength]) and (Player.Stats[MaxStrength] = Player.Stats[MaxWisdom]) then begin
+      Player.Stats[MaxDexterity] := Player.Stats[MaxDexterity] + 1;
+      Player.Stats[MaxWisdom] := Player.Stats[MaxWisdom] + 1;
+      Player.Stats[MaxStrength] := Player.Stats[MaxStrength] + 1;
     end;
-    if (Player.MaxDexterity > Player.MaxWisdom) and (Player.MaxDexterity = Player.MaxStrength) then begin
-      Player.MaxStrength := Player.MaxStrength + 2;
-      Player.MaxDexterity := Player.MaxDexterity + 1;
+    if (Player.Stats[MaxDexterity] > Player.Stats[MaxWisdom]) and (Player.Stats[MaxDexterity] = Player.Stats[MaxStrength]) then begin
+      Player.Stats[MaxStrength] := Player.Stats[MaxStrength] + 2;
+      Player.Stats[MaxDexterity] := Player.Stats[MaxDexterity] + 1;
     end;
-    WriteLn(TxtCheckLevelUp_08, Player.MaxStrength,
+    WriteLn(TxtCheckLevelUp_08, Player.Stats[MaxStrength],
           TxtMaxymalnie, TxtCheckLevelUp_09);
-    WriteLn(TxtCheckLevelUp_08, Player.MaxDexterity,
+    WriteLn(TxtCheckLevelUp_08, Player.Stats[MaxDexterity],
           TxtMaxymalnie, TxtCheckLevelUp_10);
-    WriteLn(TxtCheckLevelUp_08, Player.MaxWisdom,
+    WriteLn(TxtCheckLevelUp_08, Player.Stats[MaxWisdom],
           TxtMaxymalnie, TxtCheckLevelUp_11);
   end;
 end;
@@ -3049,7 +3050,7 @@ begin
   Gear.WornGarment := TxtEmpty;
   Bag.Items[OldSword] := -ItemUnit;
   Bag.Items[SmallShield] := -ItemUnit;
-  Player.Strength := Player.Strength - 1;
+  Player.Stats[Strength] := Player.Stats[Strength] - 1;
 end;
 
 procedure CmdNoExit;
@@ -3088,7 +3089,7 @@ begin
     Bag.Items[OldSword] := -100;
     Gear.Values[WeaponKind] := 1;
     WriteLn(TxtCmdWieldOldSword_01);
-    Player.Strength := Player.Strength + 1;
+    Player.Stats[Strength] := Player.Stats[Strength] + 1;
     Gear.Values[LuckRoll] := Gear.Values[LuckRoll] + 3;
   end;
 end;
@@ -3099,7 +3100,7 @@ begin
     Bag.Items[OldSword] := -ItemUnit;
     Gear.Values[WeaponKind] := 0;
     WriteLn(TxtCmdUnwieldOldSword_01);
-    Player.Strength := Player.Strength - 1;
+    Player.Stats[Strength] := Player.Stats[Strength] - 1;
     Gear.Values[LuckRoll] := Gear.Values[LuckRoll] - 3;
   end;
 end;
@@ -3148,12 +3149,12 @@ begin
       TxtCmdSleep_04, (20 * Session.SleepHours) - Random(2 * Session.SleepHours), TxtShared_22);
   Player.Experience := Player.Experience + Random(2 * Session.SleepHours);
   if Session.SleepHours > 4 then begin
-    WriteLn(TxtCmdSleep_05, Player.Wisdom, TxtCmdSleep_06);
-    Player.Energy := Player.Energy + Player.Wisdom;
+    WriteLn(TxtCmdSleep_05, Player.Stats[Wisdom], TxtCmdSleep_06);
+    Player.Energy := Player.Energy + Player.Stats[Wisdom];
   end;
   if Session.SleepHours > 8 then begin
-    WriteLn(TxtCmdSleep_07, Player.Wisdom * 2, TxtCmdSleep_06);
-    Player.Energy := Player.Energy + (Player.Wisdom * 2);
+    WriteLn(TxtCmdSleep_07, Player.Stats[Wisdom] * 2, TxtCmdSleep_06);
+    Player.Energy := Player.Energy + (Player.Stats[Wisdom] * 2);
   end;
   ClampStat(Player.Energy, Player.MaxEnergy);
 end;

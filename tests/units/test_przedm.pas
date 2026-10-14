@@ -62,41 +62,41 @@ end;
 
 procedure TestTrainSila;
 begin
-  Player.Strength := 10; Player.MaxStrength := 20; Player.Practice := 10; Command := 'TRENUJ SILA';
+  Player.Stats[Strength] := 10; Player.Stats[MaxStrength] := 20; Player.Practice := 10; Command := 'TRENUJ SILA';
   HandleTrain;
-  CheckEqual(11, Player.Strength, 'TRENUJ SILA raises SIL by one');
+  CheckEqual(11, Player.Stats[Strength], 'TRENUJ SILA raises SIL by one');
   CheckEqual(7, Player.Practice, 'TRENUJ SILA spends three PRA');
 end;
 
 procedure TestTrainZrecznosc;
 begin
-  Player.Dexterity := 10; Player.MaxDexterity := 20; Player.Practice := 10; Command := 'TRENUJ ZRECZNOSC';
+  Player.Stats[Dexterity] := 10; Player.Stats[MaxDexterity] := 20; Player.Practice := 10; Command := 'TRENUJ ZRECZNOSC';
   HandleTrain;
-  CheckEqual(11, Player.Dexterity, 'TRENUJ ZRECZNOSC raises ZRE by one');
+  CheckEqual(11, Player.Stats[Dexterity], 'TRENUJ ZRECZNOSC raises ZRE by one');
   CheckEqual(8, Player.Practice, 'TRENUJ ZRECZNOSC spends two PRA');
 end;
 
 procedure TestTrainMadrosc;
 begin
-  Player.Wisdom := 10; Player.MaxWisdom := 20; Player.Practice := 10; Command := 'TRENUJ MADROSC';
+  Player.Stats[Wisdom] := 10; Player.Stats[MaxWisdom] := 20; Player.Practice := 10; Command := 'TRENUJ MADROSC';
   HandleTrain;
-  CheckEqual(11, Player.Wisdom, 'TRENUJ MADROSC raises MAD by one');
+  CheckEqual(11, Player.Stats[Wisdom], 'TRENUJ MADROSC raises MAD by one');
   CheckEqual(7, Player.Practice, 'TRENUJ MADROSC spends three PRA');
 end;
 
 procedure TestTrainNeedsPracticePoints;
 begin
-  Player.Strength := 10; Player.MaxStrength := 20; Player.Practice := 2; Command := 'TRENUJ SILA';
+  Player.Stats[Strength] := 10; Player.Stats[MaxStrength] := 20; Player.Practice := 2; Command := 'TRENUJ SILA';
   HandleTrain;
-  CheckEqual(10, Player.Strength, 'TRENUJ SILA refuses with two PRA');
+  CheckEqual(10, Player.Stats[Strength], 'TRENUJ SILA refuses with two PRA');
   CheckEqual(2, Player.Practice, 'TRENUJ SILA spends nothing with two PRA');
 end;
 
 procedure TestTrainCapsAtMaximum;
 begin
-  Player.Strength := 20; Player.MaxStrength := 20; Player.Practice := 10; Command := 'TRENUJ SILA';
+  Player.Stats[Strength] := 20; Player.Stats[MaxStrength] := 20; Player.Practice := 10; Command := 'TRENUJ SILA';
   HandleTrain;
-  CheckEqual(20, Player.Strength, 'TRENUJ SILA stops at MAXSIL');
+  CheckEqual(20, Player.Stats[Strength], 'TRENUJ SILA stops at MAXSIL');
   CheckEqual(10, Player.Practice, 'TRENUJ SILA spends nothing at MAXSIL');
 end;
 
@@ -240,9 +240,9 @@ begin
   Gear.Values[WornCount] := 0;
   Player.MaxEnergy := aMaxE;
   Combat.EnemyEnergy := aWrogE;
-  Player.Strength := aSil;
+  Player.Stats[Strength] := aSil;
   Combat.EnemyStrength := aWrogSil;
-  Player.Dexterity := aZre;
+  Player.Stats[Dexterity] := aZre;
   Combat.EnemyDexterity := aWrogZre;
 end;
 
@@ -617,7 +617,7 @@ procedure TestBraniePicksUpBluszczItems;
 begin
   Session.OuterRoom := 7;
   Bag.Items[SmallShield] := 7; Bag.Items[Heart] := 7; Bag.Items[Diploma] := 7; Bag.Items[Pipe] := 7;
-  Bag.Count := 0; Player.Wisdom := 0; Player.MaxWisdom := 5; Player.MaxEnergy := 50;
+  Bag.Count := 0; Player.Stats[Wisdom] := 0; Player.Stats[MaxWisdom] := 5; Player.MaxEnergy := 50;
   Command := 'BIERZ MALA'; TakeDrop;
   Command := 'BIERZ SERCE'; TakeDrop;
   Command := 'BIERZ DYPLOM'; TakeDrop;
@@ -628,14 +628,14 @@ begin
   CheckEqual(-10, Bag.Items[Pipe], 'BIERZ FAJKA stores the pipe as -10');
   CheckEqual(4, Bag.Count, 'four BRANIE picks count four items');
   CheckEqual(55, Player.MaxEnergy, 'BIERZ DYPLOM adds five max energy');
-  CheckEqual(1, Player.Wisdom, 'BIERZ FAJKA adds one wisdom under the cap');
+  CheckEqual(1, Player.Stats[Wisdom], 'BIERZ FAJKA adds one wisdom under the cap');
 end;
 
 procedure TestBranieDropsBluszczItems;
 begin
   Session.OuterRoom := 7;
   Bag.Items[SmallShield] := -10; Bag.Items[Heart] := -10; Bag.Items[Diploma] := -10; Bag.Items[Pipe] := -10;
-  Bag.Count := 4; Player.Wisdom := 1; Player.MaxEnergy := 55;
+  Bag.Count := 4; Player.Stats[Wisdom] := 1; Player.MaxEnergy := 55;
   Command := 'ODRZUC FAJKA'; TakeDrop;
   Command := 'ODRZUC MALA'; TakeDrop;
   Command := 'ODRZUC SERCE'; TakeDrop;
@@ -646,7 +646,7 @@ begin
   CheckEqual(7, Bag.Items[Pipe], 'ODRZUC FAJKA restores the pipe marker');
   CheckEqual(0, Bag.Count, 'four ODRZUC drops uncount four items');
   CheckEqual(50, Player.MaxEnergy, 'ODRZUC DYPLOM removes five max energy');
-  CheckEqual(0, Player.Wisdom, 'ODRZUC FAJKA removes one wisdom');
+  CheckEqual(0, Player.Stats[Wisdom], 'ODRZUC FAJKA removes one wisdom');
 end;
 
 procedure TestUzywaSerce;
@@ -815,7 +815,7 @@ end;
 
 procedure TestUzywaPigulkaLow;
 begin
-  Bag.Items[TeleportPill] := -10; Player.Wisdom := 5; Player.MaxEnergy := 50; Player.Energy := 40; Player.Experience := 100;
+  Bag.Items[TeleportPill] := -10; Player.Stats[Wisdom] := 5; Player.MaxEnergy := 50; Player.Energy := 40; Player.Experience := 100;
   Command := 'UZYJ PIGULKA';
   UseItems;
   CheckEqual(0, Bag.Items[TeleportPill], 'UZYJ PIGULKA consumes the pigulka');
@@ -826,7 +826,7 @@ end;
 
 procedure TestUzywaPigulkaMid;
 begin
-  Bag.Items[TeleportPill] := -10; Player.Wisdom := 12; Player.Energy := 100; Player.Experience := 100;
+  Bag.Items[TeleportPill] := -10; Player.Stats[Wisdom] := 12; Player.Energy := 100; Player.Experience := 100;
   Command := 'UZYJ PIGULKA';
   UseItems;
   CheckEqual(60, Player.Energy, 'UZYJ PIGULKA with mid MAD drains forty energy');
@@ -835,7 +835,7 @@ end;
 
 procedure TestUzywaPigulkaHigh;
 begin
-  Bag.Items[TeleportPill] := -10; Player.Wisdom := 20; Player.Energy := 100; Player.Experience := 100;
+  Bag.Items[TeleportPill] := -10; Player.Stats[Wisdom] := 20; Player.Energy := 100; Player.Experience := 100;
   Command := 'UZYJ PIGULKA';
   UseItems;
   CheckEqual(0, Bag.Items[TeleportPill], 'UZYJ PIGULKA with high MAD consumes the pigulka');
@@ -865,7 +865,7 @@ end;
 
 procedure TestKasetaZyskInvariant;
 begin
-  Bag.Items[Cassette] := 50; Player.MaxEnergy := 0; Gear.Values[Armor] := 0; Bag.Count := 0; Player.Dexterity := 0;
+  Bag.Items[Cassette] := 50; Player.MaxEnergy := 0; Gear.Values[Armor] := 0; Bag.Count := 0; Player.Stats[Dexterity] := 0;
   Session.Room := 20;
   CassetteGain;
   CheckTrue((Bag.Items[Cassette] = 50) or (Bag.Items[Cassette] = 40),
@@ -876,7 +876,7 @@ begin
     'KASETAZYSK lowers PRO by eight or not at all');
   CheckTrue((Bag.Count = 0) or (Bag.Count = 1),
     'KASETAZYSK counts at most one item');
-  CheckTrue((Player.Dexterity = 0) or (Player.Dexterity = 1),
+  CheckTrue((Player.Stats[Dexterity] = 0) or (Player.Stats[Dexterity] = 1),
     'KASETAZYSK raises ZRE by one or not at all');
 end;
 
@@ -939,7 +939,7 @@ procedure TestKasetaZyskGain;
 var i: Integer;
 begin
   Bag.Items[Cassette] := 100; Player.MaxEnergy := 0; Gear.Values[Armor] := 0; Bag.Count := 0;
-  Player.Dexterity := 0; Session.Room := 20;
+  Player.Stats[Dexterity] := 0; Session.Room := 20;
   i := 0;
   while (Bag.Count = 0) and (i < 2000) do begin
     CassetteGain;
@@ -950,7 +950,7 @@ begin
     'KASETAZYSK drops the cassette by ten');
   CheckEqual(5, Player.MaxEnergy, 'KASETAZYSK raises MAXE by five');
   CheckEqual(-8, Gear.Values[Armor], 'KASETAZYSK lowers PRO by eight');
-  CheckEqual(1, Player.Dexterity, 'KASETAZYSK raises ZRE by one');
+  CheckEqual(1, Player.Stats[Dexterity], 'KASETAZYSK raises ZRE by one');
 end;
 
 procedure TestListekZyskGain;
@@ -1064,7 +1064,7 @@ begin
   World.Monsters[Camel] := 33; World.Monsters[Ostrich] := 33; World.Monsters[Boa] := 33; World.Monsters[Bison] := 33;
   World.Monsters[Panther] := 33; World.Monsters[Gladiator] := 33; World.Monsters[Warrior] := 33; World.Monsters[Tamer] := 33;
   Session.Room := 33;
-  Player.Strength := 127; Player.Dexterity := 127; Player.Energy := 30000; Combat.Fled := 0;
+  Player.Stats[Strength] := 127; Player.Stats[Dexterity] := 127; Player.Energy := 30000; Combat.Fled := 0;
 end;
 
 procedure TestMiniarenaSlabo;
@@ -1143,7 +1143,7 @@ begin
   World.Monsters[SowThistle] := 100; World.Monsters[Dandelion] := 100; World.Monsters[Rose] := 100;
   World.Monsters[Thistle] := 100; World.Monsters[Raspberry] := 100; World.Monsters[Gooseberry] := 100;
   World.Monsters[Blackberry] := 100; World.Monsters[Grass] := 100;
-  Player.Strength := 127; Player.Dexterity := 127; Player.Energy := 30000; Combat.Fled := 0;
+  Player.Stats[Strength] := 127; Player.Stats[Dexterity] := 127; Player.Energy := 30000; Combat.Fled := 0;
   World.DuncanQuest := 0; Player.Money := 10000; Bag.Permit := 100;
   Bag.Items[Backpack] := 100; World.Quest := 0; Player.Experience := 0;
 end;
@@ -1199,7 +1199,7 @@ begin
    OGOL (POZIOM + SIL plus the ZRE/PAR/KOP bonuses)
    and SIL, so both are set to reach each band.}
   FeedStdin(monster);
-  Player.Mana := 10; Player.Level := aPoziom; Player.Strength := aSil; Player.Dexterity := aZre;
+  Player.Mana := 10; Player.Level := aPoziom; Player.Stats[Strength] := aSil; Player.Stats[Dexterity] := aZre;
   Skills.Values[Parry] := aPar; Skills.Values[Kick] := aKop;
   CompareFoe;
 end;
@@ -1212,7 +1212,7 @@ begin
   PorownanieAsk('KUROPATWA', 0, 16, 0, 0, 0);
   PorownanieAsk('SARNA', 0, 19, 0, 0, 0);
   PorownanieAsk('DZIADEK', 0, 30, 0, 0, 0);
-  CheckEqual(30, Player.Strength, 'POROWNANIE leaves the last SIL in place');
+  CheckEqual(30, Player.Stats[Strength], 'POROWNANIE leaves the last SIL in place');
 end;
 
 procedure TestPorownanieBigBeasts;
@@ -1321,7 +1321,7 @@ begin
    must be reset here: earlier tests leave it held, which
    would skip every drop.}
   Bag.Items[Heart] := 0;
-  Player.Energy := 30000; Player.Strength := 127; Player.Dexterity := 127; Combat.Fled := 0;
+  Player.Energy := 30000; Player.Stats[Strength] := 127; Player.Stats[Dexterity] := 127; Combat.Fled := 0;
   Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Combat.FireballCharges := 0;
   Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0;
   Skills.Values[KickMaxEnergy] := 0; Gear.Values[Armor] := 0; Gear.Values[WornCount] := 0; Gear.Values[LuckRoll] := 0;

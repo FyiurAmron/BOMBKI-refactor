@@ -38,7 +38,7 @@ begin
    start combats, so give the player a full pool, no parry or
    flee skill (which would change the combat flow), and clear
    the leftover markers that alter the room or loot text.}
-  Player.Energy := 30000; Player.Experience := 100; Player.Strength := 127; Player.Dexterity := 127;
+  Player.Energy := 30000; Player.Experience := 100; Player.Stats[Strength] := 127; Player.Stats[Dexterity] := 127;
   Combat.Fled := 0; Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Skills.Values[Parry] := 0;
   Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Cooking] := 0;
   Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[Armor] := 0; Gear.Values[WornCount] := 0;
@@ -107,7 +107,7 @@ begin
   Bag.Items[OldSword] := 0; Bag.Items[SmallShield] := 0; Bag.Items[Heart] := 0;
   sawSword := false; sawShield := false; sawHeart := false;
   for i := 1 to 80 do begin
-    Player.Energy := 30000; Player.Experience := 100; Player.Strength := 127; Player.Dexterity := 127;
+    Player.Energy := 30000; Player.Experience := 100; Player.Stats[Strength] := 127; Player.Stats[Dexterity] := 127;
     Combat.Fled := 0; Skills.Values[Fleeing] := 0; Skills.Values[FleeEnergy] := 0; Player.Mana := 0; Skills.Values[Parry] := 0;
     Combat.FireballCharges := 0; Combat.PoisonCharges := 0; Combat.PoisonRounds := 0; Skills.Values[Cooking] := 0;
     Skills.Values[Kick] := 0; Skills.Values[KickMinMana] := 0; Skills.Values[KickMaxEnergy] := 0; Gear.Values[LuckRoll] := 0;
@@ -280,7 +280,7 @@ procedure TestPokoj100SellHard;
 begin
   RoomSetup;
   World.Quest := 3; World.QuestKills := 0; Bag.Items[Pipe] := -10; Player.Practice := 1;
-  Bag.Permit := 0; Player.Experience := 100; Bag.Count := 0; Player.Wisdom := 5;
+  Bag.Permit := 0; Player.Experience := 100; Bag.Count := 0; Player.Stats[Wisdom] := 5;
   PokojAt('SPRZEDAJ QUEST|WYJSCIE', 100);
   CheckEqual(0, World.Quest, 'the sold quest is cleared');
   CheckEqual(0, Bag.Items[Pipe], 'the pipe is handed over');
@@ -288,7 +288,7 @@ begin
   CheckEqual(-10, Bag.Permit, 'selling lowers the pass');
   CheckEqual(525, Player.Experience, 'the hard quest pays 425 skill');
   CheckEqual(-1, Bag.Count, 'the hard quest uncounts the pipe');
-  CheckEqual(4, Player.Wisdom, 'the hard quest costs one wisdom');
+  CheckEqual(4, Player.Stats[Wisdom], 'the hard quest costs one wisdom');
 end;
 
 begin

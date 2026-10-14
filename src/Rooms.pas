@@ -1028,8 +1028,8 @@ begin
   Combat.Roll := Random(100);
   if Combat.Roll < 40 then begin
     WriteLn(TxtRoom87_03,
-       25 - Player.Dexterity, TxtShared_26);
-    Player.Energy := Player.Energy - 25 + Player.Dexterity;
+       25 - Player.Stats[Dexterity], TxtShared_26);
+    Player.Energy := Player.Energy - 25 + Player.Stats[Dexterity];
   end;
   repeat
     Write(Player.Energy, TxtShared_01, Player.Experience, TxtShared_02);
@@ -1129,7 +1129,7 @@ begin
              WriteLn(TxtQuestReward, 425, TxtSpaceKunsztDashes);
              Player.Experience := Player.Experience + 425;
              Bag.Count := Bag.Count - 1;
-             Player.Wisdom := Player.Wisdom - 1;
+             Player.Stats[Wisdom] := Player.Stats[Wisdom] - 1;
              World.Quest := 0;
              World.QuestKills := 0;
              Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
@@ -1411,7 +1411,7 @@ begin
               Player.MaxEnergy := Player.MaxEnergy + 5;
               Gear.Values[Armor] := Gear.Values[Armor] - 8;
               Bag.Count := Bag.Count + 1;
-              Player.Dexterity := Player.Dexterity + 1;
+              Player.Stats[Dexterity] := Player.Stats[Dexterity] + 1;
             end;
           end;
         end;

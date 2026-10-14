@@ -1417,6 +1417,56 @@ begin
   end;
 end;
 
+type
+  TMazeDir = (mdPolodnie, mdPolnoc, mdWschod, mdZachod);
+  TMazeMove = record
+    room: Integer;
+    dest: array[TMazeDir] of Integer;
+  end;
+
+const
+  MazeMoves: array[1..25] of TMazeMove = (
+    (room: RoomArena33; dest: (RoomArenaEntrance, RoomArena34, RoomArena35, RoomArena36)),
+    (room: RoomArena34; dest: (RoomArena33, RoomArena37, RoomArena38, RoomArena39)),
+    (room: RoomArena35; dest: (RoomArena35, RoomArena38, RoomArena40, RoomArena33)),
+    (room: RoomArena36; dest: (RoomArena36, RoomArena39, RoomArena33, RoomArena41)),
+    (room: RoomArena37; dest: (RoomArena34, RoomArena42, RoomArena43, RoomArena44)),
+    (room: RoomArena38; dest: (RoomArena35, RoomArena43, RoomArena45, RoomArena34)),
+    (room: RoomArena39; dest: (RoomArena36, RoomArena44, RoomArena34, RoomArena46)),
+    (room: RoomArena40; dest: (RoomArena40, RoomArena45, RoomArena40, RoomArena35)),
+    (room: RoomArena41; dest: (RoomArena41, RoomArena46, RoomArena36, RoomArena41)),
+    (room: RoomArena42; dest: (RoomArena37, RoomArena47, RoomArena48, RoomArena49)),
+    (room: RoomArena43; dest: (RoomArena38, RoomArena48, RoomArena50, RoomArena37)),
+    (room: RoomArena44; dest: (RoomArena39, RoomArena49, RoomArena37, RoomArena51)),
+    (room: RoomArena45; dest: (RoomArena40, RoomArena50, RoomArena45, RoomArena38)),
+    (room: RoomArena46; dest: (RoomArena41, RoomArena51, RoomArena39, RoomArena46)),
+    (room: RoomArena47; dest: (RoomArena42, RoomArena47, RoomArena52, RoomArena53)),
+    (room: RoomArena48; dest: (RoomArena43, RoomArena52, RoomArena54, RoomArena42)),
+    (room: RoomArena49; dest: (RoomArena44, RoomArena53, RoomArena42, RoomArena55)),
+    (room: RoomArena50; dest: (RoomArena45, RoomArena54, RoomArena50, RoomArena43)),
+    (room: RoomArena51; dest: (RoomArena46, RoomArena55, RoomArena44, RoomArena51)),
+    (room: RoomArena52; dest: (RoomArena48, RoomArena52, RoomArena56, RoomArena47)),
+    (room: RoomArena53; dest: (RoomArena49, RoomArena53, RoomArena47, RoomArena57)),
+    (room: RoomArena54; dest: (RoomArena50, RoomArena56, RoomArena54, RoomArena48)),
+    (room: RoomArena55; dest: (RoomArena51, RoomArena57, RoomArena49, RoomArena55)),
+    (room: RoomArena56; dest: (RoomArena54, RoomArena56, RoomArena56, RoomArena52)),
+    (room: RoomArena57; dest: (RoomArena55, RoomArena57, RoomArena53, RoomArena57))
+  );
+
+procedure MazeMove(dir: TMazeDir);
+var
+  mi: Integer;
+begin
+  Session.InArena := 0;
+  for mi := Low(MazeMoves) to High(MazeMoves) do
+    with MazeMoves[mi] do
+      if Session.Room = room then begin
+        if dest[dir] = room then Session.InArena := 1
+        else Session.Room := dest[dir];
+        Break;
+      end;
+end;
+
 procedure ArenaMaze;
 var
   bi, ai: Integer;
@@ -1509,124 +1559,18 @@ begin
                         TxtExitWschod, TxtPlaceArena]);
         end;
       if Command = CmdWyjscie then exit;
-      if Command = CmdPolodnie then begin
-        Session.InArena := 0;
-        case Session.Room of
-          RoomArena33: Session.Room := RoomArenaEntrance;
-          RoomArena34: Session.Room := RoomArena33;
-          RoomArena35, RoomArena36, RoomArena40, RoomArena41: Session.InArena := 1;
-          RoomArena37: Session.Room := RoomArena34;
-          RoomArena38: Session.Room := RoomArena35;
-          RoomArena39: Session.Room := RoomArena36;
-          RoomArena42: Session.Room := RoomArena37;
-          RoomArena43: Session.Room := RoomArena38;
-          RoomArena44: Session.Room := RoomArena39;
-          RoomArena45: Session.Room := RoomArena40;
-          RoomArena46: Session.Room := RoomArena41;
-          RoomArena47: Session.Room := RoomArena42;
-          RoomArena48: Session.Room := RoomArena43;
-          RoomArena49: Session.Room := RoomArena44;
-          RoomArena50: Session.Room := RoomArena45;
-          RoomArena51: Session.Room := RoomArena46;
-          RoomArena52: Session.Room := RoomArena48;
-          RoomArena53: Session.Room := RoomArena49;
-          RoomArena54: Session.Room := RoomArena50;
-          RoomArena55: Session.Room := RoomArena51;
-          RoomArena56: Session.Room := RoomArena54;
-          RoomArena57: Session.Room := RoomArena55;
-        end;
-      end;
+      if Command = CmdPolodnie then
+        MazeMove(mdPolodnie);
       if Command = CmdPolnoc then begin
-        Session.InArena := 0;
-        case Session.Room of
-          RoomArena33: Session.Room := RoomArena34;
-          RoomArena34: Session.Room := RoomArena37;
-          RoomArena35: Session.Room := RoomArena38;
-          RoomArena36: Session.Room := RoomArena39;
-          RoomArena37: Session.Room := RoomArena42;
-          RoomArena38: Session.Room := RoomArena43;
-          RoomArena39: Session.Room := RoomArena44;
-          RoomArena40: Session.Room := RoomArena45;
-          RoomArena41: Session.Room := RoomArena46;
-          RoomArena42: Session.Room := RoomArena47;
-          RoomArena43: Session.Room := RoomArena48;
-          RoomArena44: Session.Room := RoomArena49;
-          RoomArena45: Session.Room := RoomArena50;
-          RoomArena46: Session.Room := RoomArena51;
-          RoomArena47: Session.InArena := 1;
-          RoomArena48: Session.Room := RoomArena52;
-          RoomArena49: Session.Room := RoomArena53;
-          RoomArena50: Session.Room := RoomArena54;
-          RoomArena51: Session.Room := RoomArena55;
-          RoomArena52: Session.InArena := 1;
-          RoomArena53: Session.InArena := 1;
-          RoomArena54: Session.Room := RoomArena56;
-          RoomArena55: Session.Room := RoomArena57;
-          RoomArena56: Session.InArena := 1;
-          RoomArena57: Session.InArena := 1;
-        end;
+        MazeMove(mdPolnoc);
         Session.MoveGuard := 1;
       end;
       if Command = CmdWschod then begin
-        Session.InArena := 0;
-        case Session.Room of
-          RoomArena33: Session.Room := RoomArena35;
-          RoomArena34: Session.Room := RoomArena38;
-          RoomArena35: Session.Room := RoomArena40;
-          RoomArena36: Session.Room := RoomArena33;
-          RoomArena37: Session.Room := RoomArena43;
-          RoomArena38: Session.Room := RoomArena45;
-          RoomArena39: Session.Room := RoomArena34;
-          RoomArena40: Session.InArena := 1;
-          RoomArena41: Session.Room := RoomArena36;
-          RoomArena42: Session.Room := RoomArena48;
-          RoomArena43: Session.Room := RoomArena50;
-          RoomArena44: Session.Room := RoomArena37;
-          RoomArena45: Session.InArena := 1;
-          RoomArena46: Session.Room := RoomArena39;
-          RoomArena47: Session.Room := RoomArena52;
-          RoomArena48: Session.Room := RoomArena54;
-          RoomArena49: Session.Room := RoomArena42;
-          RoomArena50: Session.InArena := 1;
-          RoomArena51: Session.Room := RoomArena44;
-          RoomArena52: Session.Room := RoomArena56;
-          RoomArena53: Session.Room := RoomArena47;
-          RoomArena54: Session.InArena := 1;
-          RoomArena55: Session.Room := RoomArena49;
-          RoomArena56: Session.InArena := 1;
-          RoomArena57: Session.Room := RoomArena53;
-        end;
+        MazeMove(mdWschod);
         Session.MoveGuard := 1;
       end;
       if Command = CmdZachod then begin
-        Session.InArena := 0;
-        case Session.Room of
-          RoomArena33: Session.Room := RoomArena36;
-          RoomArena34: Session.Room := RoomArena39;
-          RoomArena35: Session.Room := RoomArena33;
-          RoomArena36: Session.Room := RoomArena41;
-          RoomArena37: Session.Room := RoomArena44;
-          RoomArena38: Session.Room := RoomArena34;
-          RoomArena39: Session.Room := RoomArena46;
-          RoomArena40: Session.Room := RoomArena35;
-          RoomArena41: Session.InArena := 1;
-          RoomArena42: Session.Room := RoomArena49;
-          RoomArena43: Session.Room := RoomArena37;
-          RoomArena44: Session.Room := RoomArena51;
-          RoomArena45: Session.Room := RoomArena38;
-          RoomArena46: Session.InArena := 1;
-          RoomArena47: Session.Room := RoomArena53;
-          RoomArena48: Session.Room := RoomArena42;
-          RoomArena49: Session.Room := RoomArena55;
-          RoomArena50: Session.Room := RoomArena43;
-          RoomArena51: Session.InArena := 1;
-          RoomArena52: Session.Room := RoomArena47;
-          RoomArena53: Session.Room := RoomArena57;
-          RoomArena54: Session.Room := RoomArena48;
-          RoomArena55: Session.InArena := 1;
-          RoomArena56: Session.Room := RoomArena52;
-          RoomArena57: Session.InArena := 1;
-        end;
+        MazeMove(mdZachod);
         Session.MoveGuard := 1;
       end;
       Session.MoveGuard := 0;

@@ -1230,6 +1230,11 @@ const
     (cmd: CmdUzyj + CmdBigos; item: Bigos; verb: TxtEatVerb; line: TxtUseItems_27; gain: 20; stat: @Player.Energy; cap: @Player.MaxEnergy)
   );
 
+procedure ClampStat(var stat: Integer; cap: Integer);
+begin
+  if stat > cap then stat := cap;
+end;
+
 procedure EatFood(cmd: string; item: TBagItem; verb, line: string;
   gain: Integer; stat, cap: PInteger);
 begin
@@ -1238,7 +1243,7 @@ begin
     Bag.Items[item] := Bag.Items[item] + ItemUnit;
     WriteLn(verb, line);
     stat^ := stat^ + gain;
-    if stat^ > cap^ then stat^ := cap^;
+    ClampStat(stat^, cap^);
   end;
 end;
 
@@ -1252,7 +1257,7 @@ begin
     Bag.Items[Heart] := 0;
     WriteLn(TxtEatVerb, TxtUseItems_02);
     Player.Energy := Player.Energy + 5;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
+    ClampStat(Player.Energy, Player.MaxEnergy);
     Bag.Count := Bag.Count - 1;
   end;
   if (Command = CmdUzyj + CmdDyplom) and (Bag.Items[Diploma] = -ItemUnit) then begin
@@ -3150,7 +3155,7 @@ begin
     WriteLn(TxtCmdSleep_07, Player.Wisdom * 2, TxtCmdSleep_06);
     Player.Energy := Player.Energy + (Player.Wisdom * 2);
   end;
-  if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
+  ClampStat(Player.Energy, Player.MaxEnergy);
 end;
 
 procedure CmdCompare;
@@ -3349,7 +3354,7 @@ begin
 
     ArenaMaze;
     if Session.Room = DeadRoom then Death;
-    if Player.Energy > Player.MaxEnergy then Player.Energy := Player.MaxEnergy;
+    ClampStat(Player.Energy, Player.MaxEnergy);
     if Session.Room = TranceRoom then begin
       for ti := Low(TranceItems) to High(TranceItems) do
         with TranceItems[ti] do

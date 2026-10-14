@@ -893,14 +893,14 @@ begin
       WriteExits([TxtShared_03,
                   TxtExitWschod, TxtPlacePodejrzaneKrzaki]);
       if World.Door <> 0 then
-        WriteLn(TxtExitZachod, TxtPlaceGdybyNieTeCholerneDrzwi);
-      if World.Door = 0 then
+        WriteLn(TxtExitZachod, TxtPlaceGdybyNieTeCholerneDrzwi)
+      else
         WriteLn(TxtExitZachod, TxtPlaceWejscieDoDomku);
     end;
     if MoveWhenOrQuit([Go(CmdWschod, RoomCavePath)]) then Exit;
-    if (Command = CmdZachod) and (World.Door = 0) then Session.Room := RoomHut;
-    if (Command = CmdZachod) and (World.Door <> 0) then
-      WriteLn(TxtRoom85_07);
+    if Command = CmdZachod then
+      if World.Door = 0 then Session.Room := RoomHut
+      else WriteLn(TxtRoom85_07);
   until Session.Room <> RoomLivingDoor;
 
 end;

@@ -1393,9 +1393,32 @@ const
     (cmd: CmdZabij + CmdPantera; beast: @World.Monsters[Panther]; foe: MediumEnemy; unlessFled: False)
   );
 
+type
+  TArenaKill = record
+    cmd: string;
+    monster: TMonster;
+    pills: Boolean;
+  end;
+
+const
+  ArenaKills: array[1..3] of TArenaKill = (
+    (cmd: CmdZabij + CmdGladiator; monster: Gladiator; pills: True),
+    (cmd: CmdZabij + CmdWojownik; monster: Warrior; pills: True),
+    (cmd: CmdZabij + CmdTrener; monster: Tamer; pills: False)
+  );
+
+procedure ArenaKill(cmd: string; monster: TMonster; pills: Boolean);
+begin
+  if (Command = cmd) and (Session.Room = World.Monsters[monster]) then begin
+    Fight(HardEnemy);
+    World.Monsters[monster] := 0;
+    if pills then PillGain else SuitGain;
+  end;
+end;
+
 procedure ArenaMaze;
 var
-  bi: Integer;
+  bi, ai: Integer;
 begin
   if (Session.Room = RoomArena33) or (Session.Room = RoomArena34) or (Session.Room = RoomArena35) or (Session.Room = RoomArena36) or (Session.Room = RoomArena37) or
      (Session.Room = RoomArena38) or (Session.Room = RoomArena39) or (Session.Room = RoomArena40) or (Session.Room = RoomArena41) or (Session.Room = RoomArena42) or
@@ -1428,21 +1451,9 @@ begin
         World.Monsters[Mongrel] := 0;
       end;
 
-      if (Command = CmdZabij + CmdGladiator) and (Session.Room = World.Monsters[Gladiator]) then
-      begin Fight(HardEnemy);
-        World.Monsters[Gladiator] := 0;
-        PillGain;
-      end;
-      if (Command = CmdZabij + CmdWojownik) and (Session.Room = World.Monsters[Warrior]) then
-      begin Fight(HardEnemy);
-        World.Monsters[Warrior] := 0;
-        PillGain;
-      end;
-      if (Command = CmdZabij + CmdTrener) and (Session.Room = World.Monsters[Tamer]) then
-      begin Fight(HardEnemy);
-        World.Monsters[Tamer] := 0;
-        SuitGain;
-      end;
+      for ai := Low(ArenaKills) to High(ArenaKills) do
+        with ArenaKills[ai] do
+          ArenaKill(cmd, monster, pills);
       if Command = CmdExit then
         case Session.Room of
           RoomArena33:

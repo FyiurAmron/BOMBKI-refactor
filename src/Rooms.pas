@@ -1019,6 +1019,29 @@ begin
 
 end;
 
+procedure GrantQuestReward(quest, exp: Integer);
+begin
+  WriteLn(TxtRoom100_12);
+  WriteLn(TxtQuestReward, exp, TxtSpaceKunsztDashes);
+  Player.Experience := Player.Experience + exp;
+  World.Quest := 0;
+  World.QuestKills := 0;
+  Bag.Permit := Bag.Permit - ItemUnit;
+  case quest of
+    1: Bag.Count := Bag.Count + 1;
+    2: begin
+      Bag.Items[Diploma] := 0;
+      Player.MaxEnergy := Player.MaxEnergy - 5;
+    end;
+    3: begin
+      Bag.Count := Bag.Count - 1;
+      Player.Stats[Wisdom] := Player.Stats[Wisdom] - 1;
+      Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
+      Player.Practice := Player.Practice - 1;
+    end;
+  end;
+end;
+
 procedure Room100;
 var
   i: Integer;
@@ -1044,42 +1067,14 @@ begin
         BuyQuest(cmd, line, quest, kills, price);
     if (Command = CmdSprzedaj + CmdQuest) and (World.Quest > 0) then begin
       case World.Quest of
-        1: if World.QuestKills < 1 then begin
-             WriteLn(TxtRoom100_12);
-             WriteLn(TxtQuestReward, 100, TxtSpaceKunsztDashes);
-             Player.Experience := Player.Experience + 100;
-             World.Quest := 0;
-             World.QuestKills := 0;
-             Bag.Permit := Bag.Permit - ItemUnit;
-             Bag.Count := Bag.Count + 1;
-           end;
-        2: if (World.QuestKills < 1) and (Bag.Items[Diploma] <= -10) then begin
-             WriteLn(TxtRoom100_12);
-             WriteLn(TxtQuestReward, 250, TxtSpaceKunsztDashes);
-             Player.Experience := Player.Experience + 250;
-             World.Quest := 0;
-             World.QuestKills := 0;
-             Bag.Items[Diploma] := 0;
-             Player.MaxEnergy := Player.MaxEnergy - 5;
-             Bag.Permit := Bag.Permit - ItemUnit;
-           end;
-        3: if (World.QuestKills < 1) and (Bag.Items[Pipe] <= -10) and (Player.Practice > 0) then begin
-             WriteLn(TxtRoom100_12);
-             WriteLn(TxtQuestReward, 425, TxtSpaceKunsztDashes);
-             Player.Experience := Player.Experience + 425;
-             Bag.Count := Bag.Count - 1;
-             Player.Stats[Wisdom] := Player.Stats[Wisdom] - 1;
-             World.Quest := 0;
-             World.QuestKills := 0;
-             Bag.Items[Pipe] := Bag.Items[Pipe] + ItemUnit;
-             Player.Practice := Player.Practice - 1;
-             Bag.Permit := Bag.Permit - ItemUnit;
-           end;
+        1: if World.QuestKills < 1 then GrantQuestReward(1, 100);
+        2: if (World.QuestKills < 1) and (Bag.Items[Diploma] <= -ItemUnit) then GrantQuestReward(2, 250);
+        3: if (World.QuestKills < 1) and (Bag.Items[Pipe] <= -ItemUnit) and (Player.Practice > 0) then GrantQuestReward(3, 425);
       end;
 
     end;
     if MoveWhenOrExit([Go(CmdPolodnie, RoomShopStreet2)]) then Exit;
-    if (Command = CmdZachod) and (Bag.Permit <= -10) then Session.Room := RoomRoad1;
+    if (Command = CmdZachod) and (Bag.Permit <= -ItemUnit) then Session.Room := RoomRoad1;
 if (Command = CmdZachod) and (Bag.Permit = 0) then WriteLn(TxtRoom100_16);
     if Command = CmdZabij + CmdQuestMaster then begin
       Combat.PoisonCharges := 10;

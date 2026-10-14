@@ -869,61 +869,62 @@ begin
       WriteLn(StreetSpots[i].text);
 end;
 
-procedure SuitGain;
+type
+  TGainBonus = (gbNone, gbMana, gbCassette);
+
+procedure GainLoot1000(threshold: Integer; line1, line2: string; item: TBagItem);
 begin
   Combat.Roll := Random(1000);
-  if Combat.Roll <= 25 then begin
-    WriteLn(TxtSuitGain_01);
-    WriteLn(TxtUniqeItem, TxtSuitGain_02);
-    Bag.Items[SpikedSuit] := Bag.Items[SpikedSuit] - ItemUnit;
+  if Combat.Roll <= threshold then begin
+    WriteLn(line1);
+    if line2 <> '' then WriteLn(TxtUniqeItem, line2);
+    Bag.Items[item] := Bag.Items[item] - ItemUnit;
     Bag.Count := Bag.Count + 1;
   end;
+end;
+
+procedure GainLoot100(threshold: Integer; line1, line2: string; item: TBagItem; bonus: TGainBonus);
+begin
+  Combat.Roll := Random(100);
+  if (Combat.Roll < threshold) and (Session.Room <> DeadRoom) then begin
+    WriteLn(TxtShared_08, line1);
+    if line2 <> '' then WriteLn(TxtBang, TxtUniqeItem, line2);
+    Bag.Items[item] := Bag.Items[item] - ItemUnit;
+    case bonus of
+      gbMana: Player.MaxMana := Player.MaxMana + 40;
+      gbCassette: begin
+        Player.MaxEnergy := Player.MaxEnergy + 5;
+        Gear.Values[Armor] := Gear.Values[Armor] - 8;
+        Player.Stats[Dexterity] := Player.Stats[Dexterity] + 1;
+      end;
+    end;
+    Bag.Count := Bag.Count + 1;
+  end;
+end;
+
+procedure SuitGain;
+begin
+  GainLoot1000(25, TxtSuitGain_01, TxtSuitGain_02, SpikedSuit);
 end;
 
 procedure PillGain;
 begin
-  Combat.Roll := Random(1000);
-  if Combat.Roll <= 42 then begin
-    WriteLn(TxtPillGain_01);
-    Bag.Items[TeleportPill] := Bag.Items[TeleportPill] - ItemUnit;
-    Bag.Count := Bag.Count + 1;
-  end;
+  GainLoot1000(42, TxtPillGain_01, '', TeleportPill);
 end;
 
 procedure CassetteGain;
 begin
-  Combat.Roll := Random(100);
-  if (Combat.Roll < 2) and (Session.Room <> DeadRoom) then begin
-    WriteLn(TxtShared_08, TxtCassetteGain_01);
-    WriteLn(TxtBang, TxtUniqeItem, TxtCassetteGain_02);
-    Bag.Items[Cassette] := Bag.Items[Cassette] - ItemUnit;
-    Player.MaxEnergy := Player.MaxEnergy + 5;
-    Gear.Values[Armor] := Gear.Values[Armor] - 8;
-    Bag.Count := Bag.Count + 1;
-    Player.Stats[Dexterity] := Player.Stats[Dexterity] + 1;
-  end;
+  GainLoot100(2, TxtCassetteGain_01, TxtCassetteGain_02, Cassette, gbCassette);
 end;
 
 procedure LeafGain;
 begin
-  Combat.Roll := Random(100);
-  if (Combat.Roll < 6) and (Session.Room <> DeadRoom) then begin
-    WriteLn(TxtShared_08, TxtLeafGain_01);
-    WriteLn(TxtBang, TxtUniqeItem, TxtLeafGain_02);
-    Bag.Items[LuckyLeaf] := Bag.Items[LuckyLeaf] - ItemUnit;
-    Bag.Count := Bag.Count + 1;
-    Player.MaxMana := Player.MaxMana + 40;
-  end;
+  GainLoot100(6, TxtLeafGain_01, TxtLeafGain_02, LuckyLeaf, gbMana);
 end;
 
 procedure ScrollGain;
 begin
-  Combat.Roll := Random(100);
-  if (Combat.Roll < 10) and (Session.Room <> DeadRoom) then begin
-    WriteLn(TxtShared_08, TxtScrollGain_01);
-    Bag.Items[CompareScroll] := Bag.Items[CompareScroll] - ItemUnit;
-    Bag.Count := Bag.Count + 1;
-  end;
+  GainLoot100(10, TxtScrollGain_01, '', CompareScroll, gbNone);
 end;
 
 procedure EnterTrance;
